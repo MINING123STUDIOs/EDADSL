@@ -30,7 +30,11 @@ Allow untaging
 
 T and B layer references
 
-More <quantifier>@<symbol><thing> stuff. It's neat I think 
+More <quantifier>@<symbol><thing> stuff. It's neat I think. 
+
+<primary quantifier>@<secondary quantifier>~<object> to return all objecs given by <primary quantifier> affiliated with the <object> whichs type is classified by <secondary quantifier>
+    example:
+    C@p~U2 # all connections affiliated with U2
 
 Modes like phystrict or phylenient
 
