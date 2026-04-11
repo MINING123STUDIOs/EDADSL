@@ -4,7 +4,9 @@ Fix if example to correctly use cardinality
 
 Formalize ordering inside of *e
 
-Add phy.align
+Add phy.align <list of parts> axis = <axis> s = <spacing> <priority>
+
+Add phy.connmatch <property> <set of connections> <priority>
 
 Allow tag assignment at net creation 
 
