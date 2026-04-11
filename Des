@@ -81,7 +81,7 @@ examples:
 	-5e9  # = -5000000000
 	100n  # = 0.0000001
 	6.2k  # = 6200
-	4Y    # = 4000000000000000000000000
+	4Q    # = 4000000000000000000000000000000
 
 set:
 creation via: {  <object 1>, ... , <object n>  }
@@ -195,7 +195,7 @@ example:
 
 NOTE: phy.prox is raw euclidean distance, phy.creep is surface distance (affected by slots, the board, vias, traces, ect) and conductive material contributes 0 distance. 
 
-phy.board N = <number of board layers> T = <list containing the thicknesses between layers in mm, l = n - 1> W = <list containing the thicknesses of layers in oz/ft², l = n> M = [< dielectric material>, <conductive material>]
+phy.board N = <number of board layers> T = <list containing the thicknesses between layers in mm, l = n - 1> W = <list containing the thicknesses of layers in oz/ft², l = n> M = [<dielectric material>, <conductive material>]
 specifies board characteristics and can only be run once [top, ..., bottom]
 running phy.board default is equivalent to phy.board N = 2 T = [ 1.6 ] W = [ 1, 1 ] M = ["FR4", "copper"]
 example:
@@ -386,3 +386,22 @@ function work on the global scope
 example:
 	function log3( $x )::{ $retval V= ln( $x ) / ln( 3 ) }
 	print( log3( 9 ) ) # console output: 2
+
+
+
+RESOLVING A GIVEN SET OF PHYSICAL CONSTRAINTS:
+
+if all constraints can be simply satisfied without conflicts the solution is complete.
+
+if there is a conflict between constraints with different priorities:
+	the rule with the higher priority is satisfied while the one with the lower priority is optimized as much as possible without impairing the higher rule
+	a warning is printed to the console
+
+if there is a conflict between constraints with the same priority:
+	the behavior depends on the priority:
+		-d, -nth, -imp, -vimp:
+			an error message is printed to the console
+			the program continues
+		-oeo, -eo, -ne, nonneg:
+			an error message is printed to the console
+			the program does not continue
