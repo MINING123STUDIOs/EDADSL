@@ -1,6 +1,20 @@
 Todo:
+
 Fix if example to correctly use cardinality
+
 Formalize ordering inside of *e
+
 Add phy.align
+
 Allow tag assignment at net creation 
-Allow log creation
+
+Allow log file creation
+
+Add mkpcb and mkschematic command or something similar 
+
+Add pcb flags.
+    ?$vias true
+    ?$slots false
+For slots, vias, solder reinforced tracks, jumper wires, ect
+
+Add surface plating option to phy.board? 
