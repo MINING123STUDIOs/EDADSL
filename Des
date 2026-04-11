@@ -1,0 +1,388 @@
+%N is new line
+# initiates a comment untill a newline or %N
+
+Variables:
+assignment via
+$<varname> <fitting assignment operator> <value>
+$<varname> <fitting assignment operator> <value>; M = <Mutable?>
+
+Assignment operators:
+B=     bool
+V=     scalar
+S=     set
+W=     string
+L=     list
+
+P=     part
+C=     connection
+T=     pin
+N=     net
+
+Variables are referenced by $<varname> and are by default mutable, but can be made to be immutable if M = False is passed.
+example:
+	$var1 V= 45
+	$var2 V= 3 * $var1 + 7
+	$var1 V= $var1 - $var2
+	$var3 W= "protected var"; M = False
+
+
+
+BASIC DATA TYPES:
+
+bool:        True or False
+scalar:      Single number
+set:         Collection of certain objects
+string:      Text
+list:        Ordered list of objects
+
+part:        Component in a circuit
+connection:  Connection between parts
+pin:         Connection-point of a part
+net:         Collection of connections
+
+bool:
+creation via True or False
+
+scalar:
+creation via: a number ( integer or decimal ), <decimal part>e<exponent> or <value><decimal prefixe>
+decimal prefixes:
+
+q    1e-30  quecto
+r    1e-27  ronto
+y    1e-24  yocto
+z    1e-21  zepto
+a    1e-18  atto
+f    1e-15  femto
+p    1e-12  pico
+n    1e-9   nano
+u    1e-6   micro
+m    1e-3   mili
+c    1e-2   centi
+d    1e-1   deci
+     1e0
+k    1e+3   kilo
+M    1e+6   mega
+G    1e+9   giga
+T    1e+12  terra
+P    1e+15  peta
+E    1e+18  exa
+Z    1e+21  zetta
+Y    1e+24  yotta
+R    1e+27  ronna
+Q    1e+30  quetta
+
+examples:
+	0     # = 0
+	700   # = 700
+	-35   # = -35
+	+80   # = 80
+	6.94  # = 6.94
+	2e-6  # = 0.000002
+	-5e9  # = -5000000000
+	100n  # = 0.0000001
+	6.2k  # = 6200
+	4Y    # = 4000000000000000000000000
+
+set:
+creation via: {  <object 1>, ... , <object n>  }
+NOTE:
+a set may only contain the following object types: part, connection, pin, net
+all other objects will be silently dropped.
+example:
+	$set S= { Q1, Q2, R5, Gnd, C7[1] }
+
+string:
+created via: "<text>" or '<text>'
+example:
+	"This is just some text."
+
+
+list:
+creation via: [ <object 1>, ... , <object n> ] or [<start>:<increment>:<end>]
+indexing via <list>[<index>] ( <object 1> has the index 0, <object n> has the index n - 1 )
+example:
+	$list L= [ "Hi!", "This is a demo for", "LISTS!" ]
+	print( $list[2] ) # console output: LISTS!
+
+part:
+creation via: part <reference>: <model>(<args of model>); des = <description>; fp = <footprint>
+example:
+	part "R3": R( R = 220, P = 0.25, type = "carbon" ); des = "220Ω quarter watt carbon resistor used for current limiting." ; fp = "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P12.70mm_Horizontal"
+
+connection:
+Binary connections objects can be created via: ( <pin 1> | <pin 2> )
+a set of pins can be passed as the second argument which will result in the return of a set of connections.
+example:
+	( R2[1] | J4[7] )
+
+pin:
+pin references are created via: <part ref>[<pin ref>]
+example:
+	Q3[c]
+
+net:
+creation via: net <net name>
+example:
+	net "Gnd"
+	connect Gnd Q3[e] R1[2]
+	print(Gnd) # console output: Net: "Gnd"; connections: Q3[e], R1[2]; tags: None
+
+
+
+ELECTRICAL COMMANDS:
+
+part <reference>: <model>(<args of model>); des = "description"; fp = <footprint>
+Creates a component referenced via <reference> with a specified model
+example:
+	part "R3": R( R = 220, P = 0.25, type = "carbon" ); des = "220Ω quarter watt carbon resistor used for current limiting." ; fp = "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P12.70mm_Horizontal"
+
+NOTE: The footprint name should match the intended footprint in the kicad library if it is used.
+
+part can also take a list of references.
+example:
+	part ["R3", "R6", "R32" ]: R( R = 220, P = 0.25, type = "carbon" ); des = "220Ω quarter watt carbon resistor used for current limiting."; fp = Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P12.70mm_Horizontal
+
+connect <pin 1 / net reference> <pin 2> ... <pin n>
+joins all listed pins together. Note that only one net can be referenced as the 1st object.
+example:
+	connect Gnd Q2[s] C6[-] R3[2]
+
+net <net name>
+creates a net with the specified name.
+Example:
+	net "Gnd"
+
+tag <net name> <tag1>, ..., <tag n>
+tags a net with specified tags
+example:
+	tag Vin "sensitive"
+	tag hvVcc "high_voltage", "danger", "isolate_from_lv"
+
+
+
+
+PHYSICAL CONSTRAINTS:
+
+priorities:
+-d (or blank):  default
+-nth:           nice to have
+-imp:           important
+-vimp:          very important
+-oeo:           only explicit overrides
+-ne:            no exceptions
+-nonneg:        non negotiable
+-eo:            explicit override of a previous rule
+
+proirity chain: -d < -nth < -imp < -vimp < -oeo < -eo < -ne = -nonneg
+
+
+phy.prox <set a> <set b> min = <min distance between edges of a and b> max = <max distance anything in a can be away from anything in b> <priority>
+
+phy.prox <set> minim <priority>
+tries to minimize the distance between all objects in <set>
+example:
+	phy.prox $hvsys $lvsys min=15 -ne
+	phy.prox $noisy_loop minim -vimp
+
+phy.layer <set> <layer> <priority>
+<side> is an integer. layer 0 is the top while the bottom layer is the nth layer.
+example:
+	phy.side *p 0 -oeo
+
+phy.creep <set a> <set b> d = <minimum creepage distance> <priority>
+example:
+	phy.creep $hvsys $lvsys d = 30 -nonneg
+
+NOTE: phy.prox is raw euclidean distance, phy.creep is surface distance (affected by slots, the board, vias, traces, ect) and conductive material contributes 0 distance. 
+
+phy.board N = <number of board layers> T = <list containing the thicknesses between layers in mm, l = n - 1> W = <list containing the thicknesses of layers in oz/ft², l = n> M = [< dielectric material>, <conductive material>]
+specifies board characteristics and can only be run once [top, ..., bottom]
+running phy.board default is equivalent to phy.board N = 2 T = [ 1.6 ] W = [ 1, 1 ] M = ["FR4", "copper"]
+example:
+	phy.board N = 2 T = [ 1.6 ] W = [ 2, 2 ] M = ["FR4", "copper"]
+
+phy.shrinknet <net> <priority>
+tries to shrink <net> as much as possible.
+example:
+	net "Vsw"
+	phy.shrinknet Vsw -Vimp
+
+phy.mkplane <layer> <net>
+creates a plane on <layer> which is connected to <net>
+example:
+	net "Gnd"
+	phy.mkplane 1 Gnd
+
+phy.viafill <Pad> v = <via hole diameter> d = <distance between centers of adjacent vias>
+fills the referenced Pad with vias. Used for cooling for example DPak and D2Pak components.
+example:
+	part "Q1": MOSFET( type = "IRFS4115" ); des = "99A Id, 150V Vds, 10.3mOhm Rds, N-Channel HEXFET Power MOSFET, D2PAK"; fp = "Package_TO_SOT_SMD:TO-263-2"
+	net "Gnd"
+	connect Gnd Q1[d] # the drain is the large pad. I know that this example is electrically stupid, but it gets the point across.
+	phy.mkplane 1 Gnd
+	phy.viafill Q1[d] v = 0.25 d = 0.5
+
+phy.connectioncurrent <connection / set containing connections> <rms current the connection must be able to carry> <priority>
+sets the minimum rms current a connection must be able to carry
+example:
+	phy.connectioncurrent ( J1[2] | F1[1] ) 30 -oeo
+
+
+
+FLOW CONTROLL:
+
+if <boolean var>::{<condition dependent code>}
+example:
+	$c B= len( $lvsys n $hvsys ) != 0
+	if $c::{print("ISOLATION VIOLATION!")}
+
+gotomarker <goto marker name>
+creates a goto marker with a specefied name
+
+gotojump <goto marker name>
+jumps to a goto marker with a specified name
+gotomarkers can jump out of functions and loops and nesting is allowed.
+example:
+	gotojump m1
+	print( "This text will never be printed." )
+	gotomarker m1
+
+for <var> E <list>::{<code dependant on var>}
+example:
+	for $P E list(*t)::{ print( $P ) }
+
+halt
+halts the program and must be present at the end
+example:
+	halt
+
+echo <var>
+prints <var> to the console
+example:
+	$s T= "error." %N echo $s
+
+
+
+OPERATORS, FUNCTIONS AND CONSTANTS:
+
+operators:
+arithmetic
+n + m  Addition
+n - m  Subtraction
+n * m  Multiplication
+n / m  Division
+n % m  Modulo
+n ^ m  Exponentiation
+
+comparison
+n <  m Less Than
+n <= m Less or Equal
+b == c Equal
+b != c Not Equal
+n >= m Greater or Equal
+n >  m Greater Than
+
+boolean logic
+b && c Logical And
+b || c Logical Or
+b ^^ c Logical Xor
+!b     Negation
+
+set algebra
+a u b  Union
+a n b  Intersection
+a / b  Difference
+||a    Cardinality of a
+
+a c b  Checks whether a is a   subset of b
+a E b  Checks whether a is an element of b
+a !E b Checks whether a is not an element of b
+
+functions:
+mathematical
+abs    Absolute value
+sign   Sign
+sin    Sine
+cos    Cosine
+tan    Tangent
+acos   Inverse cosine
+asin   Inverse sine
+atan   Inverse tangent
+floor  Rounding down
+round  Rounding
+ceil   Rounding up
+ln     Natural logarithm
+log    Base 10 logarithm
+pow    1st arg to the power of the 2nd arg
+sqrt   Square root
+exp    e to the power of the arg
+min    Maximum value in a list
+max    Minimum value in a list
+norm   Normalizes a list such that the square root of the sum of all squared elements is eqal to 1
+
+other
+len    Lengh of list or string / size of set
+concat Turns all arguments into a list.
+set    Turns a list into a set ( only works if the list only contains objects that are allowed in sets. All forbidden objects are silently dropped )
+list   Turns a set into a list. The order is determined by the order that the elements appear in *e
+str    Turns all given arguments into into a string
+print  Prints the arg to the console, similar to echo but has the advantage that it can directly evaluate certain expressions
+type   Returns the type of an object
+ref    Turns a string containing a part reference into the referenced part
+
+constants:
+numerical
+c.pi   Pi
+c.e    Eulers number
+c.inf  Infinity
+
+set
+*n     Empty set
+*e     All parts, connections, pins, holes and nets
+*i     All pins and connections
+*u     All parts, connections and pins on the upper  side of the board
+*b     All parts, connections and pins on the bottom side of the board
+*h     All holes
+*c     All connections
+*p     All parts
+*t     All pins
+
+
+
+examples:
+	print( 3 + 2 * 5 )                                                    # console output: 13
+	print( sin( c.pi ) )                                                  # console output: 0
+
+	$a V= 3
+	$b V= 5
+	print( str( "The sum of ", $a, " and ", $b, " is ", $a + $b, "." ) )  # console output: The sum of 3 and 5 is 8.
+
+
+<quantifier>@<netname>
+is the set of everything physical specefied by <quantifier> connected to <netname>
+quantifiers:
+P              parts
+C              connections
+T              pins
+I              connections and pins
+H              holes
+E (or nothing) everything
+example:
+	$input S= I@Vin
+
+I@^<tag>
+is expanded to
+I@<1st net with tag> u ... u I@<nth net with tag>
+example:
+	tag Vin "sensitive"
+	tag Vfb "sensitive"
+	I@^sensitive
+
+
+custom function creation:
+function creation is accomplished via: function <name>(<arguments>)::{<code of the function>}
+to make the function return a value the variable $retval must be set
+function work on the global scope
+example:
+	function log3( $x )::{ $retval V= ln( $x ) / ln( 3 ) }
+	print( log3( 9 ) ) # console output: 2
