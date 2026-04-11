@@ -1,0 +1,6 @@
+Todo:
+Fix if example to correctly use cardinality
+Formalize ordering inside of *e
+Add phy.align
+Allow tag assignment at net creation 
+Allow log creation
