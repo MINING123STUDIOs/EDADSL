@@ -20,3 +20,8 @@ Add pcb flags.
 For slots, vias, solder reinforced tracks, jumper wires, ect
 
 Add surface plating option to phy.board? 
+
+[<start>:<end>] is equivalent to [<start>:1:<end>]
+Also add [<start>|<end>|<number of steps>]
+
+Add language name to the top of the document 
