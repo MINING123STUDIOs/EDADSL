@@ -8,7 +8,7 @@ O Add phy.align <list of parts> axis = <axis> s = <spacing> <priority>
 
 O Add phy.connmatch <property> <set of connections> <priority>
 
-O Allow tag assignment at net creation 
+X Allow tag assignment at net creation 
 
 O Allow log file creation
 
@@ -21,12 +21,12 @@ O Add pcb flags.
 
 O Add surface plating option to phy.board? 
 
-O [<start>:<end>] is equivalent to [<start>:1:<end>]
+X [<start>:<end>] is equivalent to [<start>:1:<end>]
   Also add [<start>|<end>|<number of steps>]
 
 X Add language name to the top of the document 
 
-O Allow untaging
+X Allow untaging
 
 O T and B layer references
 
@@ -39,3 +39,7 @@ O <primary quantifier>@<secondary quantifier>~<object> to return all objecs give
 O Modes like phystrict or phylenient
 
 X Fix @^ in ssr example: adding E
+
+O Add flags on what part-text to show on the pcb
+
+O Add PCB text commands
