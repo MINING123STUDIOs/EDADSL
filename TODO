@@ -10,16 +10,16 @@ X Add phy.connmatch <property> <set of connections> <priority>
 
 X Allow tag assignment at net creation 
 
-O Allow log file creation
+X Allow log file creation
 
-O Add mkpcb and mkschematic command or something similar 
+X Add mkpcb and mkschematic command or something similar 
 
 O Add pcb flags.
       ?$vias true
       ?$slots false
   For slots, vias, solder reinforced tracks, jumper wires, ect
 
-O Add surface plating option to phy.board? 
+X Add surface plating option to phy.board
 
 X [<start>:<end>] is equivalent to [<start>:1:<end>]
   Also add [<start>|<end>|<number of steps>]
@@ -29,8 +29,6 @@ X Add language name to the top of the document
 X Allow untaging
 
 O T and B layer references
-
-O More <quantifier>@<symbol><thing> stuff. It's neat I think. 
 
 O <primary quantifier>@<secondary quantifier>~<object> to return all objecs given by <primary quantifier> affiliated with the <object> whichs type is classified by <secondary quantifier>
       example:
