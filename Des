@@ -3,7 +3,7 @@ EDADSL LANGUAGE DESCRIPTION
 
 
 assumed standard units:
-lengh    in mm
+length    in mm
 all other units in simple SI units unless explicitly specified.
 
 %N is new line
@@ -214,7 +214,7 @@ phy.creep <set a> <set b> d = <minimum creepage distance> <priority>
 example:
 	phy.creep $hvsys $lvsys d = 30 -nonneg
 
-NOTE: phy.prox is raw euclidean distance, phy.creep is surface distance (affected by slots, the board, vias, traces, ect) and conductive material contributes 0 distance. 
+NOTE: phy.prox is raw euclidean distance, phy.creep is surface distance (affected by slots, the board, vias, traces, ect) and conductive material contributes 0 distance.
 
 phy.board N = <number of board layers> T = <list containing the thicknesses between layers in mm, l = n - 1> W = <list containing the thicknesses of layers in oz/ft², l = n> M = [<dielectric material>, <conductive material>, <surface-plating material>]
 specifies board characteristics and can only be run once [top, ..., bottom]
@@ -257,7 +257,7 @@ example:
 phy.connmatch <property> <set of connections> <priority>
 tries to minimize the by ||(<set of connections>) scaled variance of <property>
 allowed properties:
-len    lengh
+len    length
 res    resistance
 ind    inducttance
 cap    capacitance
@@ -375,7 +375,7 @@ max    Minimum value in a list
 norm   Normalizes a list such that the square root of the sum of all squared elements is eqal to 1
 
 other
-len    Lengh of list or string / size of set
+len    Length of list or string / size of set
 concat Turns all arguments into a list.
 set    Turns a list into a set ( only works if the list only contains objects that are allowed in sets. All forbidden objects are silently dropped )
 list   Turns a set into a list. The order is determined by the order that the elements appear in *e
@@ -462,10 +462,30 @@ if there is a conflict between constraints with the same priority:
 
 
 
+ORDERING OF THE GLOBAL SET CONSTANT *e:
+
+inside *e the order of elements is determined by the time of creation and the type of the element.
+the type order is:
+	part, pin, connection, net
+pins are ordered by the pad number in the footprint.
+
+
+example:
+	part U1: opamp( type = "LM741" ); des = ""; fp = "Package_DIP:DIP-8_W7.62mm"
+	net V-
+	connect V- U1[v-]
+
+	then *e is { U1, U1[v+], U1[v-], U1[-], U1[+], U1[out], ( U1[v-] | V- ), V- }
 
 
 
+FLAGS:
 
-
-
-
+flags have the following syntax:
+	?$<flag> <value>
+the system supports the following flags:
+?$vias                       Controlls whether the use of vias                     is allowed
+?$slots                      Controlls whether the use of slots / pcb cuts         is allowed
+?$jumpers                    Controlls whether the use of jumper wires             is allowed
+?$solder_reinforced_tracks   Controlls whether the use of solder reinforced tracks is allowed
+?$buried_vias                Controlls whether the use of burried vias             is allowed
