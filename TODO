@@ -4,9 +4,9 @@ X Fix if example to correctly use cardinality
 
 O Formalize ordering inside of *e
 
-O Add phy.align <list of parts> axis = <axis> s = <spacing> <priority>
+X Add phy.align <list of parts> axis = <axis> s = <spacing> <priority>
 
-O Add phy.connmatch <property> <set of connections> <priority>
+X Add phy.connmatch <property> <set of connections> <priority>
 
 X Allow tag assignment at net creation 
 
