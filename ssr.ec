@@ -15,25 +15,27 @@ part               "D3"  : zener( type = "BZV55B3V0" )                          
 part [ "C1", "C2", "C5" ]: nonpol_c( C = 100n, V = 35, type = "ceramic" )            ; des = "PSU filtering"                                                                                                                    ; fp = "Capacitor_SMD:C_0805_2012Metric"
 part       [ "C3", "C4" ]: pol_c( C = 470u, V = 35, type = "aluminium electrolyte" ) ; des = "PSU filtering"                                                                                                                    ; fp = "Capacitor_SMD:CP_Elec_8x6.9"
 part               "J1"  : pinheader( N = 3 )                                        ; des = "main lv side io"                                                                                                                  ; fp = "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical"
-part               "Q3"  : mosfet( type = "2N7002H")                                 ; des = "0.21A Id, 60V Vds, N-Channel MOSFET, SOT-23"                                                                                      ; fp = "Package_TO_SOT_SMD:SOT-23"
+part               "Q3"  : mosfet( type = "2N7002H" )                                ; des = "0.21A Id, 60V Vds, N-Channel MOSFET, SOT-23"                                                                                      ; fp = "Package_TO_SOT_SMD:SOT-23"
+part              "TP1"  : testpoint( )                                              ; des = "node"                                                                                                                             ; fp = "TestPoint:TestPoint_Pad_1.0x1.0mm"
 
 
-net "Vswa"
-net "Vswb"
+net "Vswa"   "hv" "I"
+net "Vswb"   "hv" "I"
 
-net "Gnd_lv"
-net "Vcc_lv"
-net "sig_lv"
-net "Vstab"
+net "Gnd_hv" "hv"
+net "Vcc_hv" "hv"
+net "sig_hv" "hv"
+net "gate"   "hv"
+net "gn"     "hv"
 
-net "Gnd_hv"
-net "Vcc_hv"
-net "sig_hv"
-net "gate"
+net "Gnd_lv" "lv"
+net "Vcc_lv" "lv"
+net "sig_lv" "lv"
+net "Vstab"  "lv"
 
-net "tnet1"
-net "tnet2"
-net "tnet3"
+net "tnet1"  "lv"
+net "tnet2"  "lv"
+net "tnet3"  "lv"
 
 # IO connections
 connect Vswa   H1[1] Q1[d]
@@ -66,7 +68,8 @@ connect Vcc_hv C2[1] C4[+] U2[+vout]
 connect Gnd_hv C2[2] C4[-] U2[-vout]
 
 # hv side MOSFET
-connect gate   Q1[g] Q2[g] R1[1] D1[k] U3[out]
+connect gn     Q1[g] Q2[g] TP1[1]
+connect gate   R1[1] D1[k] TP1[1] U3[out]
 connect Gnd_hv             R1[2] D1[a]
 
 # hv side gate drive
@@ -75,29 +78,15 @@ connect Gnd_hv U3[gnd]       U1[e]
 connect sig_hv U3[inp] R6[2] U1[c]
 
 
-tag Vswa   "hv" "I"
-tag Vswb   "hv" "I"
-tag Gnd_hv "hv"
-tag gate   "hv"
-tag Vcc_hv "hv"
-tag sig_hv "hv"
-
-tag Gnd_lv "lv"
-tag sig_lv "lv"
-tag Vcc_lv "lv"
-tag Vstab  "lv"
-
-tag tnet1  "lv"
-tag tnet2  "lv"
-tag tnet3  "lv"
-
 $inter S= { U1, U2 }
 
-$hvsys S= @^hv / $inter
-$lvsys S= @^lv / $inter
+$hvsys S= E@^hv / $inter
+$lvsys S= E@^lv / $inter
 
 
-phy.board N = 2 T = [ 1.6 ] W = [ 4, 4 ] M = ["FR4", "copper"]
+phy.board N = 2 T = [ 1.6 ] W = [ 4, 4 ] M = ["FR4", "copper", "HASL" ]
+
+phy.align [ Q1, Q2 ] axis = x d = 5 -vimp
 
 phy.prox  $hvsys $lvsys min = 15 -ne
 phy.creep $hvsys $lvsys       15 -ne
@@ -108,5 +97,9 @@ phy.layer      $big_q 1 -ne
 
 $high_I S= C@^I u { ( Q1[s] | Q2[s] ) }
 phy.connectioncurrent $high_I 90 -vimp
+
+phy.connmatch imp ( TP1[1] | { Q1[g], Q2[g] } ) -vimp # ensure gate drive symmetry.
+
+mkpcb
 
 halt

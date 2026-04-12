@@ -1,5 +1,14 @@
+EDADSL LANGUAGE DESCRIPTION
+
+
+
+assumed standard units:
+lengh    in mm
+all other units in simple SI units unless explicitly specified.
+
 %N is new line
 # initiates a comment untill a newline or %N
+#{ opens a multiline comment and }# closes it
 
 Variables:
 assignment via
@@ -98,11 +107,17 @@ example:
 
 
 list:
-creation via: [ <object 1>, ... , <object n> ] or [<start>:<increment>:<end>]
+creation via: [ <object 1>, ... , <object n> ]
 indexing via <list>[<index>] ( <object 1> has the index 0, <object n> has the index n - 1 )
+additional list routines:
+	[<start>:<increment>:<end>]
+	[<start>:<end>] is equal to [<start>:1:<end>]
+	[<start>|<end>|<number of elements>]
+
 example:
 	$list L= [ "Hi!", "This is a demo for", "LISTS!" ]
 	print( $list[2] ) # console output: LISTS!
+	[0|2|5] # is [0, 0.5, 1, 1.5, 2 ]
 
 part:
 creation via: part <reference>: <model>(<args of model>); des = <description>; fp = <footprint>
@@ -147,10 +162,11 @@ joins all listed pins together. Note that only one net can be referenced as the 
 example:
 	connect Gnd Q2[s] C6[-] R3[2]
 
-net <net name>
-creates a net with the specified name.
+net <net name> <tag 1> ... <tag n>
+creates a net with the specified name and optinal tags
 Example:
 	net "Gnd"
+	net "hvbus" "hv" "high_i" "noisy"
 
 tag <net name> <tag1>, ..., <tag n>
 tags a net with specified tags
@@ -158,6 +174,11 @@ example:
 	tag Vin "sensitive"
 	tag hvVcc "high_voltage", "danger", "isolate_from_lv"
 
+untag <net name> <tag1>, ..., <tag n>
+removes all specified tags from a net
+example:
+	tag hvVcc "high_voltage", "danger", "isolate_from_lv", "safe"
+	untag hvVcc "safe"
 
 
 
@@ -195,11 +216,11 @@ example:
 
 NOTE: phy.prox is raw euclidean distance, phy.creep is surface distance (affected by slots, the board, vias, traces, ect) and conductive material contributes 0 distance. 
 
-phy.board N = <number of board layers> T = <list containing the thicknesses between layers in mm, l = n - 1> W = <list containing the thicknesses of layers in oz/ft², l = n> M = [<dielectric material>, <conductive material>]
+phy.board N = <number of board layers> T = <list containing the thicknesses between layers in mm, l = n - 1> W = <list containing the thicknesses of layers in oz/ft², l = n> M = [<dielectric material>, <conductive material>, <surface-plating material>]
 specifies board characteristics and can only be run once [top, ..., bottom]
-running phy.board default is equivalent to phy.board N = 2 T = [ 1.6 ] W = [ 1, 1 ] M = ["FR4", "copper"]
+running phy.board default is equivalent to phy.board N = 2 T = [ 1.6 ] W = [ 1, 1 ] M = ["FR4", "copper", "HASL"]
 example:
-	phy.board N = 2 T = [ 1.6 ] W = [ 2, 2 ] M = ["FR4", "copper"]
+	phy.board N = 2 T = [ 1.6 ] W = [ 2, 2 ] M = ["FR4", "copper", "ENIG" ]
 
 phy.shrinknet <net> <priority>
 tries to shrink <net> as much as possible.
@@ -227,13 +248,31 @@ sets the minimum rms current a connection must be able to carry
 example:
 	phy.connectioncurrent ( J1[2] | F1[1] ) 30 -oeo
 
+phy.align <list of parts> axis = <x or y> d = <spacing between the edges> <priority>
+aligns all given parts in the given order along the specified axis with the given edge-to-edge spacing.
+example:
+	part [ "Q1", "Q2" ]: mosfet( type = "C2M0025120D" ); des = "90A Id, 1200V Vds, 25mOhm, N-Channel SiC MOSFET, TO-247"; fp = "Package_TO_SOT_THT:TO-247-3_Horizontal_TabUp"
+	phy.align [ Q1, Q2 ] axis = x d = 5 -vimp
+
+phy.connmatch <property> <set of connections> <priority>
+tries to minimize the by ||(<set of connections>) scaled variance of <property>
+allowed properties:
+len    lengh
+res    resistance
+ind    inducttance
+cap    capacitance
+imp    impedance
+t      signal propagation time
+example:
+	phy.connmatch t $CPU_to_RAM_lines -vimp
+
 
 
 FLOW CONTROLL:
 
 if <boolean var>::{<condition dependent code>}
 example:
-	$c B= len( $lvsys n $hvsys ) != 0
+	$c B= ||( $lvsys n $hvsys ) != 0
 	if $c::{print("ISOLATION VIOLATION!")}
 
 gotomarker <goto marker name>
@@ -252,9 +291,24 @@ example:
 	for $P E list(*t)::{ print( $P ) }
 
 halt
-halts the program and must be present at the end
+halts the program and exports the logfile as well as all other created files. must be present at the end
 example:
 	halt
+
+writetolog <string>
+appends a string to the log file.
+example:
+	writetolog "test."
+
+mkpcb
+creates a pbc file based on the circuit and constraints specified above the mkpcb function.
+example:
+	mkpcb
+
+mkschematic
+creates a schematic file based on the circuit specified the mkschematic function.
+example:
+	mkschematic
 
 echo <var>
 prints <var> to the console
@@ -370,9 +424,9 @@ E (or nothing) everything
 example:
 	$input S= I@Vin
 
-I@^<tag>
+<quantifier>@^<tag>
 is expanded to
-I@<1st net with tag> u ... u I@<nth net with tag>
+<quantifier>@<1st net with tag> u ... u <quantifier>@<nth net with tag>
 example:
 	tag Vin "sensitive"
 	tag Vfb "sensitive"
@@ -405,3 +459,13 @@ if there is a conflict between constraints with the same priority:
 		-oeo, -eo, -ne, nonneg:
 			an error message is printed to the console
 			the program does not continue
+
+
+
+
+
+
+
+
+
+
