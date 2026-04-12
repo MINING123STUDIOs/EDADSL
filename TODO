@@ -1,41 +1,41 @@
 Todo:
 
-Fix if example to correctly use cardinality
+X Fix if example to correctly use cardinality
 
-Formalize ordering inside of *e
+O Formalize ordering inside of *e
 
-Add phy.align <list of parts> axis = <axis> s = <spacing> <priority>
+O Add phy.align <list of parts> axis = <axis> s = <spacing> <priority>
 
-Add phy.connmatch <property> <set of connections> <priority>
+O Add phy.connmatch <property> <set of connections> <priority>
 
-Allow tag assignment at net creation 
+O Allow tag assignment at net creation 
 
-Allow log file creation
+O Allow log file creation
 
-Add mkpcb and mkschematic command or something similar 
+O Add mkpcb and mkschematic command or something similar 
 
-Add pcb flags.
-    ?$vias true
-    ?$slots false
-For slots, vias, solder reinforced tracks, jumper wires, ect
+O Add pcb flags.
+      ?$vias true
+      ?$slots false
+  For slots, vias, solder reinforced tracks, jumper wires, ect
 
-Add surface plating option to phy.board? 
+O Add surface plating option to phy.board? 
 
-[<start>:<end>] is equivalent to [<start>:1:<end>]
-Also add [<start>|<end>|<number of steps>]
+O [<start>:<end>] is equivalent to [<start>:1:<end>]
+  Also add [<start>|<end>|<number of steps>]
 
-Add language name to the top of the document 
+X Add language name to the top of the document 
 
-Allow untaging
+O Allow untaging
 
-T and B layer references
+O T and B layer references
 
-More <quantifier>@<symbol><thing> stuff. It's neat I think. 
+O More <quantifier>@<symbol><thing> stuff. It's neat I think. 
 
-<primary quantifier>@<secondary quantifier>~<object> to return all objecs given by <primary quantifier> affiliated with the <object> whichs type is classified by <secondary quantifier>
-    example:
-    C@p~U2 # all connections affiliated with U2
+O <primary quantifier>@<secondary quantifier>~<object> to return all objecs given by <primary quantifier> affiliated with the <object> whichs type is classified by <secondary quantifier>
+      example:
+      C@p~U2 # all connections affiliated with U2
 
-Modes like phystrict or phylenient
+O Modes like phystrict or phylenient
 
-Fix @^ in ssr example: adding C
+X Fix @^ in ssr example: adding E
