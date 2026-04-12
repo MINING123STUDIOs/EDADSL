@@ -2,7 +2,7 @@ Todo:
 
 X Fix if example to correctly use cardinality
 
-O Formalize ordering inside of *e
+X Formalize ordering inside of *e
 
 X Add phy.align <list of parts> axis = <axis> s = <spacing> <priority>
 
@@ -14,7 +14,7 @@ X Allow log file creation
 
 X Add mkpcb and mkschematic command or something similar 
 
-O Add pcb flags.
+X Add pcb flags.
       ?$vias true
       ?$slots false
   For slots, vias, solder reinforced tracks, jumper wires, ect
