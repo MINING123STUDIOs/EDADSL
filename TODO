@@ -41,3 +41,7 @@ X Fix @^ in ssr example: adding E
 O Add flags on what part-text to show on the pcb
 
 O Add PCB text commands
+
+O add debug function
+
+O add start function 
