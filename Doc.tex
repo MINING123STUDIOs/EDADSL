@@ -1,0 +1,79 @@
+\documentclass{article}
+%\usepackage{fdsymbol}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[margin=1in]{geometry}
+\title{EDADSL Documentation}
+\author{Andreas G.}
+\date{$15^{\text{th}}$ of April 2026}
+\usepackage{verbatim}
+\usepackage{xcolor}
+
+\newcommand{\ppicewise}[7]{\left\{ \begin{array}{rcl}
+{#1} & \mbox{{#7}}
+& {#2} \\ {#3} & \mbox{{#7}} & {#4} \\
+{#5} & \mbox{{#7}} & {#6}
+\end{array}\right.}
+\newcommand{\picewise}[5]{\left\{ \begin{array}{rcl}
+{#1} & \mbox{{#5}}
+& {#2} \\ {#3} & \mbox{{#5}} & {#4}
+\end{array}\right.}
+\newcommand{\m}[1]{\({#1}\)} 
+\newcommand{\blt}{\(\bullet\;\)}
+\newcommand{\ms}{\m{\quad}} 
+\newcommand{\mbb}[1]{\text{$\mathbb{{#1}}$}}
+\newcommand{\lims}[3]{\lim_{{#1}\rightarrow{#2}}\left({#3}\right)}
+\newcommand{\floor}[1]{\left\lfloor{#1}\right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil{#1}\right\rceil} 
+\newcommand{\sums}[3]{\sum_{#1}^{#2}\left({#3}\right)} 
+\newcommand{\prods}[3]{\prod_{#1}^{#2}\left({#3}\right)} 
+\newcommand{\mods}[2]{\left({#1}\right)\text{mod}\left({#2}\right)} 
+\newcommand{\derv}[2]{\frac{d}{d{#1}}{#2}}
+\newcommand{\dderv}[2]{\frac{d^{2}}{d{#1}^{2}}{#2}}
+\newcommand{\nderv}[3]{\frac{d^{{#1}}}{d{#2}^{{#1}}}{#3}}
+\newcommand{\pderv}[2]{\frac{\partial}{\partial{}{#1}}{#2}}
+\newcommand{\pdderv}[2]{\frac{\partial^{2}}{\partial{}{#1}^{2}}{#2}}
+\newcommand{\npderv}[3]{\frac{\partial^{#1}}{\partial{}{#2}^{#1}}{#3}}
+\newcommand{\mpdderv}[3]{\frac{\partial^{2}}{\partial{}{#1}\partial{}{#2}}{#3}}
+\newcommand{\ints}[4]{\int_{{#1}}^{{#2}}{{#3}}\;d{{#4}}}
+\newcommand{\abs}[1]{\left\vert{#1}\right\vert} 
+\newcommand{\wsp}[1]{\left({#1}\right)} 
+\newcommand{\wssp}[1]{\left[{#1}\right]} 
+\newcommand{\wscp}[1]{\left\{{#1}\right\}} 
+\newcommand{\wsap}[1]{\left\langle{#1}\right\rangle} 
+
+\begin{document}
+\large
+\maketitle
+\clearpage
+\tableofcontents
+\clearpage
+
+\section{Introduction}
+\section{Design Principles}
+\section{Lexcal Structure}
+\section{Syntax}
+\section{Types}
+\section{Variables}
+\section{Expressions}
+\section{Operators}
+\section{Controll Flow}
+\section{Functions}
+\section{Circuit Model}
+\section{Nets, Parts and Pins}
+\section{Quantifiers}
+\section{Physical Constraints}
+\section{Solver Model}
+\section{Toolchain}
+\section{Standard Library}
+\section{External Library}
+\section{Flags}
+\section{Examples}
+\section{Exceptions}
+\section{Future Improvements}
+\section{Refrences}
+\section{Appendices}
+
+
+\end{document}
