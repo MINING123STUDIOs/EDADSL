@@ -1,0 +1,105 @@
+tree                                             leaf?     addres
+
+state                                            _         state
+|
++--bookkeeping                                   _         state[0]
+|  |
+|  +--metadata                                   _         state[0][0]
+|  |  |
+|  |  +--version                                 #         state[0][0][0]
+|  |  |
+|  |  +--..                                      #         state[0][0][1]
+|  |  |
+|  |  +--..                                      #         state[0][0][2]
+|  |
+|  +--programm                                   _         state[0][1]
+|  |  |
+|  |  +--line 0                                  #         state[0][1][0]
+|  |  |
+|  |  ...                                        ~
+|  |  |
+|  |  +--line n                                  #         state[0][1][n]
+|  |
+|  +--line index                                 #         state[0][2]
+|  |
+|  +--delimiter counters                         _         state[0][3]
+|     |
+|     +--()                                      #         state[0][3][0]
+|     |
+|     +--[]                                      #         state[0][3][1]
+|     |
+|     +--{}                                      #         state[0][3][2]
+|     |
+|     +--""                                      #         state[0][3][3]
+|     |
+|     +--''                                      #         state[0][3][4]
+|     |
+|     +--#                                       #         state[0][3][5]
+|     |
+|     +--#{}#                                    #         state[0][3][6]
+|
++--scope                                         _         state[1]
+|  |
+|  +--vars                                       _         state[1]
+|  |  |
+|  |  +--names                                   _         state[1]
+|  |  |  |
+|  |  |  +--name 0                               #         state[1]
+|  |  |  |
+|  |  |  ...                                     ~
+|  |  |  |
+|  |  |  +--name n                               #         state[1]
+|  |  |
+|  |  +--types                                   _         state[1]
+|  |  |  |
+|  |  |  +--type 0                               #         state[1]
+|  |  |  |
+|  |  |  ...                                     ~
+|  |  |  |
+|  |  |  +--type n                               #         state[1]
+|  |  |
+|  |  +--values                                  _         state[1]
+|  |  |  |
+|  |  |  +--value 0                              #         state[1]
+|  |  |  |
+|  |  |  ...                                     ~
+|  |  |  |
+|  |  |  +--value n                              #         state[1]
+|  |  |
+|  |  +--mutables                                _         state[1]
+|  |     |
+|  |     +--mutable 0                            #         state[1]
+|  |     |
+|  |     ...                                     ~
+|  |     |
+|  |     +--mutable n                            #         state[1]
+|  |
+|  +--functions                                  _         state[1]
+|  |
+|  +--gotos                                      _         state[1]
+|     |
+|     +--names                                   _         state[1]
+|     |  |
+|     |  +--name 0                               #         state[1]
+|     |  |
+|     |  ...                                     ~         state[1]
+|     |  |
+|     |  +--name n                               #         state[1]
+|     |
+|     +--indecies                                _         state[1]
+|        |
+|        +--index 0                              #         state[1]
+|        |
+|        ...                                     ~         state[1]
+|        |
+|        +--index n                              #         state[1]
+|
++--electrical                                    _         state[2]
+|
++--files                                         _         state[3]
+   |
+   +--log file                                   #         state[3][0]
+   |
+   +--schematic file                             #         state[3][1]
+   |
+   +--PCB                                        #         state[3][2]

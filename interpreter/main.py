@@ -41,7 +41,7 @@ def parse_end(line):
 def parse_(line):
     pass
 
-
+while True: print(F.str_to_scalar(input()))
 
 input_code = F.readfile("ssr.ec")
 
