@@ -4,20 +4,32 @@ def readfile(name):
     with open(name) as f: tmp = f.read()
     return tmp
     
-def str_to_scalar(string):
-    s = string
 
-    suffix =     [   "q",   "r",   "y",   "z",   "a",   "f",   "p",  "n",  "u",  "m",  "c",  "d", "k", "M", "G",  "T",  "P",  "E",  "Z",  "Y",  "R", "Q"  ]
-    suffix_val = [ "-30", "-27", "-24", "-21", "-18", "-15", "-12", "-9", "-6", "-3", "-2", "-1", "3", "6", "9", "12", "15", "18", "21", "24", "27", "30" ]
-    if re.search( r"^(|-|\+)(([0-9]*\.[0-9]+)|([0-9]+\.[0-9]*)|[0-9]+)[qryzafpnumcdkMGTPEZYRQ]$", s ): #s[len(s)-1:] in suffix:
-        #suffix parsing
-        si = suffix.index(s[len(s)-1])
-        s = s[:len(s)-1] + "e" + suffix_val[si]
-        r = float(s)
-    elif re.search( r"^(|-|\+)(([0-9]*\.[0-9]+)|([0-9]+\.[0-9]*))$", s ) or re.search( r"^(|-|\+)(([0-9]*\.[0-9]+)|([0-9]+\.[0-9]*)|[0-9]+)e(|-|\+)[0-9]+$", s ):
-        r = float(s)
-    elif re.search( r"^(|-|\+)[0-9]+$", s ):
-        r = int(s)
-    else: r = None
+def str_to_scalar(s):
+    suffix_map = {
+        "q": -30, "r": -27, "y": -24, "z": -21,
+        "a": -18, "f": -15, "p": -12, "n": -9,
+        "u": -6,  "m": -3,  "c": -2,  "d": -1,
+        "k": 3,   "M": 6,   "G": 9,   "T": 12,
+        "P": 15,  "E": 18,  "Z": 21,  "Y": 24,
+        "R": 27,  "Q": 30
+    }
 
-    return r
+    # Base number pattern
+    num = r"[+-]?(\d+(\.\d*)?|\.\d+)"
+
+    s = s.replace(" ", "").replace("µ", "u").replace("μ", "u").replace("_", "").replace("−", "-").replace("K", "k")
+    # With suffix (e.g., 10k, 3.3M)
+    if re.fullmatch(num + r"[qryzafpnumcdkMGTPEZYRQ]", s):
+        value = float(s[:-1])
+        return value * (10 ** suffix_map[s[-1]])
+
+    # Scientific notation
+    if re.fullmatch(num + r"[eE][+-]?\d+", s):
+        return float(s)
+
+    # Plain float
+    if re.fullmatch(num, s):
+        return float(s)
+
+    return None
