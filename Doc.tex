@@ -1,27 +1,25 @@
 \documentclass{article}
-%\usepackage{fdsymbol}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage[margin=1in]{geometry}
-\title{EDADSL Documentation}
-\author{Andreas G.}
-\date{$15^{\text{th}}$ of April 2026}
 \usepackage{verbatim}
 \usepackage{xcolor}
 
+\title{EDADSL Documentation}
+\author{Andreas G.}
+\date{15\textsuperscript{th} of April 2026}
+
 \newcommand{\ppicewise}[7]{\left\{ \begin{array}{rcl}
-{#1} & \mbox{{#7}}
-& {#2} \\ {#3} & \mbox{{#7}} & {#4} \\
+{#1} & \mbox{{#7}} & {#2} \\ 
+{#3} & \mbox{{#7}} & {#4} \\
 {#5} & \mbox{{#7}} & {#6}
 \end{array}\right.}
 \newcommand{\picewise}[5]{\left\{ \begin{array}{rcl}
-{#1} & \mbox{{#5}}
-& {#2} \\ {#3} & \mbox{{#5}} & {#4}
+{#1} & \mbox{{#5}} & {#2} \\ 
+{#3} & \mbox{{#5}} & {#4}
 \end{array}\right.}
-\newcommand{\m}[1]{\({#1}\)} 
-\newcommand{\blt}{\(\bullet\;\)}
-\newcommand{\ms}{\m{\quad}} 
+
 \newcommand{\mbb}[1]{\text{$\mathbb{{#1}}$}}
 \newcommand{\lims}[3]{\lim_{{#1}\rightarrow{#2}}\left({#3}\right)}
 \newcommand{\floor}[1]{\left\lfloor{#1}\right\rfloor}
@@ -51,28 +49,38 @@
 \clearpage
 
 \section{Introduction}
+
+\part{Core Language}
 \section{Design Principles}
-\section{Lexcal Structure}
+\section{Lexical Structure}
 \section{Syntax}
 \section{Types}
 \section{Variables}
 \section{Expressions}
 \section{Operators}
-\section{Controll Flow}
+\section{Control Flow}
 \section{Functions}
+
+\part{Hardware Model}
 \section{Circuit Model}
 \section{Nets, Parts and Pins}
 \section{Quantifiers}
+
+\part{Physical System}
 \section{Physical Constraints}
 \section{Solver Model}
+\section{Flags}
+
+\part{Toolchain}
 \section{Toolchain}
 \section{Standard Library}
 \section{External Library}
-\section{Flags}
+
+\part{Reference}
 \section{Examples}
 \section{Exceptions}
 \section{Future Improvements}
-\section{Refrences}
+\section{References}
 \section{Appendices}
 
 
