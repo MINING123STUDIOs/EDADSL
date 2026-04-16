@@ -47,36 +47,156 @@
 \clearpage
 \tableofcontents
 \clearpage
-
+% NOTESPACE:
+% TODO:
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% WHEN DONE:
+% complete keyword section in lexical structure
+% replace loose refrences ( eg.: [ NUMBER OF SECTION Types/Type Literals ] )
+% complete lexical structure
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
 \chapter{Introduction}
-EDADSL (Electronic Design Automation Domain Specific Language) is a Domain-specific Language (DSL) specialized for programatic Elcectronic Design Automation (EDA) and Hardware-Synthesis. 
+\section{Abstract}
+EDADSL (Electronic Design Automation Domain Specific Language) is a Domain-specific Language (DSL) specialized for programatic Elecectronic Design Automation (EDA) and Hardware-Synthesis. 
 It is based on an Electrical System and a constraint driven optimisation Engine\\
 This Document is a full Outline and as of now the authoritative Specification of the EDADSL Language as well as the Systems underlying it.
-
+\section{Reading this Document}
+%
 
 
 
 
 \part{Core Language}
+%This Part defines the core Programming Language of EDADSL.
 \chapter{Design Principles}
 \section{Design Goals}
 \section{Applications and Application-Areas with special Priority during Design}
 \section{Design Philosophy}
 
 \chapter{Lexical Structure}
+\section{Character Set}
+EDADSL supports the Full Unicode Character-set.
+\section{Whitespace}
+Whitespace is defined using the following Regular Expression:
+\begin{verbatim}
+Whitespace                    = [ \t\n\r]+
+\end{verbatim}
+
+\section{Comments}
+Comments are defined using the following Regular Expressions:
+\begin{verbatim}
+Line_Comments                 = "#"[^\n]*
+Multiline_Comments            = "#{" [^"}#"]* "}#"
+\end{verbatim}
+
+\section{Identifiers}
+Identifiers are defined using the following Regular Expressions:
+\begin{verbatim}
+Variable_Identifiers          =     \$[_a-zA-Z0-9]+
+Built_In_Function_Identifiers =    f\.[_a-zA-Z0-9]+
+User_Function_Identifiers     = f\.u\.[_a-zA-Z0-9]+
+Built_In_Constant_Identifiers =    c\.[_a-zA-Z0-9]+
+User_Constant_Identifiers     = c\.u\.[_a-zA-Z0-9]+
+\end{verbatim}
+
+\section{Keywords}
+The language uses the following Keywords defined using the following Regular Expressions:
+\begin{verbatim}
+Generic_Keywords:    start halt if for gotomarker gotojump writetolog mkpcb 
+                     mkschematic export echo return
+Physical_Keywords:   phys\.[a-z]+
+Electrical_Keywords: elec\.[a-z]+
+System_Keywords:     syst\.[a-z]+
+\end{verbatim}
+
+\section{Literals}
+For the Lexical Structure of Literals see:  [ NUMBER OF SECTION Types/Type Literals ] Type Literals.
+
+\section{Operators}
+For the Lexical Structure of built in Operators see:  [ NUMBER OF SECTION Operators/Built-in Operators ] Built-in Operators. \\
+User-defined Operators are defined using the following Regular Expressions:
+\begin{verbatim}
+User_1_Arg_Operators     = o\.u\.[_a-zA-Z0-9]+
+User_Binary_Operators    = o\.u\.[_a-zA-Z0-9]+
+\end{verbatim}
+
+\section{Delimiters}
+EDADSL uses the following Delimiters:
+\begin{verbatim}
+"" '' () [] {} . , : |
+\end{verbatim}
+
+\section{Tokenization Rules}
+The Tokenization follows the following Rules: \\
+Longer Matches takes Priority over shorter Matches. \\
+Keywords take Priority over Identifiers. \\
+Whitespace and Comments are discarded.
 
 \chapter{Formal Grammar}
 
 \chapter{Types}
 \section{Type Definitions}
 \subsection{Generic Type Definitions}
+\subsubsection{Boolean Data Type Definition}
+\subsubsection{Scalar Data Type Definition}
+\subsubsection{Set Data Type Definition}
+\subsubsection{String Data Type Definition}
+\subsubsection{List Data Type Definition}
 \subsection{Electrical Type Definitions}
+\subsubsection{Part Data Type Definition}
+\subsubsection{Pin Data Type Definition}
+\subsubsection{Connection Data Type Definition}
+\subsubsection{Net Data Type Definition}
+\subsubsection{E-Set Data Type Definition}
 \section{Type Literals}
+This Section defines Type Literals using Regular Expressions.
 \subsection{Generic Type Literals}
+\subsubsection{Boolean Data Type Literals}
+\subsubsection{Scalar Data Type Literals}
+\subsubsection{Set Data Type Literals}
+\subsubsection{String Data Type Literals}
+\subsubsection{List Data Type Literals}
 \subsection{Electrical Type Literals}
+\subsubsection{Part Data Type Literals}
+\subsubsection{Pin Data Type Literals}
+\subsubsection{Connection Data Type Literals}
+\subsubsection{Net Data Type Literals}
+\subsubsection{E-Set Data Type Literals}
 \section{Type Casting and Coercion}
 \subsection{Generic Type Casting and Coercion}
+\subsubsection{Boolean Data Type Casting and Coercion}
+\subsubsection{Scalar Data Type Casting and Coercion}
+\subsubsection{Set Data Type Casting and Coercion}
+\subsubsection{String Data Type Casting and Coercion}
+\subsubsection{List Data Type Casting and Coercion}
 \subsection{Electrical Type Casting and Coercion}
+\subsubsection{Part Data Type Casting and Coercion}
+\subsubsection{Pin Data Type Casting and Coercion}
+\subsubsection{Connection Data Type Casting and Coercion}
+\subsubsection{Net Data Type Casting and Coercion}
+\subsubsection{E-Set Data Type Casting and Coercion}
 
 \chapter{Variables}
 
@@ -84,8 +204,12 @@ This Document is a full Outline and as of now the authoritative Specification of
 
 \chapter{Operators}
 \section{Built-in Operators}
-\subsection{}
-\section{User defined Operators}
+\subsection{Arithmetic}
+\subsection{Comparison}
+\subsection{Boolean Logic}
+\subsection{Set Algebraic}
+\subsection{Set Comparison}
+\section{User-defined Operators}
 
 \chapter{Constants}
 \section{Built-in Constants}
@@ -94,9 +218,9 @@ This Document is a full Outline and as of now the authoritative Specification of
 \subsubsection{Physical Constants}
 \subsection{Pseudo-Constants}
 \subsubsection{Set Pseudo-Constants}
-\section{User defined Constants}
-\subsection{User defined Proper Constants}
-\subsection{User defined Pseudo-Constants}
+\section{User-defined Constants}
+\subsection{User-defined Proper Constants}
+\subsection{User-defined Pseudo-Constants}
 
 \chapter{Control Flow}
 \section{Conditional Execution}
@@ -107,9 +231,11 @@ This Document is a full Outline and as of now the authoritative Specification of
 \chapter{Functions}
 \section{Built-in Functions}
 \subsection{Mathematical Functions}
-\subsection{Generic Data-manipulation Functions}
-\section{User defined Functions}
-
+\subsection{String Functions}
+\subsection{List and Set Functions}
+\subsection{Shared Functions}
+\section{User-defined Functions}
+%
 
 
 
@@ -122,7 +248,7 @@ This Document is a full Outline and as of now the authoritative Specification of
 \chapter{Constraint Resolution}
 
 \chapter{Type System Rules}
-
+%
 
 
 
@@ -133,7 +259,7 @@ This Document is a full Outline and as of now the authoritative Specification of
 \chapter{Structure of the Electrical System}
 
 \chapter{Structure of the Solver}
-
+%
 
 
 
@@ -141,12 +267,20 @@ This Document is a full Outline and as of now the authoritative Specification of
 \part{Hardware Model}
 \chapter{Circuit Model}
 
-\chapter{Nets, Parts and Pins}
+\chapter{Electrical Objects}
+\section{Nets}
+\section{Parts}
+\section{Pins}
+\section{Connections}
+\section{Models}
+\section{Relationship between the Objects}
 
-\chapter{connections}
-
-\chapter{Quantifiers}
-
+\chapter{Querying}
+\section{Output and Input Quantifiers}
+\section{Net based Querying}
+\section{Tagged Net based Querying}
+\section{Geneneral Querying}
+%
 
 
 
@@ -157,7 +291,7 @@ This Document is a full Outline and as of now the authoritative Specification of
 \chapter{Solver Model}
 
 \chapter{Flags}
-
+%
 
 
 
@@ -172,29 +306,50 @@ This Document is a full Outline and as of now the authoritative Specification of
 \chapter{External Library}
 
 \chapter{Debugging and Logging}
-
+%
 
 
 
 
 \part{Reference}
-
-\chapter{Examples}
-\section{LED Circuit}
-\subsection{Intent}
-\subsection{EDADSL Code}
-\subsection{Explaination}
-
 \chapter{Exceptions}
 
 \chapter{Error and Warning Model}
 
 \chapter{Future Improvements}
 
-\chapter{Implementation}
+\chapter{Implementations}
 
 \chapter{References}
+%
 
-\chapter{Appendices}
+
+
+
+\part{Appendices}
+\chapter{Standard Libraries}
+\section{Material Libraries}
+\subsection{PCB Substrate Material Library}
+\subsection{PCB Conductor Material Library}
+\subsection{PCB Surface-finish Material Library}
+\section{Basic Model Libraries}
+\subsection{Passive Component Model Library}
+\subsection{Active Component Model Library}
+\subsection{Integrated Circuit Component Model Library}
+\subsection{Board Hardware Component Model Library}
+\section{Additional Language Libraries}
+\section{Footprint Libraries}
+
+\chapter{Examples}
+\section{LED Circuit}
+\subsection{Intent}
+\subsection{EDADSL Code}
+\begin{verbatim}
+	#code goes here#
+\end{verbatim}
+\subsection{Explaination}
+
+\chapter{Diagramms}
+\section{Execution-phase Diagramm}
 
 \end{document}
