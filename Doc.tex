@@ -108,17 +108,13 @@ Whitespace                    = [ \t\n\r]+
 Comments are defined using the following Regular Expressions:
 \begin{verbatim}
 Line_Comments                 = "#"[^\n]*
-Multiline_Comments            = "#{" [^"}#"]* "}#"
+Multiline_Comments            = "#{" ... "}#"
 \end{verbatim}
 
 \section{Identifiers}
 Identifiers are defined using the following Regular Expressions:
 \begin{verbatim}
-Variable_Identifiers          =     \$[_a-zA-Z0-9]+
-Built_In_Function_Identifiers =    f\.[_a-zA-Z0-9]+
-User_Function_Identifiers     = f\.u\.[_a-zA-Z0-9]+
-Built_In_Constant_Identifiers =    c\.[_a-zA-Z0-9]+
-User_Constant_Identifiers     = c\.u\.[_a-zA-Z0-9]+
+id                            = [_a-zA-Z0-9]+
 \end{verbatim}
 
 \section{Keywords}
@@ -138,67 +134,206 @@ For the Lexical Structure of Literals see:  [ NUMBER OF SECTION Types/Type Liter
 For the Lexical Structure of built in Operators see:  [ NUMBER OF SECTION Operators/Built-in Operators ] Built-in Operators. \\
 User-defined Operators are defined using the following Regular Expressions:
 \begin{verbatim}
-User_1_Arg_Operators     = o\.u\.[_a-zA-Z0-9]+
-User_Binary_Operators    = o\.u\.[_a-zA-Z0-9]+
+User_Operators     = o\.u\.[_a-zA-Z0-9]+
 \end{verbatim}
 
 \section{Delimiters}
 EDADSL uses the following Delimiters:
 \begin{verbatim}
-"" '' () [] {} . , : |
+() [] {} . , : |
 \end{verbatim}
 
 \section{Tokenization Rules}
 The Tokenization follows the following Rules: \\
-Longer Matches takes Priority over shorter Matches. \\
-Keywords take Priority over Identifiers. \\
+The Lexer uses the Longes Match Rule: in Cases where multiple valid tokizations are possible the longest token is chosen. \\
+If Lexeme matches both a Keyword and an Identifier it is classified as a Keyword. \\
 Whitespace and Comments are discarded.
 
 \chapter{Formal Grammar}
+The Formal Grammar of EDADSL is defined using Extended Backus–Naur form, while Primitives are given using Regular Expressions.
+\section{Primitives}
+The Primitives are defined using Regular Expressions. For more Information on Lexical structure see Part I Chapter 3.
+\begin{verbatim}
+idchar  = [_a-zA-Z0-9]
+id      = [_a-zA-Z0-9]+
+letter  = [a-zA-Z]
+\end{verbatim}
+
+\section{General Grammar}
+\begin{verbatim}
+program                       = "start", { statement }
+
+statement                     = assignment
+                              | flow_control
+                              | function
+                              | electrical_system_statement
+
+assignment                    = variable_assignment          
+                              | constant_assignment
+
+function                      = function_call_built_in
+                              | function_call_ud
+                              | function_definition
+
+flow_control                  = conditional
+                              | iterator
+                              | jump
+                              | halt
+                              | noop
+
+conditional                   = "if", boolean, "::", code_block
+
+iterator                      = "for", variable, "E", list, "::", code_block
+
+jump                          = ( "gotomarker" | "gotojump" ), id
+
+function_definition           = "function", "f.u.", id, "(", [ { id, "," }, id],
+                                ")", "::", "{" f_statement, {f_statement}, "}"
+
+f_statement                   = statement | "return", [data]
+
+function_call_ud              = "f.u.", id, "(", [{ data, "," }, data] ,")"
+
+function_call_built_in        = "f.", id, "(", [{ data, "," }, data] ,")"
+
+variable_assignment           = variable, assigner, [";", "M", "=", boolean]
+
+assigner                      = "B=", boolean_type
+                              | "V=",  scalar_type
+                              | "L=",    list_type
+                              | "W=",  string_type
+                              | "S=",     set_type
+                              | electrical_system_assigner
+
+constant_assignment           = "let", "c.u.", id, assigner, [";", "P", "=", boolean]
+
+
+halt                          = "halt"
+noop                          = "skip"
+
+list                          = "[", [{ data, "," }, data], "]"
+
+variable                      = "$", id
+
+code_block                    = ( statement | "{" statement, {statement} "}" )
+
+data                          = variable
+                              | literal
+                              | constant
+                              | function_call_built_in
+                              | function_call_ud
+                              | expression
+\end{verbatim}
+
+\newpage
+\section{Grammar relating to the electrical System}
+\begin{verbatim}
+electrical_system_statement   = make_statement
+                              | elec_statement
+                              | phys_statement
+                              | syst_statement
+
+electrical_system_assigner    = "P=",       part_type
+                              | "C=", connection_type
+                              | "T=",        pin_type
+                              | "N=",        net_type
+
+make_statement = "make.", ( "pcb" | "schematic" )
+
+elec_statement = "elec.", ( "part", part_reference, ":", model_name, 
+                            "(", model_params, ")", ";", "des", "=", 
+                            string_type, ";", "fp", "=", string_type
+                          | "connect", ( net_type | pin_type ), pin_type,
+                            { pin_type }
+                          | "net", string_type, { string_type }
+                          | "tag", net_type, string_type, { string_type },
+                            ["-remove"]
+
+part_reference = ( string_type | "[", { string_type, "," }, string_type, "]" )
+model_name     = id
+model_params   = [ { id, "=", data, "," }, id, "=", data ]
+
+
+\end{verbatim}
+%""
+%\begin{verbatim}
+%\end{verbatim}
+
 
 \chapter{Types}
-\section{Type Definitions}
-\subsection{Generic Type Definitions}
+This Section defines Type Literals using EBNF and RegEx.
+\section{Generic Types}
+\subsection{Boolean}
 \subsubsection{Boolean Data Type Definition}
-\subsubsection{Scalar Data Type Definition}
-\subsubsection{Set Data Type Definition}
-\subsubsection{String Data Type Definition}
-\subsubsection{List Data Type Definition}
-\subsection{Electrical Type Definitions}
-\subsubsection{Part Data Type Definition}
-\subsubsection{Pin Data Type Definition}
-\subsubsection{Connection Data Type Definition}
-\subsubsection{Net Data Type Definition}
-\subsubsection{E-Set Data Type Definition}
-\section{Type Literals}
-This Section defines Type Literals using Regular Expressions.
-\subsection{Generic Type Literals}
 \subsubsection{Boolean Data Type Literals}
-\subsubsection{Scalar Data Type Literals}
-\subsubsection{Set Data Type Literals}
-\subsubsection{String Data Type Literals}
-\subsubsection{List Data Type Literals}
-\subsection{Electrical Type Literals}
-\subsubsection{Part Data Type Literals}
-\subsubsection{Pin Data Type Literals}
-\subsubsection{Connection Data Type Literals}
-\subsubsection{Net Data Type Literals}
-\subsubsection{E-Set Data Type Literals}
-\section{Type Casting and Coercion}
-\subsection{Generic Type Casting and Coercion}
+\begin{verbatim}
+boolean_literal = "True" | "False"
+\end{verbatim}
 \subsubsection{Boolean Data Type Casting and Coercion}
+\subsection{Scalar}
+\subsubsection{Scalar Data Type Definition}
+\subsubsection{Scalar Data Type Literals}
 \subsubsection{Scalar Data Type Casting and Coercion}
+\subsection{Set}
+\subsubsection{Set Data Type Definition}
+\subsubsection{Set Data Type Literals}
+\begin{verbatim}
+set_literal = "{", [ { electrical_data, ","}, electrical_data ], "}"
+\end{verbatim}
 \subsubsection{Set Data Type Casting and Coercion}
+\subsection{String}
+\subsubsection{String Data Type Definition}
+\subsubsection{String Data Type Literals}
+\begin{verbatim}
+EBNF:
+string_literal = long_string | short_string
+short_string   =   '"', {short_string_item_I},  '"'   |
+                   "'", {short_string_item_II}, "'"
+long_string    = '"""',  {long_string_item_I},  '"""' |
+                 "'''",  {long_string_item_II}, "'''"
+
+RegEx:
+short_string_item_I  = [^"(\\)(\n)]|(\\.)
+short_string_item_II = [^'(\\)(\n)]|(\\.)
+ long_string_item_I  = [^"(\\)]|(\\.)
+ long_string_item_II = [^'(\\)]|(\\.)
+
+\end{verbatim}
 \subsubsection{String Data Type Casting and Coercion}
+\subsection{List}
+\subsubsection{List Data Type Definition}
+\subsubsection{List Data Type Literals}
+\begin{verbatim}
+
+\end{verbatim}
 \subsubsection{List Data Type Casting and Coercion}
-\subsection{Electrical Type Casting and Coercion}
+\section{Electrical Types}
+\subsection{Part}
+\subsubsection{Part Data Type Definition}
+\subsubsection{Part Data Type Literals}
 \subsubsection{Part Data Type Casting and Coercion}
+\subsection{Pin}
+\subsubsection{Pin Data Type Definition}
+\subsubsection{Pin Data Type Literals}
 \subsubsection{Pin Data Type Casting and Coercion}
+\subsection{Connection}
+\subsubsection{Connection Data Type Definition}
+\subsubsection{Connection Data Type Literals}
+\begin{verbatim}
+
+\end{verbatim}
 \subsubsection{Connection Data Type Casting and Coercion}
+\subsection{Net}
+\subsubsection{Net Data Type Definition}
+\subsubsection{Net Data Type Literals}
+\begin{verbatim}
+
+\end{verbatim}
 \subsubsection{Net Data Type Casting and Coercion}
-\subsubsection{E-Set Data Type Casting and Coercion}
+
 
 \chapter{Variables}
+
 
 \chapter{Expressions}
 
@@ -326,7 +461,7 @@ This Section defines Type Literals using Regular Expressions.
 
 
 
-\part{Appendices}
+\appendix
 \chapter{Standard Libraries}
 \section{Material Libraries}
 \subsection{PCB Substrate Material Library}
@@ -347,9 +482,9 @@ This Section defines Type Literals using Regular Expressions.
 \begin{verbatim}
 	#code goes here#
 \end{verbatim}
-\subsection{Explaination}
+\subsection{Explanation}
 
-\chapter{Diagramms}
+\chapter{Diagrams}
 \section{Execution-phase Diagramm}
 
 \end{document}
