@@ -1,0 +1,59 @@
+program = "start", { statement }
+
+statement = assignment
+          | flow_controll
+          | function
+
+assignment = variable_assignment
+           | propper_constant_assignment
+           | pseudo_constant_assignment
+
+fucntion = function_call_built_in
+         | function_call_ud
+         | function_definition
+         | keyword_function_call
+
+flow_controll = conditional
+              | iterator
+              | jump
+              | halt
+              | noop
+
+conditional = "if", boolean, "::", code_block
+
+iterator = "for", variable, "E", list, "::", code_block
+
+jump = ( "gotomarker" | "gotojump" ), id
+
+function_definition = "function", "f.u.", id, "(", ( [ { id, "," }, ] id | ), ")", "::" ( f_statement | "{" f_statement, {f_statement} "}" )
+f_statement = statement | "return", [data]
+
+function_call_ud = "f.u.", id, "(", ( { data, "," }, data | ) ,")"
+
+function_call_built_in = "f.", id, "(", ( { data, "," }, data | ) ,")"
+
+halt = "halt"
+noop = "skip"
+
+list = "[", ( { data, "," }, data | ) ,"]"
+
+variable = "$", id
+
+code_block = ( statement | "{" statement, {statement} "}" )
+
+
+
+
+
+
+
+
+
+
+
+
+Primitives in regex:
+
+idchar = [_a-zA-Z0-9]
+
+id = [_a-zA-Z0-9]+
