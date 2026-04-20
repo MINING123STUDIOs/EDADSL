@@ -1,0 +1,37 @@
+model MOSFET/IRLZ44N:{
+    g -> 1; T = input
+    S -> 2; T = power
+    d -> 3; T = power
+    }
+
+“model“, id, “/“, id, “:“, “{“, pin_entry, {pin_entry}, “}“
+
+pin_entry = id, “->“, id, “;“, “T“, “=“, id
+
+
+
+phys.mktext txt = “text“ font = “Ubuntu mono“ size = 9 material = “cu“ layer = T
+
+“phys.mktext“, “txt“, “=“, string_type, “font“, “=“, string_type, “size“, “=“, scalar_type, “material“, “=“, string_type, “layer“, “=“, layer_reference
+
+
+Model nonpol_C:
+
+model nonpol_c:{
+1 -> 1; T = 
+2 -> 2; T =
+}
+
+model mosfet/C3M0016120K1:{
+pins: 
+g        -> 4; T = input
+s        -> 2; T = power
+d        -> 1; T = power
+kelvin_s -> 3; T = output
+
+des: “1200 V, 125A, 16 mΩ, TO-247-4 LP package, Industrial qualified, Discrete SiC MOSFET“
+
+dts: “https://assets.wolfspeed.com/uploads/2024/06/Wolfspeed_C3M0016120K1_data_sheet.pdf“
+
+fp:  “Package_TO_SOT_THT/TO-247-4_Vertical“
+}
