@@ -97,16 +97,18 @@ This Document is a full Outline and as of now the authoritative Specification of
 
 \chapter{Lexical Structure}
 \section{Character Set}
-EDADSL supports the Full Unicode Character-set.
+EDADSL supports the Full Unicode Character-set, but the Language itself only uses ASCII.
 \section{Whitespace}
 Whitespace is defined using the following Regular Expression:
 \begin{verbatim}
+RegEx:
 Whitespace                    = [ \t\n\r]+
 \end{verbatim}
 
 \section{Comments}
 Comments are defined using the following Regular Expressions:
 \begin{verbatim}
+RegEx:
 Line_Comments                 = "#"[^\n]*
 Multiline_Comments            = "#{" ... "}#"
 \end{verbatim}
@@ -114,6 +116,7 @@ Multiline_Comments            = "#{" ... "}#"
 \section{Identifiers}
 Identifiers are defined using the following Regular Expressions:
 \begin{verbatim}
+RegEx:
 id                            = [_a-zA-Z0-9]+
 \end{verbatim}
 
@@ -256,8 +259,7 @@ model_params   = [ { id, "=", data, "," }, id, "=", data ]
 
 \end{verbatim}
 %""
-%\begin{verbatim}
-%\end{verbatim}
+%\begin{verbatim}\end{verbatim}
 
 
 \chapter{Types}
@@ -273,6 +275,9 @@ boolean_literal = "True" | "False"
 \subsection{Scalar}
 \subsubsection{Scalar Data Type Definition}
 \subsubsection{Scalar Data Type Literals}
+\begin{verbatim}
+
+\end{verbatim}
 \subsubsection{Scalar Data Type Casting and Coercion}
 \subsection{Set}
 \subsubsection{Set Data Type Definition}
@@ -293,24 +298,27 @@ long_string    = '"""',  {long_string_item_I},  '"""' |
                  "'''",  {long_string_item_II}, "'''"
 
 RegEx:
-short_string_item_I  = [^"(\\)(\n)]|(\\.)
-short_string_item_II = [^'(\\)(\n)]|(\\.)
- long_string_item_I  = [^"(\\)]|(\\.)
- long_string_item_II = [^'(\\)]|(\\.)
-
+short_string_item_I  = [^"\\\n)]|(\\.)
+short_string_item_II = [^'\\\n)]|(\\.)
+ long_string_item_I  = [^"\\]|(\\.)
+ long_string_item_II = [^'\\]|(\\.)
 \end{verbatim}
 \subsubsection{String Data Type Casting and Coercion}
 \subsection{List}
 \subsubsection{List Data Type Definition}
 \subsubsection{List Data Type Literals}
 \begin{verbatim}
-
+EBNF:
+list_literal = "[", [{ data, "," }, data], "]"
 \end{verbatim}
 \subsubsection{List Data Type Casting and Coercion}
 \section{Electrical Types}
 \subsection{Part}
 \subsubsection{Part Data Type Definition}
 \subsubsection{Part Data Type Literals}
+\begin{verbatim}
+
+\end{verbatim}
 \subsubsection{Part Data Type Casting and Coercion}
 \subsection{Pin}
 \subsubsection{Pin Data Type Definition}
@@ -340,11 +348,60 @@ short_string_item_II = [^'(\\)(\n)]|(\\.)
 \chapter{Operators}
 \section{Built-in Operators}
 \subsection{Arithmetic}
+List of arithmetic Operators:
+\begin{verbatim}
+n + m  Addition
+n - m  Subtraction
+n * m  Multiplication
+n / m  Division
+n % m  Modulo
+n ^ m  Exponentiation
+\end{verbatim}
 \subsection{Comparison}
-\subsection{Boolean Logic}
-\subsection{Set Algebraic}
+
+\begin{verbatim}
+n <  m Less Than
+n <= m Less or Equal
+b == c Equal
+b != c Not Equal
+n >= m Greater or Equal
+n >  m Greater Than
+\end{verbatim}
+\subsection{Boolean Algebra}
+\begin{verbatim}
+b && c Logical And
+b || c Logical Or
+b ^^ c Logical Xor
+!b     Negation
+\end{verbatim}
+\subsection{Set Algebra}
+\begin{verbatim}
+a u b  Union
+a n b  Intersection
+a / b  Difference
+||a    Cardinality of a
+\end{verbatim}
 \subsection{Set Comparison}
+\begin{verbatim}
+a c b  Checks whether a is a   subset of b
+a E b  Checks whether a is an element of b
+a !E b Checks whether a is not an element of b
+\end{verbatim}
 \section{User-defined Operators}
+\subsection{Definition}
+\begin{verbatim}
+EBNF:
+"letop", "o.u.", id, assigner, data
+\end{verbatim}
+
+Example:
+\begin{verbatim}
+letop o.u.mod_minus_1 V= a % b - 1
+
+print( 4 o.u.mod_minus_1 3 ) # = 0
+\end{verbatim}
+
+
 
 \chapter{Constants}
 \section{Built-in Constants}
@@ -366,9 +423,103 @@ short_string_item_II = [^'(\\)(\n)]|(\\.)
 \chapter{Functions}
 \section{Built-in Functions}
 \subsection{Mathematical Functions}
+\subsubsection{Absolute Value Function}
+The Absolute Value Function ( denoted as \texttt{abs} ) returns the Absolute Value of the Argument or the Magnitude of a Vector. \\
+Morphology of the Absolute Value Function:
+\begin{verbatim}
+EBNF:
+"abs", "(", argument, [ "vec", "=", boolean_data_type ], ")"
+\end{verbatim}
+If the Type of the Argument does not match the expected Type (a Scalar Value) a Value Error is raised.\\
+Example:
+\begin{verbatim}
+abs(-3.2)
+\end{verbatim}
+This Example would return a value of \texttt{3.2}.
+
+The Argument may also be a List of Scalar Values. If This is the case the Function is iterated over each Element.\\
+Example:
+\begin{verbatim}
+abs([-3, 0.2, 0, -7])
+\end{verbatim}
+This Example would return \texttt{[3, 0.2, 0, 7]}. \vspace{5 mm}\\
+If \texttt{vec = True} is passed a List shall be passed as the Argument and the Function will return Magnitude of the List as an n-dimensional Vector, where n is the Length of the List. $\texttt{abs}(\vec{v}\texttt{, vec = True}) = \sqrt{\sum_{i=1}^n\vec{v}_i^2}$. \\
+Example:
+\begin{verbatim}
+abs( [ 3, -4 ], vec = True )
+\end{verbatim}
+This Example would return \texttt{5.0}.
+
+\subsubsection{Signum Function}
+\begin{verbatim}
+
+\end{verbatim}
+\subsubsection{Trigonometric Functions}
+\begin{verbatim}
+
+\end{verbatim}
+\subsubsection{Rounding Functions}
+\begin{verbatim}
+
+\end{verbatim}
+\subsubsection{Exponential Functions and Logarithms}
+\begin{verbatim}
+
+\end{verbatim}
+\subsubsection{Extrema Functions}
+\begin{verbatim}
+
+\end{verbatim}
+
+\begin{verbatim}
+sign   Sign
+sin    Sine
+cos    Cosine
+tan    Tangent
+acos   Inverse cosine
+asin   Inverse sine
+atan   Inverse tangent
+atan2
+floor  Rounding down
+round  Rounding
+ceil   Rounding up
+ln     Natural logarithm
+log    Base 10 logarithm
+pow    1st arg to the power of the 2nd arg
+sqrt   Square root
+exp    e to the power of the arg
+min    Maximum value in a list
+max    Minimum value in a list
+norm   Normalizes a list such that the square root of the sum of all squared elements is eqal to 1
+\end{verbatim}
 \subsection{String Functions}
+\begin{verbatim}
+str    Turns all given arguments into into a string
+format formats a nonstring datatype
+upperc uppercases a string
+lowerc lowercases a string
+\end{verbatim}
 \subsection{List and Set Functions}
+\begin{verbatim}
+concat Turns all arguments into a list.
+set    Turns a list into a set ( only works if the list only contains objects
+       that are allowed in sets. All forbidden objects are dropped with a 
+       Warning )
+list   Turns a set into a list. The order is determined by the order that the 
+       elements appear in *e
+\end{verbatim}
 \subsection{Shared Functions}
+\begin{verbatim}
+len    Length of list or string / size of set
+\end{verbatim}
+\subsection{Special Functions}
+\begin{verbatim}
+print  Prints the arg to the console, similar to echo but has the advantage that 
+       it can directly evaluate certain expressions
+type   Returns the type of an object
+ref    Turns a string containing a part reference into the referenced part
+\end{verbatim}
+
 \section{User-defined Functions}
 %
 
