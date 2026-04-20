@@ -430,7 +430,7 @@ Morphology of the Absolute Value Function:
 EBNF:
 "abs", "(", argument, [ ",", "vec", "=", boolean_data_type ], ")"
 \end{verbatim}
-If the Type of the Argument does not match the expected Type (a Scalar Value or List only containing Scalar Values) a Value Error is raised.\\
+If the Type of the Argument does not match the expected Type (a Scalar Value or a List of Scalar Values) a Value Error is raised.\\
 Example:
 \begin{verbatim}
 abs(-3.2)
@@ -443,7 +443,7 @@ Example:
 abs([-3, 0.2, 0, -7])
 \end{verbatim}
 This Example would return \texttt{[3, 0.2, 0, 7]}. \vspace{5 mm}\\
-If \texttt{vec = True} is passed a List shall be passed as the Argument and the Function will return Magnitude of the List as an n-dimensional Vector, where n is the Length of the List. $\texttt{abs}(\vec{v}\texttt{, vec = True}) = \sqrt{\sum_{i=1}^nv_i^2}$. \\
+If \texttt{vec = True} is passed a List shall be passed as the Argument and the Function will return Magnitude of the List as an n-dimensional Vector, where n is the Length of the List.\\ %$\texttt{abs}(\vec{v}\texttt{, vec = True}) = \sqrt{\sum_{i=1}^nv_i^2}$. 
 Example:
 \begin{verbatim}
 abs( [ 3, -4 ], vec = True )
@@ -453,12 +453,12 @@ There are no Domain-Restrictions for the function inside $\mathbb{R}^n$.
 
 \subsubsection{Signum Function}
 The Signum Function ( denoted as \texttt{sign} ) returns the Sign of the Argument. \\
-Morphology of the Absolute Value Function:
+Morphology of the Signum Function:
 \begin{verbatim}
 EBNF:
 "sign", "(", argument, ")"
 \end{verbatim}
-If the Type of the Argument does not match the expected Type (a Scalar Value or List only containing Scalar Values) a Value Error is raised.\\
+If the Type of the Argument does not match the expected Type (a Scalar Value or a List of Scalar Values) a Value Error is raised.\\
 Example:
 \begin{verbatim}
 sign(-3.2)
@@ -468,15 +468,42 @@ This Example would return a value of \texttt{-1}.
 The Argument may also be a List of Scalar Values. If This is the case the Function is iterated over each Element.\\
 Example:
 \begin{verbatim}
-abs([-3, 0.2, 0, -7])
+sign([-3, 0.2, 0, -7])
 \end{verbatim}
 This Example would return \texttt{[-1, 1, 0, -1]}.\\
 There are no Domain-Restrictions for the function inside $\mathbb{R}^n$.
 
 
-\subsubsection{Trigonometric Functions}
+\subsubsection{Regular Trigonometric Functions}
+Important: Angles are given in Radians by Default!\\
+The Regular Trigonometric Functions (Sine, Cosine and Tangent) ( denoted as \texttt{sin, cos, tan} ) return the Sine Cosine and Tangent of the Argument. \\
+Morphology of the Trigonometric Functions:
+\begin{verbatim}
+EBNF:
+( "sin" | "cos" | "tan" ), "(", argument, [ ",", "unit", "=", unit ] ")"
 
+unit = ( ( "'", ("rad" | "deg" ), "'" ) | ( '"', ("rad" | "deg" ), '"' ) )
+\end{verbatim}
+If the Type of the Argument does not match the expected Type (a Scalar Value or a List of Scalar Values) a Value Error is raised.\\
+Example:
+\begin{verbatim}
+sin(1.570796327)
+\end{verbatim}
+This Example would return a value of around \texttt{1}.
 
+The Argument may also be a List of Scalar Values. If This is the case the Function is iterated over each Element.\\
+Example:
+\begin{verbatim}
+sin([0, 30, 90], unit = "deg" )
+\end{verbatim}
+This Example would return \texttt{[0, 0.5, 1]}.\\
+For Sine and Cosine there are no Domain-Restrictions for the functions inside $\mathbb{R}^n$. \\
+For Tangent there are Domain-Restrictions inside $\mathbb{R}^n$.\\
+It is only defined for $(\mathbb{R} \backslash \{ n\pi\cdot 1\text{rad} : n \in \mathbb{Z} \} )^n$
+
+\subsubsection{Regular Inverse Trigonometric Functions}
+\subsubsection{Hyperbolic Trigonometric Functions}
+\subsubsection{Hyperbolic Inverse Trigonometric Functions}
 \subsubsection{Rounding Functions}
 \begin{verbatim}
 
@@ -491,10 +518,6 @@ There are no Domain-Restrictions for the function inside $\mathbb{R}^n$.
 \end{verbatim}
 
 \begin{verbatim}
-sign   Sign
-sin    Sine
-cos    Cosine
-tan    Tangent
 acos   Inverse cosine
 asin   Inverse sine
 atan   Inverse tangent
