@@ -428,9 +428,9 @@ The Absolute Value Function ( denoted as \texttt{abs} ) returns the Absolute Val
 Morphology of the Absolute Value Function:
 \begin{verbatim}
 EBNF:
-"abs", "(", argument, [ "vec", "=", boolean_data_type ], ")"
+"abs", "(", argument, [ ",", "vec", "=", boolean_data_type ], ")"
 \end{verbatim}
-If the Type of the Argument does not match the expected Type (a Scalar Value) a Value Error is raised.\\
+If the Type of the Argument does not match the expected Type (a Scalar Value or List only containing Scalar Values) a Value Error is raised.\\
 Example:
 \begin{verbatim}
 abs(-3.2)
@@ -443,21 +443,40 @@ Example:
 abs([-3, 0.2, 0, -7])
 \end{verbatim}
 This Example would return \texttt{[3, 0.2, 0, 7]}. \vspace{5 mm}\\
-If \texttt{vec = True} is passed a List shall be passed as the Argument and the Function will return Magnitude of the List as an n-dimensional Vector, where n is the Length of the List. $\texttt{abs}(\vec{v}\texttt{, vec = True}) = \sqrt{\sum_{i=1}^n\vec{v}_i^2}$. \\
+If \texttt{vec = True} is passed a List shall be passed as the Argument and the Function will return Magnitude of the List as an n-dimensional Vector, where n is the Length of the List. $\texttt{abs}(\vec{v}\texttt{, vec = True}) = \sqrt{\sum_{i=1}^nv_i^2}$. \\
 Example:
 \begin{verbatim}
 abs( [ 3, -4 ], vec = True )
 \end{verbatim}
-This Example would return \texttt{5.0}.
+This Example would return \texttt{5.0}.\\
+There are no Domain-Restrictions for the function inside $\mathbb{R}^n$.
 
 \subsubsection{Signum Function}
+The Signum Function ( denoted as \texttt{sign} ) returns the Sign of the Argument. \\
+Morphology of the Absolute Value Function:
 \begin{verbatim}
-
+EBNF:
+"sign", "(", argument, ")"
 \end{verbatim}
+If the Type of the Argument does not match the expected Type (a Scalar Value or List only containing Scalar Values) a Value Error is raised.\\
+Example:
+\begin{verbatim}
+sign(-3.2)
+\end{verbatim}
+This Example would return a value of \texttt{-1}.
+
+The Argument may also be a List of Scalar Values. If This is the case the Function is iterated over each Element.\\
+Example:
+\begin{verbatim}
+abs([-3, 0.2, 0, -7])
+\end{verbatim}
+This Example would return \texttt{[-1, 1, 0, -1]}.\\
+There are no Domain-Restrictions for the function inside $\mathbb{R}^n$.
+
+
 \subsubsection{Trigonometric Functions}
-\begin{verbatim}
 
-\end{verbatim}
+
 \subsubsection{Rounding Functions}
 \begin{verbatim}
 
