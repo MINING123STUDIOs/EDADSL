@@ -407,7 +407,11 @@ print( 4 o.u.mod_minus_1 3 ) # = 0
 \section{Built-in Constants}
 \subsection{Proper Constants}
 \subsubsection{Mathematical Constants}
+c.pi
+c.e
 \subsubsection{Physical Constants}
+c.eps0
+c.mu0
 \subsection{Pseudo-Constants}
 \subsubsection{Set Pseudo-Constants}
 \section{User-defined Constants}
@@ -475,14 +479,15 @@ There are no Domain-Restrictions for the function inside $\mathbb{R}^n$.
 
 
 \subsubsection{Regular Trigonometric Functions}
-Important: Angles are given in Radians by Default!\\
-The Regular Trigonometric Functions (Sine, Cosine and Tangent) ( denoted as \texttt{sin, cos, tan} ) return the Sine Cosine and Tangent of the Argument. \\
+Important: Angles are interpreted as Radians by Default.\\
+The Regular Trigonometric Functions (Sine, Cosine and Tangent) ( denoted as \texttt{sin, cos, tan} ) return the Sine, Cosine, or Tangent of the Argument. \\
 Morphology of the Trigonometric Functions:
 \begin{verbatim}
 EBNF:
-( "sin" | "cos" | "tan" ), "(", argument, [ ",", "unit", "=", unit ] ")"
+( "sin" | "cos" | "tan" ), "(", argument, [ ",", "unit", "=", unit ], ")"
 
-unit = ( ( "'", ("rad" | "deg" ), "'" ) | ( '"', ("rad" | "deg" ), '"' ) )
+unit = ( "'", ("rad" | "deg" ), "'" )
+     | ( '"', ("rad" | "deg" ), '"' )
 \end{verbatim}
 If the Type of the Argument does not match the expected Type (a Scalar Value or a List of Scalar Values) a Value Error is raised.\\
 Example:
@@ -499,11 +504,92 @@ sin([0, 30, 90], unit = "deg" )
 This Example would return \texttt{[0, 0.5, 1]}.\\
 For Sine and Cosine there are no Domain-Restrictions for the functions inside $\mathbb{R}^n$. \\
 For Tangent there are Domain-Restrictions inside $\mathbb{R}^n$.\\
-It is only defined for $(\mathbb{R} \backslash \{ n\pi\cdot 1\text{rad} : n \in \mathbb{Z} \} )^n$
+It is only defined for $\{x \in \mathbb{R}: \cos x \neq 0 \}^n$
 
 \subsubsection{Regular Inverse Trigonometric Functions}
-\subsubsection{Hyperbolic Trigonometric Functions}
-\subsubsection{Hyperbolic Inverse Trigonometric Functions}
+Important: Angles are interpreted as Radians by Default.\\
+The Regular Inverse Trigonometric Functions (Arcsine, Arccosine and Arctangent) ( denoted as \texttt{asin, acos, atan}, \texttt{arsin, arcos, artan} or \texttt{arcsin, arccos, arctan} ) return the Inverse for the Sine, Cosine, or Tangent of the Argument. \\
+Morphology of the Trigonometric Functions:
+\begin{verbatim}
+EBNF:
+inverses_trig_functions, "(", argument, [ ",", "unit", "=", unit ], ")"
+
+inverses_trig_functions =   "asin" |   "acos" |   "atan" 
+                        |  "arsin" |  "arcos" |  "artan"
+                        | "arcsin" | "arccos" | "arctan"
+
+
+unit = ( "'", ("rad" | "deg" ), "'" )
+     | ( '"', ("rad" | "deg" ), '"' )
+\end{verbatim}
+If the Type of the Argument does not match the expected Type (a Scalar Value or a List of Scalar Values) a Value Error is raised.\\
+Example:
+\begin{verbatim}
+asin(1)
+\end{verbatim}
+This Example would return a value of around \texttt{1.570796327}.
+
+The Argument may also be a List of Scalar Values. If This is the case the Function is iterated over each Element.\\
+Example:
+\begin{verbatim}
+arcsin([0, 0.5, 1], unit = "deg" )
+\end{verbatim}
+This Example would return \texttt{[0, 30, 90]}.\\
+For Arctangent there is no Domain-Restrictions for the functions inside $\mathbb{R}^n$. \\
+For Arcsine and Arccosine the Domain is Restricted to $[0,1]^n$.\\
+
+\subsubsection{Inverse Tangent Function based on a Vector Argument}
+
+\newpage
+\subsubsection{Hyperbolic Functions}
+The Hyperbolic Functions (Hyperbolic Sine, Hyperbolic Cosine and Hyperbolic Tangent) ( denoted as \texttt{sinh, cosh, tanh} ) return the Hyperbolic Sine, Hyperbolic Cosine, or Hyperbolic Tangent of the Argument. \\
+Morphology of the Hyperbolic Functions:
+\begin{verbatim}
+EBNF:
+( "sinh" | "cosh" | "tanh" ), "(", argument, ")"
+\end{verbatim}
+If the Type of the Argument does not match the expected Type (a Scalar Value or a List of Scalar Values) a Value Error is raised.\\
+Example:
+\begin{verbatim}
+sinh(1.443635475)
+\end{verbatim}
+This Example would return a value of around \texttt{2}.
+
+The Argument may also be a List of Scalar Values. If This is the case the Function is iterated over each Element.\\
+Example:
+\begin{verbatim}
+sinh([0, 1, 2] )
+\end{verbatim}
+This Example would return around \texttt{[0, 1.175, 3.627]}.\\
+There are no Domain-Restrictions for the functions inside $\mathbb{R}^n$.
+
+\subsubsection{Hyperbolic Inverse Functions}
+The Hyperbolic Inverse Functions (Hyperbolic Arcsine, Hyperbolic Arccosine and Hyperbolic Arctangent) ( denoted as \texttt{asinh, acosh, atanh}, \texttt{arsinh, arcosh, artanh} or \texttt{arcsinh, arccosh, arctanh} ) return the Inverse for the Hyperbolic Sine, Hyperbolic Cosine, or Hyperbolic Tangent of the Argument. \\
+Morphology of the Hyperbolic Functions:
+\begin{verbatim}
+EBNF:
+inverses_hypb_functions, "(", argument, ")"
+
+inverses_hypb_functions =   "asinh" |   "acosh" |   "atanh" 
+                        |  "arsinh" |  "arcosh" |  "artanh"
+                        | "arcsinh" | "arccosh" | "arctanh"
+\end{verbatim}
+If the Type of the Argument does not match the expected Type (a Scalar Value or a List of Scalar Values) a Value Error is raised.\\
+Example:
+\begin{verbatim}
+asinh(1)
+\end{verbatim}
+This Example would return a value of around \texttt{0.881373587}.
+
+The Argument may also be a List of Scalar Values. If This is the case the Function is iterated over each Element.\\
+Example:
+\begin{verbatim}
+arcsinh( [0, 0.5, 1] )
+\end{verbatim}
+This Example would return \texttt{[0, 0.481, 0.881]}.\\
+For the Hyperbolic Arcsine there is no Domain-Restrictions for the function inside $\mathbb{R}^n$. \\
+For Hyperbolic Arctangent and Hyperbolic Arccosine the Domain is Restricted to $(-1,1)^n$ and $[1,\infty)^n$ respektively.\\
+
 \subsubsection{Rounding Functions}
 \begin{verbatim}
 
@@ -518,9 +604,6 @@ It is only defined for $(\mathbb{R} \backslash \{ n\pi\cdot 1\text{rad} : n \in 
 \end{verbatim}
 
 \begin{verbatim}
-acos   Inverse cosine
-asin   Inverse sine
-atan   Inverse tangent
 atan2
 floor  Rounding down
 round  Rounding
