@@ -218,7 +218,7 @@ list                          = "[", [{ data, "," }, data], "]"
 
 variable                      = "$", id
 
-code_block                    = ( statement | "{" statement, {statement} "}" )
+code_block                    = "{" statement, {statement} "}"
 
 data                          = variable
                               | literal
