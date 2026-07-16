@@ -185,7 +185,7 @@ id                            = [_a-zA-Z0-9]+
 The language uses the following Keywords defined using the following Regular Expressions:
 \begin{verbatim}
 Generic_Keywords:    start halt if for gotomarker gotojump 
-                     writetolog mkpcb mkschematic export 
+                     writetolog make.pcb make.schematic export 
                      echo return let skip
 
 Physical_Keywords:   phys\.[a-z]+
@@ -193,7 +193,8 @@ Physical_Keywords:   phys\.[a-z]+
                      phys.prox  phys.creep  phys.layer
                      phys.side  phys.shrinknet  phys.mkplane
                      phys.viafill  phys.connectioncurrent
-                     phys.align  phys.connmatch
+                     phys.align  phys.connmatch  phys.board
+                     phys.mktext
 
 Electrical_Keywords: elec\.[a-z]+
                      Known Electrical Keywords:
@@ -228,6 +229,21 @@ The Lexer uses the Longes Match Rule: in Cases where multiple valid tokizations 
 If Lexeme matches both a Keyword and an Identifier it is classified as a Keyword. \\
 Whitespace and Comments are discarded.
 
+\section{Statement Separators}
+Statements within a code block are separated by implicit newlines. The \texttt{\%N} token acts as an explicit statement separator, allowing multiple statements on a single line:
+\begin{verbatim}
+# These are equivalent:
+::{
+    f.print("a")
+    f.print("b")
+}
+
+::{
+    f.print("a") %N f.print("b")
+}
+\end{verbatim}
+The \texttt{\%N} token is primarily useful inside inline code blocks where writing multiple lines is impractical.
+
 \chapter{Formal Grammar}
 The Formal Grammar of EDADSL is defined using Extended Backus–Naur form, while Primitives are given using Regular Expressions.
 \section{Primitives}
@@ -240,12 +256,15 @@ letter  = [a-zA-Z]
 
 \section{General Grammar}
 \begin{verbatim}
-program                       = "start", { statement }
+program                       = "start", { statement, 
+                                { ("%N" | newline) } }
 
 statement                     = assignment
                               | flow_control
                               | function
                               | electrical_system_statement
+                              | compound_assignment
+                              | postfix_expression
 
 assignment                    = variable_assignment          
                               | constant_assignment
@@ -260,9 +279,10 @@ flow_control                  = conditional
                               | halt
                               | noop
 
-conditional                   = "if", boolean, "::", code_block
+conditional                   = "if", boolean, "::", code_block,
+                              ["else", "::", code_block]
 
-iterator                      = "for", variable, "E", list, "::", code_block
+iterator                      = "for", variable, "E", (list | set), "::", code_block
 
 jump                          = ( "gotomarker" | "gotojump" ), id
 
@@ -277,13 +297,18 @@ function_call_ud              = "f.u.", id, "(", [{ data, "," }, data] ,")"
 
 function_call_built_in        = "f.", id, "(", [{ data, "," }, data] ,")"
 
-variable_assignment           = variable, assigner, [";", "M", "=", boolean]
+variable_assignment           = variable, (typed_assign | inferred_assign),
+                                [";", "M", "=", boolean]
 
-assigner                      = "B=", boolean_type
-                              | "V=",  scalar_type
-                              | "L=",    list_type
-                              | "W=",  string_type
-                              | "S=",     set_type
+typed_assign                  = assigner
+inferred_assign               = "t", "=", data
+
+assigner                      = "[bool]=",   boolean_type
+                              | "[int]=",     int_type
+                              | "[real]=",    real_type
+                              | "[list]=",    list_type
+                              | "[string]=",  string_type
+                              | "[set]=",     set_type
                               | electrical_system_assigner
 
 constant_assignment = "let", "c.u.", id, assigner, 
@@ -297,7 +322,8 @@ list                          = "[", [{ data, "," }, data], "]"
 
 variable                      = "$", id
 
-code_block                    = "{" statement, {statement} "}"
+code_block                    = "{", statement, 
+                                { ("%N" | newline), statement }, "}"
 
 data                          = variable
                               | literal
@@ -315,32 +341,117 @@ electrical_system_statement   = make_statement
                               | phys_statement
                               | syst_statement
 
-electrical_system_assigner    = "P=",       part_type
-                              | "C=", connection_type
-                              | "T=",        pin_type
-                              | "N=",        net_type
+electrical_system_assigner    = "[part]=", part_type
+                              | "[connection]=", connection_type
+                              | "[pin]=", pin_type
+                              | "[net]=", net_type
+\end{verbatim}
 
-make_statement = "make.", ( "pcb" | "schematic" )
+\subsection{Make Statement}
+\begin{verbatim}
+make_statement = "make.", ("pcb" | "schematic")
+\end{verbatim}
 
-elec_statement = "elec.", 
-  ( "part", part_reference, ":", model_name, 
-    "(", model_params, ")", ";", "des", "=", 
-    string_type, ";", "fp", "=", string_type
-  | "connect", ( net_type | pin_type ), 
+\subsection{Electrical Statements}
+\begin{verbatim}
+elec_statement = "elec.",
+  ( "part", part_reference, ":", model_name,
+    "(", [model_params], ")",
+    [";", "des", "=", string_type],
+    [";", "fp", "=", string_type]
+  | "connect", (net_type | pin_type),
     pin_type, { pin_type }
   | "net", string_type, { string_type }
-  | "tag", net_type, string_type, 
+  | "tag", net_type, string_type,
     { string_type }, ["-remove"]
+  | "untag", net_type, string_type,
+    { string_type }
+  )
 
-part_reference = string_type | 
-                 "[", { string_type, "," }, string_type, "]"
+part_reference = string_type
+               | "[", { string_type, "," }, string_type, "]"
+
 model_name     = id
-model_params   = [ { id, "=", data, "," }, id, "=", data ]
-
-
+model_params   = [{ id, "=", data, "," }, id, "=", data]
 \end{verbatim}
-%""
-%\begin{verbatim}\end{verbatim}
+
+\subsection{Physical Constraints}
+\begin{verbatim}
+phys_statement = phys_prox | phys_creep | phys_layer
+               | phys_side | phys_board | phys_shrinknet
+               | phys_mkplane | phys_viafill
+               | phys_connectioncurrent | phys_align
+               | phys_connmatch | phys_mktext
+
+phys_prox   = "phys.prox", set,
+              ( set, "min", real, "max", real
+              | "minim" ), priority
+
+phys_creep  = "phys.creep", set, set,
+              "d", real, priority
+
+phys_layer  = "phys.layer", set, layer_ref, priority
+
+phys_side   = "phys.side", set, layer_ref, priority
+
+phys_board  = "phys.board",
+              "N=", int,
+              "T=", list,
+              "W=", list,
+              ["M=", list]
+
+phys_shrinknet = "phys.shrinknet", net, priority
+
+phys_mkplane   = "phys.mkplane", layer_ref, net
+
+phys_viafill   = "phys.viafill", pad,
+              "v", real, "d", real,
+              ["p", pattern]
+
+phys_connectioncurrent = "phys.connectioncurrent",
+              (connection | set), real, priority
+
+phys_align  = "phys.align", list,
+              "axis", ("x" | "y"),
+              "d", real, priority
+
+phys_connmatch = "phys.connmatch",
+              match_property, set, priority
+
+phys_mktext = "phys.mktext",
+              "txt", string,
+              ["font", string],
+              ["size", real],
+              ["material", string],
+              ["layer", layer_ref]
+\end{verbatim}
+
+\subsection{System Statements}
+\begin{verbatim}
+syst_statement = syst_flag | syst_cm | syst_alg
+
+syst_flag = "syst.flag.", flag_name, real
+
+syst_cm   = "syst.cm.calc",
+            ("approx" | "calculus" | "hybrid")
+
+syst_alg  = "syst.alg", id
+\end{verbatim}
+
+\subsection{Common Rules}
+\begin{verbatim}
+layer_ref      = int | "T" | "B"
+priority       = ["-d" | "-nth" | "-imp" | "-vimp"
+                | "-oeo" | "-eo" | "-ne"]
+pattern        = "grid" | "hex" | "stagger"
+               | "radial" | "random"
+match_property = "l" | "res" | "L" | "cap"
+               | "imp" | "t"
+flag_name      = "vias" | "slots" | "jumpers"
+               | "solder_reinforced_tracks"
+               | "buried_vias"
+               | "approx_eps" | "approx_eps_mult"
+\end{verbatim}
 
 
 \chapter{Types}
@@ -359,32 +470,23 @@ boolean_literal = "True" | "False"
 \subsubsection{Boolean Data Type Casting and Coercion}
 Boolean values can be coerced from other types:
 \begin{itemize}
-\item Scalar values coerce to \texttt{False} if zero, \texttt{True} otherwise
+\item Int and real values coerce to \texttt{False} if zero, \texttt{True} otherwise
 \item Strings coerce to \texttt{False} if empty, \texttt{True} otherwise
 \item Lists and Sets coerce to \texttt{False} if empty, \texttt{True} otherwise
 \item \texttt{None} coerces to \texttt{False}
 \end{itemize}
 Explicit conversion is not supported; boolean evaluation is implicit in conditional contexts.
-\subsection{Scalar}
-\subsubsection{Scalar Data Type Definition}
-The Scalar data type represents real numbers (elements of $\mathbb{R}$). Scalars support standard arithmetic operations and can express values from very small (quecto-scale, $10^{-30}$) to very large (quetta-scale, $10^{30}$) using SI decimal prefixes.
-\subsubsection{Scalar Data Type Literals}
-Scalar literals can be expressed in multiple formats:
+\subsection{Integer}
+\subsubsection{Integer Data Type Definition}
+The Integer data type represents whole numbers (elements of $\mathbb{Z}$). Integers support standard arithmetic operations and can express values from very large negative to very large positive using SI decimal prefixes (kilo and above).
+\subsubsection{Integer Data Type Literals}
+Integer literals can be expressed in multiple formats:
 \begin{verbatim}
 EBNF:
-scalar_literal = decimal_literal | binary_literal 
-               | octal_literal | hex_literal
+int_literal = decimal_int | binary_literal 
+            | octal_literal | hex_literal
 
-decimal_literal  = prefixless_decimal | prefixed_decimal
-prefixless_decimal = ["+" | "-"], digit, {digit}, 
-                     [".", {digit}]
-                   | ["+" | "-"], ".", digit, {digit}
-                   | ["+" | "-"], digit, {digit}, 
-                     ("e" | "E"), ["+" | "-"], digit, 
-                     {digit}
-
-prefixed_decimal = prefix, digit, {digit}
-prefix           = "0b" | "0o" | "0d" | "0x"
+decimal_int = ["+" | "-"], digit, {digit}
 
 binary_literal   = "0b", bindigit, {bindigit}
 octal_literal    = "0o", octdigit, {octdigit}
@@ -397,7 +499,63 @@ octdigit  = [0-7]
 hexdigit  = [0-9a-fA-F]
 \end{verbatim}
 
-Additionally, SI decimal prefixes may be appended to any numeric literal:
+SI prefixes >= k produce integers:
+\begin{verbatim}
+6.2k    # = 6200 (int)
+1M      # = 1000000 (int)
+-5e9    # = -5000000000 (int)
+4Q      # = 4e30 (int)
+\end{verbatim}
+
+Binary, octal, and hex literals always produce integers:
+\begin{verbatim}
+0x10    # = 16
+0b1010  # = 10
+0o17    # = 15
+\end{verbatim}
+
+\subsubsection{Integer Data Type Casting and Coercion}
+Integers can be coerced from other types:
+\begin{itemize}
+\item Booleans coerce to \texttt{0} (False) or \texttt{1} (True)
+\item Numeric strings with no decimal point are parsed as integers (e.g., \texttt{"42"} becomes \texttt{42})
+\item \texttt{real} values are truncated (e.g., \texttt{int(3.7)} becomes \texttt{3})
+\end{itemize}
+
+\subsection{Real}
+\subsubsection{Real Data Type Definition}
+The Real data type represents floating-point numbers (elements of $\mathbb{R}$). Reals support standard arithmetic operations and can express values from very small (quecto-scale, $10^{-30}$) to very large (quetta-scale, $10^{30}$) using SI decimal prefixes.
+\subsubsection{Real Data Type Literals}
+Real literals can be expressed in multiple formats:
+\begin{verbatim}
+EBNF:
+real_literal = decimal_real | scientific_real
+
+decimal_real   = ["+" | "-"], digit, {digit}, ".", {digit}
+               | ["+" | "-"], ".", digit, {digit}
+
+scientific_real = ["+" | "-"], digit, {digit}, 
+                  ["." , {digit}], ("e" | "E"), 
+                  ["+" | "-"], digit, {digit}
+\end{verbatim}
+
+A literal with a decimal point or scientific notation produces a real, even if the fractional part is zero:
+\begin{verbatim}
+3.14    # = 3.14 (real)
+42.0    # = 42.0 (real)
+42e0    # = 42.0 (real)
+.4      # = 0.4 (real)
+2e-6    # = 0.000002 (real)
+\end{verbatim}
+
+SI prefixes below k produce reals:
+\begin{verbatim}
+100n    # = 0.0000001 (real)
+1m      # = 0.001 (real)
+5c      # = 0.05 (real)
+\end{verbatim}
+
+The full SI prefix table:
 \begin{verbatim}
 SI_Prefixes:
 q  1e-30  quecto     Q  1e+30  quetta
@@ -414,36 +572,22 @@ c  1e-2   centi
 d  1e-1   deci
 \end{verbatim}
 
-Examples:
-\begin{verbatim}
-0       # = 0
-700     # = 700
--35     # = -35
-.4      # = 0.4
-+80     # = 80
-6.94    # = 6.94
-2e-6    # = 0.000002
--5e9    # = -5000000000
-100n    # = 0.0000001
-6.2k    # = 6200
-4Q      # = 4e30
-0x10    # = 16
-0b1010  # = 10
-0o17    # = 15
-\end{verbatim}
-\subsubsection{Scalar Data Type Casting and Coercion}
-Scalars can be coerced from other types:
+Prefixes >= k produce integers. Prefixes < k produce reals.
+
+\subsubsection{Real Data Type Casting and Coercion}
+Reals can be coerced from other types:
 \begin{itemize}
-\item Booleans coerce to \texttt{0} (False) or \texttt{1} (True)
-\item Numeric strings are parsed as scalars (e.g., \texttt{"42"} becomes \texttt{42})
+\item Integers coerce to real (e.g., \texttt{real(5)} becomes \texttt{5.0})
+\item Booleans coerce to \texttt{0.0} (False) or \texttt{1.0} (True)
+\item Numeric strings with a decimal point are parsed as reals (e.g., \texttt{"3.14"} becomes \texttt{3.14})
 \item Non-numeric strings raise a type error
 \end{itemize}
-Lists of scalars can be passed to mathematical functions, which operate element-wise.
+Lists of ints or reals can be passed to mathematical functions, which operate element-wise.
 \subsection{Set}
 \subsubsection{Set Data Type Definition}
 A Set is an unordered collection of unique elements. Sets can contain any data type:
 \begin{itemize}
-\item Scalars (numbers)
+\item Integers and reals (numbers)
 \item Strings
 \item Booleans
 \item Lists
@@ -463,17 +607,17 @@ set_literal = "{", [ { data, ","}, data ], "}"
 
 Examples:
 \begin{verbatim}
-$f.numbers [set]= { 1, 2, 3, 4, 5 }
-$f.mixed [set]= { 1, "hello", True, Q1 }
-$f.parts [set]= { Q1, Q2, R3 }
+$numbers [set]= { 1, 2, 3, 4, 5 }
+$mixed [set]= { 1, "hello", True, Q1 }
+$parts [set]= { Q1, Q2, R3 }
 \end{verbatim}
 
 \subsubsection{Set Data Type Casting and Coercion}
 Sets can be created from Lists using the \texttt{f.set()} function. When converting a List to a Set, duplicate elements are removed and order is lost.\\
 Example:
 \begin{verbatim}
-$f.my_list [list]= [ 1, 2, 2, 3, 3, 3 ]
-$f.my_set [set]= f.set( $my_list )  # { 1, 2, 3 }
+$my_list [list]= [ 1, 2, 2, 3, 3, 3 ]
+$my_set [set]= f.set( $my_list )  # { 1, 2, 3 }
 \end{verbatim}
 Sets can be converted to Lists using the \texttt{f.list()} function. The order of elements in the resulting List is determined by the order they appear in the global set \texttt{*e}.
 \subsection{String}
@@ -498,7 +642,7 @@ short_string_item_II = [^'\\\n)]|(\\.)
 Strings can be created from other types using the \texttt{f.str()} function, which concatenates all arguments into a single string.\\
 Example:
 \begin{verbatim}
-$f.msg [string]= f.str( "The value is ", 42, 
+$msg [string]= f.str( "The value is ", 42, 
     " and color is ", "red" )
 # $msg = "The value is 42 and color is red"
 \end{verbatim}
@@ -521,9 +665,9 @@ Lists support range generation using the syntax:
 \end{verbatim}
 Examples:
 \begin{verbatim}
-$f.r1 [list]= [0:2:10]      # [0, 2, 4, 6, 8, 10]
-$f.r2 [list]= [0:5]         # [0, 1, 2, 3, 4, 5]
-$f.r3 [list]= [0|1|5]       # [0, 0.25, 0.5, 0.75, 1]
+$r1 [list]= [0:2:10]      # [0, 2, 4, 6, 8, 10]
+$r2 [list]= [0:5]         # [0, 1, 2, 3, 4, 5]
+$r3 [list]= [0|1|5]       # [0, 0.25, 0.5, 0.75, 1]
 \end{verbatim}
 \section{Electrical Types}
 \subsection{Part}
@@ -633,19 +777,32 @@ Variables in EDADSL are prefixed with the \texttt{\$} character and are assigned
 Variables are declared and assigned simultaneously using the following syntax:
 \begin{verbatim}
 EBNF:
-variable          = "$", id
-variable_assignment = variable, "[", type, "]", "=", 
-                      data, [";", "M", "=", boolean]
+variable            = "$", id
+variable_assignment = variable, (typed_assign | inferred_assign),
+                      [",", "M", "=", boolean]
 
-type              = "bool" | "scalar" | "list" | "string" 
-                  | "set" | "part" | "connection" | "pin" 
-                  | "net"
+typed_assign        = "[", type, "]", "=", data
+inferred_assign     = "t", "=", data
+
+type                = "bool" | "int" | "real" | "list" | "string" 
+                    | "set" | "part" | "connection" | "pin" 
+                    | "net"
+\end{verbatim}
+
+\subsection{Type-Inferred Assignment}
+As syntax sugar, \texttt{\$var t= val} is equivalent to \texttt{\$var [type(val)]= val}. The type is inferred from the value at assignment time.
+\begin{verbatim}
+$a t= 3              # Equivalent to $a [int]= 3
+$name t= "EDADSL"    # Equivalent to $name [string]= "EDADSL"
+$flag t= True        # Equivalent to $flag [bool]= True
+$colors t= [1, 2, 3] # Equivalent to $colors [list]= [1, 2, 3]
 \end{verbatim}
 
 The type determines the variable's data type:
 \begin{itemize}
 \item \texttt{bool} -- Boolean
-\item \texttt{scalar} -- Scalar
+\item \texttt{int} -- Integer
+\item \texttt{real} -- Real
 \item \texttt{list} -- List
 \item \texttt{string} -- String
 \item \texttt{set} -- Set
@@ -658,8 +815,8 @@ The type determines the variable's data type:
 \section{Mutability}
 By default, variables are mutable (can be reassigned). To make a variable immutable, append \texttt{; M = False} after the assignment:
 \begin{verbatim}
-$f.immutable [scalar]= 42; M = False
-$f.mutable [scalar]= 100    # Can be reassigned
+$immutable [int]= 42; M = False
+$mutable [int]= 100    # Can be reassigned
 \end{verbatim}
 
 \section{Scope}
@@ -667,15 +824,15 @@ Variables have global scope once declared. They can be accessed from any point i
 
 \section{Examples}
 \begin{verbatim}
-$a [scalar]= 3
-$b [scalar]= 5
-$f.result [scalar]= $a + $b        # Scalar assignment
+$a [int]= 3
+$b [int]= 5
+$result [int]= $a + $b        # Scalar assignment
 
-$f.name [string]= "EDADSL"         # String assignment
-$f.flag [bool]= True               # Boolean assignment
+$name [string]= "EDADSL"         # String assignment
+$flag [bool]= True               # Boolean assignment
 
-$f.colors [list]= ["red", "green", "blue"]  # List
-$f.hwset [set]= { Q1, Q2, R5 }              # Set
+$colors [list]= ["red", "green", "blue"]  # List
+$hwset [set]= { Q1, Q2, R5 }              # Set
 \end{verbatim}
 
 
@@ -685,30 +842,39 @@ Expressions in EDADSL evaluate to values and can be composed of literals, variab
 \section{Expression Grammar}
 \begin{verbatim}
 EBNF:
-expression      = arithmetic_expression
-                | boolean_expression
-                | comparison_expression
-                | set_expression
-                | function_call
-                | "(" expression ")"
+expression          = arithmetic_expression
+                    | boolean_expression
+                    | comparison_expression
+                    | set_expression
+                    | postfix_expression
+                    | function_call
+                    | "(" expression ")"
 
-arithmetic_expression = expression, 
-    ("+" | "-" | "*" | "/" | "%" | "^"), 
+arithmetic_expression = expression,
+    ("+" | "-" | "*" | "/" | "%" | "^" | "." | "x"),
     expression
   | "-" expression
 
-boolean_expression = expression, 
+boolean_expression = expression,
     ("&&" | "||" | "^^"), expression
   | "!", expression
 
-comparison_expression = expression, 
-    ("<" | "<=" | "==" | "!=" | ">=" | ">"), 
-    expression
+comparison_expression = expression,
+    ("<" | "<=" | "==" | "!=" | "=n=" | "><" | ">=" | ">"
+     | "~" | "~*"), expression
+  | expression, "~+", "(", expression, ")~", expression
+  | expression, "~*", "(", expression, ")~", expression
 
-set_expression = expression, ("u" | "n" | "/"), 
-    expression
+set_expression = expression, ("u" | "n" | "/"), expression
   | "||", expression
   | expression, ("c" | "E" | "!E"), expression
+
+postfix_expression = variable, ("++" | "--")
+
+compound_assignment = variable,
+    ("+=" | "-=" | "*=" | "/=" | "%=" | "^=" 
+     | "&&=" | "||=" | "^^=" | "^r=" 
+     | "u=" | "n="), expression
 \end{verbatim}
 
 \section{Operator Precedence}
@@ -717,9 +883,9 @@ Operators are evaluated in the following order of precedence (highest to lowest)
 \item Exponentiation (\texttt{\^{}}) -- right-associative
 \item Boolean negation (\texttt{!})
 \item Set cardinality (\texttt{||a})
-\item Multiplication (\texttt{*}), Division (\texttt{/}), Modulo (\texttt{\%})
+\item Multiplication (\texttt{*}), Division (\texttt{/}), Floor Division (\texttt{//}), Modulo (\texttt{\%})
 \item Addition (\texttt{+}), Subtraction (\texttt{-})
-\item Comparison operators (\texttt{<}, \texttt{<=}, \texttt{==}, \texttt{!=}, \texttt{>=}, \texttt{>})
+\item Comparison operators (\texttt{<}, \texttt{<=}, \texttt{==}, \texttt{!=}, \texttt{=n=}, \texttt{><}, \texttt{>=}, \texttt{>}, \texttt{\textasciitilde}, \texttt{\textasciitilde*}, \texttt{\textasciitilde+()\textasciitilde}, \texttt{\textasciitilde*()\textasciitilde})
 \item Set comparison (\texttt{c}, \texttt{E}, \texttt{!E})
 \item Logical AND (\texttt{\&\&})
 \item Logical OR (\texttt{||})
@@ -744,26 +910,107 @@ Arithmetic operators perform mathematical operations. Most operators support mul
 n + m  Addition / Concatenation
 n - m  Subtraction
 n * m  Multiplication
-n / m  Division
+n / m  Division (always returns real)
+n // m Floor Division (returns int)
 n % m  Modulo
 n ^ m  Exponentiation
 \end{verbatim}
 
 \paragraph{Type Overloading}
 \begin{itemize}
-\item \texttt{+}: \texttt{scalar + scalar} $\rightarrow$ \texttt{scalar}
+\item \texttt{+}: \texttt{int + int} $\rightarrow$ \texttt{int}
+\item \texttt{+}: \texttt{int + real} $\rightarrow$ \texttt{real}
+\item \texttt{+}: \texttt{real + int} $\rightarrow$ \texttt{real}
+\item \texttt{+}: \texttt{real + real} $\rightarrow$ \texttt{real}
 \item \texttt{+}: \texttt{string + string} $\rightarrow$ \texttt{string} (concatenation)
 \item \texttt{+}: \texttt{list + list} $\rightarrow$ \texttt{list} (append)
-\item \texttt{-}: \texttt{scalar - scalar} $\rightarrow$ \texttt{scalar}
-\item \texttt{*}: \texttt{scalar * scalar} $\rightarrow$ \texttt{scalar}
-\item \texttt{*}: \texttt{scalar * string} $\rightarrow$ \texttt{string} (repetition)
-\item \texttt{*}: \texttt{scalar * list} $\rightarrow$ \texttt{list} (replication)
-\item \texttt{/}: \texttt{scalar / scalar} $\rightarrow$ \texttt{scalar}
-\item \texttt{\%}: \texttt{scalar \% scalar} $\rightarrow$ \texttt{scalar}
-\item \texttt{\^{}}: \texttt{scalar \^{} scalar} $\rightarrow$ \texttt{scalar}
+\item \texttt{-}: \texttt{int - int} $\rightarrow$ \texttt{int}
+\item \texttt{-}: \texttt{int - real} $\rightarrow$ \texttt{real}
+\item \texttt{-}: \texttt{real - int} $\rightarrow$ \texttt{real}
+\item \texttt{-}: \texttt{real - real} $\rightarrow$ \texttt{real}
+\item \texttt{*}: \texttt{int * int} $\rightarrow$ \texttt{int}
+\item \texttt{*}: \texttt{int * real} $\rightarrow$ \texttt{real}
+\item \texttt{*}: \texttt{real * int} $\rightarrow$ \texttt{real}
+\item \texttt{*}: \texttt{real * real} $\rightarrow$ \texttt{real}
+\item \texttt{*}: \texttt{int * string} $\rightarrow$ \texttt{string} (repetition)
+\item \texttt{*}: \texttt{int * list} $\rightarrow$ \texttt{list} (replication)
+\item \texttt{/}: \texttt{int / int} $\rightarrow$ \texttt{real} (true division)
+\item \texttt{/}: \texttt{real / int} $\rightarrow$ \texttt{real}
+\item \texttt{/}: \texttt{int / real} $\rightarrow$ \texttt{real}
+\item \texttt{/}: \texttt{real / real} $\rightarrow$ \texttt{real}
+\item \texttt{//}: \texttt{int // int} $\rightarrow$ \texttt{int} (floor division)
+\item \texttt{\%}: \texttt{int \% int} $\rightarrow$ \texttt{int}
+\item \texttt{\%}: \texttt{real \% int} $\rightarrow$ \texttt{real}
+\item \texttt{\%}: \texttt{int \% real} $\rightarrow$ \texttt{real}
+\item \texttt{\%}: \texttt{real \% real} $\rightarrow$ \texttt{real}
+\item \texttt{\^{}}: \texttt{int \^{} int} $\rightarrow$ \texttt{int} (non-negative exponents)
+\item \texttt{\^{}}: \texttt{int \^{} real} $\rightarrow$ \texttt{real}
+\item \texttt{\^{}}: \texttt{real \^{} int} $\rightarrow$ \texttt{real}
+\item \texttt{\^{}}: \texttt{real \^{} real} $\rightarrow$ \texttt{real}
 \end{itemize}
 
-Division by zero raises a runtime error. Modulo uses truncated division (\texttt{sign(result) = sign(dividend)}). Exponentiation is right-associative: \texttt{-2\^{}3 = -8}.
+Mixed-type operations promote to \texttt{real}. Division by zero raises a runtime error. Floor division (\texttt{//}) truncates toward negative infinity. Modulo uses truncated division (\texttt{sign(result) = sign(dividend)}). Exponentiation is right-associative: \texttt{-2\^{}3 = -8}.
+
+\subsection{Increment / Decrement}
+Postfix increment and decrement operators add 1 or subtract 1 from an int or real variable. The variable must already be declared.
+\begin{verbatim}
+$var++    Increment $var by 1 (returns old value)
+$var--    Decrement $var by 1 (returns old value)
+\end{verbatim}
+
+\paragraph{Semantics}
+\texttt{\$var++} increments \texttt{\$var} by 1 and returns the original value before the increment.
+\texttt{\$var--} decrements \texttt{\$var} by 1 and returns the original value before the decrement.
+
+Examples:
+\begin{verbatim}
+$counter [int]= 0
+$counter++
+# $counter = 1
+
+$counter++
+# $counter = 2
+
+$counter--
+# $counter = 1
+
+# Can be used in expressions
+$val [int]= $counter++   # $val = 1, $counter = 2
+\end{verbatim}
+
+\subsection{Compound Assignment}
+Compound assignment operators combine an operation with assignment. They are available for all operators.
+\begin{verbatim}
+$var += expr   $var = $var + expr
+$var -= expr   $var = $var - expr
+$var *= expr   $var = $var * expr
+$var /= expr   $var = $var / expr
+$var %= expr   $var = $var % expr
+$var ^= expr   $var = $var ^ expr
+$var &&= expr  $var = $var && expr
+$var ||= expr  $var = $var || expr
+$var ^^= expr  $var = $var ^^ expr
+$var ^r= expr  $var = expr ^ $var
+$var u= expr   $var = $var u expr
+$var n= expr   $var = $var n expr
+\end{verbatim}
+
+Examples:
+\begin{verbatim}
+$x [int]= 5
+$x += 3        # $x = 8
+$x *= 2        # $x = 16
+$x -= 4        # $x = 12
+$x /= 3        # $x = 4
+$x %= 3        # $x = 1
+$x ^= 3        # $x = 1
+
+$str [string]= "hello"
+$str += " " + "world"   # $str = "hello world"
+
+$list [list]= [1, 2, 3]
+$list += [4, 5]         # $list = [1, 2, 3, 4, 5]
+\end{verbatim}
 
 Examples:
 \begin{verbatim}
@@ -793,18 +1040,53 @@ n <  m Less Than
 n <= m Less or Equal
 b == c Equal
 b != c Not Equal
+a =n= b Numeric Equal (cross-type)
+a >< b Three-way Numeric Compare
 n >= m Greater or Equal
 n >  m Greater Than
+a ~  b Approximately Equal (uses syst.flag.approx_eps)
+a ~* b Approximately Equal (uses syst.flag.approx_eps_mult)
+a ~+( c )~ b Approximately Equal with additive tolerance c
+a ~*( c )~ b Approximately Equal with multiplicative tolerance c
 \end{verbatim}
 
 \paragraph{Type Overloading}
 \begin{itemize}
-\item \texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}: \texttt{scalar} $\rightarrow$ \texttt{bool} (ordered)
+\item \texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}: \texttt{int} or \texttt{real} $\rightarrow$ \texttt{bool} (ordered)
 \item \texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}: \texttt{string} $\rightarrow$ \texttt{bool} (lexicographic)
-\item \texttt{==}, \texttt{!=}: any $\rightarrow$ \texttt{bool} (equality)
+\item \texttt{==}, \texttt{!=}: any $\rightarrow$ \texttt{bool} (strict equality)
+\item \texttt{=n=}: \texttt{int} or \texttt{real} $\rightarrow$ \texttt{bool} (numeric equality)
+\item \texttt{><}: \texttt{int} or \texttt{real} $\rightarrow$ \texttt{int} (three-way numeric compare)
+\item \texttt{\textasciitilde}, \texttt{\textasciitilde*}, \texttt{\textasciitilde+()\textasciitilde}, \texttt{\textasciitilde*()\textasciitilde}: \texttt{int} or \texttt{real} $\rightarrow$ \texttt{bool} (approximate equality)
 \end{itemize}
 
-Ordered comparisons (\texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}) only work on scalars and strings. Equality (\texttt{==}, \texttt{!=}) works on any type including lists, sets, parts, and connections.
+Ordered comparisons (\texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}) only work on ints, reals, and strings. Equality (\texttt{==}, \texttt{!=}) works on any type including lists, sets, parts, and connections. \texttt{=n=} works only on numeric types.
+
+\paragraph{Numeric Equality}
+\texttt{=n=} compares values numerically across types. Unlike \texttt{==} which is type-strict, \texttt{=n=} returns \texttt{True} if the numeric values are equal regardless of whether the operands are \texttt{int} or \texttt{real}.
+
+\begin{itemize}
+\item \texttt{5 == 5.0} $\rightarrow$ \texttt{False} (strict: int vs real)
+\item \texttt{5 =n= 5.0} $\rightarrow$ \texttt{True} (numeric: same value)
+\end{itemize}
+
+\textbf{Note:} \texttt{==} is strict type equality. \texttt{5 == 5.0} is \texttt{False} because the left operand is \texttt{int} and the right is \texttt{real}. Use \texttt{=n=} when you want to compare values regardless of numeric type.
+
+\paragraph{Three-way Numeric Compare}
+\texttt{a >< b} performs a three-way numeric comparison using \texttt{=n=} semantics.
+\begin{itemize}
+\item Returns \texttt{-1} if $a > b$
+\item Returns \texttt{0} if $a \mathbin{\texttt{=n=}} b$
+\item Returns \texttt{1} if $a < b$
+\end{itemize}
+Raises a Type Error if either operand is not numeric.
+
+\paragraph{Approximate Equality}
+\texttt{a \textasciitilde b} returns \texttt{True} if $|a - b| \leq \texttt{syst.flag.approx\_eps}$.
+\texttt{a \textasciitilde* b} returns \texttt{True} if $|a - b| \leq \texttt{syst.flag.approx\_eps\_mult} \cdot \max(|a|, |b|)$.
+\texttt{a \textasciitilde+(c)\textasciitilde b} returns \texttt{True} if $|a - b| \leq c$.
+\texttt{a \textasciitilde*(c)\textasciitilde b} returns \texttt{True} if $|a - b| \leq c \cdot \max(|a|, |b|)$.
+The default value of \texttt{syst.flag.approx\_eps} is \texttt{1}.
 
 Examples:
 \begin{verbatim}
@@ -812,6 +1094,34 @@ Examples:
 "a" < "b"          # = True (lexicographic)
 [1,2] == [1,2]     # = True (list equality)
 Q1 == Q1            # = True (part identity)
+
+# Numeric equality (cross-type)
+5 == 5.0           # = False (strict: int vs real)
+5 =n= 5.0          # = True  (numeric: same value)
+5 =n= 5.1          # = False (different values)
+3.14 =n= 3.14      # = True  (real vs real works too)
+
+# Three-way numeric compare
+5 >< 3             # = -1  (5 > 3)
+5 >< 5             # =  0  (5 =n= 5)
+5 >< 7             # =  1  (5 < 7)
+5 >< 5.0           # =  0  (numeric equality)
+3.14 >< 3.14       # =  0  (real vs real)
+
+# Approximate equality
+syst.flag.approx_eps [real]= 0.01
+3.0 ~ 3.005        # = True (within 0.01)
+3.0 ~ 3.1          # = False (not within 0.01)
+3.0 ~+(0.2)~ 3.1    # = True (within 0.2)
+3.0 ~+(0.05)~ 3.1   # = False (not within 0.05)
+
+# Multiplicative approximate equality (relative tolerance)
+100 ~*(0.01)~ 100.5  # = True (within 1%)
+100 ~*(0.001)~ 100.5 # = False (not within 0.1%)
+
+# Multiplicative approximate equality with system default
+syst.flag.approx_eps_mult [real]= 0.01
+100 ~* 100.5         # = True (within 1%)
 \end{verbatim}
 
 \subsection{Boolean Logic}
@@ -843,7 +1153,7 @@ Collection operators manipulate sets, lists, and strings.
 \begin{verbatim}
 a u b  Union (sets only)
 a n b  Intersection (sets only)
-a / b  Difference (sets) / Division (scalars)
+a / b  Difference (sets) / Division (numeric)
 ||a    Cardinality / Length
 \end{verbatim}
 
@@ -852,13 +1162,13 @@ a / b  Difference (sets) / Division (scalars)
 \item \texttt{u}: \texttt{set + set} $\rightarrow$ \texttt{set} (union)
 \item \texttt{n}: \texttt{set + set} $\rightarrow$ \texttt{set} (intersection)
 \item \texttt{/}: \texttt{set / set} $\rightarrow$ \texttt{set} (difference)
-\item \texttt{/}: \texttt{scalar / scalar} $\rightarrow$ \texttt{scalar} (division)
-\item \texttt{||}: \texttt{||set} $\rightarrow$ \texttt{scalar} (cardinality)
-\item \texttt{||}: \texttt{||list} $\rightarrow$ \texttt{scalar} (length)
-\item \texttt{||}: \texttt{||string} $\rightarrow$ \texttt{scalar} (length)
+\item \texttt{/}: \texttt{int / int} $\rightarrow$ \texttt{real} (division)
+\item \texttt{||}: \texttt{||set} $\rightarrow$ \texttt{int} (cardinality)
+\item \texttt{||}: \texttt{||list} $\rightarrow$ \texttt{int} (length)
+\item \texttt{||}: \texttt{||string} $\rightarrow$ \texttt{int} (length)
 \end{itemize}
 
-Set operations (\texttt{u}, \texttt{n}) only work on sets. The \texttt{/} operator is overloaded: on sets it returns difference, on scalars it returns division. Cardinality (\texttt{||}) returns the element count for sets, lists, and strings.
+Set operations (\texttt{u}, \texttt{n}) only work on sets. The \texttt{/} operator is overloaded: on sets it returns difference, on ints or reals it returns division. Cardinality (\texttt{||}) returns the element count for sets, lists, and strings.
 
 Examples:
 \begin{verbatim}
@@ -871,6 +1181,33 @@ Examples:
 ||{1,2,3}          # = 3 (set size)
 ||[1,2,3,4]        # = 4 (list length)
 ||"hello"           # = 5 (string length)
+\end{verbatim}
+
+\subsection{List Operators}
+List operators perform vector and matrix operations on lists.
+\begin{verbatim}
+a . b  Dot product (real result)
+a x b  Cross product (list result)
+\end{verbatim}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{.}: \texttt{list . list} $\rightarrow$ \texttt{real} (dot product, n-dimensional)
+\item \texttt{x}: \texttt{list x list} $\rightarrow$ \texttt{list} (cross product, 3D only)
+\end{itemize}
+
+The dot product computes $\sum_{i} a_i \cdot b_i$ for n-dimensional vectors (any length). The cross product computes the vector cross product (both lists must have length 3).
+
+Examples:
+\begin{verbatim}
+# Dot product (n-dimensional)
+[1, 2, 3] . [4, 5, 6]     # = 32 (1*4 + 2*5 + 3*6)
+[1, 2] . [3, 4]           # = 11 (2D)
+[1, 2, 3, 4] . [5, 6, 7, 8] # = 70 (4D)
+
+# Cross product (3D only)
+[1, 0, 0] x [0, 1, 0]     # = [0, 0, 1]
+[1, 2, 3] x [4, 5, 6]     # = [-3, 6, -3]
 \end{verbatim}
 
 \subsection{Set Comparison}
@@ -912,17 +1249,17 @@ A ternary-like operator for inline conditional values.
 
 Examples:
 \begin{verbatim}
-$f.x [scalar]= 5
-$f.result [scalar]= ($x > 3)?->("big")!("small")
+$x [int]= 5
+$result [int]= ($x > 3)?->("big")!("small")
 # $result = "big"
 
-$f.val [scalar]= 10
-$f.abs [scalar]= ($val >= 0)?->($val)!($val * -1)
+$val [int]= 10
+$abs [int]= ($val >= 0)?->($val)!($val * -1)
 # $abs = 10
 
-$f.a [scalar]= 1
-$f.b [scalar]= 2
-$f.max [scalar]= ($a > $b)?->($a)!($b)
+$a [int]= 1
+$b [int]= 2
+$max [int]= ($a > $b)?->($a)!($b)
 # $max = 2
 \end{verbatim}
 
@@ -931,10 +1268,11 @@ Operators are evaluated in the following order (highest to lowest):
 \begin{enumerate}
 \item \texttt{\^{}} -- Exponentiation (right-associative)
 \item \texttt{!} -- Boolean negation
+\item \texttt{\$var++}, \texttt{\$var--} -- Postfix increment / decrement
 \item \texttt{||a} -- Cardinality / length
-\item \texttt{*}, \texttt{/}, \texttt{\%} -- Multiplication, division, modulo
+\item \texttt{*}, \texttt{/}, \texttt{//}, \texttt{\%} -- Multiplication, division, floor division, modulo
 \item \texttt{+}, \texttt{-} -- Addition, subtraction
-\item \texttt{<}, \texttt{<=}, \texttt{==}, \texttt{!=}, \texttt{>=}, \texttt{>} -- Comparison
+\item \texttt{<}, \texttt{<=}, \texttt{==}, \texttt{!=}, \texttt{>=}, \texttt{>}, \texttt{\textasciitilde}, \texttt{\textasciitilde+()} -- Comparison
 \item \texttt{c}, \texttt{E}, \texttt{!E} -- Set comparison
 \item \texttt{\&\&} -- Logical AND
 \item \texttt{||} -- Logical OR
@@ -943,7 +1281,7 @@ Operators are evaluated in the following order (highest to lowest):
 \item User-defined operators (\texttt{o.u.*})
 \end{enumerate}
 
-Note: \texttt{||} is unary for cardinality/length (high precedence) but binary for logical OR (low precedence). Parentheses override precedence. Function arguments are evaluated before the function is called.
+Note: \texttt{||} has two distinct meanings depending on position. As a \textbf{prefix} operator (\texttt{||expr}), it denotes cardinality/length and has high precedence (level 3). As an \textbf{infix} operator (\texttt{expr || expr}), it denotes logical OR and has low precedence (level 9). Parentheses override precedence. Function arguments are evaluated before the function is called.
 
 \section{User-defined Operators}
 User-defined operators extend the language with custom infix notation.
@@ -958,12 +1296,12 @@ The operator name must follow the pattern \texttt{o.u.[\_a-zA-Z0-9]+}.
 
 \subsection{Examples}
 \begin{verbatim}
-letop o.u.mod_minus_1 [scalar]= 
+letop o.u.mod_minus_1 [int]= 
     a % b - 1
 
 print( 4 o.u.mod_minus_1 3 )  # = 0
 
-letop o.u.parallel [scalar]= 
+letop o.u.parallel [int]= 
     (a * b) / (a + b)
 
 print( 100 o.u.parallel 100 )  # = 50
@@ -985,7 +1323,8 @@ Proper constants are fixed values provided by the language.
 \begin{itemize}
 \item \texttt{c.pi} -- The mathematical constant $\pi \approx 3.14159265...$
 \item \texttt{c.e} -- Euler's number $e \approx 2.71828182...$
-\item \texttt{c.inf} -- Positive infinity
+\item \texttt{c.iinf} -- Integer positive infinity
+\item \texttt{c.rinf} -- Real positive infinity
 \end{itemize}
 
 \subsubsection{Physical Constants}
@@ -1018,7 +1357,7 @@ constant_assignment = "let", "c.u.", id, assigner,
                       [";", "P", "=", boolean]
 
 Examples:
-let c.u.$max_current [scalar]= 30
+let c.u.$max_current [int]= 30
 let c.u.$board_name [string]= "PowerSupply"
 \end{verbatim}
 Constants are immutable by definition and cannot be reassigned.
@@ -1027,19 +1366,30 @@ Constants are immutable by definition and cannot be reassigned.
 EDADSL provides several control flow constructs for conditional execution, iteration, and program flow control.
 
 \section{Conditional Execution}
-Conditional execution uses the \texttt{if} keyword followed by a boolean expression and a code block:
+Conditional execution uses the \texttt{if} keyword followed by a boolean expression and a code block. An optional \texttt{else} clause provides an alternative code block executed when the condition is \texttt{False}:
 \begin{verbatim}
 EBNF:
 conditional = "if", boolean_expression, 
-              "::", code_block
+              "::", code_block,
+              ["else", "::", code_block]
 
+Example:
+$flag [bool]= True
+if $flag ::{
+    f.print("Flag is set")
+} else ::{
+    f.print("Flag is not set")
+}
+\end{verbatim}
+
+Basic \texttt{if} without \texttt{else}:
+\begin{verbatim}
 Example:
 $flag [bool]= True
 if $flag ::{
     f.print("Flag is set")
 }
 \end{verbatim}
-The code block is executed only if the boolean expression evaluates to \texttt{True}.
 
 \section{For Loops}
 For loops iterate over a list or set:
@@ -1055,6 +1405,9 @@ for $c E $colors ::{
 }
 \end{verbatim}
 The loop variable (\texttt{\$c}) takes on each value in the list/set in sequence.
+
+\paragraph{Variable Scoping}
+The loop variable is \textbf{not} block-scoped: it persists after the loop exits, retaining the last value assigned during iteration. Loop variables declared at the top level are global. Loop variables declared inside a function are local to that function (see Section~\ref{sec:function-scope}).
 
 \section{Goto Statements}
 Goto statements provide unconditional jumps to labeled positions:
@@ -1090,7 +1443,7 @@ writetolog     = "writetolog", string_expression
 
 Example:
 f.print("Hello, EDADSL!")
-f.writetolog "Board design completed successfully"
+writetolog "Board design completed successfully"
 \end{verbatim}
 \begin{itemize}
 \item \texttt{echo} -- Prints a value to the console
@@ -1108,14 +1461,14 @@ EBNF:
 "abs", "(", argument, [ ",", "vec", "=", 
        boolean_data_type ], ")"
 \end{verbatim}
-If the Type of the Argument does not match the expected Type (a Scalar Value or a List of Scalar Values) a Value Error is raised.\\
+If the Type of the Argument does not match the expected Type (a Numeric Value or a List of Numeric Values) a Value Error is raised.\\
 Example:
 \begin{verbatim}
 abs(-3.2)
 \end{verbatim}
 This Example would return a value of \texttt{3.2}.
 
-The Argument may also be a List of Scalar Values. If This is the case the Function is iterated over each Element.\\
+The Argument may also be a List of Numeric Values. If This is the case the Function is iterated over each Element.\\
 Example:
 \begin{verbatim}
 abs([-3, 0.2, 0, -7])
@@ -1136,14 +1489,14 @@ Morphology of the Signum Function:
 EBNF:
 "sign", "(", argument, ")"
 \end{verbatim}
-If the Type of the Argument does not match the expected Type (a Scalar Value or a List of Scalar Values) a Value Error is raised.\\
+If the Type of the Argument does not match the expected Type (a Numeric Value or a List of Numeric Values) a Value Error is raised.\\
 Example:
 \begin{verbatim}
 sign(-3.2)
 \end{verbatim}
 This Example would return a value of \texttt{-1}.
 
-The Argument may also be a List of Scalar Values. If This is the case the Function is iterated over each Element.\\
+The Argument may also be a List of Numeric Values. If This is the case the Function is iterated over each Element.\\
 Example:
 \begin{verbatim}
 sign([-3, 0.2, 0, -7])
@@ -1164,14 +1517,14 @@ EBNF:
 unit = ( "'", ("rad" | "deg" ), "'" )
      | ( '"', ("rad" | "deg" ), '"' )
 \end{verbatim}
-If the Type of the Argument does not match the expected Type (a Scalar Value or a List of Scalar Values) a Value Error is raised.\\
+If the Type of the Argument does not match the expected Type (a Numeric Value or a List of Numeric Values) a Value Error is raised.\\
 Example:
 \begin{verbatim}
 sin(1.570796327)
 \end{verbatim}
 This Example would return a value of around \texttt{1}.
 
-The Argument may also be a List of Scalar Values. If This is the case the Function is iterated over each Element.\\
+The Argument may also be a List of Numeric Values. If This is the case the Function is iterated over each Element.\\
 Example:
 \begin{verbatim}
 sin([0, 30, 90], unit = "deg" )
@@ -1198,14 +1551,14 @@ inverses_trig_functions =
 unit = ( "'", ("rad" | "deg" ), "'" )
      | ( '"', ("rad" | "deg" ), '"' )
 \end{verbatim}
-If the Type of the Argument does not match the expected Type (a Scalar Value or a List of Scalar Values) a Value Error is raised.\\
+If the Type of the Argument does not match the expected Type (a Numeric Value or a List of Numeric Values) a Value Error is raised.\\
 Example:
 \begin{verbatim}
 asin(1)
 \end{verbatim}
 This Example would return a value of around \texttt{1.570796327}.
 
-The Argument may also be a List of Scalar Values. If This is the case the Function is iterated over each Element.\\
+The Argument may also be a List of Numeric Values. If This is the case the Function is iterated over each Element.\\
 Example:
 \begin{verbatim}
 arcsin([0, 0.5, 1], unit = "deg" )
@@ -1224,14 +1577,14 @@ Morphology of the Hyperbolic Functions:
 EBNF:
 ( "sinh" | "cosh" | "tanh" ), "(", argument, ")"
 \end{verbatim}
-If the Type of the Argument does not match the expected Type (a Scalar Value or a List of Scalar Values) a Value Error is raised.\\
+If the Type of the Argument does not match the expected Type (a Numeric Value or a List of Numeric Values) a Value Error is raised.\\
 Example:
 \begin{verbatim}
 sinh(1.443635475)
 \end{verbatim}
 This Example would return a value of around \texttt{2}.
 
-The Argument may also be a List of Scalar Values. If This is the case the Function is iterated over each Element.\\
+The Argument may also be a List of Numeric Values. If This is the case the Function is iterated over each Element.\\
 Example:
 \begin{verbatim}
 sinh([0, 1, 2] )
@@ -1251,14 +1604,14 @@ inverses_hypb_functions =
   | "arsinh" | "arcosh" | "artanh"
   | "arcsinh" | "arccosh" | "arctanh"
 \end{verbatim}
-If the Type of the Argument does not match the expected Type (a Scalar Value or a List of Scalar Values) a Value Error is raised.\\
+If the Type of the Argument does not match the expected Type (a Numeric Value or a List of Numeric Values) a Value Error is raised.\\
 Example:
 \begin{verbatim}
 asinh(1)
 \end{verbatim}
 This Example would return a value of around \texttt{0.881373587}.
 
-The Argument may also be a List of Scalar Values. If This is the case the Function is iterated over each Element.\\
+The Argument may also be a List of Numeric Values. If This is the case the Function is iterated over each Element.\\
 Example:
 \begin{verbatim}
 arcsinh( [0, 0.5, 1] )
@@ -1418,16 +1771,16 @@ atan2(0, 1)    # Returns 0.0
 EDADSL provides functions for computing vector norms and normalizing vectors.
 
 \paragraph{Norm Function}
-The \texttt{norm} function computes the p-norm of a vector (list of scalars). \\
+The \texttt{norm} function computes the p-norm of a vector (list of ints or reals). \\
 Morphology of the Norm Function:
 \begin{verbatim}
 EBNF:
 "norm", "(", argument, [ ",", "p", "=", 
-       scalar_data_type ], ")"
+       real_data_type ], ")"
 \end{verbatim}
 Parameters:
 \begin{itemize}
-\item \texttt{argument} -- A list of scalar values (the vector)
+\item \texttt{argument} -- A list of int or real values (the vector)
 \item \texttt{p} -- (Optional) The order of the norm. Defaults to 2 (Euclidean norm).
 \end{itemize}
 
@@ -1448,7 +1801,7 @@ norm([3, 4], p=0)       # Returns 2 (L0 norm)
 norm([-3, 4, -2], p=-1) # Returns 4 (L-inf norm)
 \end{verbatim}
 
-If the argument is not a list of scalars, a Value Error is raised.
+If the argument is not a list of ints or reals, a Value Error is raised.
 
 \paragraph{Normalize Function}
 The \texttt{normalize} function returns a unit vector in the direction of the input vector. \\
@@ -1456,11 +1809,11 @@ Morphology of the Normalize Function:
 \begin{verbatim}
 EBNF:
 "normalize", "(", argument, [ ",", "p", "=", 
-              scalar_data_type ], ")"
+              real_data_type ], ")"
 \end{verbatim}
 Parameters:
 \begin{itemize}
-\item \texttt{argument} -- A list of scalar values (the vector to normalize)
+\item \texttt{argument} -- A list of int or real values (the vector to normalize)
 \item \texttt{p} -- (Optional) The order of the norm to use for normalization. Defaults to 2.
 \end{itemize}
 
@@ -1612,7 +1965,8 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-type(42)       # Returns "scalar"
+type(42)       # Returns "int"
+type(3.14)     # Returns "real"
 type("hello")  # Returns "string"
 type(Q1)       # Returns "part"
 \end{verbatim}
@@ -1644,6 +1998,21 @@ noop(Q1)       # Returns Q1
 \end{verbatim}
 Use \texttt{noop} as a placeholder in queries where no transformation is needed.
 
+\subsubsection{Soft Integer Conversion}
+The \texttt{softint} function converts its argument to an integer if it is either already an integer or is a real number numerically equal to an integer. Otherwise it returns the argument unchanged. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"softint", "(", argument, ")"
+\end{verbatim}
+Examples:
+\begin{verbatim}
+softint(42)       # Returns 42 (already int)
+softint(5.0)      # Returns 5 (real equal to int)
+softint(3.7)      # Returns 3.7 (not equal to int, unchanged)
+softint("hello")  # Returns "hello" (not numeric, unchanged)
+\end{verbatim}
+
 \section{User-defined Functions}
 User-defined functions allow creation of reusable code blocks with local scoping.
 
@@ -1659,7 +2028,7 @@ f_statement = statement | "return", [data]
 
 Example:
 function f.u.add( $a, $b )::{
-    $retval [scalar]= $a + $b
+    $retval [int]= $a + $b
 }
 \end{verbatim}
 
@@ -1673,14 +2042,14 @@ function_call_ud = "f.u.", id, "(",
                    [{ data, "," }, data], ")"
 
 Example:
-$f.result [scalar]= f.u.add( 3, 5 )   # $result = 8
+$result [int]= f.u.add( 3, 5 )   # $result = 8
 \end{verbatim}
 
 \subsection{Return Values}
 Functions return values by setting the \texttt{\$retval} variable. If \texttt{\$retval} is not set, the function returns nothing:
 \begin{verbatim}
 function f.u.square( $x )::{
-    $retval [scalar]= $x ^ 2
+    $retval [int]= $x ^ 2
 }
 
 function f.u.greet( $name )::{
@@ -1688,7 +2057,7 @@ function f.u.greet( $name )::{
     # No return value
 }
 
-$f.sq [scalar]= f.u.square( 4 )     # $sq = 16
+$sq [int]= f.u.square( 4 )     # $sq = 16
 f.u.greet( "World" )          # Prints: Hello, World!
 \end{verbatim}
 
@@ -1705,21 +2074,29 @@ Functions have local scoping. Variables declared inside a function are only acce
 \item Functions cannot access local variables from other function invocations
 \end{itemize}
 
+\paragraph{Return Values}
+Functions can return values using two equivalent mechanisms:
+\begin{itemize}
+\item Assign to \texttt{\$retval} and let execution fall through the closing \texttt{\}}
+\item Use the \texttt{return} keyword, which is syntactic sugar that assigns its argument to \texttt{\$retval} and immediately exits the function
+\end{itemize}
+Both \texttt{return \$value} and \texttt{\$retval [type]= \$value} followed by natural function exit are valid and equivalent.
+
 \paragraph{Examples}
 \begin{verbatim}
-$f.x [scalar]= 10      # Global variable
+$x [int]= 10      # Global variable
 
 function f.u.doublen()::{
-    $f.x [scalar]= $f.x * 2  # Local $x shadows global
-    f.print($f.x)            # Prints: 20
+    $x [int]= $x * 2  # Local $x shadows global
+    f.print($x)            # Prints: 20
 }
 
 f.u.doublen()
-f.print($f.x)          # Prints: 10 (global unchanged)
+f.print($x)          # Prints: 10 (global unchanged)
 
 function f.u.addLocal( $a, $b )::{
-    $sum [scalar]= $a + $b   # $sum is local
-    $retval [scalar]= $sum
+    $sum [int]= $a + $b   # $sum is local
+    $retval [int]= $sum
 }
 
 f.u.addLocal( 3, 4 )   # Returns 7
@@ -1731,14 +2108,14 @@ Local scoping enables recursion since each call has its own copy of parameters:
 \begin{verbatim}
 function f.u.factorial( $n )::{
     if $n <= 1 ::{
-        $retval [scalar]= 1
+        $retval [int]= 1
     } else ::{
-        $retval [scalar]= $n * 
+        $retval [int]= $n * 
             f.u.factorial( $n - 1 )
     }
 }
 
-$f.result [scalar]= f.u.factorial( 5 )  # = 120
+$result [int]= f.u.factorial( 5 )  # = 120
 \end{verbatim}
 
 
@@ -1784,7 +2161,7 @@ EDADSL uses a dynamic type system with distinct types for electrical and non-ele
 
 \section{Type Categories}
 \begin{itemize}
-\item Generic types: Boolean, Scalar, String, List, Set
+\item Generic types: Boolean, Integer, Real, String, List, Set
 \item Electrical types: Part, Pin, Connection, Net
 \end{itemize}
 
@@ -2062,7 +2439,7 @@ E@<net>    # Everything on net (or just @<net>)
 
 Example:
 \begin{verbatim}
-$input S= I@Vin
+$input [set]= I@Vin
 \end{verbatim}
 
 \section{Tagged Net based Querying}
@@ -2074,8 +2451,8 @@ This expands to the union of the quantifier across all nets with the given tag.
 
 Example:
 \begin{verbatim}
-tag Vin "sensitive"
-tag Vfb "sensitive"
+elec.tag Vin "sensitive"
+elec.tag Vfb "sensitive"
 I@^sensitive  # All connections/pins on 
               # nets tagged "sensitive"
 \end{verbatim}
@@ -2095,7 +2472,7 @@ filter_expr   = function_call   # returns bool
 transform_expr = function_call  # applied to filtered elements
 \end{verbatim}
 
-The filter function receives each element and returns \texttt{True} to keep it. The transform function is applied to all elements that pass the filter. If transform is omitted, elements are returned as-is.
+The filter function receives each element and returns \texttt{True} to keep it. The transform function is applied \textbf{per-element} to each item that passes the filter; the result set contains the transformed values. If transform is omitted, elements are returned as-is.
 
 Examples:
 \begin{verbatim}
@@ -2169,7 +2546,7 @@ Always use SI prefixes for typical PCB dimensions:
 \item \texttt{d=0.25m} -- 0.25 millimeters (250 $\mu$m)
 \end{itemize}
 
-SI prefixes available: \texttt{n} ($10^{-9}$), \texttt{u} ($10^{-6}$), \texttt{m} ($10^{-3}$), \texttt{k} ($10^{3}$), \texttt{M} ($10^{6}$), \texttt{G} ($10^{9}$). See Section~\ref{sec:scalar-type} for details. %BUG ref is broken!!
+SI prefixes available: \texttt{n} ($10^{-9}$), \texttt{u} ($10^{-6}$), \texttt{m} ($10^{-3}$), \texttt{k} ($10^{3}$), \texttt{M} ($10^{6}$), \texttt{G} ($10^{9}$). See Section~\ref{sec:generic-types} for details.
 
 \section{Priority System}
 All physical constraints accept a priority parameter that determines how conflicts are resolved:
@@ -2263,7 +2640,7 @@ phys.shrinknet <net> <priority>
 
 Example:
 \begin{verbatim}
-net "Vsw"
+elec.net "Vsw"
 phys.shrinknet Vsw -vimp
 \end{verbatim}
 
@@ -2275,7 +2652,7 @@ phys.mkplane <layer_number> <net>
 
 Example:
 \begin{verbatim}
-net "Gnd"
+elec.net "Gnd"
 phys.mkplane 1 Gnd
 \end{verbatim}
 
@@ -2306,7 +2683,7 @@ phys.mktext txt = "HV" font = "Ubuntu Mono"
 Fills a pad with vias for thermal management:
 \begin{verbatim}
 phys.viafill <pad> v=<via_hole_diameter> 
-    d=<via_spacing> p=<pattern>
+    d=<via_spacing> [p=<pattern>]
 \end{verbatim}
 \begin{itemize}
 \item \texttt{v} -- Via hole diameter (use \texttt{m} for mm)
@@ -2394,9 +2771,9 @@ phys.connmatch <property>
 
 \subsection{Properties}
 \begin{itemize}
-\item \texttt{len} -- Physical trace length
+\item \texttt{l} -- Physical trace length
 \item \texttt{res} -- DC resistance
-\item \texttt{ind} -- Self-inductance
+\item \texttt{L} -- Self-inductance
 \item \texttt{cap} -- Capacitance to reference plane
 \item \texttt{imp} -- Characteristic impedance
 \item \texttt{t} -- Signal propagation delay
@@ -2429,12 +2806,12 @@ The physical length of the trace path from source pin to destination pin, measur
 \subsubsection{Resistance (res)}
 DC resistance is calculated using:
 \begin{equation}
-R = \frac{\rho \cdot L}{W \cdot T}
+R = \frac{\rho \cdot l}{W \cdot T}
 \end{equation}
 where:
 \begin{itemize}
 \item $\rho$ -- Resistivity of the conductor (copper: $1.72 \times 10^{-8}$ $\Omega\cdot$m)
-\item $L$ -- Trace length (mm)
+\item $l$ -- Trace length (mm)
 \item $W$ -- Trace width (mm)
 \item $T$ -- Trace thickness (mm, derived from copper weight in oz/ft$^2$)
 \end{itemize}
@@ -2449,12 +2826,12 @@ where $\delta = \sqrt{\frac{2\rho}{\omega\mu}}$ is the skin depth at frequency $
 \subsubsection{Inductance (ind)}
 Self-inductance is approximated using the loop inductance formula for a microstrip:
 \begin{equation}
-L \approx \frac{\mu_0 \cdot L_{trace}}{2\pi} \cdot \ln\left(\frac{2h}{w + t}\right)
+L \approx \frac{\mu_0 \cdot l_{trace}}{2\pi} \cdot \ln\left(\frac{2h}{w + t}\right)
 \end{equation}
 where:
 \begin{itemize}
 \item $\mu_0$ -- Permeability of free space ($4\pi \times 10^{-7}$ H/m)
-\item $L_{trace}$ -- Trace length
+\item $l_{trace}$ -- Trace length
 \item $h$ -- Height above reference plane
 \item $w$ -- Trace width
 \item $t$ -- Trace thickness
@@ -2463,28 +2840,28 @@ where:
 \paragraph{Calculus Mode}
 When \texttt{syst.cm.calc calculus} is active, mutual inductance and frequency-dependent effects are computed using numerical integration:
 \begin{equation}
-L_{total} = \int_0^{L_{trace}} \frac{\mu_0}{2\pi} \cdot \ln\left(\frac{2h(x)}{w(x) + t}\right) dx
+L_{total} = \int_0^{l_{trace}} \frac{\mu_0}{2\pi} \cdot \ln\left(\frac{2h(x)}{w(x) + t}\right) dx
 \end{equation}
 This accounts for trace width variations and non-uniform height above the reference plane.
 
 \subsubsection{Capacitance (cap)}
 Capacitance to the reference plane is calculated using the microstrip capacitance formula:
 \begin{equation}
-C \approx \frac{\varepsilon_0 \cdot \varepsilon_r \cdot w \cdot L_{trace}}{h}
+C \approx \frac{\varepsilon_0 \cdot \varepsilon_r \cdot w \cdot l_{trace}}{h}
 \end{equation}
 where:
 \begin{itemize}
 \item $\varepsilon_0$ -- Permittivity of free space ($8.854 \times 10^{-12}$ F/m)
 \item $\varepsilon_r$ -- Relative permittivity of the dielectric (FR4: $\approx 4.5$)
 \item $w$ -- Trace width
-\item $L_{trace}$ -- Trace length
+\item $l_{trace}$ -- Trace length
 \item $h$ -- Height above reference plane
 \end{itemize}
 
 \paragraph{Calculus Mode}
 When \texttt{syst.cm.calc calculus} is active, fringing effects and dielectric variations are included:
 \begin{equation}
-C = \int_0^{L_{trace}} \frac{\varepsilon_0 \cdot \varepsilon_r(x) \cdot w_{eff}(x)}{h(x)} dx
+C = \int_0^{l_{trace}} \frac{\varepsilon_0 \cdot \varepsilon_r(x) \cdot w_{eff}(x)}{h(x)} dx
 \end{equation}
 where $w_{eff}$ includes fringing capacitance contributions and $\varepsilon_r(x)$ accounts for material variations along the trace.
 
@@ -2509,7 +2886,7 @@ where $R$, $L$, $G$, and $C$ are per-unit-length parameters computed from the tr
 \subsubsection{Propagation Time (t)}
 Signal propagation delay is calculated as:
 \begin{equation}
-t = \frac{L_{trace}}{v_p} = \frac{L_{trace} \cdot \sqrt{\varepsilon_{eff}}}{c}
+t = \frac{l_{trace}}{v_p} = \frac{l_{trace} \cdot \sqrt{\varepsilon_{eff}}}{c}
 \end{equation}
 where:
 \begin{itemize}
@@ -2521,7 +2898,7 @@ where:
 \paragraph{Calculus Mode}
 When \texttt{syst.cm.calc calculus} is active, propagation delay is computed by integrating along the trace path:
 \begin{equation}
-t = \int_0^{L_{trace}} \frac{\sqrt{\varepsilon_{eff}(x)}}{c} dx
+t = \int_0^{l_{trace}} \frac{\sqrt{\varepsilon_{eff}(x)}}{c} dx
 \end{equation}
 This accounts for varying dielectric thickness, material transitions, and impedance discontinuities along the trace.
 
@@ -3010,8 +3387,8 @@ The final layout is verified against all constraints:
 \subsection{Phase 8: File Export}
 The verified layout is exported to KiCad format:
 \begin{enumerate}
-\item \texttt{mkschematic} generates the schematic file (.kicad\_sch)
-\item \texttt{mkpcb} generates the PCB file (.kicad\_pcb)
+\item \texttt{make.schematic} generates the schematic file (.kicad\_sch)
+\item \texttt{make.pcb} generates the PCB file (.kicad\_pcb)
 \item \texttt{halt} triggers final export and log file generation
 \end{enumerate}
 
@@ -3025,10 +3402,10 @@ Inside the \texttt{*e} pseudo-constant, element order is determined by:
 
 Example:
 \begin{verbatim}
-part U1: opamp(type="LM741"); des=""; 
+elec.part U1: opamp(type="LM741"); des=""; 
     fp="Package_DIP:DIP-8_W7.62mm"
-net V-
-connect V- U1[v-]
+elec.net "V-"
+elec.connect V- U1[v-]
 
 # *e = { U1, U1[v+], U1[v-], U1[-], U1[+], 
 #   U1[out], (U1[v-] | V-), V- }
@@ -3048,6 +3425,8 @@ syst.flag.<flag_name> <value>
 \item \texttt{jumpers} -- Controls whether jumper wires are allowed
 \item \texttt{solder\_reinforced\_tracks} -- Controls whether solder-reinforced tracks are allowed
 \item \texttt{buried\_vias} -- Controls whether buried vias are allowed
+\item \texttt{approx\_eps} -- Additive tolerance for approximate equality operator \texttt{\textasciitilde} (default: 1)
+\item \texttt{approx\_eps\_mult} -- Multiplicative tolerance for approximate equality operator \texttt{\textasciitilde*} (default: 1)
 \end{itemize}
 
 
@@ -3072,16 +3451,16 @@ Every program must begin with the \texttt{start} keyword. The program halts when
 \chapter{Code Generation}
 
 \section{PCB Generation}
-The \texttt{mkpcb} command generates a PCB file based on the circuit and physical constraints:
+The \texttt{make.pcb} command generates a PCB file based on the circuit and physical constraints:
 \begin{verbatim}
-mkpcb
+make.pcb
 \end{verbatim}
 This command must be placed after all circuit definitions and physical constraints.
 
 \section{Schematic Generation}
-The \texttt{mkschematic} command generates a schematic file:
+The \texttt{make.schematic} command generates a schematic file:
 \begin{verbatim}
-mkschematic
+make.schematic
 \end{verbatim}
 
 \section{Export}
@@ -3133,7 +3512,7 @@ The log file is exported when \texttt{halt} is executed.
 Raised when an operation is applied to a value of the wrong type.
 
 \section{Value Errors}
-Raised when a function receives an argument outside its domain (e.g., division by zero, invalid list index).
+Raised when a function receives an argument outside its domain (e.g., division by zero, invalid list index). Out-of-bounds list or set indexing (e.g., accessing index 10 on a 3-element list) raises a Value Error and halts execution.
 
 \section{Reference Errors}
 Raised when referencing an undefined variable, part, or function.
@@ -3253,19 +3632,19 @@ A simple LED current-limiting circuit.
 \begin{verbatim}
 start
 
-part "R1": R(R=330, P=0.25); 
+elec.part "R1": R(R=330, P=0.25); 
     des="330 ohm resistor"; 
     fp="Resistor_THT:R_Axial_DIN0309"
-part "D1": LED(color="red"); 
+elec.part "D1": LED(color="red"); 
     des="Red LED"; 
     fp="LED_THT:LED_D3.0mm"
 
-net "Vcc"
-net "Gnd"
+elec.net "Vcc"
+elec.net "Gnd"
 
-connect Vcc R1[1]
-connect R1[2] D1[a]
-connect D1[c] Gnd
+elec.connect Vcc R1[1]
+elec.connect R1[2] D1[a]
+elec.connect D1[c] Gnd
 
 halt
 \end{verbatim}
