@@ -48,26 +48,31 @@
 \tableofcontents
 \clearpage
 % NOTESPACE:
-% TODO:
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% WHEN DONE:
-% complete keyword section in lexical structure
-% replace loose refrences ( eg.: [ NUMBER OF SECTION Types/Type Literals ] )
-% complete lexical structure
+% COMPLETED (Phase 1):
+% - Ch 4.3: Keywords section updated with prefixes
+% - Ch 5: All type definitions, literals, and casting sections completed
+% - Ch 6: Variables chapter completed
+% - Ch 7: Expressions chapter completed
+% - Ch 8: Constants chapter completed
+% - Ch 9: Control Flow chapter completed
+% - Ch 10.2: User-defined Functions section completed
+% - Cross-references fixed
+%
+% COMPLETED (Phases 2-5):
+% - Part II: Formal Semantics (with TODOs for uncertain parts)
+% - Part III: Core Formal Model (with TODOs for uncertain parts)
+% - Part IV: Hardware Model completed
+% - Part V: Physical System completed
+%
+% REMAINING TODOs:
+% - Phase 2: Evaluation Model type coercion rules
+% - Phase 2: Execution Order declaration order
+% - Phase 2: Type System Rules type safety guarantees
+% - Phase 3: Execution Model (declaration vs execution phase)
+% - Phase 3: Object Lifecycle (graph commit, modifications, undo)
+% - Phase 3: Solver Resolution Algorithm (optimization details)
+% - Phase 4: General Querying (beyond quantifier system)
+% - Phase 6-10: Toolchain, Reference, Appendices, Examples, Review
 % 
 % 
 % 
@@ -79,21 +84,77 @@
 % 
 \chapter{Introduction}
 \section{Abstract}
-EDADSL (Electronic Design Automation Domain Specific Language) is a Domain-specific Language (DSL) specialized for programatic Elecectronic Design Automation (EDA) and Hardware-Synthesis. 
-It is based on an Electrical System and a constraint driven optimisation Engine\\
-This Document is a full Outline and as of now the authoritative Specification of the EDADSL Language as well as the Systems underlying it.
+EDADSL (Electronic Design Automation Domain Specific Language) is a Domain-specific Language (DSL) specialized for programmatic Electronic Design Automation (EDA) and Hardware-Synthesis. 
+It is based on an Electrical System and a constraint-driven optimisation engine.
+This Document is a full outline and as of now the authoritative Specification of the EDADSL Language as well as the systems underlying it.
+
 \section{Reading this Document}
-%
+This document is organized into the following parts:
 
+\begin{itemize}
+\item \textbf{Part I: Core Language} -- Defines the programming language constructs including lexical structure, types, variables, expressions, constants, control flow, and functions.
+\item \textbf{Part II: Formal Semantics} -- Describes the evaluation model, execution order, constraint resolution, and type system rules.
+\item \textbf{Part III: Core Formal Model} -- Defines the structure of programs, the electrical system, and the solver.
+\item \textbf{Part IV: Hardware Model} -- Describes the circuit model, electrical objects, and querying system.
+\item \textbf{Part V: Physical System} -- Defines physical constraints, the solver model, and system flags.
+\item \textbf{Part VI: Toolchain} -- Describes the compiler pipeline, code generation, standard library, and debugging.
+\item \textbf{Part VII: Reference} -- Contains exceptions, error model, future improvements, and references.
+\item \textbf{Appendices} -- Contains standard libraries, examples, and diagrams.
+\end{itemize}
 
+Readers new to EDADSL should start with Parts I and IV, which define the language and electrical system. Those interested in physical layout should read Part V. Implementers should consult Parts II and III for formal specifications.
 
 
 \part{Core Language}
-%This Part defines the core Programming Language of EDADSL.
 \chapter{Design Principles}
 \section{Design Goals}
+EDADSL was designed with the following primary goals:
+
+\begin{enumerate}
+\item \textbf{Programmatic PCB Design} -- Enable engineers to describe circuits and layouts programmatically, enabling version control, automation, and reproducibility.
+
+\item \textbf{Constraint-Driven Layout} -- Allow physical constraints (clearance, creepage, alignment) to be specified declaratively, with the solver handling the complex optimization.
+
+\item \textbf{Electrical Awareness} -- Maintain a rich electrical model (parts, pins, connections, nets) that understands circuit topology, not just geometry.
+
+\item \textbf{KiCad Integration} -- Generate industry-standard KiCad files (schematics and PCBs) for further editing and manufacturing.
+
+\item \textbf{Readability} -- Use clear, prefixed syntax (elec.*, phys.*, syst.*) to make code self-documenting and easy to understand.
+
+\item \textbf{Simplicity} -- Provide a minimal set of powerful constructs rather than a large number of specialized features.
+
+\item \textbf{Accessibility} -- Serve both professional engineers and hobbyists with appropriate defaults while supporting advanced features for complex designs.
+\end{enumerate}
+
 \section{Applications and Application-Areas with special Priority during Design}
+EDADSL is particularly well-suited for:
+
+\begin{itemize}
+\item \textbf{Power Electronics} -- Where creepage distances, high-current traces, and thermal management are critical. The constraint system supports isolation requirements between high-voltage and low-voltage sections.
+
+\item \textbf{High-Speed Digital Design} -- Where trace length matching, impedance control, and signal integrity are important. The \texttt{phys.connmatch} constraint supports length and impedance matching.
+
+\item \textbf{Mixed-Signal Designs} -- Where analog and digital sections must be carefully isolated. The constraint system supports separation of noisy and sensitive circuits.
+
+\item \textbf{Prototyping} -- Where rapid iteration and parametric design enable quick exploration of design alternatives.
+
+\item \textbf{Automated Manufacturing} -- Where programmatic generation enables batch production and design automation pipelines.
+\end{itemize}
+
 \section{Design Philosophy}
+EDADSL follows a declarative-imperative hybrid philosophy:
+
+\begin{itemize}
+\item \textbf{Imperative Circuit Definition} -- Components and connections are defined sequentially, allowing natural expression of circuit topology.
+
+\item \textbf{Declarative Physical Constraints} -- Physical requirements are declared as constraints, letting the solver determine optimal placement and routing.
+
+\item \textbf{Separation of Concerns} -- The electrical description (what the circuit does) is separated from the physical description (how it is laid out).
+
+\item \textbf{Constraint Hierarchy} -- A priority system allows designers to express preferences while ensuring critical requirements are met.
+
+\item \textbf{Global Scope} -- All variables and objects are globally accessible, simplifying code structure at the cost of encapsulation.
+\end{itemize}
 
 \chapter{Lexical Structure}
 \section{Character Set}
@@ -123,18 +184,33 @@ id                            = [_a-zA-Z0-9]+
 \section{Keywords}
 The language uses the following Keywords defined using the following Regular Expressions:
 \begin{verbatim}
-Generic_Keywords:    start halt if for gotomarker gotojump writetolog mkpcb 
-                     mkschematic export echo return
+Generic_Keywords:    start halt if for gotomarker gotojump 
+                     writetolog mkpcb mkschematic export 
+                     echo return let skip
+
 Physical_Keywords:   phys\.[a-z]+
+                     Known Physical Keywords:
+                     phys.prox  phys.creep  phys.layer
+                     phys.side  phys.shrinknet  phys.mkplane
+                     phys.viafill  phys.connectioncurrent
+                     phys.align  phys.connmatch
+
 Electrical_Keywords: elec\.[a-z]+
+                     Known Electrical Keywords:
+                     elec.part  elec.connect  elec.net
+                     elec.tag  elec.untag
+
 System_Keywords:     syst\.[a-z]+
+                     Known System Keywords:
+                     syst.flag\.[a-z]+
 \end{verbatim}
+Keywords are reserved identifiers and may not be used as variable names, function names, or constant names.
 
 \section{Literals}
-For the Lexical Structure of Literals see:  [ NUMBER OF SECTION Types/Type Literals ] Type Literals.
+For the Lexical Structure of Literals see:  Section~\ref{sec:generic-types} (Types).
 
 \section{Operators}
-For the Lexical Structure of built in Operators see:  [ NUMBER OF SECTION Operators/Built-in Operators ] Built-in Operators. \\
+For the Lexical Structure of built in Operators see:  Section~\ref{sec:operators} (Operators). \\
 User-defined Operators are defined using the following Regular Expressions:
 \begin{verbatim}
 User_Operators     = o\.u\.[_a-zA-Z0-9]+
@@ -190,10 +266,12 @@ iterator                      = "for", variable, "E", list, "::", code_block
 
 jump                          = ( "gotomarker" | "gotojump" ), id
 
-function_definition           = "function", "f.u.", id, "(", [ { id, "," }, id],
-                                ")", "::", "{" f_statement, {f_statement}, "}"
+function_definition = "function", "f.u.", id, 
+                      "(", [ { id, "," }, id], 
+                      ")", "::", "{", f_statement, 
+                      {f_statement}, "}"
 
-f_statement                   = statement | "return", [data]
+f_statement = statement | "return", [data]
 
 function_call_ud              = "f.u.", id, "(", [{ data, "," }, data] ,")"
 
@@ -208,7 +286,8 @@ assigner                      = "B=", boolean_type
                               | "S=",     set_type
                               | electrical_system_assigner
 
-constant_assignment           = "let", "c.u.", id, assigner, [";", "P", "=", boolean]
+constant_assignment = "let", "c.u.", id, assigner, 
+                      [";", "P", "=", boolean]
 
 
 halt                          = "halt"
@@ -243,16 +322,18 @@ electrical_system_assigner    = "P=",       part_type
 
 make_statement = "make.", ( "pcb" | "schematic" )
 
-elec_statement = "elec.", ( "part", part_reference, ":", model_name, 
-                            "(", model_params, ")", ";", "des", "=", 
-                            string_type, ";", "fp", "=", string_type
-                          | "connect", ( net_type | pin_type ), pin_type,
-                            { pin_type }
-                          | "net", string_type, { string_type }
-                          | "tag", net_type, string_type, { string_type },
-                            ["-remove"]
+elec_statement = "elec.", 
+  ( "part", part_reference, ":", model_name, 
+    "(", model_params, ")", ";", "des", "=", 
+    string_type, ";", "fp", "=", string_type
+  | "connect", ( net_type | pin_type ), 
+    pin_type, { pin_type }
+  | "net", string_type, { string_type }
+  | "tag", net_type, string_type, 
+    { string_type }, ["-remove"]
 
-part_reference = ( string_type | "[", { string_type, "," }, string_type, "]" )
+part_reference = string_type | 
+                 "[", { string_type, "," }, string_type, "]"
 model_name     = id
 model_params   = [ { id, "=", data, "," }, id, "=", data ]
 
@@ -263,31 +344,128 @@ model_params   = [ { id, "=", data, "," }, id, "=", data ]
 
 
 \chapter{Types}
+\label{ch:types}
 This Section defines Type Literals using EBNF and RegEx.
 \section{Generic Types}
+\label{sec:generic-types}
 \subsection{Boolean}
 \subsubsection{Boolean Data Type Definition}
+The Boolean data type represents logical truth values. It has exactly two possible values: \texttt{True} and \texttt{False}. Booleans are used in conditional expressions, logical operations, and control flow decisions.
+
 \subsubsection{Boolean Data Type Literals}
 \begin{verbatim}
 boolean_literal = "True" | "False"
 \end{verbatim}
 \subsubsection{Boolean Data Type Casting and Coercion}
+Boolean values can be coerced from other types:
+\begin{itemize}
+\item Scalar values coerce to \texttt{False} if zero, \texttt{True} otherwise
+\item Strings coerce to \texttt{False} if empty, \texttt{True} otherwise
+\item Lists and Sets coerce to \texttt{False} if empty, \texttt{True} otherwise
+\item \texttt{None} coerces to \texttt{False}
+\end{itemize}
+Explicit conversion is not supported; boolean evaluation is implicit in conditional contexts.
 \subsection{Scalar}
 \subsubsection{Scalar Data Type Definition}
+The Scalar data type represents real numbers (elements of $\mathbb{R}$). Scalars support standard arithmetic operations and can express values from very small (quecto-scale, $10^{-30}$) to very large (quetta-scale, $10^{30}$) using SI decimal prefixes.
 \subsubsection{Scalar Data Type Literals}
+Scalar literals can be expressed in multiple formats:
 \begin{verbatim}
+EBNF:
+scalar_literal = decimal_literal | binary_literal 
+               | octal_literal | hex_literal
 
+decimal_literal  = prefixless_decimal | prefixed_decimal
+prefixless_decimal = ["+" | "-"], digit, {digit}, 
+                     [".", {digit}]
+                   | ["+" | "-"], ".", digit, {digit}
+                   | ["+" | "-"], digit, {digit}, 
+                     ("e" | "E"), ["+" | "-"], digit, 
+                     {digit}
+
+prefixed_decimal = prefix, digit, {digit}
+prefix           = "0b" | "0o" | "0d" | "0x"
+
+binary_literal   = "0b", bindigit, {bindigit}
+octal_literal    = "0o", octdigit, {octdigit}
+hex_literal      = "0x", hexdigit, {hexdigit}
+
+RegEx:
+digit     = [0-9]
+bindigit  = [01]
+octdigit  = [0-7]
+hexdigit  = [0-9a-fA-F]
+\end{verbatim}
+
+Additionally, SI decimal prefixes may be appended to any numeric literal:
+\begin{verbatim}
+SI_Prefixes:
+q  1e-30  quecto     Q  1e+30  quetta
+r  1e-27  ronto      R  1e+27  ronna
+y  1e-24  yocto      Y  1e+24  yotta
+z  1e-21  zepto      Z  1e+21  zetta
+a  1e-18  atto       E  1e+18  exa
+f  1e-15  femto      P  1e+15  peta
+p  1e-12  pico       T  1e+12  tera
+n  1e-9   nano       G  1e+9   giga
+u  1e-6   micro      M  1e+6   mega
+m  1e-3   milli      k  1e+3   kilo
+c  1e-2   centi
+d  1e-1   deci
+\end{verbatim}
+
+Examples:
+\begin{verbatim}
+0       # = 0
+700     # = 700
+-35     # = -35
+.4      # = 0.4
++80     # = 80
+6.94    # = 6.94
+2e-6    # = 0.000002
+-5e9    # = -5000000000
+100n    # = 0.0000001
+6.2k    # = 6200
+4Q      # = 4e30
+0x10    # = 16
+0b1010  # = 10
+0o17    # = 15
 \end{verbatim}
 \subsubsection{Scalar Data Type Casting and Coercion}
+Scalars can be coerced from other types:
+\begin{itemize}
+\item Booleans coerce to \texttt{0} (False) or \texttt{1} (True)
+\item Numeric strings are parsed as scalars (e.g., \texttt{"42"} becomes \texttt{42})
+\item Non-numeric strings raise a type error
+\end{itemize}
+Lists of scalars can be passed to mathematical functions, which operate element-wise.
 \subsection{Set}
 \subsubsection{Set Data Type Definition}
+A Set is an unordered collection of electrical objects. Sets may only contain the following types:
+\begin{itemize}
+\item Parts
+\item Connections
+\item Pins
+\item Nets
+\end{itemize}
+All other object types are silently dropped when attempting to add them to a set. Sets support standard set algebra operations (union, intersection, difference, subset, element-of).
+
 \subsubsection{Set Data Type Literals}
 \begin{verbatim}
-set_literal = "{", [ { electrical_data, ","}, electrical_data ], "}"
+set_literal = "{", [ { electrical_data, ","}, 
+              electrical_data ], "}"
 \end{verbatim}
 \subsubsection{Set Data Type Casting and Coercion}
+Sets can be created from Lists using the \texttt{f.set()} function. When converting a List to a Set, any elements that are not electrical objects (Part, Pin, Connection, Net) are silently dropped with a warning.\\
+Example:
+\begin{verbatim}
+$my_list L= [ "text", Q1, R3, 42 ]
+$f.my_set S= f.set( $my_list )  # Only Q1, R3
+\end{verbatim}
+Sets can be converted to Lists using the \texttt{f.list()} function. The order of elements in the resulting List is determined by the order they appear in the global set \texttt{*e}.
 \subsection{String}
 \subsubsection{String Data Type Definition}
+The String data type represents textual data. Strings can be delimited by single or double quotes, and support escape sequences. Long strings (multi-line) are delimited by triple quotes.
 \subsubsection{String Data Type Literals}
 \begin{verbatim}
 EBNF:
@@ -304,48 +482,248 @@ short_string_item_II = [^'\\\n)]|(\\.)
  long_string_item_II = [^'\\]|(\\.)
 \end{verbatim}
 \subsubsection{String Data Type Casting and Coercion}
+Strings can be created from other types using the \texttt{f.str()} function, which concatenates all arguments into a single string.\\
+Example:
+\begin{verbatim}
+$f.msg W= f.str( "The value is ", 42, 
+    " and color is ", "red" )
+# $msg = "The value is 42 and color is red"
+\end{verbatim}
+Additional string functions include \texttt{f.upperc()} (uppercase), \texttt{f.lowerc()} (lowercase), and \texttt{f.format()} (formatted output).
 \subsection{List}
 \subsubsection{List Data Type Definition}
+The List data type represents an ordered, indexed collection of objects. Lists support 0-based indexing, slicing, and can contain elements of different types. Lists are mutable and can be dynamically resized.
 \subsubsection{List Data Type Literals}
 \begin{verbatim}
 EBNF:
 list_literal = "[", [{ data, "," }, data], "]"
 \end{verbatim}
 \subsubsection{List Data Type Casting and Coercion}
+Lists can be created from Sets using the \texttt{f.list()} function. The order is determined by the element order in \texttt{*e}.\\
+Lists support range generation using the syntax:
+\begin{verbatim}
+[start:increment:end]    # explicit increment
+[start:end]              # increment defaults to 1
+[start|end|count]        # evenly spaced, count elements
+\end{verbatim}
+Examples:
+\begin{verbatim}
+$f.r1 L= [0:2:10]      # [0, 2, 4, 6, 8, 10]
+$f.r2 L= [0:5]         # [0, 1, 2, 3, 4, 5]
+$f.r3 L= [0|1|5]       # [0, 0.25, 0.5, 0.75, 1]
+\end{verbatim}
 \section{Electrical Types}
 \subsection{Part}
 \subsubsection{Part Data Type Definition}
+A Part represents a physical electronic component in the circuit. Each Part has a reference designator, a model type, a description, and a footprint. Parts contain Pins which can be connected to Nets or other Pins.
 \subsubsection{Part Data Type Literals}
+Parts are created using the \texttt{elec.part} statement:
 \begin{verbatim}
+EBNF:
+part_statement = "elec.part", part_reference, 
+  ":", model_name, "(", [model_params], ")", 
+  ";", "des", "=", string_type, 
+  ";", "fp", "=", string_type
 
+part_reference = string_type | 
+  "[", { string_type, "," }, string_type, "]"
+model_name     = id
+model_params   = [ { id, "=", data, "," }, 
+                   id, "=", data ]
+\end{verbatim}
+Examples:
+\begin{verbatim}
+elec.part "R1": r( R = 100, P = 0.25, 
+    type = "metal film" )
+    ; des = "100 ohm resistor"
+    ; fp = "Resistor_SMD:R_0805_2012Metric"
+
+elec.part ["R2", "R3"]: r( R = 220, P = 0.25 )
+    ; des = "220 ohm resistors"; fp = "Resistor_SMD:R_0805_2012Metric"
 \end{verbatim}
 \subsubsection{Part Data Type Casting and Coercion}
+Parts cannot be cast from other types. Parts are created via \texttt{elec.part} statements and accessed by their reference designator. Parts support the following properties:
+\begin{itemize}
+\item Model parameters (accessed via model-specific syntax)
+\item Pin references (using \texttt{part\_ref[pin\_ref]} syntax)
+\item Description (set via \texttt{des} parameter)
+\item Footprint (set via \texttt{fp} parameter)
+\end{itemize}
 \subsection{Pin}
 \subsubsection{Pin Data Type Definition}
+A Pin represents a connection point on a Part. Pins are referenced using the syntax \texttt{part\_ref[pin\_ref]}, where \texttt{pin\_ref} is typically a numeric index or a named terminal (e.g., \texttt{R1[1]}, \texttt{Q1[d]}, \texttt{U1[v+]}).
 \subsubsection{Pin Data Type Literals}
+Pins are created implicitly when Parts are instantiated. Pin references are formed using the bracket notation:
+\begin{verbatim}
+pin_literal = part_ref, "[", pin_ref, "]"
+
+Examples:
+R1[1]      # Pin 1 of resistor R1
+Q1[d]      # Drain pin of MOSFET Q1
+U1[v+]     # Non-inverting input of op-amp U1
+J1[3]      # Pin 3 of connector J1
+\end{verbatim}
+The available pin references depend on the Part's footprint and model definition.
 \subsubsection{Pin Data Type Casting and Coercion}
+Pins cannot be cast from other types. Pins are accessed via Part references and support the following operations:
+\begin{itemize}
+\item Connection to other Pins or Nets via \texttt{elec.connect}
+\item Membership testing in Sets
+\item Iteration over Pins of a Part
+\end{itemize}
 \subsection{Connection}
 \subsubsection{Connection Data Type Definition}
+A Connection represents an electrical connection between two Pins. Connections are binary (exactly two Pins) and are created using the pipe syntax or the \texttt{elec.connect} statement.
 \subsubsection{Connection Data Type Literals}
+Connections can be created using the pipe syntax:
 \begin{verbatim}
+connection_literal = "(", pin, "|", pin, ")"
 
+Example:
+( R2[1] | J4[7] )  # R2 pin 1 to J4 pin 7
 \end{verbatim}
+Connections are also created implicitly by \texttt{elec.connect} statements.
 \subsubsection{Connection Data Type Casting and Coercion}
+Connections cannot be cast from other types. Connections support:
+\begin{itemize}
+\item Membership testing in Sets
+\item Property queries (length, resistance, inductance, capacitance, impedance)
+\end{itemize}
 \subsection{Net}
 \subsubsection{Net Data Type Definition}
+A Net represents a named electrical node that connects multiple Pins and Connections. Nets are the fundamental grouping mechanism in the electrical system, allowing multiple components to share a common electrical connection.
 \subsubsection{Net Data Type Literals}
+Nets are created using the \texttt{elec.net} statement:
 \begin{verbatim}
+EBNF:
+net_statement = "elec.net", string_type, { string_type }
 
+Example:
+elec.net "Gnd"
+elec.net "hvbus" "hv" "high_i" "noisy"
 \end{verbatim}
+The first argument is the net name; subsequent arguments are optional tags.
 \subsubsection{Net Data Type Casting and Coercion}
+Nets cannot be cast from other types. Nets support:
+\begin{itemize}
+\item Tagging/untagging via \texttt{elec.tag} and \texttt{elec.untag}
+\item Membership testing in Sets
+\item Connection to Pins via \texttt{elec.connect}
+\item Querying connected objects using quantifier syntax (e.g., \texttt{I@Gnd}, \texttt{P@Vin})
+\end{itemize}
 
 
 \chapter{Variables}
+Variables in EDADSL are prefixed with the \texttt{\$} character and are assigned values using type-specific assignment operators.
+
+\section{Variable Declaration and Assignment}
+Variables are declared and assigned simultaneously using the following syntax:
+\begin{verbatim}
+EBNF:
+variable          = "$", id
+variable_assignment = variable, assigner, 
+                      [";", "M", "=", boolean]
+
+assigner          = "B=", boolean_data_type
+                  | "V=", scalar_data_type
+                  | "L=", list_data_type
+                  | "W=", string_data_type
+                  | "S=", set_data_type
+                  | "P=", part_data_type
+                  | "C=", connection_data_type
+                  | "T=", pin_data_type
+                  | "N=", net_data_type
+\end{verbatim}
+
+The assignment operator determines the variable's type:
+\begin{itemize}
+\item \texttt{B=} assigns a Boolean
+\item \texttt{V=} assigns a Scalar
+\item \texttt{L=} assigns a List
+\item \texttt{W=} assigns a String
+\item \texttt{S=} assigns a Set
+\item \texttt{P=} assigns a Part
+\item \texttt{C=} assigns a Connection
+\item \texttt{T=} assigns a Pin
+\item \texttt{N=} assigns a Net
+\end{itemize}
+
+\section{Mutability}
+By default, variables are mutable (can be reassigned). To make a variable immutable, append \texttt{; M = False} after the assignment:
+\begin{verbatim}
+$f.immutable V= 42; M = False
+$f.mutable V= 100    # Can be reassigned
+\end{verbatim}
+
+\section{Scope}
+Variables have global scope once declared. They can be accessed from any point in the program after their declaration. There is no block scoping; variables declared inside code blocks remain accessible outside.
+
+\section{Examples}
+\begin{verbatim}
+$a V= 3
+$b V= 5
+$f.result V= $a + $b        # Scalar assignment
+
+$f.name W= "EDADSL"         # String assignment
+$f.flag B= True              # Boolean assignment
+
+$f.colors L= ["red", "green", "blue"]  # List
+$f.hwset S= { Q1, Q2, R5 }             # Set
+\end{verbatim}
 
 
 \chapter{Expressions}
+Expressions in EDADSL evaluate to values and can be composed of literals, variables, function calls, and operators.
+
+\section{Expression Grammar}
+\begin{verbatim}
+EBNF:
+expression      = arithmetic_expression
+                | boolean_expression
+                | comparison_expression
+                | set_expression
+                | function_call
+                | "(" expression ")"
+
+arithmetic_expression = expression, 
+    ("+" | "-" | "*" | "/" | "%" | "^"), 
+    expression
+  | "-" expression
+
+boolean_expression = expression, 
+    ("&&" | "||" | "^^"), expression
+  | "!", expression
+
+comparison_expression = expression, 
+    ("<" | "<=" | "==" | "!=" | ">=" | ">"), 
+    expression
+
+set_expression = expression, ("u" | "n" | "/"), 
+    expression
+  | "||", expression
+  | expression, ("c" | "E" | "!E"), expression
+\end{verbatim}
+
+\section{Operator Precedence}
+Operators are evaluated in the following order of precedence (highest to lowest):
+\begin{enumerate}
+\item Unary minus (\texttt{-}), Logical NOT (\texttt{!})
+\item Exponentiation (\texttt{\^{}})
+\item Multiplication (\texttt{*}), Division (\texttt{/}), Modulo (\texttt{\%})
+\item Addition (\texttt{+}), Subtraction (\texttt{-})
+\item Set cardinality (\texttt{||})
+\item Comparison operators (\texttt{<}, \texttt{<=}, \texttt{==}, \texttt{!=}, \texttt{>=}, \texttt{>})
+\item Set membership (\texttt{E}, \texttt{!E}), Subset (\texttt{c})
+\item Logical AND (\texttt{\&\&})
+\item Logical XOR (\texttt{\^{}}\texttt{\^{}})
+\item Logical OR (\texttt{||})
+\end{enumerate}
+
+\section{Evaluation Order}
+Expressions are evaluated left-to-right for operators of equal precedence. Parentheses can be used to override precedence. Function arguments are evaluated before the function is called.
 
 \chapter{Operators}
+\label{sec:operators}
 \section{Built-in Operators}
 \subsection{Arithmetic}
 List of arithmetic Operators:
@@ -404,25 +782,127 @@ print( 4 o.u.mod_minus_1 3 ) # = 0
 
 
 \chapter{Constants}
+Constants are immutable values that cannot be reassigned after declaration.
+
 \section{Built-in Constants}
 \subsection{Proper Constants}
+Proper constants are fixed values provided by the language.
+
 \subsubsection{Mathematical Constants}
-c.pi
-c.e
+\begin{itemize}
+\item \texttt{c.pi} -- The mathematical constant $\pi \approx 3.14159265...$
+\item \texttt{c.e} -- Euler's number $e \approx 2.71828182...$
+\item \texttt{c.inf} -- Positive infinity
+\end{itemize}
+
 \subsubsection{Physical Constants}
-c.eps0
-c.mu0
+\begin{itemize}
+\item \texttt{c.eps0} -- Vacuum permittivity $\varepsilon_0 \approx 8.854 \times 10^{-12}$ F/m
+\item \texttt{c.mu0} -- Vacuum permeability $\mu_0 \approx 4\pi \times 10^{-7}$ H/m
+\end{itemize}
+
 \subsection{Pseudo-Constants}
+Pseudo-constants are system-defined sets that provide access to electrical objects.
+
 \subsubsection{Set Pseudo-Constants}
+\begin{itemize}
+\item \texttt{*n} -- Empty set
+\item \texttt{*e} -- All parts, connections, pins, holes, and nets
+\item \texttt{*i} -- All pins and connections
+\item \texttt{*u} -- All parts, connections, and pins on the upper side of the board
+\item \texttt{*b} -- All parts, connections, and pins on the bottom side of the board
+\item \texttt{*h} -- All holes
+\item \texttt{*c} -- All connections
+\item \texttt{*p} -- All parts
+\item \texttt{*t} -- All pins
+\end{itemize}
+
 \section{User-defined Constants}
-\subsection{User-defined Proper Constants}
-\subsection{User-defined Pseudo-Constants}
+User-defined constants are created using the \texttt{let} keyword with the \texttt{c.u.} prefix:
+\begin{verbatim}
+EBNF:
+constant_assignment = "let", "c.u.", id, assigner, 
+                      [";", "P", "=", boolean]
+
+Examples:
+let c.u.$max_current V= 30
+let c.u.$board_name W= "PowerSupply"
+\end{verbatim}
+Constants are immutable by definition and cannot be reassigned.
 
 \chapter{Control Flow}
+EDADSL provides several control flow constructs for conditional execution, iteration, and program flow control.
+
 \section{Conditional Execution}
-\section{for Loops}
-\section{End of Program Statements}
+Conditional execution uses the \texttt{if} keyword followed by a boolean expression and a code block:
+\begin{verbatim}
+EBNF:
+conditional = "if", boolean_expression, 
+              "::", code_block
+
+Example:
+$flag B= True
+if $flag ::{
+    f.print("Flag is set")
+}
+\end{verbatim}
+The code block is executed only if the boolean expression evaluates to \texttt{True}.
+
+\section{For Loops}
+For loops iterate over a list or set:
+\begin{verbatim}
+EBNF:
+iterator = "for", variable, "E", 
+           (list | set), "::", code_block
+
+Example:
+$colors L= ["red", "green", "blue"]
+for $c E $colors ::{
+    f.print($c)
+}
+\end{verbatim}
+The loop variable (\texttt{\$c}) takes on each value in the list/set in sequence.
+
 \section{Goto Statements}
+Goto statements provide unconditional jumps to labeled positions:
+\begin{verbatim}
+EBNF:
+gotomarker = "gotomarker", id
+gotojump   = "gotojump", id
+
+Example:
+gotojump skip_section
+f.print("This will not be printed")
+gotomarker skip_section
+f.print("Jumped here")
+\end{verbatim}
+Gotomarkers and gotojumps can cross function and loop boundaries. Nesting is allowed.
+
+\section{End of Program Statements}
+\begin{verbatim}
+EBNF:
+halt = "halt"
+noop = "skip"
+\end{verbatim}
+\begin{itemize}
+\item \texttt{halt} -- Terminates program execution and exports all created files
+\item \texttt{skip} -- No operation; program continues to next statement
+\end{itemize}
+
+\section{Output and Logging}
+\begin{verbatim}
+EBNF:
+echo_statement = "echo", expression
+writetolog     = "writetolog", string_expression
+
+Example:
+f.print("Hello, EDADSL!")
+f.writetolog "Board design completed successfully"
+\end{verbatim}
+\begin{itemize}
+\item \texttt{echo} -- Prints a value to the console
+\item \texttt{writetolog} -- Appends a message to the log file
+\end{itemize}
 
 \chapter{Functions}
 \section{Built-in Functions}
@@ -432,7 +912,8 @@ The Absolute Value Function ( denoted as \texttt{abs} ) returns the Absolute Val
 Morphology of the Absolute Value Function:
 \begin{verbatim}
 EBNF:
-"abs", "(", argument, [ ",", "vec", "=", boolean_data_type ], ")"
+"abs", "(", argument, [ ",", "vec", "=", 
+       boolean_data_type ], ")"
 \end{verbatim}
 If the Type of the Argument does not match the expected Type (a Scalar Value or a List of Scalar Values) a Value Error is raised.\\
 Example:
@@ -484,7 +965,8 @@ The Regular Trigonometric Functions (Sine, Cosine and Tangent) ( denoted as \tex
 Morphology of the Trigonometric Functions:
 \begin{verbatim}
 EBNF:
-( "sin" | "cos" | "tan" ), "(", argument, [ ",", "unit", "=", unit ], ")"
+( "sin" | "cos" | "tan" ), "(", argument, 
+  [ ",", "unit", "=", unit ], ")"
 
 unit = ( "'", ("rad" | "deg" ), "'" )
      | ( '"', ("rad" | "deg" ), '"' )
@@ -512,12 +994,13 @@ The Regular Inverse Trigonometric Functions (Arcsine, Arccosine and Arctangent) 
 Morphology of the Trigonometric Functions:
 \begin{verbatim}
 EBNF:
-inverses_trig_functions, "(", argument, [ ",", "unit", "=", unit ], ")"
+inverses_trig_functions, "(", argument, 
+  [ ",", "unit", "=", unit ], ")"
 
-inverses_trig_functions =   "asin" |   "acos" |   "atan" 
-                        |  "arsin" |  "arcos" |  "artan"
-                        | "arcsin" | "arccos" | "arctan"
-
+inverses_trig_functions = 
+    "asin" | "acos" | "atan" 
+  | "arsin" | "arcos" | "artan"
+  | "arcsin" | "arccos" | "arctan"
 
 unit = ( "'", ("rad" | "deg" ), "'" )
      | ( '"', ("rad" | "deg" ), '"' )
@@ -570,9 +1053,10 @@ Morphology of the Hyperbolic Functions:
 EBNF:
 inverses_hypb_functions, "(", argument, ")"
 
-inverses_hypb_functions =   "asinh" |   "acosh" |   "atanh" 
-                        |  "arsinh" |  "arcosh" |  "artanh"
-                        | "arcsinh" | "arccosh" | "arctanh"
+inverses_hypb_functions = 
+    "asinh" | "acosh" | "atanh" 
+  | "arsinh" | "arcosh" | "artanh"
+  | "arcsinh" | "arccosh" | "arctanh"
 \end{verbatim}
 If the Type of the Argument does not match the expected Type (a Scalar Value or a List of Scalar Values) a Value Error is raised.\\
 Example:
@@ -590,76 +1074,471 @@ This Example would return \texttt{[0, 0.481, 0.881]}.\\
 For the Hyperbolic Arcsine there is no Domain-Restrictions for the function inside $\mathbb{R}^n$. \\
 For Hyperbolic Arctangent and Hyperbolic Arccosine the Domain is Restricted to $(-1,1)^n$ and $[1,\infty)^n$ respektively.\\
 
-\subsubsection{Rounding Functions}
-\begin{verbatim}
-
-\end{verbatim}
 \subsubsection{Exponential Functions and Logarithms}
+\paragraph{Exponential Function}
+The \texttt{exp} function returns $e$ raised to the power of the argument. \\
+Morphology:
 \begin{verbatim}
-
+EBNF:
+"exp", "(", argument, ")"
 \end{verbatim}
+Example:
+\begin{verbatim}
+exp(0)    # Returns 1.0
+exp(1)    # Returns approximately 2.71828
+\end{verbatim}
+
+\paragraph{Square Root Function}
+The \texttt{sqrt} function returns the square root of the argument. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"sqrt", "(", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+sqrt(9)   # Returns 3.0
+sqrt(2)   # Returns approximately 1.41421
+\end{verbatim}
+Domain: $[0, \infty)$
+
+\paragraph{Power Function}
+The \texttt{pow} function returns the first argument raised to the power of the second argument. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"pow", "(", argument, ",", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+pow(2, 3)   # Returns 8.0
+pow(9, 0.5) # Returns 3.0
+\end{verbatim}
+
+\paragraph{Natural Logarithm}
+The \texttt{ln} function returns the natural logarithm (base $e$) of the argument. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"ln", "(", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+ln(1)      # Returns 0.0
+ln(e)      # Returns 1.0
+\end{verbatim}
+Domain: $(0, \infty)$
+
+\paragraph{Base-10 Logarithm}
+The \texttt{log} function returns the base-10 logarithm of the argument. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"log", "(", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+log(100)   # Returns 2.0
+log(1)     # Returns 0.0
+\end{verbatim}
+Domain: $(0, \infty)$
+
+\subsubsection{Rounding Functions}
+\paragraph{Floor Function}
+The \texttt{floor} function rounds the argument down to the nearest integer. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"floor", "(", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+floor(2.7)   # Returns 2
+floor(-1.3)  # Returns -2
+\end{verbatim}
+
+\paragraph{Ceiling Function}
+The \texttt{ceil} function rounds the argument up to the nearest integer. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"ceil", "(", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+ceil(2.3)    # Returns 3
+ceil(-2.7)   # Returns -2
+\end{verbatim}
+
+\paragraph{Round Function}
+The \texttt{round} function rounds the argument to the nearest integer. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"round", "(", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+round(2.5)   # Returns 3
+round(2.4)   # Returns 2
+\end{verbatim}
+
 \subsubsection{Extrema Functions}
+\paragraph{Minimum Function}
+The \texttt{min} function returns the minimum value in a list. \\
+Morphology:
 \begin{verbatim}
-
+EBNF:
+"min", "(", list, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+min([3, 1, 4, 1, 5])   # Returns 1
 \end{verbatim}
 
+\paragraph{Maximum Function}
+The \texttt{max} function returns the maximum value in a list. \\
+Morphology:
 \begin{verbatim}
-atan2
-floor  Rounding down
-round  Rounding
-ceil   Rounding up
-ln     Natural logarithm
-log    Base 10 logarithm
-pow    1st arg to the power of the 2nd arg
-sqrt   Square root
-exp    e to the power of the arg
-min    Maximum value in a list
-max    Minimum value in a list
-norm   Normalizes a list such that the square root of the sum of all squared elements is eqal to 1
+EBNF:
+"max", "(", list, ")"
 \end{verbatim}
+Example:
+\begin{verbatim}
+max([3, 1, 4, 1, 5])   # Returns 5
+\end{verbatim}
+
+\subsubsection{Inverse Tangent Function based on a Vector Argument}
+The \texttt{atan2} function computes the arctangent of $y/x$ using the signs of both arguments to determine the correct quadrant. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"atan2", "(", argument, ",", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+atan2(1, 0)    # Returns approximately 1.5708 (π/2)
+atan2(0, 1)    # Returns 0.0
+\end{verbatim}
+
+\subsubsection{Norm and Normalization Functions}
+EDADSL provides functions for computing vector norms and normalizing vectors.
+
+\paragraph{Norm Function}
+The \texttt{norm} function computes the p-norm of a vector (list of scalars). \\
+Morphology of the Norm Function:
+\begin{verbatim}
+EBNF:
+"norm", "(", argument, [ ",", "p", "=", 
+       scalar_data_type ], ")"
+\end{verbatim}
+Parameters:
+\begin{itemize}
+\item \texttt{argument} -- A list of scalar values (the vector)
+\item \texttt{p} -- (Optional) The order of the norm. Defaults to 2 (Euclidean norm).
+\end{itemize}
+
+Supported norms:
+\begin{itemize}
+\item \texttt{p = 1} -- L1 norm (Manhattan distance): $\|\mathbf{x}\|_1 = \sum_{i=1}^n |x_i|$
+\item \texttt{p = 2} -- L2 norm (Euclidean distance): $\|\mathbf{x}\|_2 = \sqrt{\sum_{i=1}^n x_i^2}$
+\item \texttt{p > 2} -- Lp norm: $\|\mathbf{x}\|_p = \left(\sum_{i=1}^n |x_i|^p\right)^{1/p}$
+\item \texttt{p = 0} -- L0 "norm" (count of non-zero elements): $\|\mathbf{x}\|_0 = |\{i : x_i \neq 0\}|$
+\item \texttt{p = -1} -- L-infinity norm (Chebyshev distance): $\|\mathbf{x}\|_\infty = \max_i |x_i|$
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+norm([3, 4])            # Returns 5.0 (L2 norm)
+norm([3, 4], p=1)       # Returns 7 (L1 norm)
+norm([3, 4], p=0)       # Returns 2 (L0 norm)
+norm([-3, 4, -2], p=-1) # Returns 4 (L-inf norm)
+\end{verbatim}
+
+If the argument is not a list of scalars, a Value Error is raised.
+
+\paragraph{Normalize Function}
+The \texttt{normalize} function returns a unit vector in the direction of the input vector. \\
+Morphology of the Normalize Function:
+\begin{verbatim}
+EBNF:
+"normalize", "(", argument, [ ",", "p", "=", 
+              scalar_data_type ], ")"
+\end{verbatim}
+Parameters:
+\begin{itemize}
+\item \texttt{argument} -- A list of scalar values (the vector to normalize)
+\item \texttt{p} -- (Optional) The order of the norm to use for normalization. Defaults to 2.
+\end{itemize}
+
+The function computes: $\hat{\mathbf{x}} = \frac{\mathbf{x}}{\|\mathbf{x}\|_p}$
+
+Examples:
+\begin{verbatim}
+normalize([3, 4])        # Returns [0.6, 0.8] (L2)
+normalize([3, 4], p=1)   # Returns [0.43, 0.57] (L1)
+normalize([6, 8], p=2)   # Returns [0.6, 0.8] (L2)
+\end{verbatim}
+
+If the norm of the vector is zero, a Division by Zero Error is raised.
+
+\paragraph{Relationship between abs(vec=True) and norm}
+The function \texttt{abs(v, vec=True)} is equivalent to \texttt{norm(v)} (L2 norm by default).
+
+
 \subsection{String Functions}
+
+\subsubsection{String Conversion}
+The \texttt{str} function converts its arguments to a string. \\
+Morphology:
 \begin{verbatim}
-str    Turns all given arguments into into a string
-format formats a nonstring datatype
-upperc uppercases a string
-lowerc lowercases a string
+EBNF:
+"str", "(", { argument }, ")"
 \end{verbatim}
+Example:
+\begin{verbatim}
+str("Hello")           # Returns "Hello"
+str(42)                # Returns "42"
+str("Value: ", 3.14)   # Returns "Value: 3.14"
+\end{verbatim}
+
+\subsubsection{String Formatting}
+The \texttt{format} function formats a non-string datatype. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"format", "(", argument, [ ",", options ], ")"
+\end{verbatim}
+% TODO: Document specific format options
+
+\subsubsection{String Case Functions}
+\paragraph{Uppercase}
+The \texttt{upperc} function converts a string to uppercase. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"upperc", "(", string, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+upperc("hello")   # Returns "HELLO"
+\end{verbatim}
+
+\paragraph{Lowercase}
+The \texttt{lowerc} function converts a string to lowercase. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"lowerc", "(", string, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+lowerc("HELLO")   # Returns "hello"
+\end{verbatim}
+
+
 \subsection{List and Set Functions}
+
+\subsubsection{Concatenation}
+The \texttt{concat} function combines all arguments into a single list. \\
+Morphology:
 \begin{verbatim}
-concat Turns all arguments into a list.
-set    Turns a list into a set ( only works if the list only contains objects
-       that are allowed in sets. All forbidden objects are dropped with a 
-       Warning )
-list   Turns a set into a list. The order is determined by the order that the 
-       elements appear in *e
+EBNF:
+"concat", "(", { argument }, ")"
 \end{verbatim}
+Example:
+\begin{verbatim}
+concat([1, 2], [3, 4])        # Returns [1, 2, 3, 4]
+concat("a", "b", "c")         # Returns ["a", "b", "c"]
+\end{verbatim}
+
+\subsubsection{Type Conversion}
+\paragraph{List to Set}
+The \texttt{set} function converts a list to a set. Only objects allowed in sets (parts, connections, pins, nets) are preserved; forbidden objects are silently dropped with a warning. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"set", "(", list, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+set([Q1, Q2, R5])   # Returns {Q1, Q2, R5}
+\end{verbatim}
+
+\paragraph{Set to List}
+The \texttt{list} function converts a set to a list. The order is determined by the order elements appear in \texttt{*e}. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"list", "(", set, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+list({Q1, Q2})   # Returns [Q1, Q2] (order from *e)
+\end{verbatim}
+
+
 \subsection{Shared Functions}
+
+\subsubsection{Length/Size Function}
+The \texttt{len} function returns the length of a list or string, or the size of a set. \\
+Morphology:
 \begin{verbatim}
-len    Length of list or string / size of set
+EBNF:
+"len", "(", ( list | string | set ), ")"
 \end{verbatim}
-\subsection{Special Functions}
+Examples:
 \begin{verbatim}
-print  Prints the arg to the console, similar to echo but has the advantage that 
-       it can directly evaluate certain expressions
-type   Returns the type of an object
-ref    Turns a string containing a part reference into the referenced part
+len([1, 2, 3])     # Returns 3
+len("hello")       # Returns 5
+len({Q1, Q2, R5})  # Returns 3
+\end{verbatim}
+
+
+\subsection{Special Functions}
+
+\subsubsection{Print Function}
+The \texttt{print} function outputs its argument to the console. Unlike \texttt{echo}, it can directly evaluate certain expressions. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"print", "(", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+print("Hello, World!")
+print(3 + 2 * 5)   # Outputs: 13
+\end{verbatim}
+
+\subsubsection{Type Function}
+The \texttt{type} function returns the type of an object as a string. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"type", "(", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+type(42)       # Returns "scalar"
+type("hello")  # Returns "string"
+type(Q1)       # Returns "part"
+\end{verbatim}
+
+\subsubsection{Reference Function}
+The \texttt{ref} function converts a string containing a part reference into the referenced part. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"ref", "(", string, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+ref("R1")   # Returns the part referenced as R1
 \end{verbatim}
 
 \section{User-defined Functions}
-%
+User-defined functions allow creation of reusable code blocks.
+
+\subsection{Function Definition}
+Functions are defined using the \texttt{function} keyword with the \texttt{f.u.} prefix:
+\begin{verbatim}
+EBNF:
+function_definition = "function", "f.u.", id, 
+  "(", [ { id, "," }, id], ")", "::", "{", 
+  f_statement, {f_statement}, "}"
+
+f_statement = statement | "return", [data]
+
+Example:
+function f.u.add( $a, $b )::{
+    $retval V= $a + $b
+}
+\end{verbatim}
+Functions operate on the global scope. To return a value, set the \texttt{\$retval} variable.
+
+\subsection{Function Calls}
+User-defined functions are called using the \texttt{f.u.} prefix:
+\begin{verbatim}
+EBNF:
+function_call_ud = "f.u.", id, "(", 
+                   [{ data, "," }, data], ")"
+
+Example:
+$f.result V= f.u.add( 3, 5 )   # $result = 8
+\end{verbatim}
+
+\subsection{Return Values}
+Functions return values by setting the \texttt{\$retval} variable. If \texttt{\$retval} is not set, the function returns nothing:
+\begin{verbatim}
+function f.u.square( $x )::{
+    $retval V= $x ^ 2
+}
+
+function f.u.greet( $name )::{
+    f.print( f.str( "Hello, ", $name, "!" ) )
+    # No return value
+}
+
+$f.sq V= f.u.square( 4 )     # $sq = 16
+f.u.greet( "World" )          # Prints: Hello, World!
+\end{verbatim}
+
+\subsection{Scope}
+User-defined functions operate on the global scope. Variables declared inside functions are accessible outside, and vice versa. There is no local scoping.
 
 
 
 
 \part{Formal Semantics}
 \chapter{Evaluation Model} %Abstract
+Expressions in EDADSL are evaluated according to standard mathematical precedence rules. The evaluation model is eager (strict), meaning all sub-expressions are evaluated before the operator is applied.
+
+\section{Operator Precedence}
+% Reference to Chapter 7 (Expressions)
+The complete operator precedence is defined in Section~\ref{sec:operators}.
+
+\section{Type Coercion}
+% TODO: Define formal type coercion rules
+% Uncertain about:
+% - Whether implicit type conversions exist
+% - How mixed-type operations are handled
+% - Error semantics for type mismatches
+
 
 \chapter{Execution Order}  %Concrete
 
+\section{Sequential Execution}
+Program statements are executed sequentially from the entry point (\texttt{start}).
+
+\section{Declaration Order}
+% TODO: Define whether declarations are processed before execution
+% Uncertain about:
+% - Can parts be referenced before they are declared?
+% - How does the order of elec.part and elec.connect statements affect the result?
+
+
 \chapter{Constraint Resolution}
+Physical constraints are resolved by the solver according to the priority system defined in Section~\ref{sec:physical-constraints}.
+
+\section{Conflict Resolution}
+When constraints conflict, the solver applies the higher-priority constraint and optimizes the lower-priority one. See Section~\ref{sec:solver-model} for the complete resolution rules.
+
 
 \chapter{Type System Rules}
-%
+EDADSL uses a dynamic type system with distinct types for electrical and non-electrical objects.
+
+\section{Type Categories}
+\begin{itemize}
+\item Generic types: Boolean, Scalar, String, List, Set
+\item Electrical types: Part, Pin, Connection, Net
+\end{itemize}
+
+\section{Type Safety}
+% TODO: Define formal type safety guarantees
+% Uncertain about:
+% - Whether sets can contain mixed types
+% - How function argument type checking works
+% - Runtime vs compile-time type checking
 
 
 
@@ -667,57 +1546,775 @@ ref    Turns a string containing a part reference into the referenced part
 \part{Core Formal Model}
 \chapter{Structure of the Program}
 
+\section{Program Entry Point}
+Every EDADSL program must begin with the \texttt{start} keyword. The program executes sequentially from the entry point.
+
+\section{Global Scope}
+All variables, constants, and functions operate on the global scope. There is no block scoping; variables declared inside code blocks remain accessible outside.
+
+\section{Execution Model}
+% TODO: Define the formal execution model
+% Uncertain about: 
+% - How the program transitions between declaration phase and execution phase
+% - Whether electrical statements are executed immediately or deferred
+% - How the solver interacts with the program execution
+
+
 \chapter{Structure of the Electrical System}
 
+\section{Electrical Graph}
+The electrical system is modeled as an undirected graph where:
+\begin{itemize}
+\item Vertices represent Nets
+\item Edges represent Connections
+\item Parts attach to the graph via their Pins
+\end{itemize}
+
+\section{Object Lifecycle}
+% TODO: Define the lifecycle of electrical objects
+% Uncertain about:
+% - When objects are committed to the graph
+% - How modifications to the graph are tracked
+% - Undo/redo semantics if any
+
+
 \chapter{Structure of the Solver}
-%
+
+\section{Constraint Representation}
+Physical constraints are represented as optimization objectives with priorities.
+
+\section{Resolution Algorithm}
+% TODO: Define the formal resolution algorithm
+% Uncertain about:
+% - The specific optimization algorithm used
+% - How constraints are weighted
+% - Convergence criteria
 
 
 
 
 \part{Hardware Model}
 \chapter{Circuit Model}
+The circuit model represents the electrical system as a graph of interconnected objects.
+
+\section{Graph Structure}
+The circuit is represented as a graph where:
+\begin{itemize}
+\item Nodes are Nets (electrical connection points)
+\item Edges are Connections (physical wires/traces between pins)
+\item Parts are components that connect to the graph via Pins
+\end{itemize}
+
+\section{Hierarchy}
+The model supports hierarchical grouping:
+\begin{itemize}
+\item Parts contain Pins
+\item Pins connect to Nets via Connections
+\item Nets can be grouped by Tags
+\end{itemize}
+
 
 \chapter{Electrical Objects}
+The electrical system consists of five primary object types.
+
 \section{Nets}
+A Net is a named electrical node that connects multiple Pins and Connections. Nets are the fundamental grouping mechanism for shared electrical connections.
+
+\subsection{Creation}
+Nets are created using the \texttt{elec.net} statement:
+\begin{verbatim}
+elec.net <name> [<tag1> ... <tag n>]
+
+Example:
+elec.net "Gnd"
+elec.net "hvbus" "hv" "high_i" "noisy"
+\end{verbatim}
+
+\subsection{Properties}
+\begin{itemize}
+\item Name (unique identifier)
+\item Connected objects (Pins and Connections)
+\item Tags (user-defined labels)
+\end{itemize}
+
 \section{Parts}
+A Part represents a physical electronic component in the circuit.
+
+\subsection{Creation}
+Parts are created using the \texttt{elec.part} statement:
+\begin{verbatim}
+elec.part <reference>: <model>(<args>); 
+    des="<description>"; fp="<footprint>"
+
+Example:
+elec.part "R3": R(R=220, P=0.25, type="carbon"); 
+    des="220 ohm resistor"; 
+    fp="Resistor_THT:R_Axial_DIN0309"
+\end{verbatim}
+
+\subsection{Properties}
+\begin{itemize}
+\item Reference designator (e.g., R3, Q1, U1)
+\item Model and parameters
+\item Description
+\item Footprint
+\item Pins (derived from model/footprint)
+\end{itemize}
+
 \section{Pins}
+A Pin is a connection point on a Part. Pins are accessed using the bracket notation.
+
+\subsection{Creation}
+Pins are created implicitly when Parts are instantiated.
+
+\subsection{Reference Syntax}
+\begin{verbatim}
+<part_ref>[<pin_ref>]
+
+Examples:
+R1[1]    # Pin 1 of resistor R1
+Q1[d]    # Drain pin of MOSFET Q1
+U1[v+]   # Non-inverting input of op-amp U1
+\end{verbatim}
+
 \section{Connections}
+A Connection is a binary electrical connection between exactly two Pins.
+
+\subsection{Creation}
+Connections can be created using the pipe syntax or \texttt{elec.connect}:
+\begin{verbatim}
+# Pipe syntax (creates a Connection object):
+( R2[1] | J4[7] )
+
+# Connect statement (joins pins to a Net):
+elec.connect <net> <pin1> <pin2> ... <pin n>
+
+Example:
+elec.connect Gnd Q2[s] C6[-] R3[2]
+\end{verbatim}
+
 \section{Models}
+Models define the electrical characteristics and available pins of a Part type.
+
+\subsection{Built-in Models}
+\begin{itemize}
+\item \texttt{R} -- Resistor
+\item \texttt{C} -- Capacitor
+\item \texttt{L} -- Inductor
+\item \texttt{opamp} -- Operational Amplifier
+\item \texttt{MOSFET} -- MOSFET transistor
+\item Additional models available in standard library
+\end{itemize}
+
 \section{Relationship between the Objects}
+\begin{itemize}
+\item Parts contain Pins
+\item Pins are connected to Nets via Connections
+\item Nets can have Tags for grouping
+\item The global set \texttt{*e} contains all objects in creation order
+\end{itemize}
+
 
 \chapter{Querying}
+EDADSL provides a powerful querying system for selecting electrical objects based on their relationships.
+
 \section{Output and Input Quantifiers}
+The quantifier syntax selects objects connected to a net:
+\begin{verbatim}
+<quantifier>@<net_name>
+\end{verbatim}
+
 \section{Net based Querying}
+Quantifiers filter by object type:
+\begin{verbatim}
+P@<net>    # Parts connected to net
+C@<net>    # Connections on net
+T@<net>    # Pins connected to net
+I@<net>    # Connections and Pins on net
+H@<net>    # Holes on net
+E@<net>    # Everything on net (or just @<net>)
+\end{verbatim}
+
+Example:
+\begin{verbatim}
+$input S= I@Vin
+\end{verbatim}
+
 \section{Tagged Net based Querying}
+Query by tag instead of net name:
+\begin{verbatim}
+<quantifier>@^<tag>
+\end{verbatim}
+This expands to the union of the quantifier across all nets with the given tag.
+
+Example:
+\begin{verbatim}
+tag Vin "sensitive"
+tag Vfb "sensitive"
+I@^sensitive  # All connections/pins on 
+              # nets tagged "sensitive"
+\end{verbatim}
+
 \section{Geneneral Querying}
-%
+% TODO: Document general querying capabilities beyond net-based selection
+% Uncertain about what additional querying syntax exists beyond the quantifier system
 
 
 
 
 \part{Physical System}
 \chapter{Physical Constraints}
+\label{sec:physical-constraints}
+Physical constraints are specified using the \texttt{phys.} prefix and control the physical layout and manufacturing requirements of the PCB.
+
+\section{Priority System}
+All physical constraints accept a priority parameter that determines how conflicts are resolved:
+\begin{verbatim}
+Priorities:
+  (none) or -d     Default
+  -nth             Nice to have
+  -imp             Important
+  -vimp            Very important
+  -oeo             Only explicit overrides
+  -eo              Explicit override
+  -ne = -nonneg    No exceptions
+
+Priority Chain: 
+  -d < -nth < -imp < -vimp < -oeo < -eo < -ne = -nonneg
+\end{verbatim}
+
+\section{Proximity Constraint}
+Controls the distance between sets of objects:
+\begin{verbatim}
+phys.prox <set_a> <set_b> 
+    min=<min_distance> max=<max_distance> 
+    <priority>
+phys.prox <set> minim <priority>
+\end{verbatim}
+\begin{itemize}
+\item \texttt{min} -- Minimum distance between edges of set a and set b
+\item \texttt{max} -- Maximum distance anything in set a can be from anything in set b
+\item \texttt{minim} -- Tries to minimize distance between all objects in the set
+\end{itemize}
+
+Example:
+\begin{verbatim}
+phys.prox $hvsys $lvsys min=15 -ne
+phys.prox $noisy_loop minim -vimp
+\end{verbatim}
+
+\section{Creepage Constraint}
+Controls the surface distance between sets (affected by slots, vias, traces, and conductive material):
+\begin{verbatim}
+phys.creep <set_a> <set_b> 
+    d=<min_creepage_distance> <priority>
+\end{verbatim}
+
+Note: Unlike \texttt{phys.prox} (Euclidean distance), \texttt{phys.creep} measures surface distance. Conductive material contributes 0 distance.
+
+Example:
+\begin{verbatim}
+phys.creep $hvsys $lvsys d=30 -nonneg
+\end{verbatim}
+
+\section{Layer Constraint}
+Assigns objects to specific board layers:
+\begin{verbatim}
+phys.layer <set> <layer_number> <priority>
+\end{verbatim}
+Layer 0 is the top layer; the bottom layer is layer $n$ (where $n$ is the total number of layers).
+
+Example:
+\begin{verbatim}
+phys.layer *p 0 -oeo
+\end{verbatim}
+
+\section{Board Definition}
+Defines the PCB stackup characteristics. Can only be invoked once:
+\begin{verbatim}
+phys.board N=<layers> T=[<thicknesses>] 
+           W=[<weights>] M=[<materials>]
+\end{verbatim}
+\begin{itemize}
+\item \texttt{N} -- Number of board layers
+\item \texttt{T} -- List of thicknesses between layers in mm (length $n-1$)
+\item \texttt{W} -- List of copper weights in oz/ft$^2$ (length $n$)
+\item \texttt{M} -- List: [dielectric, conductor, surface-plating]
+\end{itemize}
+
+Default: \texttt{phys.board N=2 T=[1.6] W=[1, 1] 
+         M=["FR4", "copper", "HASL"]}
+
+Example:
+\begin{verbatim}
+phys.board N=2 T=[1.6] W=[2, 2] 
+           M=["FR4", "copper", "ENIG"]
+\end{verbatim}
+
+\section{Net Shrink}
+Minimizes the physical extent of a net:
+\begin{verbatim}
+phys.shrinknet <net> <priority>
+\end{verbatim}
+
+Example:
+\begin{verbatim}
+net "Vsw"
+phys.shrinknet Vsw -vimp
+\end{verbatim}
+
+\section{Plane Creation}
+Creates a copper plane on a layer connected to a net:
+\begin{verbatim}
+phys.mkplane <layer_number> <net>
+\end{verbatim}
+
+Example:
+\begin{verbatim}
+net "Gnd"
+phys.mkplane 1 Gnd
+\end{verbatim}
+
+\section{Via Fill}
+Fills a pad with vias for thermal management:
+\begin{verbatim}
+phys.viafill <pad> v=<via_hole_diameter> d=<via_spacing>
+\end{verbatim}
+
+Example:
+\begin{verbatim}
+phys.viafill Q1[d] v=0.25 d=0.5
+\end{verbatim}
+
+\section{Connection Current}
+Sets the minimum RMS current a connection must carry:
+\begin{verbatim}
+phys.connectioncurrent <connection | set> 
+    <rms_current> <priority>
+\end{verbatim}
+
+Example:
+\begin{verbatim}
+phys.connectioncurrent ( J1[2] | F1[1] ) 30 -oeo
+\end{verbatim}
+
+\section{Alignment}
+Aligns parts along an axis with specified spacing:
+\begin{verbatim}
+phys.align <list_of_parts> 
+    axis=<x|y> d=<edge_spacing> <priority>
+\end{verbatim}
+
+Example:
+\begin{verbatim}
+phys.align [ Q1, Q2 ] axis=x d=5 -vimp
+\end{verbatim}
+
+\section{Connection Matching}
+Minimizes variance of a property across a set of connections:
+\begin{verbatim}
+phys.connmatch <property> 
+    <set_of_connections> <priority>
+\end{verbatim}
+
+\subsection{Properties}
+\begin{itemize}
+\item \texttt{len} -- Physical trace length
+\item \texttt{res} -- DC resistance
+\item \texttt{ind} -- Self-inductance
+\item \texttt{cap} -- Capacitance to reference plane
+\item \texttt{imp} -- Characteristic impedance
+\item \texttt{t} -- Signal propagation delay
+\end{itemize}
+
+\subsection{Value Calculation Methods}
+
+\subsubsection{Calculation Mode Selection}
+The calculation method can be selected using the \texttt{syst.cm.calc} flag:
+\begin{verbatim}
+syst.cm.calc <mode>
+\end{verbatim}
+
+Available modes:
+\begin{itemize}
+\item \texttt{approx} -- (Default) Uses simplified closed-form formulas for fast computation. Suitable for most designs.
+\item \texttt{calculus} -- Uses numerical integration and differential equations for higher accuracy. Computationally more expensive.
+\item \texttt{hybrid} -- Uses closed-form formulas for initial estimates, then refines with calculus-based methods for critical nets.
+\end{itemize}
+
+Example:
+\begin{verbatim}
+syst.cm.calc calculus
+phys.connmatch imp $high_speed_lines -vimp
+\end{verbatim}
+
+\subsubsection{Length (len)}
+The physical length of the trace path from source pin to destination pin, measured in millimeters. Calculated as the sum of all trace segments.
+
+\subsubsection{Resistance (res)}
+DC resistance is calculated using:
+\begin{equation}
+R = \frac{\rho \cdot L}{W \cdot T}
+\end{equation}
+where:
+\begin{itemize}
+\item $\rho$ -- Resistivity of the conductor (copper: $1.72 \times 10^{-8}$ $\Omega\cdot$m)
+\item $L$ -- Trace length (mm)
+\item $W$ -- Trace width (mm)
+\item $T$ -- Trace thickness (mm, derived from copper weight in oz/ft$^2$)
+\end{itemize}
+
+\paragraph{Calculus Mode}
+When \texttt{syst.cm.calc calculus} is active, skin effect is considered:
+\begin{equation}
+R_{ac} = R_{dc} \cdot \left(1 + \frac{1}{12} \cdot \left(\frac{\delta}{T}\right)^4\right)
+\end{equation}
+where $\delta = \sqrt{\frac{2\rho}{\omega\mu}}$ is the skin depth at frequency $\omega$.
+
+\subsubsection{Inductance (ind)}
+Self-inductance is approximated using the loop inductance formula for a microstrip:
+\begin{equation}
+L \approx \frac{\mu_0 \cdot L_{trace}}{2\pi} \cdot \ln\left(\frac{2h}{w + t}\right)
+\end{equation}
+where:
+\begin{itemize}
+\item $\mu_0$ -- Permeability of free space ($4\pi \times 10^{-7}$ H/m)
+\item $L_{trace}$ -- Trace length
+\item $h$ -- Height above reference plane
+\item $w$ -- Trace width
+\item $t$ -- Trace thickness
+\end{itemize}
+
+\paragraph{Calculus Mode}
+When \texttt{syst.cm.calc calculus} is active, mutual inductance and frequency-dependent effects are computed using numerical integration:
+\begin{equation}
+L_{total} = \int_0^{L_{trace}} \frac{\mu_0}{2\pi} \cdot \ln\left(\frac{2h(x)}{w(x) + t}\right) dx
+\end{equation}
+This accounts for trace width variations and non-uniform height above the reference plane.
+
+\subsubsection{Capacitance (cap)}
+Capacitance to the reference plane is calculated using the microstrip capacitance formula:
+\begin{equation}
+C \approx \frac{\varepsilon_0 \cdot \varepsilon_r \cdot w \cdot L_{trace}}{h}
+\end{equation}
+where:
+\begin{itemize}
+\item $\varepsilon_0$ -- Permittivity of free space ($8.854 \times 10^{-12}$ F/m)
+\item $\varepsilon_r$ -- Relative permittivity of the dielectric (FR4: $\approx 4.5$)
+\item $w$ -- Trace width
+\item $L_{trace}$ -- Trace length
+\item $h$ -- Height above reference plane
+\end{itemize}
+
+\paragraph{Calculus Mode}
+When \texttt{syst.cm.calc calculus} is active, fringing effects and dielectric variations are included:
+\begin{equation}
+C = \int_0^{L_{trace}} \frac{\varepsilon_0 \cdot \varepsilon_r(x) \cdot w_{eff}(x)}{h(x)} dx
+\end{equation}
+where $w_{eff}$ includes fringing capacitance contributions and $\varepsilon_r(x)$ accounts for material variations along the trace.
+
+\subsubsection{Impedance (imp)}
+Characteristic impedance for a microstrip is calculated as:
+\begin{equation}
+Z_0 \approx \frac{87}{\sqrt{\varepsilon_r + 1.41}} \cdot \ln\left(\frac{5.98h}{0.8w + t}\right)
+\end{equation}
+For stripline:
+\begin{equation}
+Z_0 \approx \frac{60}{\sqrt{\varepsilon_r}} \cdot \ln\left(\frac{4b}{0.67(0.8w + t)}\right)
+\end{equation}
+where $b$ is the total dielectric thickness for stripline configurations.
+
+\paragraph{Calculus Mode}
+When \texttt{syst.cm.calc calculus} is active, the full telegrapher's equations are solved numerically:
+\begin{equation}
+Z_0 = \sqrt{\frac{R + j\omega L}{G + j\omega C}}
+\end{equation}
+where $R$, $L$, $G$, and $C$ are per-unit-length parameters computed from the trace geometry and material properties. This accounts for frequency-dependent losses and dispersion.
+
+\subsubsection{Propagation Time (t)}
+Signal propagation delay is calculated as:
+\begin{equation}
+t = \frac{L_{trace}}{v_p} = \frac{L_{trace} \cdot \sqrt{\varepsilon_{eff}}}{c}
+\end{equation}
+where:
+\begin{itemize}
+\item $v_p$ -- Propagation velocity
+\item $c$ -- Speed of light in vacuum ($3 \times 10^8$ m/s)
+\item $\varepsilon_{eff}$ -- Effective permittivity (depends on geometry and dielectric)
+\end{itemize}
+
+\paragraph{Calculus Mode}
+When \texttt{syst.cm.calc calculus} is active, propagation delay is computed by integrating along the trace path:
+\begin{equation}
+t = \int_0^{L_{trace}} \frac{\sqrt{\varepsilon_{eff}(x)}}{c} dx
+\end{equation}
+This accounts for varying dielectric thickness, material transitions, and impedance discontinuities along the trace.
+
+\subsection{Matching Objective}
+The solver minimizes the scaled variance of the selected property across all connections in the set:
+\begin{equation}
+\text{minimize} \quad \frac{\text{var}(P)}{||S||}
+\end{equation}
+where $P$ is the property value for each connection and $||S||$ is the cardinality of the connection set.
+
+\subsection{Example}
+\begin{verbatim}
+phys.connmatch t $CPU_to_RAM_lines -vimp
+\end{verbatim}
+This ensures all CPU-to-RAM signal lines have matched propagation delays, critical for parallel data buses.
+
 
 \chapter{Solver Model}
+\label{sec:solver-model}
+
+\section{Overview}
+The EDADSL solver transforms declarative physical constraints into an optimized PCB layout. The process involves collecting constraints, selecting an optimization algorithm, and generating the final layout through placement and routing phases.
+
+\section{Algorithm Selection}
+The solver algorithm can be selected using the \texttt{syst.alg} flag:
+\begin{verbatim}
+syst.alg <algorithm_name>
+\end{verbatim}
+
+\subsection{Available Algorithms}
+
+\subsubsection{Simulated Annealing (sa)}
+A probabilistic optimization technique that explores the solution space by accepting worse solutions with decreasing probability. Well-suited for general-purpose constraint satisfaction.
+\begin{itemize}
+\item Pros: Good global optimization, handles complex constraints
+\item Cons: Slower convergence, requires parameter tuning
+\item Best for: Complex designs with many interacting constraints
+\end{itemize}
+
+\subsubsection{Genetic Algorithm (ga)}
+An evolutionary approach that maintains a population of candidate solutions and evolves them through selection, crossover, and mutation.
+\begin{itemize}
+\item Pros: Explores multiple solutions in parallel, good for multi-objective optimization
+\item Cons: High memory usage, slower for simple designs
+\item Best for: Multi-objective optimization with competing constraints
+\end{itemize}
+
+\subsubsection{Constraint Programming (cp)}
+A declarative approach that models constraints as logical relationships and uses propagation and backtracking to find solutions.
+\begin{itemize}
+\item Pros: Fast for satisfiability problems, guarantees constraint satisfaction when possible
+\item Cons: May not optimize as well as stochastic methods
+\item Best for: Designs where constraint satisfaction is more important than optimization
+\end{itemize}
+
+\subsubsection{Gradient Descent (gd)}
+A deterministic optimization method that follows the gradient of the objective function to find local optima.
+\begin{itemize}
+\item Pros: Fast convergence for smooth objective functions, deterministic results
+\item Cons: May get stuck in local optima, requires differentiable objectives
+\item Best for: Simple designs with well-defined objective functions
+\end{itemize}
+
+\subsubsection{Hybrid (hybrid)}
+Combines multiple algorithms, typically using a fast method for initial placement and a more thorough method for refinement.
+\begin{itemize}
+\item Pros: Balances speed and quality, adapts to problem complexity
+\item Cons: More complex implementation, harder to predict runtime
+\item Best for: Large designs where pure algorithms are too slow or too slow to converge
+\end{itemize}
+
+\subsection{Default Algorithm}
+If no algorithm is specified, the solver uses simulated annealing (\texttt{sa}) as the default.
+
+\section{Constraint Resolution}
+The solver resolves physical constraints according to the following rules:
+
+\subsection{No Conflicts}
+If all constraints can be satisfied without conflicts, the solution is complete.
+
+\subsection{Conflicts Between Different Priorities}
+When constraints with different priorities conflict:
+\begin{itemize}
+\item The higher-priority constraint is satisfied
+\item The lower-priority constraint is optimized as much as possible without impairing the higher rule
+\item A warning is printed to the console
+\end{itemize}
+
+\subsection{Conflicts Between Same Priorities}
+When constraints with the same priority conflict, behavior depends on the priority level:
+
+\subsubsection{Lower Priorities (-d, -nth, -imp, -vimp)}
+\begin{itemize}
+\item An error message is printed to the console
+\item The program continues execution
+\end{itemize}
+
+\subsubsection{Higher Priorities (-oeo, -eo, -ne, -nonneg)}
+\begin{itemize}
+\item An error message is printed to the console
+\item The program does NOT continue execution (halts)
+\end{itemize}
+
+\section{Layout Generation Pipeline}
+The final layout is generated through a multi-phase pipeline:
+
+\subsection{Phase 1: Constraint Collection}
+All physical constraints are collected from the program and organized by type and priority.
+
+\subsection{Phase 2: Board Setup}
+The board stackup is defined (layers, thicknesses, materials) and the design area is initialized.
+
+\subsection{Phase 3: Component Placement}
+Parts are placed on the board according to:
+\begin{enumerate}
+\item Alignment constraints (\texttt{phys.align})
+\item Proximity constraints (\texttt{phys.prox})
+\item Layer constraints (\texttt{phys.layer})
+\item Creepage constraints (\texttt{phys.creep})
+\end{enumerate}
+
+The solver optimizes placement to satisfy all constraints simultaneously, respecting the priority hierarchy.
+
+\subsection{Phase 4: Trace Routing}
+Connections are routed as traces on the board:
+\begin{enumerate}
+\item Current capacity constraints (\texttt{phys.connectioncurrent}) determine minimum trace width
+\item Connection matching constraints (\texttt{phys.connmatch}) ensure length/impedance matching
+\item Net shrinkage (\texttt{phys.shrinknet}) minimizes trace length
+\end{enumerate}
+
+\subsection{Phase 5: Via Placement}
+Vias are placed to connect traces across layers:
+\begin{enumerate}
+\item Via fill constraints (\texttt{phys.viafill}) populate thermal vias
+\item System flags (\texttt{syst.flag.vias}, etc.) control via availability
+\end{enumerate}
+
+\subsection{Phase 6: Plane Generation}
+Copper planes are generated on specified layers:
+\begin{enumerate}
+\item Plane constraints (\texttt{phys.mkplane}) create ground and power planes
+\item Clearances are maintained around non-connected objects
+\end{enumerate}
+
+\subsection{Phase 7: Design Rule Check}
+The final layout is verified against all constraints:
+\begin{enumerate}
+\item All physical constraints are checked
+\item Violations are reported with severity based on priority
+\item Critical violations (\texttt{-ne}, \texttt{-nonneg}) halt generation
+\end{enumerate}
+
+\subsection{Phase 8: File Export}
+The verified layout is exported to KiCad format:
+\begin{enumerate}
+\item \texttt{mkschematic} generates the schematic file (.kicad\_sch)
+\item \texttt{mkpcb} generates the PCB file (.kicad\_pcb)
+\item \texttt{halt} triggers final export and log file generation
+\end{enumerate}
+
+\section{Ordering of Global Set Constant *e}
+Inside the \texttt{*e} pseudo-constant, element order is determined by:
+\begin{enumerate}
+\item Type ordering: part, pin, connection, net
+\item Within the same type: order of creation
+\item Within pins: pad number order from the footprint
+\end{enumerate}
+
+Example:
+\begin{verbatim}
+part U1: opamp(type="LM741"); des=""; 
+    fp="Package_DIP:DIP-8_W7.62mm"
+net V-
+connect V- U1[v-]
+
+# *e = { U1, U1[v+], U1[v-], U1[-], U1[+], 
+#   U1[out], (U1[v-] | V-), V- }
+\end{verbatim}
+
 
 \chapter{Flags}
-%
+System flags control PCB manufacturing capabilities using the \texttt{syst.flag.} prefix:
+\begin{verbatim}
+syst.flag.<flag_name> <value>
+\end{verbatim}
 
-
+\section{Available Flags}
+\begin{itemize}
+\item \texttt{vias} -- Controls whether vias are allowed
+\item \texttt{slots} -- Controls whether slots / PCB cuts are allowed
+\item \texttt{jumpers} -- Controls whether jumper wires are allowed
+\item \texttt{solder\_reinforced\_tracks} -- Controls whether solder-reinforced tracks are allowed
+\item \texttt{buried\_vias} -- Controls whether buried vias are allowed
+\end{itemize}
 
 
 \part{Toolchain}
 \chapter{Compiler and Execution Pipeline}
+The EDADSL toolchain compiles source code into PCB and schematic files.
+
+\section{Compilation Phases}
+\begin{enumerate}
+\item Lexical Analysis -- Tokenization of source code
+\item Parsing -- Syntax analysis and AST construction
+\item Semantic Analysis -- Type checking and validation
+\item Execution -- Program execution with electrical system construction
+\item Constraint Solving -- Physical layout optimization
+\item Code Generation -- Output file generation
+\end{enumerate}
+
+\section{Entry Point}
+Every program must begin with the \texttt{start} keyword. The program halts when \texttt{halt} is reached or an unrecoverable error occurs.
+
 
 \chapter{Code Generation}
 
+\section{PCB Generation}
+The \texttt{mkpcb} command generates a PCB file based on the circuit and physical constraints:
+\begin{verbatim}
+mkpcb
+\end{verbatim}
+This command must be placed after all circuit definitions and physical constraints.
+
+\section{Schematic Generation}
+The \texttt{mkschematic} command generates a schematic file:
+\begin{verbatim}
+mkschematic
+\end{verbatim}
+
+\section{Export}
+The \texttt{halt} command terminates execution and exports all created files:
+\begin{verbatim}
+halt
+\end{verbatim}
+
+
 \chapter{Standard Library}
+% TODO: Document the standard library contents
+% Uncertain about:
+% - Complete list of available component models
+% - Footprint library organization
+% - Material library contents
+
 
 \chapter{External Library}
+% TODO: Document external library integration
+% Uncertain about:
+% - How external libraries are imported
+% - Supported library formats
+% - KiCad library integration details
+
 
 \chapter{Debugging and Logging}
-%
+
+\section{Console Output}
+The \texttt{echo} and \texttt{f.print()} functions output to the console:
+\begin{verbatim}
+echo $variable
+f.print("Message: ", $variable)
+\end{verbatim}
+
+\section{Log File}
+The \texttt{writetolog} function appends messages to the log file:
+\begin{verbatim}
+writetolog "Checkpoint reached"
+\end{verbatim}
+The log file is exported when \texttt{halt} is executed.
 
 
 
@@ -725,14 +2322,52 @@ ref    Turns a string containing a part reference into the referenced part
 \part{Reference}
 \chapter{Exceptions}
 
+\section{Type Errors}
+Raised when an operation is applied to a value of the wrong type.
+
+\section{Value Errors}
+Raised when a function receives an argument outside its domain (e.g., division by zero, invalid list index).
+
+\section{Reference Errors}
+Raised when referencing an undefined variable, part, or function.
+
+\section{Constraint Errors}
+Raised when physical constraints cannot be resolved (see Section~\ref{sec:solver-model}).
+
+
 \chapter{Error and Warning Model}
 
+\section{Errors}
+Errors halt program execution. The error message includes the error type and location.
+
+\section{Warnings}
+Warnings are printed for constraint conflicts between different priorities. The program continues execution after warnings.
+
+
 \chapter{Future Improvements}
+% TODO: Document planned language features and improvements
+% Uncertain about:
+% - What features are planned for future versions
+% - Deprecation timeline for any features
+
 
 \chapter{Implementations}
 
+\section{Reference Implementation}
+% TODO: Document the reference implementation details
+% Uncertain about:
+% - Programming language of the implementation
+% - Current version number
+% - Supported platforms
+
+
 \chapter{References}
-%
+
+\section{Language Specification}
+This document serves as the authoritative specification for the EDADSL language.
+
+\section{Related Standards}
+% TODO: Reference relevant EDA standards (e.g., KiCad file formats, IPC standards)
 
 
 
@@ -741,26 +2376,102 @@ ref    Turns a string containing a part reference into the referenced part
 \chapter{Standard Libraries}
 \section{Material Libraries}
 \subsection{PCB Substrate Material Library}
+Common substrate materials:
+\begin{itemize}
+\item FR4 -- Standard glass-reinforced epoxy laminate
+\item Rogers -- High-frequency laminates
+\item Metal-core -- Aluminum or copper core substrates
+\end{itemize}
+
 \subsection{PCB Conductor Material Library}
+\begin{itemize}
+\item Copper -- Standard conductor (specified in oz/ft$^2$)
+\end{itemize}
+
 \subsection{PCB Surface-finish Material Library}
+\begin{itemize}
+\item HASL -- Hot Air Solder Leveling
+\item ENIG -- Electroless Nickel Immersion Gold
+\item OSP -- Organic Solderability Preservative
+\end{itemize}
+
 \section{Basic Model Libraries}
 \subsection{Passive Component Model Library}
+\begin{itemize}
+\item R -- Resistor (parameters: R, P, type)
+\item C -- Capacitor
+\item L -- Inductor
+\end{itemize}
+
 \subsection{Active Component Model Library}
+\begin{itemize}
+\item MOSFET -- MOSFET transistor
+\item Diode -- Standard diode
+\item BJT -- Bipolar junction transistor
+\end{itemize}
+
 \subsection{Integrated Circuit Component Model Library}
+\begin{itemize}
+\item opamp -- Operational amplifier
+\item Additional models in external libraries
+\end{itemize}
+
 \subsection{Board Hardware Component Model Library}
+\begin{itemize}
+\item Connectors
+\item Mounting holes
+\end{itemize}
+
 \section{Additional Language Libraries}
+% TODO: Document additional language libraries
+
 \section{Footprint Libraries}
+Footprints follow KiCad library naming conventions:
+\begin{verbatim}
+<Library>:<Footprint>
+
+Examples:
+Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P12.70mm_Horizontal
+Package_TO_SOT_THT:TO-247-3_Horizontal_TabUp
+Package_DIP:DIP-8_W7.62mm
+\end{verbatim}
+
 
 \chapter{Examples}
 \section{LED Circuit}
 \subsection{Intent}
+A simple LED current-limiting circuit.
+
 \subsection{EDADSL Code}
 \begin{verbatim}
-	#code goes here#
+start
+
+part "R1": R(R=330, P=0.25); 
+    des="330 ohm resistor"; 
+    fp="Resistor_THT:R_Axial_DIN0309"
+part "D1": LED(color="red"); 
+    des="Red LED"; 
+    fp="LED_THT:LED_D3.0mm"
+
+net "Vcc"
+net "Gnd"
+
+connect Vcc R1[1]
+connect R1[2] D1[a]
+connect D1[c] Gnd
+
+halt
 \end{verbatim}
+
 \subsection{Explanation}
+The circuit connects a 330$\Omega$ resistor in series with an LED between Vcc and Gnd. The resistor limits current to approximately 10mA (assuming 5V supply and 2V LED forward voltage).
+
 
 \chapter{Diagrams}
 \section{Execution-phase Diagramm}
+% TODO: Add execution flow diagram
+% Uncertain about:
+% - Exact execution phases
+% - How constraint solving fits into the pipeline
 
 \end{document}
