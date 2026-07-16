@@ -441,26 +441,39 @@ Scalars can be coerced from other types:
 Lists of scalars can be passed to mathematical functions, which operate element-wise.
 \subsection{Set}
 \subsubsection{Set Data Type Definition}
-A Set is an unordered collection of electrical objects. Sets may only contain the following types:
+A Set is an unordered collection of unique elements. Sets can contain any data type:
 \begin{itemize}
+\item Scalars (numbers)
+\item Strings
+\item Booleans
+\item Lists
 \item Parts
 \item Connections
 \item Pins
 \item Nets
 \end{itemize}
-All other object types are silently dropped when attempting to add them to a set. Sets support standard set algebra operations (union, intersection, difference, subset, element-of).
+
+Sets containing mixed types are allowed. Duplicate elements are automatically removed. Sets support standard set algebra operations (union, intersection, difference, subset, element-of).
 
 \subsubsection{Set Data Type Literals}
 \begin{verbatim}
-set_literal = "{", [ { electrical_data, ","}, 
-              electrical_data ], "}"
+EBNF:
+set_literal = "{", [ { data, ","}, data ], "}"
 \end{verbatim}
+
+Examples:
+\begin{verbatim}
+$f.numbers [set]= { 1, 2, 3, 4, 5 }
+$f.mixed [set]= { 1, "hello", True, Q1 }
+$f.parts [set]= { Q1, Q2, R3 }
+\end{verbatim}
+
 \subsubsection{Set Data Type Casting and Coercion}
-Sets can be created from Lists using the \texttt{f.set()} function. When converting a List to a Set, any elements that are not electrical objects (Part, Pin, Connection, Net) are silently dropped with a warning.\\
+Sets can be created from Lists using the \texttt{f.set()} function. When converting a List to a Set, duplicate elements are removed and order is lost.\\
 Example:
 \begin{verbatim}
-$my_list L= [ "text", Q1, R3, 42 ]
-$f.my_set S= f.set( $my_list )  # Only Q1, R3
+$f.my_list [list]= [ 1, 2, 2, 3, 3, 3 ]
+$f.my_set [set]= f.set( $my_list )  # { 1, 2, 3 }
 \end{verbatim}
 Sets can be converted to Lists using the \texttt{f.list()} function. The order of elements in the resulting List is determined by the order they appear in the global set \texttt{*e}.
 \subsection{String}
@@ -485,7 +498,7 @@ short_string_item_II = [^'\\\n)]|(\\.)
 Strings can be created from other types using the \texttt{f.str()} function, which concatenates all arguments into a single string.\\
 Example:
 \begin{verbatim}
-$f.msg W= f.str( "The value is ", 42, 
+$f.msg [string]= f.str( "The value is ", 42, 
     " and color is ", "red" )
 # $msg = "The value is 42 and color is red"
 \end{verbatim}
@@ -508,9 +521,9 @@ Lists support range generation using the syntax:
 \end{verbatim}
 Examples:
 \begin{verbatim}
-$f.r1 L= [0:2:10]      # [0, 2, 4, 6, 8, 10]
-$f.r2 L= [0:5]         # [0, 1, 2, 3, 4, 5]
-$f.r3 L= [0|1|5]       # [0, 0.25, 0.5, 0.75, 1]
+$f.r1 [list]= [0:2:10]      # [0, 2, 4, 6, 8, 10]
+$f.r2 [list]= [0:5]         # [0, 1, 2, 3, 4, 5]
+$f.r3 [list]= [0|1|5]       # [0, 0.25, 0.5, 0.75, 1]
 \end{verbatim}
 \section{Electrical Types}
 \subsection{Part}
@@ -621,54 +634,48 @@ Variables are declared and assigned simultaneously using the following syntax:
 \begin{verbatim}
 EBNF:
 variable          = "$", id
-variable_assignment = variable, assigner, 
-                      [";", "M", "=", boolean]
+variable_assignment = variable, "[", type, "]", "=", 
+                      data, [";", "M", "=", boolean]
 
-assigner          = "B=", boolean_data_type
-                  | "V=", scalar_data_type
-                  | "L=", list_data_type
-                  | "W=", string_data_type
-                  | "S=", set_data_type
-                  | "P=", part_data_type
-                  | "C=", connection_data_type
-                  | "T=", pin_data_type
-                  | "N=", net_data_type
+type              = "bool" | "scalar" | "list" | "string" 
+                  | "set" | "part" | "connection" | "pin" 
+                  | "net"
 \end{verbatim}
 
-The assignment operator determines the variable's type:
+The type determines the variable's data type:
 \begin{itemize}
-\item \texttt{B=} assigns a Boolean
-\item \texttt{V=} assigns a Scalar
-\item \texttt{L=} assigns a List
-\item \texttt{W=} assigns a String
-\item \texttt{S=} assigns a Set
-\item \texttt{P=} assigns a Part
-\item \texttt{C=} assigns a Connection
-\item \texttt{T=} assigns a Pin
-\item \texttt{N=} assigns a Net
+\item \texttt{bool} -- Boolean
+\item \texttt{scalar} -- Scalar
+\item \texttt{list} -- List
+\item \texttt{string} -- String
+\item \texttt{set} -- Set
+\item \texttt{part} -- Part
+\item \texttt{connection} -- Connection
+\item \texttt{pin} -- Pin
+\item \texttt{net} -- Net
 \end{itemize}
 
 \section{Mutability}
 By default, variables are mutable (can be reassigned). To make a variable immutable, append \texttt{; M = False} after the assignment:
 \begin{verbatim}
-$f.immutable V= 42; M = False
-$f.mutable V= 100    # Can be reassigned
+$f.immutable [scalar]= 42; M = False
+$f.mutable [scalar]= 100    # Can be reassigned
 \end{verbatim}
 
 \section{Scope}
-Variables have global scope once declared. They can be accessed from any point in the program after their declaration. There is no block scoping; variables declared inside code blocks remain accessible outside.
+Variables have global scope once declared. They can be accessed from any point in the program after their declaration. There is no block scoping for \texttt{if} or \texttt{for} blocks; variables declared inside these remain accessible outside. However, variables declared inside functions are local to that function and shadow any global variables of the same name (see Section~\ref{sec:function-scope}).
 
 \section{Examples}
 \begin{verbatim}
-$a V= 3
-$b V= 5
-$f.result V= $a + $b        # Scalar assignment
+$a [scalar]= 3
+$b [scalar]= 5
+$f.result [scalar]= $a + $b        # Scalar assignment
 
-$f.name W= "EDADSL"         # String assignment
-$f.flag B= True              # Boolean assignment
+$f.name [string]= "EDADSL"         # String assignment
+$f.flag [bool]= True               # Boolean assignment
 
-$f.colors L= ["red", "green", "blue"]  # List
-$f.hwset S= { Q1, Q2, R5 }             # Set
+$f.colors [list]= ["red", "green", "blue"]  # List
+$f.hwset [set]= { Q1, Q2, R5 }              # Set
 \end{verbatim}
 
 
@@ -707,36 +714,80 @@ set_expression = expression, ("u" | "n" | "/"),
 \section{Operator Precedence}
 Operators are evaluated in the following order of precedence (highest to lowest):
 \begin{enumerate}
-\item Unary minus (\texttt{-}), Logical NOT (\texttt{!})
-\item Exponentiation (\texttt{\^{}})
+\item Exponentiation (\texttt{\^{}}) -- right-associative
+\item Boolean negation (\texttt{!})
+\item Set cardinality (\texttt{||a})
 \item Multiplication (\texttt{*}), Division (\texttt{/}), Modulo (\texttt{\%})
 \item Addition (\texttt{+}), Subtraction (\texttt{-})
-\item Set cardinality (\texttt{||})
 \item Comparison operators (\texttt{<}, \texttt{<=}, \texttt{==}, \texttt{!=}, \texttt{>=}, \texttt{>})
-\item Set membership (\texttt{E}, \texttt{!E}), Subset (\texttt{c})
+\item Set comparison (\texttt{c}, \texttt{E}, \texttt{!E})
 \item Logical AND (\texttt{\&\&})
-\item Logical XOR (\texttt{\^{}}\texttt{\^{}})
 \item Logical OR (\texttt{||})
+\item Logical XOR (\texttt{\^{}}\texttt{\^{}})
+\item Conditional expression (\texttt{?->...!...})
+\item User-defined operators (\texttt{o.u.*})
 \end{enumerate}
+
+Parentheses override precedence. See Section~\ref{sec:operators} for detailed operator descriptions.
 
 \section{Evaluation Order}
 Expressions are evaluated left-to-right for operators of equal precedence. Parentheses can be used to override precedence. Function arguments are evaluated before the function is called.
 
 \chapter{Operators}
 \label{sec:operators}
+
 \section{Built-in Operators}
+
 \subsection{Arithmetic}
-List of arithmetic Operators:
+Arithmetic operators perform mathematical operations. Most operators support multiple type combinations.
 \begin{verbatim}
-n + m  Addition
+n + m  Addition / Concatenation
 n - m  Subtraction
 n * m  Multiplication
 n / m  Division
 n % m  Modulo
 n ^ m  Exponentiation
 \end{verbatim}
-\subsection{Comparison}
 
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{+}: \texttt{scalar + scalar} $\rightarrow$ \texttt{scalar}
+\item \texttt{+}: \texttt{string + string} $\rightarrow$ \texttt{string} (concatenation)
+\item \texttt{+}: \texttt{list + list} $\rightarrow$ \texttt{list} (append)
+\item \texttt{-}: \texttt{scalar - scalar} $\rightarrow$ \texttt{scalar}
+\item \texttt{*}: \texttt{scalar * scalar} $\rightarrow$ \texttt{scalar}
+\item \texttt{*}: \texttt{scalar * string} $\rightarrow$ \texttt{string} (repetition)
+\item \texttt{*}: \texttt{scalar * list} $\rightarrow$ \texttt{list} (replication)
+\item \texttt{/}: \texttt{scalar / scalar} $\rightarrow$ \texttt{scalar}
+\item \texttt{\%}: \texttt{scalar \% scalar} $\rightarrow$ \texttt{scalar}
+\item \texttt{\^{}}: \texttt{scalar \^{} scalar} $\rightarrow$ \texttt{scalar}
+\end{itemize}
+
+Division by zero raises a runtime error. Modulo uses truncated division (\texttt{sign(result) = sign(dividend)}). Exponentiation is right-associative: \texttt{-2\^{}3 = -8}.
+
+Examples:
+\begin{verbatim}
+# Scalar arithmetic
+3 + 4       # = 7
+10 - 3      # = 7
+4 * 5       # = 20
+15 / 4      # = 3.75
+17 % 5      # = 2
+2 ^ 10      # = 1024
+
+# String concatenation
+"hello" + " " + "world"  # = "hello world"
+
+# String repetition
+"ab" * 3                  # = "ababab"
+
+# List operations
+[1,2] + [3,4]            # = [1,2,3,4]
+[0] * 5                   # = [0,0,0,0,0]
+\end{verbatim}
+
+\subsection{Comparison}
+Comparison operators evaluate to \texttt{True} or \texttt{False}.
 \begin{verbatim}
 n <  m Less Than
 n <= m Less or Equal
@@ -745,39 +796,181 @@ b != c Not Equal
 n >= m Greater or Equal
 n >  m Greater Than
 \end{verbatim}
-\subsection{Boolean Algebra}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}: \texttt{scalar} $\rightarrow$ \texttt{bool} (ordered)
+\item \texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}: \texttt{string} $\rightarrow$ \texttt{bool} (lexicographic)
+\item \texttt{==}, \texttt{!=}: any $\rightarrow$ \texttt{bool} (equality)
+\end{itemize}
+
+Ordered comparisons (\texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}) only work on scalars and strings. Equality (\texttt{==}, \texttt{!=}) works on any type including lists, sets, parts, and connections.
+
+Examples:
+\begin{verbatim}
+3 < 5              # = True
+"a" < "b"          # = True (lexicographic)
+[1,2] == [1,2]     # = True (list equality)
+Q1 == Q1            # = True (part identity)
+\end{verbatim}
+
+\subsection{Boolean Logic}
+Boolean operators combine or negate boolean values.
 \begin{verbatim}
 b && c Logical And
 b || c Logical Or
 b ^^ c Logical Xor
 !b     Negation
 \end{verbatim}
-\subsection{Set Algebra}
+
+\begin{itemize}
+\item Operands: \texttt{bool}, \texttt{bool}
+\item Result: \texttt{bool}
+\item Short-circuit evaluation: \texttt{a \&\& b} evaluates \texttt{b} only if \texttt{a} is \texttt{True}
+\end{itemize}
+
+Examples:
 \begin{verbatim}
-a u b  Union
-a n b  Intersection
-a / b  Difference
-||a    Cardinality of a
+True && False   # = False
+True || False   # = True
+True ^^ False   # = True
+True ^^ True    # = False
+!True           # = False
 \end{verbatim}
+
+\subsection{Collection Operators}
+Collection operators manipulate sets, lists, and strings.
+\begin{verbatim}
+a u b  Union (sets only)
+a n b  Intersection (sets only)
+a / b  Difference (sets) / Division (scalars)
+||a    Cardinality / Length
+\end{verbatim}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{u}: \texttt{set + set} $\rightarrow$ \texttt{set} (union)
+\item \texttt{n}: \texttt{set + set} $\rightarrow$ \texttt{set} (intersection)
+\item \texttt{/}: \texttt{set / set} $\rightarrow$ \texttt{set} (difference)
+\item \texttt{/}: \texttt{scalar / scalar} $\rightarrow$ \texttt{scalar} (division)
+\item \texttt{||}: \texttt{||set} $\rightarrow$ \texttt{scalar} (cardinality)
+\item \texttt{||}: \texttt{||list} $\rightarrow$ \texttt{scalar} (length)
+\item \texttt{||}: \texttt{||string} $\rightarrow$ \texttt{scalar} (length)
+\end{itemize}
+
+Set operations (\texttt{u}, \texttt{n}) only work on sets. The \texttt{/} operator is overloaded: on sets it returns difference, on scalars it returns division. Cardinality (\texttt{||}) returns the element count for sets, lists, and strings.
+
+Examples:
+\begin{verbatim}
+# Set operations
+{1,2} u {2,3}     # = {1,2,3} (union)
+{1,2} n {2,3}     # = {2} (intersection)
+{1,2,3} / {2}     # = {1,3} (difference)
+
+# Cardinality
+||{1,2,3}          # = 3 (set size)
+||[1,2,3,4]        # = 4 (list length)
+||"hello"           # = 5 (string length)
+\end{verbatim}
+
 \subsection{Set Comparison}
+Set comparison operators test membership and subset relationships.
 \begin{verbatim}
-a c b  Checks whether a is a   subset of b
-a E b  Checks whether a is an element of b
-a !E b Checks whether a is not an element of b
+a c b  Subset of
+a E b  Element of
+a !E b Not element of
 \end{verbatim}
+
+\begin{itemize}
+\item Operands: \texttt{set}, \texttt{set} (subset)
+\item Operands: any, \texttt{set} (membership)
+\item Result: \texttt{bool}
+\item \texttt{a c b} is true if every element of \texttt{a} is in \texttt{b}
+\item \texttt{a E b} is true if \texttt{a} is an element of set \texttt{b}
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+{1,2} c {1,2,3}   # = True (subset)
+1 E {1,2,3}       # = True (membership)
+Q1 E *p            # = True (part in all parts)
+4 !E {1,2,3}      # = True (not element)
+\end{verbatim}
+
+\subsection{Conditional Expression}
+A ternary-like operator for inline conditional values.
+\begin{verbatim}
+(condition)?->(value_if_true)!(value_if_false)
+\end{verbatim}
+
+\begin{itemize}
+\item Operands: \texttt{bool}, any, any
+\item Result: type of the selected branch
+\item Evaluates condition, returns first value if \texttt{True}, second if \texttt{False}
+\item Both branches must be of the same type (or coercible)
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$f.x [scalar]= 5
+$f.result [scalar]= ($x > 3)?->("big")!("small")
+# $result = "big"
+
+$f.val [scalar]= 10
+$f.abs [scalar]= ($val >= 0)?->($val)!($val * -1)
+# $abs = 10
+
+$f.a [scalar]= 1
+$f.b [scalar]= 2
+$f.max [scalar]= ($a > $b)?->($a)!($b)
+# $max = 2
+\end{verbatim}
+
+\section{Operator Precedence}
+Operators are evaluated in the following order (highest to lowest):
+\begin{enumerate}
+\item \texttt{\^{}} -- Exponentiation (right-associative)
+\item \texttt{!} -- Boolean negation
+\item \texttt{||a} -- Cardinality / length
+\item \texttt{*}, \texttt{/}, \texttt{\%} -- Multiplication, division, modulo
+\item \texttt{+}, \texttt{-} -- Addition, subtraction
+\item \texttt{<}, \texttt{<=}, \texttt{==}, \texttt{!=}, \texttt{>=}, \texttt{>} -- Comparison
+\item \texttt{c}, \texttt{E}, \texttt{!E} -- Set comparison
+\item \texttt{\&\&} -- Logical AND
+\item \texttt{||} -- Logical OR
+\item \texttt{\^{}} -- Logical XOR
+\item \texttt{?->...!...} -- Conditional expression
+\item User-defined operators (\texttt{o.u.*})
+\end{enumerate}
+
+Note: \texttt{||} is unary for cardinality/length (high precedence) but binary for logical OR (low precedence). Parentheses override precedence. Function arguments are evaluated before the function is called.
+
 \section{User-defined Operators}
+User-defined operators extend the language with custom infix notation.
+
 \subsection{Definition}
 \begin{verbatim}
 EBNF:
 "letop", "o.u.", id, assigner, data
 \end{verbatim}
 
-Example:
-\begin{verbatim}
-letop o.u.mod_minus_1 V= a % b - 1
+The operator name must follow the pattern \texttt{o.u.[\_a-zA-Z0-9]+}.
 
-print( 4 o.u.mod_minus_1 3 ) # = 0
+\subsection{Examples}
+\begin{verbatim}
+letop o.u.mod_minus_1 [scalar]= 
+    a % b - 1
+
+print( 4 o.u.mod_minus_1 3 )  # = 0
+
+letop o.u.parallel [scalar]= 
+    (a * b) / (a + b)
+
+print( 100 o.u.parallel 100 )  # = 50
 \end{verbatim}
+
+\subsection{Precedence}
+User-defined operators have the lowest precedence among all operators. Use parentheses to ensure correct evaluation order.
 
 
 
@@ -825,8 +1018,8 @@ constant_assignment = "let", "c.u.", id, assigner,
                       [";", "P", "=", boolean]
 
 Examples:
-let c.u.$max_current V= 30
-let c.u.$board_name W= "PowerSupply"
+let c.u.$max_current [scalar]= 30
+let c.u.$board_name [string]= "PowerSupply"
 \end{verbatim}
 Constants are immutable by definition and cannot be reassigned.
 
@@ -841,7 +1034,7 @@ conditional = "if", boolean_expression,
               "::", code_block
 
 Example:
-$flag B= True
+$flag [bool]= True
 if $flag ::{
     f.print("Flag is set")
 }
@@ -856,7 +1049,7 @@ iterator = "for", variable, "E",
            (list | set), "::", code_block
 
 Example:
-$colors L= ["red", "green", "blue"]
+$colors [list]= ["red", "green", "blue"]
 for $c E $colors ::{
     f.print($c)
 }
@@ -1217,7 +1410,7 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-atan2(1, 0)    # Returns approximately 1.5708 (π/2)
+atan2(1, 0)    # Returns approximately 1.5708 (pi/2)
 atan2(0, 1)    # Returns 0.0
 \end{verbatim}
 
@@ -1436,8 +1629,23 @@ Example:
 ref("R1")   # Returns the part referenced as R1
 \end{verbatim}
 
+\subsubsection{No-Operation Function}
+The \texttt{noop} function is the identity function. It returns its argument unchanged. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"noop", "(", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+noop(42)       # Returns 42
+noop("hello")  # Returns "hello"
+noop(Q1)       # Returns Q1
+\end{verbatim}
+Use \texttt{noop} as a placeholder in queries where no transformation is needed.
+
 \section{User-defined Functions}
-User-defined functions allow creation of reusable code blocks.
+User-defined functions allow creation of reusable code blocks with local scoping.
 
 \subsection{Function Definition}
 Functions are defined using the \texttt{function} keyword with the \texttt{f.u.} prefix:
@@ -1451,10 +1659,11 @@ f_statement = statement | "return", [data]
 
 Example:
 function f.u.add( $a, $b )::{
-    $retval V= $a + $b
+    $retval [scalar]= $a + $b
 }
 \end{verbatim}
-Functions operate on the global scope. To return a value, set the \texttt{\$retval} variable.
+
+Function parameters are local variables scoped to the function body. To return a value, set the \texttt{\$retval} variable.
 
 \subsection{Function Calls}
 User-defined functions are called using the \texttt{f.u.} prefix:
@@ -1464,14 +1673,14 @@ function_call_ud = "f.u.", id, "(",
                    [{ data, "," }, data], ")"
 
 Example:
-$f.result V= f.u.add( 3, 5 )   # $result = 8
+$f.result [scalar]= f.u.add( 3, 5 )   # $result = 8
 \end{verbatim}
 
 \subsection{Return Values}
 Functions return values by setting the \texttt{\$retval} variable. If \texttt{\$retval} is not set, the function returns nothing:
 \begin{verbatim}
 function f.u.square( $x )::{
-    $retval V= $x ^ 2
+    $retval [scalar]= $x ^ 2
 }
 
 function f.u.greet( $name )::{
@@ -1479,12 +1688,58 @@ function f.u.greet( $name )::{
     # No return value
 }
 
-$f.sq V= f.u.square( 4 )     # $sq = 16
+$f.sq [scalar]= f.u.square( 4 )     # $sq = 16
 f.u.greet( "World" )          # Prints: Hello, World!
 \end{verbatim}
 
-\subsection{Scope}
-User-defined functions operate on the global scope. Variables declared inside functions are accessible outside, and vice versa. There is no local scoping.
+\subsection{Local Scoping}
+\label{sec:function-scope}
+Functions have local scoping. Variables declared inside a function are only accessible within that function. Parameters are also local variables.
+
+\paragraph{Scope Rules}
+\begin{itemize}
+\item Parameters (\$a, \$b, etc.) are local to the function body
+\item Variables declared inside the function with \texttt{\$var [type]= val} are local
+\item Local variables shadow global variables of the same name
+\item The \texttt{\$retval} variable is always local to the function
+\item Functions cannot access local variables from other function invocations
+\end{itemize}
+
+\paragraph{Examples}
+\begin{verbatim}
+$f.x [scalar]= 10      # Global variable
+
+function f.u.doublen()::{
+    $f.x [scalar]= $f.x * 2  # Local $x shadows global
+    f.print($f.x)            # Prints: 20
+}
+
+f.u.doublen()
+f.print($f.x)          # Prints: 10 (global unchanged)
+
+function f.u.addLocal( $a, $b )::{
+    $sum [scalar]= $a + $b   # $sum is local
+    $retval [scalar]= $sum
+}
+
+f.u.addLocal( 3, 4 )   # Returns 7
+# $sum is not accessible here
+\end{verbatim}
+
+\paragraph{Recursion}
+Local scoping enables recursion since each call has its own copy of parameters:
+\begin{verbatim}
+function f.u.factorial( $n )::{
+    if $n <= 1 ::{
+        $retval [scalar]= 1
+    } else ::{
+        $retval [scalar]= $n * 
+            f.u.factorial( $n - 1 )
+    }
+}
+
+$f.result [scalar]= f.u.factorial( 5 )  # = 120
+\end{verbatim}
 
 
 
@@ -1550,7 +1805,7 @@ EDADSL uses a dynamic type system with distinct types for electrical and non-ele
 Every EDADSL program must begin with the \texttt{start} keyword. The program executes sequentially from the entry point.
 
 \section{Global Scope}
-All variables, constants, and functions operate on the global scope. There is no block scoping; variables declared inside code blocks remain accessible outside.
+Variables and constants declared at the top level of the program operate on the global scope. They can be accessed from any point in the program after their declaration. However, variables declared inside functions are local to that function (see Section~\ref{sec:function-scope}).
 
 \section{Execution Model}
 % TODO: Define the formal execution model
@@ -1696,6 +1951,38 @@ elec.connect Gnd Q2[s] C6[-] R3[2]
 \section{Models}
 Models define the electrical characteristics and available pins of a Part type.
 
+\subsection{Model Declaration Syntax}
+Custom models are defined using the following syntax:
+\begin{verbatim}
+EBNF:
+model_declaration = "model", model_name, ":",
+                    "{", pin_entries, [metadata], "}"
+
+model_name        = id, "/", id
+
+pin_entry         = pin_name, "->", pin_id, ";",
+                    "T", "=", pin_type
+
+pin_name          = id
+pin_id            = integer
+pin_type          = "input" | "power" | "output"
+
+metadata          = des_entry | dts_entry | fp_entry
+
+des_entry         = "des", "=", string_type
+dts_entry         = "dts", "=", string_type
+fp_entry          = "fp", "=", string_type
+\end{verbatim}
+
+The \texttt{model\_name} consists of a category and variant separated by \texttt{/} (e.g., \texttt{mosfet/C3M0016120K1}).
+
+Pin types classify the electrical role:
+\begin{itemize}
+\item \texttt{input} -- Signal input (gate, base, control)
+\item \texttt{power} -- Power connection (source, drain, emitter, collector)
+\item \texttt{output} -- Signal output (drain for sense, kelvin connections)
+\end{itemize}
+
 \subsection{Built-in Models}
 \begin{itemize}
 \item \texttt{R} -- Resistor
@@ -1705,6 +1992,44 @@ Models define the electrical characteristics and available pins of a Part type.
 \item \texttt{MOSFET} -- MOSFET transistor
 \item Additional models available in standard library
 \end{itemize}
+
+\subsection{Custom Model Examples}
+
+\paragraph{MOSFET Model}
+\begin{verbatim}
+model MOSFET/IRLZ44N:{
+    g -> 1; T = input
+    S -> 2; T = power
+    d -> 3; T = power
+}
+\end{verbatim}
+
+\paragraph{Non-Polarized Capacitor}
+\begin{verbatim}
+model nonpol_C:{
+    1 -> 1; T = power
+    2 -> 2; T = power
+}
+\end{verbatim}
+
+\paragraph{SiC MOSFET with Metadata}
+\begin{verbatim}
+model mosfet/C3M0016120K1:{
+pins:
+    g        -> 4; T = input
+    s        -> 2; T = power
+    d        -> 1; T = power
+    kelvin_s -> 3; T = output
+
+des: "1200 V, 125A, 16 mOhm, TO-247-4"
+
+dts: "https://assets.wolfspeed.com/..."
+
+fp:  "Package_TO_SOT_THT/TO-247-4_Vert"
+}
+\end{verbatim}
+
+The \texttt{des} (description), \texttt{dts} (datasheet URL), and \texttt{fp} (footprint path) are optional metadata entries.
 
 \section{Relationship between the Objects}
 \begin{itemize}
@@ -1755,17 +2080,96 @@ I@^sensitive  # All connections/pins on
               # nets tagged "sensitive"
 \end{verbatim}
 
-\section{Geneneral Querying}
-% TODO: Document general querying capabilities beyond net-based selection
-% Uncertain about what additional querying syntax exists beyond the quantifier system
+\section{General Querying}
+\label{sec:general-querying}
+General querying provides two powerful forms for filtering and transforming sets: set builder notation and set query notation. Both support nesting.
 
+\subsection{Set Builder Notation}
+Set builder notation iterates over a set or list, filtering and optionally transforming elements.
+\begin{verbatim}
+EBNF:
+set_builder = "{", variable, "E", ( set | list ), 
+              ":", filter_expr, [ "~", transform_expr ], "}"
 
+filter_expr   = function_call   # returns bool
+transform_expr = function_call  # applied to filtered elements
+\end{verbatim}
 
+The filter function receives each element and returns \texttt{True} to keep it. The transform function is applied to all elements that pass the filter. If transform is omitted, elements are returned as-is.
 
-\part{Physical System}
+Examples:
+\begin{verbatim}
+# Filter: only active parts
+{ $x E *p : f.u.is_active($x) ~ noop($x) }
+
+# Filter and transform: get names of large caps
+{ $x E *p : f.u.is_capacitor($x) && 
+             f.u.value($x) > 100u ~ 
+             f.u.name($x) }
+
+# Nested: find all nets connected to parts 
+# in a set
+{ $x E *p : f.u.is_mosfet($x) ~ 
+    { $y E *n : f.u.connected($y, $x) ~ 
+        noop($y) } }
+\end{verbatim}
+
+\subsection{Set Query Notation}
+Set query notation applies a filter and optional transform to an existing set, with optional output assignment.
+\begin{verbatim}
+EBNF:
+set_query = "{", set_expr, "@~", "[", 
+            filter_expr, "]", 
+            [ "~[", transform_expr, "]" ],
+            "~>", [ variable ], "}"
+\end{verbatim}
+
+The \texttt{@\~} operator queries the set. The trailing \texttt{\~{}>} optionally writes the result to a variable; if omitted, the result is returned directly.
+
+Examples:
+\begin{verbatim}
+# Query with filter only
+{ *p @~[f.u.is_active] ~> }
+
+# Query with filter and transform
+{ *p @~[f.u.is_mosfet] 
+      ~[f.u.name] ~> }
+
+# Store result in variable
+{ *p @~[f.u.is_capacitor] 
+      ~[f.u.value] ~> $cap_values }
+
+# Query connections on a net
+{ C@Vin @~[f.u.is_high_current] ~> }
+\end{verbatim}
+
+\subsection{Nesting}
+Both forms can be nested to any depth. Each nested query creates a new scope for its loop variable.
+
+Example:
+\begin{verbatim}
+# For each MOSFET, find all connected nets,
+# then filter to high-voltage nets
+{ $q E *p : f.u.is_mosfet($q) ~ 
+    { C@^power @~[f.u.connected_to($q)] 
+               ~[f.u.voltage_rating] ~> 
+      $ratings } }
+\end{verbatim}\part{Physical System}
 \chapter{Physical Constraints}
 \label{sec:physical-constraints}
 Physical constraints are specified using the \texttt{phys.} prefix and control the physical layout and manufacturing requirements of the PCB.
+
+\section{Units and SI Prefixes}
+\textbf{Warning:} All physical values use base SI units (meters, ohms, farads, etc.). A value like \texttt{min=15} means 15 \textbf{meters}, not 15 millimeters!
+
+Always use SI prefixes for typical PCB dimensions:
+\begin{itemize}
+\item \texttt{min=15m} -- 15 millimeters ($15 \times 10^{-3}$ m)
+\item \texttt{min=15u} -- 15 micrometers ($15 \times 10^{-6}$ m)
+\item \texttt{d=0.25m} -- 0.25 millimeters (250 $\mu$m)
+\end{itemize}
+
+SI prefixes available: \texttt{n} ($10^{-9}$), \texttt{u} ($10^{-6}$), \texttt{m} ($10^{-3}$), \texttt{k} ($10^{3}$), \texttt{M} ($10^{6}$), \texttt{G} ($10^{9}$). See Section~\ref{sec:scalar-type} for details. %BUG ref is broken!!
 
 \section{Priority System}
 All physical constraints accept a priority parameter that determines how conflicts are resolved:
@@ -1799,7 +2203,7 @@ phys.prox <set> minim <priority>
 
 Example:
 \begin{verbatim}
-phys.prox $hvsys $lvsys min=15 -ne
+phys.prox $hvsys $lvsys min=15m -ne
 phys.prox $noisy_loop minim -vimp
 \end{verbatim}
 
@@ -1814,7 +2218,7 @@ Note: Unlike \texttt{phys.prox} (Euclidean distance), \texttt{phys.creep} measur
 
 Example:
 \begin{verbatim}
-phys.creep $hvsys $lvsys d=30 -nonneg
+phys.creep $hvsys $lvsys d=30m -nonneg
 \end{verbatim}
 
 \section{Layer Constraint}
@@ -1875,15 +2279,86 @@ net "Gnd"
 phys.mkplane 1 Gnd
 \end{verbatim}
 
-\section{Via Fill}
-Fills a pad with vias for thermal management:
+\section{Text Annotation}
+Places text on the board as a physical object:
 \begin{verbatim}
-phys.viafill <pad> v=<via_hole_diameter> d=<via_spacing>
+phys.mktext txt = <text> 
+    font = <font_name> 
+    size = <point_size> 
+    material = <material> 
+    layer = <layer>
 \end{verbatim}
+\begin{itemize}
+\item \texttt{txt} -- Text string to display
+\item \texttt{font} -- Font name (e.g., \texttt{"Ubuntu Mono"})
+\item \texttt{size} -- Font size in points
+\item \texttt{material} -- Material (\texttt{"cu"} for copper silkscreen)
+\item \texttt{layer} -- Target layer (e.g., \texttt{T} for top silkscreen)
+\end{itemize}
 
 Example:
 \begin{verbatim}
-phys.viafill Q1[d] v=0.25 d=0.5
+phys.mktext txt = "HV" font = "Ubuntu Mono" 
+    size = 9 material = "cu" layer = T
+\end{verbatim}
+
+\section{Via Fill}
+Fills a pad with vias for thermal management:
+\begin{verbatim}
+phys.viafill <pad> v=<via_hole_diameter> 
+    d=<via_spacing> p=<pattern>
+\end{verbatim}
+\begin{itemize}
+\item \texttt{v} -- Via hole diameter (use \texttt{m} for mm)
+\item \texttt{d} -- Minimum spacing between via centers
+\item \texttt{p} -- Fill pattern (default: \texttt{grid})
+\end{itemize}
+
+\subsection{Pattern Types}
+
+\paragraph{grid}
+Regular rectangular matrix of vias. Simple, predictable routing channels.
+\begin{verbatim}
+phys.viafill Q1[d] v=0.25m d=0.5m p=grid
+\end{verbatim}
+
+\paragraph{hex}
+Hexagonal honeycomb packing. Approximately 15\% denser than grid, better thermal performance.
+\begin{verbatim}
+phys.viafill Q1[d] v=0.25m d=0.5m p=hex
+\end{verbatim}
+
+\paragraph{stagger}
+Offset rows forming triangular lattice. Balances density with routing space between rows.
+\begin{verbatim}
+phys.viafill Q1[d] v=0.25m d=0.5m p=stagger
+\end{verbatim}
+
+\paragraph{radial}
+Concentric rings emanating from pad center. Optimal for round thermal pads under ICs.
+\begin{verbatim}
+phys.viafill U1[pin5] v=0.3m d=0.8m p=radial
+\end{verbatim}
+
+\paragraph{random}
+Poisson-disk distributed vias. Avoids periodic structures that can cause resonance or EMI.
+\begin{verbatim}
+phys.viafill Q1[d] v=0.25m d=0.5m p=random
+\end{verbatim}
+
+\subsection{Examples}
+\begin{verbatim}
+# Standard grid fill for MOSFET drain
+phys.viafill Q1[d] v=0.25m d=0.5m p=grid
+
+# Dense hex fill for high-current pad
+phys.viafill Q1[d] v=0.2m d=0.4m p=hex
+
+# Radial fill for IC thermal pad
+phys.viafill U1[pin5] v=0.3m d=0.8m p=radial
+
+# Random fill to avoid EMI resonance
+phys.viafill Q1[d] v=0.25m d=0.5m p=random
 \end{verbatim}
 
 \section{Connection Current}
@@ -1907,7 +2382,7 @@ phys.align <list_of_parts>
 
 Example:
 \begin{verbatim}
-phys.align [ Q1, Q2 ] axis=x d=5 -vimp
+phys.align [ Q1, Q2 ] axis=x d=5m -vimp
 \end{verbatim}
 
 \section{Connection Matching}
@@ -2079,43 +2554,375 @@ syst.alg <algorithm_name>
 \subsection{Available Algorithms}
 
 \subsubsection{Simulated Annealing (sa)}
-A probabilistic optimization technique that explores the solution space by accepting worse solutions with decreasing probability. Well-suited for general-purpose constraint satisfaction.
+A probabilistic optimization technique inspired by the annealing process in metallurgy. The algorithm explores the solution space by accepting worse solutions with a probability that decreases over time.
+
+\paragraph{Objective Function}
+Let $\mathbf{x} \in \mathcal{X}$ represent the complete layout state (component positions, trace routes, via placements). The objective function $f: \mathcal{X} \rightarrow \mathbb{R}$ quantifies the total constraint violation cost:
+\begin{equation}
+f(\mathbf{x}) = \sum_{i=1}^{n} w_i \cdot v_i(\mathbf{x})
+\end{equation}
+where $w_i$ is the priority weight of constraint $i$ and $v_i(\mathbf{x})$ is the violation measure (0 if satisfied, positive otherwise).
+
+\paragraph{Neighbourhood Structure}
+A neighbour state $\mathbf{x}'$ is generated by applying a random perturbation $\delta$ to the current state:
+\begin{equation}
+\mathbf{x}' = \mathbf{x} + \delta, \quad \delta \sim \mathcal{U}(-\epsilon, \epsilon)
+\end{equation}
+where $\epsilon$ is the maximum perturbation magnitude, adaptively scaled based on acceptance history.
+
+\paragraph{Acceptance Probability}
+The Metropolis acceptance criterion determines whether to move to a neighbour state:
+\begin{equation}
+P(\text{accept}) = \begin{cases}
+1 & \text{if } f(\mathbf{x}') \leq f(\mathbf{x}) \\
+\exp\left(-\frac{f(\mathbf{x}') - f(\mathbf{x})}{T}\right) & \text{if } f(\mathbf{x}') > f(\mathbf{x})
+\end{cases}
+\end{equation}
+where $T > 0$ is the current temperature parameter.
+
+\paragraph{Cooling Schedule}
+The temperature decreases according to a geometric cooling schedule:
+\begin{equation}
+T_{k+1} = \alpha \cdot T_k, \quad \alpha \in (0, 1)
+\end{equation}
+with typical values $\alpha \in [0.95, 0.999]$. The initial temperature $T_0$ is set such that the initial acceptance probability for a worst-case perturbation is approximately $0.8$:
+\begin{equation}
+T_0 = -\frac{\Delta f_{\max}}{\ln(0.8)}
+\end{equation}
+
+\paragraph{Convergence Criterion}
+The algorithm terminates when one of the following conditions is met:
 \begin{itemize}
-\item Pros: Good global optimization, handles complex constraints
-\item Cons: Slower convergence, requires parameter tuning
-\item Best for: Complex designs with many interacting constraints
+\item Temperature threshold: $T_k < T_{\min}$ (typically $10^{-6}$)
+\item No improvement: $f(\mathbf{x}_{\text{best}})$ has not improved for $N_{\text{stale}}$ iterations
+\item Maximum iterations: $k > k_{\max}$
+\end{itemize}
+
+\paragraph{Algorithm}
+\begin{enumerate}
+\item Initialize $\mathbf{x}_0$ randomly, set $T_0$, $k = 0$
+\item Generate neighbour $\mathbf{x}'$ from $\mathbf{x}_k$
+\item Compute $\Delta f = f(\mathbf{x}') - f(\mathbf{x}_k)$
+\item If $\Delta f \leq 0$ or $\mathcal{U}(0,1) < \exp(-\Delta f / T_k)$, set $\mathbf{x}_{k+1} = \mathbf{x}'$
+\item Otherwise, set $\mathbf{x}_{k+1} = \mathbf{x}_k$
+\item Update $T_{k+1} = \alpha \cdot T_k$
+\item If convergence not met, $k \leftarrow k+1$, goto 2
+\end{enumerate}
+
+\paragraph{Properties}
+\begin{itemize}
+\item Time complexity: $O(k_{\max} \cdot |\mathcal{N}(\mathbf{x})|)$ where $|\mathcal{N}(\mathbf{x})|$ is the neighbourhood evaluation cost
+\item Probability of finding global optimum approaches 1 as $k_{\max} \rightarrow \infty$ with sufficiently slow cooling
+\item Space complexity: $O(|\mathbf{x}|)$ for storing the current and best states
 \end{itemize}
 
 \subsubsection{Genetic Algorithm (ga)}
-An evolutionary approach that maintains a population of candidate solutions and evolves them through selection, crossover, and mutation.
+An evolutionary optimization method that maintains a population of candidate solutions and evolves them through biologically-inspired operators: selection, crossover, and mutation.
+
+\paragraph{Population Representation}
+The population at generation $t$ is a set of $N$ chromosomes:
+\begin{equation}
+P(t) = \{\mathbf{x}_1^{(t)}, \mathbf{x}_2^{(t)}, \ldots, \mathbf{x}_N^{(t)}\}
+\end{equation}
+Each chromosome $\mathbf{x}_i^{(t)} \in \mathcal{X}$ encodes a complete layout state as a gene vector:
+\begin{equation}
+\mathbf{x}_i^{(t)} = (g_1, g_2, \ldots, g_m)
+\end{equation}
+where each gene $g_j$ represents a design variable (position, route choice, etc.).
+
+\paragraph{Fitness Function}
+The fitness of chromosome $\mathbf{x}_i$ is derived from the objective function:
+\begin{equation}
+\text{fit}(\mathbf{x}_i) = \frac{1}{1 + f(\mathbf{x}_i)}
+\end{equation}
+where $f(\mathbf{x}_i)$ is the constraint violation cost. Higher fitness indicates better solutions.
+
+\paragraph{Selection}
+Parent selection uses tournament selection of size $\tau$:
+\begin{enumerate}
+\item Sample $\tau$ individuals uniformly from $P(t)$
+\item Select the individual with highest fitness as parent
+\end{enumerate}
+This is repeated to select $N$ parents for mating.
+
+\paragraph{Crossover}
+Single-point crossover with probability $p_c$:
+\begin{equation}
+\text{crossover}(\mathbf{x}_i, \mathbf{x}_j) = \begin{cases}
+(g_1^{(i)}, \ldots, g_c^{(i)}, g_{c+1}^{(j)}, \ldots, g_m^{(j)}) & \text{if } \mathcal{U}(0,1) < p_c \\
+\mathbf{x}_i & \text{otherwise}
+\end{cases}
+\end{equation}
+where $c \sim \mathcal{U}\{1, m-1\}$ is the crossover point.
+
+\paragraph{Mutation}
+Per-gene mutation with probability $p_m$:
+\begin{equation}
+g_j' = \begin{cases}
+g_j + \mathcal{N}(0, \sigma^2) & \text{if } \mathcal{U}(0,1) < p_m \\
+g_j & \text{otherwise}
+\end{cases}
+\end{equation}
+where $\sigma$ is the mutation strength, often adapted over generations.
+
+\paragraph{Elitism}
+The best $\lfloor e \cdot N \rfloor$ individuals are copied unchanged to the next generation, where $e \in [0, 0.2]$ is the elitism rate.
+
+\paragraph{Convergence Criterion}
+The algorithm terminates when:
 \begin{itemize}
-\item Pros: Explores multiple solutions in parallel, good for multi-objective optimization
-\item Cons: High memory usage, slower for simple designs
-\item Best for: Multi-objective optimization with competing constraints
+\item Maximum generations: $t > t_{\max}$
+\item Fitness stagnation: Best fitness has not improved for $t_{\text{stale}}$ generations
+\item Target fitness: $\text{fit}(\mathbf{x}_{\text{best}}) > 1 - \epsilon_{\text{fit}}$
+\end{itemize}
+
+\paragraph{Algorithm}
+\begin{enumerate}
+\item Initialize population $P(0)$ randomly
+\item Evaluate fitness for all $\mathbf{x}_i^{(t)} \in P(t)$
+\item Apply elitism: copy top $e \cdot N$ individuals to $P(t+1)$
+\item Select parents via tournament selection
+\item Apply crossover with probability $p_c$
+\item Apply mutation with probability $p_m$
+\item Replace population: $P(t) \leftarrow P(t+1)$
+\item If convergence not met, $t \leftarrow t+1$, goto 2
+\end{enumerate}
+
+\paragraph{Properties}
+\begin{itemize}
+\item Time complexity: $O(t_{\max} \cdot N \cdot m)$ for $N$ individuals of length $m$
+\item Maintains population diversity, reducing local optima entrapment
+\item Space complexity: $O(N \cdot |\mathbf{x}|)$ for storing the population
+\item Naturally parallelizable across individuals
 \end{itemize}
 
 \subsubsection{Constraint Programming (cp)}
-A declarative approach that models constraints as logical relationships and uses propagation and backtracking to find solutions.
+A declarative optimization approach that models the problem as a set of variables, domains, and constraints, using propagation and backtracking to find solutions.
+
+\paragraph{Problem Formulation}
+A constraint satisfaction problem (CSP) is defined as a tuple:
+\begin{equation}
+\mathcal{P} = (\mathcal{X}, \mathcal{D}, \mathcal{C})
+\end{equation}
+where:
 \begin{itemize}
-\item Pros: Fast for satisfiability problems, guarantees constraint satisfaction when possible
-\item Cons: May not optimize as well as stochastic methods
-\item Best for: Designs where constraint satisfaction is more important than optimization
+\item $\mathcal{X} = \{x_1, x_2, \ldots, x_n\}$ is the set of decision variables
+\item $\mathcal{D} = \{D(x_1), D(x_2), \ldots, D(x_n)\}$ is the set of variable domains
+\item $\mathcal{C} = \{c_1, c_2, \ldots, c_m\}$ is the set of constraints
+\end{itemize}
+
+\paragraph{Domains}
+Each variable $x_i$ has an initial domain $D(x_i) \subseteq \mathbb{R}$ (or discrete set). For PCB layout:
+\begin{itemize}
+\item Position variables: $D(x_i) = [x_{\min}, x_{\max}] \times [y_{\min}, y_{\max}]$
+\item Route variables: $D(x_i) = \{\text{path}_1, \text{path}_2, \ldots\}$
+\end{itemize}
+
+\paragraph{Constraint Types}
+Constraints are classified as:
+\begin{itemize}
+\item \textbf{Unary}: $c(x_i)$ --- restricts a single variable
+\item \textbf{Binary}: $c(x_i, x_j)$ --- relates two variables
+\item \textbf{Global}: $c(x_{i_1}, \ldots, x_{i_k})$ --- involves multiple variables (e.g., \texttt{alldiff})
+\end{itemize}
+
+\paragraph{Arc Consistency (AC-3)}
+For each binary constraint $c(x_i, x_j)$, enforce arc consistency:
+\begin{equation}
+\forall v_i \in D(x_i), \exists v_j \in D(x_j) \text{ such that } c(v_i, v_j) = \text{true}
+\end{equation}
+If no such $v_j$ exists, remove $v_i$ from $D(x_i)$. Repeat until no more domains can be reduced.
+
+\paragraph{Propagation}
+When a domain is reduced, propagate effects to all connected constraints:
+\begin{enumerate}
+\item Maintain a worklist $W$ of affected variables
+\item For each $x_i \in W$, re-evaluate all constraints involving $x_i$
+\item If any domain $D(x_j)$ is reduced, add $x_j$ to $W$
+\item Continue until $W$ is empty (fixpoint reached) or a domain becomes empty (failure)
+\end{enumerate}
+
+\paragraph{Backtracking Search}
+The solver explores the search tree depth-first:
+\begin{enumerate}
+\item Select unassigned variable $x_i$ (branching heuristic: smallest domain first)
+\item For each value $v \in D(x_i)$ (best-first ordering):
+\begin{enumerate}
+\item Assign $x_i \leftarrow v$
+\item Propagate constraints
+\item If propagation succeeds (no empty domains), recurse
+\item If propagation fails, backtrack
+\end{enumerate}
+\end{enumerate}
+
+\paragraph{Optimization Extension}
+For optimization (minimizing $f(\mathbf{x})$), add a bound constraint:
+\begin{equation}
+f(\mathbf{x}) < f(\mathbf{x}_{\text{best}})
+\end{equation}
+This is tightened each time a better solution is found (branch-and-bound).
+
+\paragraph{Convergence Criterion}
+\begin{itemize}
+\item Solution found: All variables assigned, all constraints satisfied
+\item No solution: Search tree exhausted (problem infeasible)
+\item Optimality: All nodes pruned, current best is optimal
+\end{itemize}
+
+\paragraph{Properties}
+\begin{itemize}
+\item Time complexity: Exponential in worst case, but propagation prunes large portions of the search tree
+\item Guarantees constraint satisfaction (complete when solution exists)
+\item Space complexity: $O(n \cdot |D_{\max}| + m)$ for domain storage and constraint graph
+\item Deterministic: Same problem instance yields same solution
 \end{itemize}
 
 \subsubsection{Gradient Descent (gd)}
-A deterministic optimization method that follows the gradient of the objective function to find local optima.
+A first-order iterative optimization algorithm that finds local minima by moving in the direction of steepest descent of the objective function.
+
+\paragraph{Objective Function}
+Assume the objective function $f: \mathbb{R}^n \rightarrow \mathbb{R}$ is differentiable, where $n$ is the number of design variables (component positions, trace parameters, etc.).
+
+\paragraph{Gradient Computation}
+The gradient of $f$ at point $\mathbf{x}_k$ is:
+\begin{equation}
+\nabla f(\mathbf{x}_k) = \left(\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}, \ldots, \frac{\partial f}{\partial x_n}\right)^{\top}
+\end{equation}
+Computed via automatic differentiation or finite differences:
+\begin{equation}
+\frac{\partial f}{\partial x_i} \approx \frac{f(\mathbf{x}_k + h\mathbf{e}_i) - f(\mathbf{x}_k - h\mathbf{e}_i)}{2h}
+\end{equation}
+where $h$ is a small perturbation and $\mathbf{e}_i$ is the $i$-th unit vector.
+
+\paragraph{Update Rule}
+The basic gradient descent update is:
+\begin{equation}
+\mathbf{x}_{k+1} = \mathbf{x}_k - \eta_k \nabla f(\mathbf{x}_k)
+\end{equation}
+where $\eta_k > 0$ is the learning rate at iteration $k$.
+
+\paragraph{Learning Rate Schedules}
 \begin{itemize}
-\item Pros: Fast convergence for smooth objective functions, deterministic results
-\item Cons: May get stuck in local optima, requires differentiable objectives
-\item Best for: Simple designs with well-defined objective functions
+\item \textbf{Constant}: $\eta_k = \eta$
+\item \textbf{Decay}: $\eta_k = \eta_0 / (1 + \beta k)$
+\item \textbf{Exponential}: $\eta_k = \eta_0 \cdot \gamma^k$
+\item \textbf{Adaptive}: $\eta_{k,i} = \eta_0 / \sqrt{s_i + \epsilon}$ (per-parameter, AdaGrad-style)
+\end{itemize}
+where $\eta_0$ is the initial learning rate, $\beta, \gamma$ are decay parameters, $s_i$ accumulates past squared gradients, and $\epsilon$ prevents division by zero.
+
+\paragraph{Momentum Enhancement}
+To accelerate convergence and dampen oscillations:
+\begin{align}
+\mathbf{v}_{k+1} &= \mu \mathbf{v}_k + \eta_k \nabla f(\mathbf{x}_k) \\
+\mathbf{x}_{k+1} &= \mathbf{x}_k - \mathbf{v}_{k+1}
+\end{align}
+where $\mu \in [0, 1)$ is the momentum coefficient (typical: $0.9$).
+
+\paragraph{Constraint Handling}
+For constraints $g_j(\mathbf{x}) \leq 0$, use a penalty method:
+\begin{equation}
+\tilde{f}(\mathbf{x}) = f(\mathbf{x}) + \lambda \sum_{j=1}^{m} \max(0, g_j(\mathbf{x}))^2
+\end{equation}
+where $\lambda$ is a penalty weight, increased iteratively:
+\begin{equation}
+\lambda_{k+1} = \min(\lambda_k \cdot \rho, \lambda_{\max}), \quad \rho > 1
+\end{equation}
+
+\paragraph{Convergence Criterion}
+\begin{itemize}
+\item Gradient norm: $\|\nabla f(\mathbf{x}_k)\| < \epsilon_{\text{grad}}$
+\item Parameter change: $\|\mathbf{x}_{k+1} - \mathbf{x}_k\| < \epsilon_{\text{step}}$
+\item Function change: $|f(\mathbf{x}_{k+1}) - f(\mathbf{x}_k)| < \epsilon_f$
+\item Maximum iterations: $k > k_{\max}$
+\end{itemize}
+
+\paragraph{Algorithm}
+\begin{enumerate}
+\item Initialize $\mathbf{x}_0$, $\eta_0$, $\lambda_0$, $k = 0$
+\item Compute $\nabla f(\mathbf{x}_k)$ and $\nabla g_j(\mathbf{x}_k)$
+\item Update penalty: $\lambda_{k+1} = \min(\lambda_k \cdot \rho, \lambda_{\max})$
+\item Compute search direction: $\mathbf{d}_k = -\nabla \tilde{f}(\mathbf{x}_k)$
+\item Line search: find $\eta_k$ satisfying Armijo condition
+\item Update: $\mathbf{x}_{k+1} = \mathbf{x}_k + \eta_k \mathbf{d}_k$
+\item If convergence not met, $k \leftarrow k+1$, goto 2
+\end{enumerate}
+
+\paragraph{Properties}
+\begin{itemize}
+\item Time complexity: $O(k_{\max} \cdot n)$ per iteration for gradient computation
+\item Converges to local minima; requires convexity or good initialization for global optimality
+\item Space complexity: $O(n)$ for storing the current point and gradient
+\item Fast per-iteration, but may require many iterations for convergence
 \end{itemize}
 
 \subsubsection{Hybrid (hybrid)}
-Combines multiple algorithms, typically using a fast method for initial placement and a more thorough method for refinement.
+A multi-strategy approach that combines the strengths of different algorithms in a sequential pipeline, adapting the optimization strategy to the problem characteristics at each phase.
+
+\paragraph{Architecture}
+The hybrid solver operates in three sequential phases:
+\begin{equation}
+\mathbf{x}_{\text{final}} = \text{Phase}_3(\text{Phase}_2(\text{Phase}_1(\mathbf{x}_0)))
+\end{equation}
+
+\paragraph{Phase 1: Global Exploration (Simulated Annealing)}
 \begin{itemize}
-\item Pros: Balances speed and quality, adapts to problem complexity
-\item Cons: More complex implementation, harder to predict runtime
-\item Best for: Large designs where pure algorithms are too slow or too slow to converge
+\item Algorithm: Simulated annealing with reduced iterations ($k_{\max}^{(1)} = k_{\max} / 4$)
+\item Purpose: Explore the solution space broadly, identify promising regions
+\item Output: $\mathbf{x}_1$ with $f(\mathbf{x}_1) < f_{\text{threshold}}$
+\end{itemize}
+The temperature schedule uses faster cooling ($\alpha = 0.95$) to quickly identify basins of attraction.
+
+\paragraph{Phase 2: Local Refinement (Gradient Descent)}
+\begin{itemize}
+\item Algorithm: Gradient descent with momentum
+\item Purpose: Refine the solution from Phase 1 to a local minimum
+\item Input: $\mathbf{x}_1$ from Phase 1
+\item Output: $\mathbf{x}_2$ with $\|\nabla f(\mathbf{x}_2)\| < \epsilon_{\text{grad}}$
+\end{itemize}
+The penalty weight is initialized from Phase 1's final value and continues to increase.
+
+\paragraph{Phase 3: Constraint Satisfaction (Constraint Programming)}
+\begin{itemize}
+\item Algorithm: Constraint propagation and backtracking
+\item Purpose: Verify and enforce all hard constraints
+\item Input: $\mathbf{x}_2$ from Phase 2
+\item Output: $\mathbf{x}_{\text{final}}$ feasible or infeasible report
+\end{itemize}
+If $\mathbf{x}_2$ violates hard constraints, CP attempts repair. If repair fails, the solver reports the conflict set.
+
+\paragraph{Adaptive Phase Selection}
+Based on problem characteristics, the hybrid solver may skip phases:
+\begin{equation}
+\text{skip}(\text{Phase}_i) = \begin{cases}
+\text{true} & \text{if } n < n_{\text{simple}} \text{ and } i = 1 \\
+\text{true} & \text{if } \text{all constraints linear} \text{ and } i = 1 \\
+\text{false} & \text{otherwise}
+\end{cases}
+\end{equation}
+
+\paragraph{Phase Transition Criteria}
+Transition from Phase $i$ to Phase $i+1$ occurs when:
+\begin{itemize}
+\item Improvement rate falls below threshold: $\Delta f / \Delta k < \epsilon_{\text{rate}}$
+\item Maximum phase iterations reached: $k^{(i)} > k_{\max}^{(i)}$
+\item Solution quality threshold met: $f(\mathbf{x}) < f_{\text{threshold}}^{(i)}$
+\end{itemize}
+
+\paragraph{Algorithm}
+\begin{enumerate}
+\item Initialize $\mathbf{x}_0$, determine phase parameters from problem size $n$
+\item \textbf{Phase 1}: Run SA with $k_{\max}^{(1)}$, obtain $\mathbf{x}_1$
+\item \textbf{Phase 2}: Run GD from $\mathbf{x}_1$ until convergence, obtain $\mathbf{x}_2$
+\item \textbf{Phase 3}: Run CP from $\mathbf{x}_2$, verify/repair constraints
+\item Return $\mathbf{x}_{\text{final}}$ or infeasibility report
+\end{enumerate}
+
+\paragraph{Properties}
+\begin{itemize}
+\item Time complexity: Sum of phase complexities, typically $O(k_{\max}^{(1)} \cdot |\mathcal{N}| + k_{\max}^{(2)} \cdot n + \text{CP}_{\text{search}})$
+\item Combines global exploration with local exploitation and constraint guarantees
+\item Adapts to problem complexity via phase skipping
+\item Space complexity: Maximum of individual phase requirements
 \end{itemize}
 
 \subsection{Default Algorithm}
