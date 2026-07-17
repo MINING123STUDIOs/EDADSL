@@ -1,0 +1,1812 @@
+\chapter{Control Flow}
+EDADSL provides several control flow constructs for conditional execution, iteration, and program flow control.
+
+\section{Conditional Execution}
+Conditional execution uses the \texttt{if} keyword followed by a boolean expression and a code block. An optional \texttt{else} clause provides an alternative code block executed when the condition is \texttt{False}:
+\begin{verbatim}
+EBNF:
+conditional = "if", boolean_expression, 
+              "::", code_block,
+              ["else", "::", code_block]
+
+Example:
+$flag [bool]= True
+if $flag ::{
+    f.print("Flag is set")
+} else ::{
+    f.print("Flag is not set")
+}
+\end{verbatim}
+
+Basic \texttt{if} without \texttt{else}:
+\begin{verbatim}
+Example:
+$flag [bool]= True
+if $flag ::{
+    f.print("Flag is set")
+}
+\end{verbatim}
+
+\section{For Loops}
+For loops iterate over a list or set:
+\begin{verbatim}
+EBNF:
+iterator = "for", variable, "E", 
+           (list | set), "::", code_block
+
+Example:
+$colors [list]= ["red", "green", "blue"]
+for $c E $colors ::{
+    f.print($c)
+}
+\end{verbatim}
+The loop variable (\texttt{\$c}) takes on each value in the list/set in sequence.
+
+\paragraph{Variable Scoping}
+The loop variable is \textbf{not} block-scoped: it persists after the loop exits, retaining the last value assigned during iteration. Loop variables declared at the top level are global. Loop variables declared inside a function are local to that function (see Section~\ref{sec:function-scope}).
+
+\section{Goto Statements}
+Goto statements provide unconditional jumps to labeled positions:
+\begin{verbatim}
+EBNF:
+gotomarker = "gotomarker", id
+gotojump   = "gotojump", id
+
+Example:
+gotojump skip_section
+f.print("This will not be printed")
+gotomarker skip_section
+f.print("Jumped here")
+\end{verbatim}
+Gotomarkers and gotojumps can cross function and loop boundaries. Nesting is allowed.
+
+\section{End of Program Statements}
+\begin{verbatim}
+EBNF:
+halt = "halt"
+noop = "skip"
+\end{verbatim}
+\begin{itemize}
+\item \texttt{halt} -- Terminates program execution and exports all created files
+\item \texttt{skip} -- No operation; program continues to next statement
+\end{itemize}
+
+\section{Output and Logging}
+\begin{verbatim}
+EBNF:
+echo_statement = "echo", variable
+writetolog     = "writetolog", string_expression
+
+Example:
+f.print("Hello, EDADSL!")
+writetolog "Board design completed successfully"
+\end{verbatim}
+\begin{itemize}
+\item \texttt{echo} -- Keyword that prints a variable reference to the console
+\item \texttt{writetolog} -- Keyword that appends a message to the log file
+\end{itemize}
+
+\chapter{Functions}
+\section{Built-in Functions}
+
+\textbf{Important:} All built-in function calls require the \texttt{f.} prefix. This is defined in the formal grammar (Chapter~3):
+\begin{verbatim}
+function_call_built_in = "f.", id, "(", 
+                        [{ data, "," }, data], ")"
+\end{verbatim}
+Correct usage: \texttt{f.abs(-3.2)}, \texttt{f.sin(\$x)}, \texttt{f.map(\$list, \$func)}\\
+Incorrect: \texttt{abs(-3.2)}, \texttt{sin(\$x)}, \texttt{map(\$list, \$func)}
+
+\texttt{f.print()} takes a \textbf{single} argument. Use \texttt{f.str()} for string concatenation:
+\begin{verbatim}
+f.print("value = " + $x)              # OK
+f.print(f.str("value = ", $x))        # OK
+f.print("value = ", $x)               # WRONG - two arguments
+\end{verbatim}
+
+\subsection{Mathematical Functions}
+\subsubsection{Absolute Value Function}
+The Absolute Value Function ( denoted as \texttt{abs} ) returns the Absolute Value of the Argument or the Magnitude of a Vector. \\
+Morphology of the Absolute Value Function:
+\begin{verbatim}
+EBNF:
+"f.abs", "(", argument, [ ",", "vec", "=", 
+       boolean_data_type ], ")"
+\end{verbatim}
+If the Type of the Argument does not match the expected Type (a Numeric Value or a List of Numeric Values) a Value Error is raised.\\
+Example:
+\begin{verbatim}
+f.abs(-3.2)
+\end{verbatim}
+This Example would return a value of \texttt{3.2}.
+
+The Argument may also be a List of Numeric Values. If This is the case the Function is iterated over each Element.\\
+Example:
+\begin{verbatim}
+f.abs([-3, 0.2, 0, -7])
+\end{verbatim}
+This Example would return \texttt{[3, 0.2, 0, 7]}. \vspace{5 mm}\\
+If \texttt{vec = True} is passed a List shall be passed as the Argument and the Function will return Magnitude of the List as an n-dimensional Vector, where n is the Length of the List.\\ %$\texttt{abs}(\vec{v}\texttt{, vec = True}) = \sqrt{\sum_{i=1}^nv_i^2}$. 
+Example:
+\begin{verbatim}
+f.abs( [ 3, -4 ], vec = True )
+\end{verbatim}
+This Example would return \texttt{5.0}.\\
+There are no Domain-Restrictions for the function inside $\mathbb{R}^n$.
+
+\paragraph{Complex Overload}
+When the Argument is a Complex Number $z = a + bi$, \texttt{abs} returns the Modulus (Magnitude) of the Complex Number, defined as:
+\[
+\lvert a + bi \rvert = \sqrt{a^2 + b^2}
+\]
+The Result is always a Real Number, even if the Argument is Complex.\\
+Domain: All Complex Numbers ($\mathbb{C}$).\\
+Example:
+\begin{verbatim}
+f.abs(3 + 4i)   #c# Returns 5.0
+f.abs(1 + 1i)   #c# Returns approximately 1.41421
+f.abs(0 - 5i)   #c# Returns 5.0
+\end{verbatim}
+
+\subsubsection{Parallel Equivalent Function}
+The Parallel Equivalent Function ( denoted as \texttt{parallel} ) computes the parallel combination of a list of values. This is the standard formula for parallel resistances, conductances, or any set of admittances. \\
+Morphology of the Parallel Equivalent Function:
+\begin{verbatim}
+EBNF:
+"f.parallel", "(", argument, ")"
+\end{verbatim}
+If the Type of the Argument does not match the expected Type (a List of Numeric Values) a Value Error is raised.\\
+The Argument must be a List of Numeric Values (\texttt{int}, \texttt{real}, or \texttt{complex}). The function computes:
+\[
+\text{parallel}([v_1, v_2, \ldots, v_n]) = \frac{1}{\frac{1}{v_1} + \frac{1}{v_2} + \cdots + \frac{1}{v_n}}
+\]
+If any Element in the List is Zero, the Function immediately Returns Zero.\\
+If any Element is Infinite, it is Ignored (does not contribute to the Result).\\
+The Return Type is determined by the Numerical Value of the Result:
+\begin{itemize}
+\item If the Result is Numerically Equal to an Integer, Return \texttt{int}
+\item Otherwise, if the Result is Numerically Equal to a Real, Return \texttt{real}
+\item Otherwise, Return \texttt{complex}
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.parallel([100, 100])         #c# Returns 50 (int)
+f.parallel([100, 200, 300])    #c# Returns 54 (int, softint)
+f.parallel([1e3, 2.2e3])       #c# Returns 687.5 (real)
+f.parallel([100, 0])           #c# Returns 0 (any zero)
+f.parallel([100, 200, 0, 300]) #c# Returns 0 (any zero)
+f.parallel([100, inf])           #c# Returns 100 (inf ignored)
+f.parallel([100, 200, inf])      #c# Returns 66.666... (inf ignored)
+\end{verbatim}
+
+\paragraph{Complex Overload}
+When the List contains Complex Numbers, the function computes the parallel combination using Complex Arithmetic. If the Result has a Zero Imaginary Part, it is Returned as \texttt{real}. \\
+Example:
+\begin{verbatim}
+f.parallel([100 + 0i, 200 + 0i])
+    #c# Returns 66.666... (real, imag=0)
+f.parallel([3 + 4i, 1 - 2i])           #c# Returns complex result
+\end{verbatim}
+Domain: All Lists of Numeric Values. Empty Lists raise a Value Error. Lists with a single Element return that Element unchanged (after \texttt{softint}(\texttt{softreal}())).\\
+
+\subsubsection{Signum Function}
+The Signum Function ( denoted as \texttt{sign} ) returns the Sign of the Argument. \\
+Morphology of the Signum Function:
+\begin{verbatim}
+EBNF:
+"f.sign", "(", argument, ")"
+\end{verbatim}
+If the Type of the Argument does not match the expected Type (a Numeric Value or a List of Numeric Values) a Value Error is raised.\\
+Example:
+\begin{verbatim}
+f.sign(-3.2)
+\end{verbatim}
+This Example would return a value of \texttt{-1}.
+
+The Argument may also be a List of Numeric Values. If This is the case the Function is iterated over each Element.\\
+Example:
+\begin{verbatim}
+f.sign([-3, 0.2, 0, -7])
+\end{verbatim}
+This Example would return \texttt{[-1, 1, 0, -1]}.\\
+There are no Domain-Restrictions for the function inside $\mathbb{R}^n$.
+
+
+\subsubsection{Regular Trigonometric Functions}
+Important: Angles are interpreted as Radians by Default.\\
+The Regular Trigonometric Functions (Sine, Cosine and Tangent) ( denoted as \texttt{sin, cos, tan} ) return the Sine, Cosine, or Tangent of the Argument. \\
+Morphology of the Trigonometric Functions:
+\begin{verbatim}
+EBNF:
+( "f.sin" | "f.cos" | "f.tan" ), "(", argument, 
+  [ ",", "unit", "=", unit ], ")"
+
+unit = ( "'", ("rad" | "deg" ), "'" )
+     | ( '"', ("rad" | "deg" ), '"' )
+\end{verbatim}
+If the Type of the Argument does not match the expected Type (a Numeric Value or a List of Numeric Values) a Value Error is raised.\\
+Example:
+\begin{verbatim}
+f.sin(1.570796327)
+\end{verbatim}
+This Example would return a value of around \texttt{1}.
+
+The Argument may also be a List of Numeric Values. If This is the case the Function is iterated over each Element.\\
+Example:
+\begin{verbatim}
+f.sin([0, 30, 90], unit = "deg" )
+\end{verbatim}
+This Example would return \texttt{[0, 0.5, 1]}.\\
+For Sine and Cosine there are no Domain-Restrictions for the functions inside $\mathbb{R}^n$. \\
+For Tangent there are Domain-Restrictions inside $\mathbb{R}^n$.\\
+It is only defined for $\{x \in \mathbb{R}: \cos x \neq 0 \}^n$
+
+\paragraph{Complex Overload}
+All three functions (\texttt{sin, cos, tan}) are also defined for Complex Arguments via Analytic Continuation. For complex $z = a + bi$, the functions are computed using Euler's Formula:
+\[
+\sin(a + bi) = \sin(a)\cosh(b) + i\cos(a)\sinh(b)
+\]
+\[
+\cos(a + bi) = \cos(a)\cosh(b) - i\sin(a)\sinh(b)
+\]
+\[
+\tan(a + bi) = \frac{\sin(a + bi)}{\cos(a + bi)}
+\]
+Domain: All Complex Numbers ($\mathbb{C}$) for \texttt{sin} and \texttt{cos}. For \texttt{tan}, all Complex Numbers where $\cos z \neq 0$.\\
+Examples:
+\begin{verbatim}
+f.sin(1 + 2i)        #c# Returns approximately 3.1658 - 1.9596i
+f.cos(1 + 2i)        #c# Returns approximately 2.0327 + 3.0519i
+f.tan(0 + 1i)        #c# Returns approximately 0.0 + 0.7616i
+\end{verbatim}
+
+\subsubsection{Regular Inverse Trigonometric Functions}
+Important: Angles are interpreted as Radians by Default.\\
+The Regular Inverse Trigonometric Functions (Arcsine, Arccosine and Arctangent) ( denoted as \texttt{asin, acos, atan}, \texttt{arsin, arcos, artan} or \texttt{arcsin, arccos, arctan} ) return the Inverse for the Sine, Cosine, or Tangent of the Argument. \\
+Morphology of the Trigonometric Functions:
+\begin{verbatim}
+EBNF:
+inverses_trig_functions, "(", argument, 
+  [ ",", "unit", "=", unit ], ")"
+
+inverses_trig_functions = 
+    "f.asin" | "f.acos" | "f.atan" 
+  | "f.arsin" | "f.arcos" | "f.artan"
+  | "f.arcsin" | "f.arccos" | "f.arctan"
+
+unit = ( "'", ("rad" | "deg" ), "'" )
+     | ( '"', ("rad" | "deg" ), '"' )
+\end{verbatim}
+If the Type of the Argument does not match the expected Type (a Numeric Value or a List of Numeric Values) a Value Error is raised.\\
+Example:
+\begin{verbatim}
+f.asin(1)
+\end{verbatim}
+This Example would return a value of around \texttt{1.570796327}.
+
+The Argument may also be a List of Numeric Values. If This is the case the Function is iterated over each Element.\\
+Example:
+\begin{verbatim}
+f.arcsin([0, 0.5, 1], unit = "deg" )
+\end{verbatim}
+This Example would return \texttt{[0, 30, 90]}.\\
+For Arctangent there is no Domain-Restrictions for the functions inside $\mathbb{R}^n$. \\
+For Arcsine and Arccosine the Domain is Restricted to $[-1,1]^n$.\\
+
+\subsubsection{Inverse Tangent Function based on a Vector Argument}
+
+\newpage
+\subsubsection{Hyperbolic Functions}
+The Hyperbolic Functions (Hyperbolic Sine, Hyperbolic Cosine and Hyperbolic Tangent) ( denoted as \texttt{sinh, cosh, tanh} ) return the Hyperbolic Sine, Hyperbolic Cosine, or Hyperbolic Tangent of the Argument. \\
+Morphology of the Hyperbolic Functions:
+\begin{verbatim}
+EBNF:
+( "f.sinh" | "f.cosh" | "f.tanh" ), "(", argument, ")"
+\end{verbatim}
+If the Type of the Argument does not match the expected Type (a Numeric Value or a List of Numeric Values) a Value Error is raised.\\
+Example:
+\begin{verbatim}
+f.sinh(1.443635475)
+\end{verbatim}
+This Example would return a value of around \texttt{2}.
+
+The Argument may also be a List of Numeric Values. If This is the case the Function is iterated over each Element.\\
+Example:
+\begin{verbatim}
+f.sinh([0, 1, 2] )
+\end{verbatim}
+This Example would return around \texttt{[0, 1.175, 3.627]}.\\
+There are no Domain-Restrictions for the functions inside $\mathbb{R}^n$.
+
+\paragraph{Complex Overload}
+All three functions (\texttt{sinh, cosh, tanh}) are also defined for Complex Arguments. For complex $z = a + bi$, the functions are computed as:
+\[
+\sinh(a + bi) = \sinh(a)\cos(b) + i\cosh(a)\sin(b)
+\]
+\[
+\cosh(a + bi) = \cosh(a)\cos(b) + i\sinh(a)\sin(b)
+\]
+\[
+\tanh(a + bi) = \frac{\sinh(a + bi)}{\cosh(a + bi)}
+\]
+Equivalently, the identities $\sinh(z) = -i \sin(iz)$, $\cosh(z) = \cos(iz)$, and $\tanh(z) = \sinh(z) / \cosh(z)$ hold for Complex Arguments.\\
+Domain: All Complex Numbers ($\mathbb{C}$) for \texttt{sinh} and \texttt{cosh}. For \texttt{tanh}, all Complex Numbers where $\cosh z \neq 0$.\\
+Examples:
+\begin{verbatim}
+f.sinh(1 + 2i)   #c# Returns approximately -0.4891 + 0.9889i
+f.cosh(1 + 2i)   #c# Returns approximately -0.4891 + 0.9889i
+f.tanh(0 + 1i)   #c# Returns approximately 0.0 + 0.5524i
+\end{verbatim}
+
+\subsubsection{Hyperbolic Inverse Functions}
+The Hyperbolic Inverse Functions (Hyperbolic Arcsine, Hyperbolic Arccosine and Hyperbolic Arctangent) ( denoted as \texttt{asinh, acosh, atanh}, \texttt{arsinh, arcosh, artanh} or \texttt{arcsinh, arccosh, arctanh} ) return the Inverse for the Hyperbolic Sine, Hyperbolic Cosine, or Hyperbolic Tangent of the Argument. \\
+Morphology of the Hyperbolic Functions:
+\begin{verbatim}
+EBNF:
+inverses_hypb_functions, "(", argument, ")"
+
+inverses_hypb_functions = 
+    "f.asinh" | "f.acosh" | "f.atanh" 
+  | "f.arsinh" | "f.arcosh" | "f.artanh"
+  | "f.arcsinh" | "f.arccosh" | "f.arctanh"
+\end{verbatim}
+If the Type of the Argument does not match the expected Type (a Numeric Value or a List of Numeric Values) a Value Error is raised.\\
+Example:
+\begin{verbatim}
+f.asinh(1)
+\end{verbatim}
+This Example would return a value of around \texttt{0.881373587}.
+
+The Argument may also be a List of Numeric Values. If This is the case the Function is iterated over each Element.\\
+Example:
+\begin{verbatim}
+f.arcsinh( [0, 0.5, 1] )
+\end{verbatim}
+This Example would return \texttt{[0, 0.481, 0.881]}.\\
+For the Hyperbolic Arcsine there is no Domain-Restrictions for the function inside $\mathbb{R}^n$. \\
+For Hyperbolic Arctangent and Hyperbolic Arccosine the Domain is Restricted to $(-1,1)^n$ and $[1,\infty)^n$ respectively.\\
+
+\paragraph{Complex Overload}
+All three functions (\texttt{asinh, acosh, atanh}) are also defined for Complex Arguments using the Complex Logarithm. On the Complex Plane, the Real-Domain Restrictions no longer apply:
+\[
+\operatorname{asinh}(z) = \ln\!\left(z + \sqrt{z^2 + 1}\right)
+\]
+\[
+\operatorname{acosh}(z) = \ln\!\left(z + \sqrt{z^2 - 1}\right)
+\]
+\[
+\operatorname{atanh}(z) = \frac{1}{2} \ln\!\left(\frac{1 + z}{1 - z}\right)
+\]
+Domain: All Complex Numbers ($\mathbb{C}$).\\
+Examples:
+\begin{verbatim}
+f.asinh(1 + 2i)   #c# Returns approximately 1.4694 + 1.0987i
+f.acosh(1 + 2i)   #c# Returns approximately 1.5286 + 1.1437i
+f.atanh(0.5 + 0i) #c# Returns approximately 0.5493 + 0.0i
+\end{verbatim}
+
+\subsubsection{Exponential Functions and Logarithms}
+\paragraph{Exponential Function}
+The \texttt{exp} function returns $e$ raised to the power of the argument. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.exp", "(", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+f.exp(0)    #c# Returns 1.0
+f.exp(1)    #c# Returns approximately 2.71828
+\end{verbatim}
+\paragraph{Complex Overload}
+When the Argument is a Complex Number $z = a + bi$, the function is computed using Euler's Formula:
+\[
+e^{a+bi} = e^a \left(\cos b + i \sin b\right)
+\]
+In particular, $e^{i\pi} = -1$ (Euler's Identity) and $|e^{a+bi}| = e^a$.\\
+Domain: All Complex Numbers ($\mathbb{C}$).\\
+Examples:
+\begin{verbatim}
+f.exp(0)              #c# Returns 1.0
+f.exp(1 + 3.14159i)   #c# Returns approximately -2.7183 + 0.0i
+f.exp(0 + 3.14159i)
+    #c# Returns approximately -1 + 0.0i (Euler's Identity)
+f.exp(1 + 1i)         #c# Returns approximately 1.4687 + 2.2874i
+\end{verbatim}
+
+\paragraph{Square Root Function}
+The \texttt{sqrt} function returns the square root of the argument. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.sqrt", "(", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+f.sqrt(9)   #c# Returns 3.0
+f.sqrt(2)   #c# Returns approximately 1.41421
+\end{verbatim}
+\paragraph{Complex Overload}
+Domain for Real Arguments: $[0, \infty)$. When the Argument is a Negative Real or Complex Number, the Principal Square Root is returned, defined such that:
+\[
+-\pi < \arg(\sqrt{z}) \leq \pi
+\]
+For $z = r e^{i\theta}$, the Principal Square Root is $\sqrt{z} = \sqrt{r} \, e^{i\theta/2}$.\\
+Domain: All Complex Numbers ($\mathbb{C}$), using the Principal Branch.\\
+Examples:
+\begin{verbatim}
+f.sqrt(-1)         #c# Returns 0 + 1i
+f.sqrt(-4)         #c# Returns 0 + 2i
+f.sqrt(4i)         #c# Returns approximately 1.41421 + 1.41421i
+f.sqrt(3 + 4i)    #c# Returns approximately 2 + 1i
+f.sqrt(0)          #c# Returns 0.0
+\end{verbatim}
+
+\paragraph{Power Function}
+The \texttt{pow} function returns the first argument raised to the power of the second argument. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.pow", "(", argument, ",", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+f.pow(2, 3)   #c# Returns 8.0
+f.pow(9, 0.5) #c# Returns 3.0
+\end{verbatim}
+\paragraph{Complex Overload}
+The function also accepts Complex Arguments. For complex $z_1$ and $z_2$, the result is computed via:
+\[
+z_1^{z_2} = e^{z_2 \ln z_1}
+\]
+where $\ln$ is the Principal Branch of the Complex Logarithm.\\
+Domain: All Complex Numbers ($\mathbb{C} \times \mathbb{C}$), using the Principal Branch of $\ln$. Note that $0^z$ is only defined for $\operatorname{Re}(z) > 0$.\\
+Examples:
+\begin{verbatim}
+f.pow(2, 1 + 1i)    #c# Returns approximately 1.538 + 0.999i
+f.pow(1 + 1i, 2)    #c# Returns 0 + 2i
+f.pow(0 + 1i, 0+1i)
+    #c# Returns approximately 0.2079 + 0.0i (i^i = e^{-pi/2})
+\end{verbatim}
+
+\paragraph{Natural Logarithm}
+The \texttt{ln} function returns the natural logarithm (base $e$) of the argument. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.ln", "(", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+f.ln(1)      #c# Returns 0.0
+f.ln(e)      #c# Returns 1.0
+\end{verbatim}
+\paragraph{Complex Overload}
+Domain for Real Arguments: $(0, \infty)$. When the Argument is a Complex Number, the Complex Logarithm (Principal Branch) is returned:
+\[
+\ln(a + bi) = \ln\lvert a + bi \rvert + i \arg(a + bi)
+\]
+where $-\pi < \arg(a + bi) \leq \pi$.\\
+Domain: All Complex Numbers except $0$ ($\mathbb{C} \setminus \{0\}$).\\
+Examples:
+\begin{verbatim}
+f.ln(1)          #c# Returns 0.0 + 0.0i
+f.ln(e)          #c# Returns 1.0 + 0.0i
+f.ln(-1)         #c# Returns approximately 0 + 3.1416i
+f.ln(1 + 1i)    #c# Returns approximately 0.3466 + 0.7854i
+f.ln(0 + 1i)    #c# Returns approximately 0 + 1.5708i (i*pi/2)
+\end{verbatim}
+
+\paragraph{Base-10 Logarithm}
+The \texttt{log} function returns the base-10 logarithm of the argument. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.log", "(", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+f.log(100)   #c# Returns 2.0
+f.log(1)     #c# Returns 0.0
+\end{verbatim}
+\paragraph{Complex Overload}
+Domain for Real Arguments: $(0, \infty)$. When the Argument is a Complex Number, the Complex Logarithm to base 10 is returned:
+\[
+\log(z) = \frac{\ln(z)}{\ln(10)}
+\]
+where $\ln$ is the Principal Branch of the Complex Logarithm.\\
+Domain: All Complex Numbers except $0$ ($\mathbb{C} \setminus \{0\}$).\\
+Examples:
+\begin{verbatim}
+f.log(100)        #c# Returns 2.0 + 0.0i
+f.log(1)          #c# Returns 0.0 + 0.0i
+f.log(-100)       #c# Returns approximately 2 + 1.3644i
+f.log(10i)        #c# Returns approximately 1 + 1.3644i
+\end{verbatim}
+
+\label{sec:complex_functions}
+\subsubsection{Complex Functions}
+Functions for creating and decomposing complex numbers.
+
+\paragraph{Real Part}
+The \texttt{real} function returns the real part of a complex number.
+\begin{verbatim}
+EBNF:
+"f.real", "(", complex, ")"
+\end{verbatim}
+\begin{verbatim}
+f.real(3 + 4i)   #c# Returns 3.0
+f.real(-2i)      #c# Returns 0.0
+f.real(5)        #c# Returns 5.0 (int promoted)
+\end{verbatim}
+
+\paragraph{Imaginary Part}
+The \texttt{imag} function returns the imaginary part of a complex number (as a real).
+\begin{verbatim}
+EBNF:
+"f.imag", "(", complex, ")"
+\end{verbatim}
+\begin{verbatim}
+f.imag(3 + 4i)   #c# Returns 4.0
+f.imag(-2i)      #c# Returns -2.0
+f.imag(5)        #c# Returns 0.0 (real has no imaginary part)
+\end{verbatim}
+
+\paragraph{Angle}
+The \texttt{angle} function returns the angle (argument) of a complex number in radians.
+\begin{verbatim}
+EBNF:
+"f.angle", "(", complex, ")"
+\end{verbatim}
+\begin{verbatim}
+f.angle(1 + 0i)      #c# Returns 0.0
+f.angle(0 + 1i)      #c# Returns 1.5708 (pi/2)
+f.angle(-1 + 0i)     #c# Returns 3.14159 (pi)
+f.angle(1 + 1i)      #c# Returns 0.7854 (pi/4)
+\end{verbatim}
+
+\paragraph{Complex Conjugate}
+The \texttt{conj} function returns the complex conjugate: \texttt{conj(a + bi) = a - bi}.
+\begin{verbatim}
+EBNF:
+"f.conj", "(", complex, ")"
+\end{verbatim}
+\begin{verbatim}
+f.conj(3 + 4i)   #c# Returns 3 - 4i
+f.conj(-2i)      #c# Returns 2i
+f.conj(5)        #c# Returns 5 (real numbers are self-conjugate)
+\end{verbatim}
+
+\paragraph{Polar Conversion}
+The \texttt{polar} function converts a complex number to polar form, returning a list \texttt{[magnitude, angle]}.
+\begin{verbatim}
+EBNF:
+"f.polar", "(", complex, ")"
+\end{verbatim}
+\begin{verbatim}
+f.polar(3 + 4i)     #c# Returns [5.0, 0.9273]
+f.polar(1 + 0i)     #c# Returns [1.0, 0.0]
+f.polar(0 + 1i)     #c# Returns [1.0, 1.5708]
+\end{verbatim}
+
+\paragraph{Rectangular Conversion}
+The \texttt{rect} function creates a complex number from polar form (magnitude and angle in radians).
+\begin{verbatim}
+EBNF:
+"f.rect", "(", real, ",", real, ")"
+\end{verbatim}
+\begin{verbatim}
+f.rect(5, 0.9273)      #c# Returns approximately 3 + 4i
+f.rect(1, 0)           #c# Returns 1 + 0i
+f.rect(1, 1.5708)      #c# Returns approximately 0 + 1i
+\end{verbatim}
+
+\paragraph{Radians to Degrees}
+The \texttt{rad2deg} function converts an angle from radians to degrees.
+\begin{verbatim}
+EBNF:
+"f.rad2deg", "(", real, ")"
+\end{verbatim}
+\begin{verbatim}
+f.rad2deg(3.14159)   #c# Returns 180.0
+f.rad2deg(1.5708)    #c# Returns 90.0
+f.rad2deg(0)         #c# Returns 0.0
+\end{verbatim}
+
+\paragraph{Degrees to Radians}
+The \texttt{deg2rad} function converts an angle from degrees to radians.
+\begin{verbatim}
+EBNF:
+"f.deg2rad", "(", real, ")"
+\end{verbatim}
+\begin{verbatim}
+f.deg2rad(180)   #c# Returns 3.14159
+f.deg2rad(90)    #c# Returns 1.5708
+f.deg2rad(0)     #c# Returns 0.0
+\end{verbatim}
+
+\subsubsection{Rounding Functions}
+\paragraph{Floor Function}
+The \texttt{floor} function rounds the argument down to the nearest integer. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.floor", "(", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+f.floor(2.7)   #c# Returns 2
+f.floor(-1.3)  #c# Returns -2
+\end{verbatim}
+
+\paragraph{Ceiling Function}
+The \texttt{ceil} function rounds the argument up to the nearest integer. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.ceil", "(", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+f.ceil(2.3)    #c# Returns 3
+f.ceil(-2.7)   #c# Returns -2
+\end{verbatim}
+
+\paragraph{Round Function}
+The \texttt{round} function rounds the argument to the nearest integer. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.round", "(", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+f.round(2.5)   #c# Returns 3
+f.round(2.4)   #c# Returns 2
+\end{verbatim}
+
+\subsubsection{Power and Modular Exponentiation Function}
+The \texttt{pow} function computes exponentiation and optional modular exponentiation. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.pow", "(", argument, ",", argument, 
+  [ ",", argument ], ")"
+\end{verbatim}
+With two arguments, \texttt{pow(a, b)} returns $a^b$. With three arguments, \texttt{pow(a, b, c)} returns $a^b \bmod c$ (modular exponentiation). Modular exponentiation is efficient for large exponents and is used in cryptographic and hardware applications. \\
+Examples:
+\begin{verbatim}
+f.pow(2, 10)        #c# Returns 1024
+f.pow(3, 4, 7)      #c# Returns 4  (81 mod 7)
+f.pow(2, 32, 100)   #c# Returns 96  (4294967296 mod 100)
+f.pow(3, -1, 7)     #c# Returns 5  (modular inverse: 3*5=15==1 mod 7)
+f.pow(3, -2, 7)     #c# Returns 4  (5^2=25==4 mod 7, i.e. 3^(-2) mod 7)
+f.pow(3, -3, 7)     #c# Returns 6  (5^3=125==6 mod 7, i.e. 3^(-3) mod 7)
+f.pow(5, -1, 13)    #c# Returns 8  (5*8=40==1 mod 13)
+\end{verbatim}
+Domain restrictions: When \texttt{c} is provided, \texttt{a} and \texttt{c} must be \texttt{int} and \texttt{c} must be positive. Without \texttt{c}, \texttt{b} must be non-negative (negative exponents on \texttt{int} would produce fractions). With \texttt{c}, negative \texttt{b} computes $a^b \bmod c$ via the modular multiplicative inverse: first find $a^{-1} \bmod c$ (which exists when $\gcd(a, c) = 1$), then raise to $|b|$.
+
+\subsubsection{Extrema Functions}
+\paragraph{Minimum Function}
+The \texttt{min} function returns the minimum value in a list. For ndarrays, an optional \texttt{axis} parameter reduces along that axis. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.min", "(", list, [ ",", "axis", "=", int ], ")"
+\end{verbatim}
+Examples:
+\begin{verbatim}
+f.min([3, 1, 4, 1, 5])              #c# Returns 1
+f.min([[3,1],[4,2]], axis=0)        #c# Returns [3, 1]
+f.min([[3,1],[4,2]], axis=1)        #c# Returns [1, 2]
+\end{verbatim}
+
+\paragraph{Maximum Function}
+The \texttt{max} function returns the maximum value in a list. For ndarrays, an optional \texttt{axis} parameter reduces along that axis. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.max", "(", list, [ ",", "axis", "=", int ], ")"
+\end{verbatim}
+Examples:
+\begin{verbatim}
+f.max([3, 1, 4, 1, 5])              #c# Returns 5
+f.max([[3,1],[4,2]], axis=0)        #c# Returns [4, 2]
+f.max([[3,1],[4,2]], axis=1)        #c# Returns [3, 4]
+\end{verbatim}
+
+\subsubsection{Inverse Tangent Function based on a Vector Argument}
+The \texttt{atan2} function computes the arctangent of $y/x$ using the signs of both arguments to determine the correct quadrant. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.atan2", "(", argument, ",", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+f.atan2(1, 0)    #c# Returns approximately 1.5708 (pi/2)
+f.atan2(0, 1)    #c# Returns 0.0
+\end{verbatim}
+
+\subsubsection{Norm and Normalization Functions}
+EDADSL provides functions for computing vector norms and normalizing vectors.
+
+\paragraph{Norm Function}
+The \texttt{norm} function computes the p-norm of a vector (list of ints or reals). \\
+Morphology of the Norm Function:
+\begin{verbatim}
+EBNF:
+"f.norm", "(", argument, [ ",", "p", "=", 
+       real_data_type ], ")"
+\end{verbatim}
+Parameters:
+\begin{itemize}
+\item \texttt{argument} -- A list of int or real values (the vector)
+\item \texttt{p} -- (Optional) The order of the norm. Defaults to 2 (Euclidean norm).
+\end{itemize}
+
+Supported norms:
+\begin{itemize}
+\item \texttt{p = 1} -- L1 norm (Manhattan distance): $\|\mathbf{x}\|_1 = \sum_{i=1}^n |x_i|$
+\item \texttt{p = 2} -- L2 norm (Euclidean distance): $\|\mathbf{x}\|_2 = \sqrt{\sum_{i=1}^n x_i^2}$
+\item \texttt{p > 2} -- Lp norm: $\|\mathbf{x}\|_p = \left(\sum_{i=1}^n |x_i|^p\right)^{1/p}$
+\item \texttt{p = 0} -- L0 "norm" (count of non-zero elements): $\|\mathbf{x}\|_0 = |\{i : x_i \neq 0\}|$
+\item \texttt{p = -1} -- L-infinity norm (Chebyshev distance): $\|\mathbf{x}\|_\infty = \max_i |x_i|$
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+f.norm([3, 4])            #c# Returns 5.0 (L2 norm)
+f.norm([3, 4], p=1)       #c# Returns 7 (L1 norm)
+f.norm([3, 4], p=0)       #c# Returns 2 (L0 norm)
+f.norm([-3, 4, -2], p=-1) #c# Returns 4 (L-inf norm)
+\end{verbatim}
+
+If the argument is not a list of ints or reals, a Value Error is raised.
+
+\paragraph{Normalize Function}
+The \texttt{normalize} function returns a unit vector in the direction of the input vector. \\
+Morphology of the Normalize Function:
+\begin{verbatim}
+EBNF:
+"f.normalize", "(", argument, [ ",", "p", "=", 
+              real_data_type ], ")"
+\end{verbatim}
+Parameters:
+\begin{itemize}
+\item \texttt{argument} -- A list of int or real values (the vector to normalize)
+\item \texttt{p} -- (Optional) The order of the norm to use for normalization. Defaults to 2.
+\end{itemize}
+
+The function computes: $\hat{\mathbf{x}} = \frac{\mathbf{x}}{\|\mathbf{x}\|_p}$
+
+Examples:
+\begin{verbatim}
+f.normalize([3, 4])        #c# Returns [0.6, 0.8] (L2)
+f.normalize([3, 4], p=1)   #c# Returns [0.43, 0.57] (L1)
+f.normalize([6, 8], p=2)   #c# Returns [0.6, 0.8] (L2)
+\end{verbatim}
+
+If the norm of the vector is zero, a Division by Zero Error is raised.
+
+\paragraph{Relationship between abs(vec=True) and norm}
+The function \texttt{abs(v, vec=True)} is equivalent to \texttt{norm(v)} (L2 norm by default).
+
+
+\subsection{String Functions}
+
+\subsubsection{String Conversion}
+The \texttt{str} function converts its arguments to a string. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.str", "(", { argument }, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+f.str("Hello")           #c# Returns "Hello"
+f.str(42)                #c# Returns "42"
+f.str("Value: ", 3.14)   #c# Returns "Value: 3.14"
+\end{verbatim}
+
+\subsubsection{String Formatting}
+The \texttt{format} function formats a non-string datatype. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.format", "(", argument, [ ",", options ], ")"
+\end{verbatim}
+% TODO: Document specific format options
+
+\subsubsection{String Case Functions}
+\paragraph{Uppercase}
+The \texttt{upperc} function converts a string to uppercase. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.upperc", "(", string, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+f.upperc("hello")   #c# Returns "HELLO"
+\end{verbatim}
+
+\paragraph{Lowercase}
+The \texttt{lowerc} function converts a string to lowercase. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.lowerc", "(", string, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+f.lowerc("HELLO")   #c# Returns "hello"
+\end{verbatim}
+
+
+\subsection{List and Set Functions}
+
+\subsubsection{Concatenation}
+The \texttt{concat} function combines all arguments into a single list. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.concat", "(", { argument }, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+f.concat([1, 2], [3, 4])        #c# Returns [1, 2, 3, 4]
+f.concat("a", "b", "c")         #c# Returns ["a", "b", "c"]
+\end{verbatim}
+
+\subsubsection{Type Conversion}
+\paragraph{List to Set}
+The \texttt{set} function converts a list to a set. Only objects allowed in sets (parts, connections, pins, nets) are preserved; forbidden objects are silently dropped with a warning. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.set", "(", list, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+f.set([Q1, Q2, R5])   #c# Returns {Q1, Q2, R5}
+\end{verbatim}
+
+\paragraph{Set to List}
+The \texttt{list} function converts a set to a list. The order is determined by the order elements appear in \texttt{*e}. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.list", "(", set, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+f.list({Q1, Q2})   #c# Returns [Q1, Q2] (order from *e)
+\end{verbatim}
+
+
+\subsection{Ndarray Functions}
+Functions for operating on ndarrays (and lists). These functions extend the built-in math and list functions with array-aware behavior.
+
+\subsubsection{Reduction Functions}
+Reduction functions collapse an ndarray along an axis. When \texttt{axis} is omitted, the operation is applied to the flattened array (all elements). When \texttt{axis = 0}, the operation is applied row-wise (collapses rows). When \texttt{axis = 1}, the operation is applied column-wise (collapses columns).
+
+\paragraph{Sum}
+\begin{verbatim}
+EBNF:
+"f.sum", "(", argument, [ ",", "axis", "=", int ], ")"
+\end{verbatim}
+\begin{verbatim}
+f.sum([1, 2, 3])              #c# Returns 6
+f.sum([[1,2],[3,4]])          #c# Returns 10 (flattened)
+f.sum([[1,2],[3,4]], axis=0)  #c# Returns [4, 6]  (row-wise)
+f.sum([[1,2],[3,4]], axis=1)  #c# Returns [3, 7]  (column-wise)
+\end{verbatim}
+
+\paragraph{Product}
+\begin{verbatim}
+EBNF:
+"f.prod", "(", argument, [ ",", "axis", "=", int ], ")"
+\end{verbatim}
+\begin{verbatim}
+f.prod([2, 3, 4])              #c# Returns 24
+f.prod([[2,3],[4,5]], axis=0)  #c# Returns [8, 15]
+f.prod([[2,3],[4,5]], axis=1)  #c# Returns [6, 20]
+\end{verbatim}
+
+\paragraph{Mean}
+\begin{verbatim}
+EBNF:
+"f.mean", "(", argument, [ ",", "axis", "=", int ], ")"
+\end{verbatim}
+\begin{verbatim}
+f.mean([1, 2, 3, 4])            #c# Returns 2.5
+f.mean([[1,2],[3,4]], axis=0)   #c# Returns [2.0, 3.0]
+f.mean([[1,2],[3,4]], axis=1)   #c# Returns [1.5, 3.5]
+\end{verbatim}
+
+\paragraph{Standard Deviation}
+\begin{verbatim}
+EBNF:
+"f.std", "(", argument, [ ",", "axis", "=", int ], ")"
+\end{verbatim}
+\begin{verbatim}
+f.std([1, 2, 3, 4, 5])         #c# Returns ~1.4142
+f.std([1, 1, 1, 1])            #c# Returns 0.0
+\end{verbatim}
+
+\paragraph{Variance}
+\begin{verbatim}
+EBNF:
+"f.var", "(", argument, [ ",", "axis", "=", int ], ")"
+\end{verbatim}
+\begin{verbatim}
+f.var([1, 2, 3, 4, 5])         #c# Returns 2.0
+f.var([1, 1, 1, 1])            #c# Returns 0.0
+\end{verbatim}
+
+\paragraph{Median}
+\begin{verbatim}
+EBNF:
+"f.median", "(", argument, ")"
+\end{verbatim}
+\begin{verbatim}
+f.median([3, 1, 4, 1, 5])   #c# Returns 3
+f.median([1, 2, 3, 4])      #c# Returns 2.5 (average of middle two)
+\end{verbatim}
+
+\paragraph{Percentile}
+\begin{verbatim}
+EBNF:
+"f.percentile", "(", argument, ",", real, ")"
+\end{verbatim}
+The second argument is a percentage (0--100).
+\begin{verbatim}
+f.percentile([10, 20, 30, 40, 50], 50)  #c# Returns 30
+f.percentile([10, 20, 30, 40, 50], 0)   #c# Returns 10
+f.percentile([10, 20, 30, 40, 50], 100) #c# Returns 50
+\end{verbatim}
+
+\paragraph{Root Mean Square}
+\begin{verbatim}
+EBNF:
+"f.rms", "(", argument, ")"
+\end{verbatim}
+Computes $\sqrt{\frac{1}{n}\sum_{i=1}^{n} x_i^2}$. Useful for AC signal analysis and power calculations.
+\begin{verbatim}
+f.rms([1, -1, 1, -1])        #c# Returns 1.0
+f.rms([3, 4])                 #c# Returns 3.5355...
+f.rms([0, 0, 0])             #c# Returns 0.0
+\end{verbatim}
+
+\paragraph{Peak}
+\begin{verbatim}
+EBNF:
+"f.peak", "(", argument, [ ",", "mode", "=", string ], ")"
+\end{verbatim}
+Modes:
+\begin{itemize}
+\item \texttt{"p2p"} (default) -- Peak-to-peak: $\max(x) - \min(x)$
+\item \texttt{"abs"} -- Maximum absolute value: $\max(|x|)$
+\item \texttt{"pos"} -- Maximum positive value: $\max(x)$
+\item \texttt{"neg"} -- Minimum negative value: $\min(x)$
+\end{itemize}
+\begin{verbatim}
+f.peak([1, -3, 2, -5, 4])                  #c# Returns 9 (p2p: 4 - (-5))
+f.peak([1, -3, 2, -5, 4], mode="f.abs")      #c# Returns 5
+f.peak([1, -3, 2, -5, 4], mode="pos")      #c# Returns 4
+f.peak([1, -3, 2, -5, 4], mode="neg")      #c# Returns -5
+\end{verbatim}
+
+\subsubsection{Search Functions}
+\paragraph{Index of Minimum}
+\begin{verbatim}
+EBNF:
+"f.argmin", "(", argument, ")"
+\end{verbatim}
+\begin{verbatim}
+f.argmin([5, 3, 1, 4])   #c# Returns 2 (index of 1)
+\end{verbatim}
+
+\paragraph{Index of Maximum}
+\begin{verbatim}
+EBNF:
+"f.argmax", "(", argument, ")"
+\end{verbatim}
+\begin{verbatim}
+f.argmax([5, 3, 1, 4])   #c# Returns 0 (index of 5)
+\end{verbatim}
+
+\subsubsection{Shape Functions}
+\paragraph{Flatten}
+\begin{verbatim}
+EBNF:
+"f.flatten", "(", argument, ")"
+\end{verbatim}
+\begin{verbatim}
+f.flatten([[1,2],[3,4],[5,6]])   #c# Returns [1, 2, 3, 4, 5, 6]
+f.flatten([[1,2,3]])             #c# Returns [1, 2, 3]
+\end{verbatim}
+
+\paragraph{Sort}
+\begin{verbatim}
+EBNF:
+"f.sort", "(", argument, [ ",", lambda ], ")"
+\end{verbatim}
+Returns a new sorted list (does not modify the original). An optional lambda comparator can be provided for custom ordering (see Higher-Order Functions section).
+\begin{verbatim}
+f.sort([5, 3, 1, 4])           #c# Returns [1, 3, 4, 5]
+f.sort([3.1, 2.7, 1.4])       #c# Returns [1.4, 2.7, 3.1]
+f.sort([5, 1, 3], L::($a [int], $b [int])->{ $b - $a })
+#c# Returns [5, 3, 1]  (descending)
+\end{verbatim}
+
+\paragraph{Reverse}
+\begin{verbatim}
+EBNF:
+"f.reverse", "(", argument, ")"
+\end{verbatim}
+Returns a new reversed list (does not modify the original).
+\begin{verbatim}
+f.reverse([1, 2, 3])           #c# Returns [3, 2, 1]
+f.reverse([[1,2],[3,4]])       #c# Returns [[3,4],[1,2]]
+\end{verbatim}
+
+\paragraph{Unique}
+\begin{verbatim}
+EBNF:
+"f.unique", "(", argument, ")"
+\end{verbatim}
+\begin{verbatim}
+f.unique([1, 2, 2, 3, 3, 3])   #c# Returns [1, 2, 3]
+\end{verbatim}
+
+\subsubsection{Linear Algebra Functions}
+\paragraph{Determinant}
+\begin{verbatim}
+EBNF:
+"f.det", "(", argument, ")"
+\end{verbatim}
+\begin{verbatim}
+f.det([[1,2],[3,4]])   #c# Returns -2.0
+f.det([[2,0],[0,3]])   #c# Returns 6.0
+\end{verbatim}
+
+\paragraph{Matrix Inverse}
+\begin{verbatim}
+EBNF:
+"f.inv", "(", argument, ")"
+\end{verbatim}
+Returns the inverse matrix as a list of lists. A Division by Zero Error is raised if the matrix is singular.
+\begin{verbatim}
+f.inv([[1,2],[3,4]])   #c# Returns [[-2.0, 1.0],[1.5, -0.5]]
+\end{verbatim}
+
+\paragraph{Eigenvalues}
+\begin{verbatim}
+EBNF:
+"f.eig", "(", argument, ")"
+\end{verbatim}
+Returns a list of eigenvalues.
+\begin{verbatim}
+f.eig([[2,0],[0,3]])   #c# Returns [2, 3]
+f.eig([[1,2],[2,1]])   #c# Returns [3, -1]
+\end{verbatim}
+
+\paragraph{Eigenvectors}
+\begin{verbatim}
+EBNF:
+"f.eigvec", "(", argument, ")"
+\end{verbatim}
+Returns a list of eigenvectors (one per eigenvalue, as rows).
+\begin{verbatim}
+f.eigvec([[2,0],[0,3]])   #c# Returns [[1,0],[0,1]]
+\end{verbatim}
+
+\paragraph{Singular Value Decomposition}
+\begin{verbatim}
+EBNF:
+"f.svd", "(", argument, ")"
+\end{verbatim}
+Returns a list of 3 lists: \texttt{[U, S, V]} where \texttt{U} and \texttt{V} are orthogonal matrices and \texttt{S} is the list of singular values.
+\begin{verbatim}
+f.svd([[1,0],[0,2]])
+    #c# Returns [[[1,0],[0,1]], [1, 2], [[1,0],[0,1]]]
+\end{verbatim}
+
+\paragraph{LU Decomposition}
+\begin{verbatim}
+EBNF:
+"f.lu", "(", argument, ")"
+\end{verbatim}
+Returns a list of 2 lists: \texttt{[L, U]} where \texttt{L} is lower triangular and \texttt{U} is upper triangular.
+\begin{verbatim}
+f.lu([[2,1],[4,3]])   #c# Returns L and U such that L .* U = original
+\end{verbatim}
+
+\paragraph{QR Decomposition}
+\begin{verbatim}
+EBNF:
+"f.qr", "(", argument, ")"
+\end{verbatim}
+Returns a list of 2 lists: \texttt{[Q, R]} where \texttt{Q} is orthogonal and \texttt{R} is upper triangular.
+\begin{verbatim}
+f.qr([[1,1],[1,-1]])   #c# Returns Q and R such that Q .* R = original
+\end{verbatim}
+
+\paragraph{Cholesky Decomposition}
+\begin{verbatim}
+EBNF:
+"f.chol", "(", argument, ")"
+\end{verbatim}
+Returns the lower triangular matrix \texttt{L} such that \texttt{L .* L.T = original}. A Value Error is raised if the matrix is not positive definite.
+\begin{verbatim}
+f.chol([[4,2],[2,3]])   #c# Returns [[2,0],[1,1.7321]]
+\end{verbatim}
+
+\paragraph{Trace}
+\begin{verbatim}
+EBNF:
+"f.trace", "(", argument, ")"
+\end{verbatim}
+\begin{verbatim}
+f.trace([[1,2],[3,4]])   #c# Returns 5
+f.trace([[2,0],[0,3]])   #c# Returns 5
+\end{verbatim}
+
+\paragraph{Matrix Rank}
+\begin{verbatim}
+EBNF:
+"f.rank", "(", argument, ")"
+\end{verbatim}
+\begin{verbatim}
+f.rank([[1,2],[3,4]])   #c# Returns 2
+f.rank([[1,2],[2,4]])   #c# Returns 1 (rows are linearly dependent)
+\end{verbatim}
+
+\paragraph{Condition Number}
+\begin{verbatim}
+EBNF:
+"f.cond", "(", argument, ")"
+\end{verbatim}
+Returns the ratio of the largest to smallest singular value. A high condition number indicates numerical instability.
+\begin{verbatim}
+f.cond([[1,0],[0,1]])   #c# Returns 1.0 (well-conditioned)
+f.cond([[1,0],[0,1e-10]]) #c# Returns 1e10 (ill-conditioned)
+\end{verbatim}
+
+\paragraph{Pseudo-Inverse}
+\begin{verbatim}
+EBNF:
+"f.pinv", "(", argument, ")"
+\end{verbatim}
+Returns the Moore--Penrose pseudo-inverse. Works for non-square or singular matrices.
+\begin{verbatim}
+f.pinv([[1,2],[3,4]])   #c# Returns [[-2, 1],[1.5, -0.5]]
+\end{verbatim}
+
+\subsubsection{Statistical Functions}
+\paragraph{Histogram}
+\begin{verbatim}
+EBNF:
+"f.histogram", "(", argument, ",", int, ")"
+\end{verbatim}
+Returns a list of 2 lists: \texttt{[edges, counts]} where \texttt{edges} has \texttt{n + 1} values and \texttt{counts} has \texttt{n} values.
+\begin{verbatim}
+f.histogram([1, 2, 3, 4, 5], 3)
+#c# Returns [[1.0, 2.333, 3.667, 5.0], [2, 1, 2]]
+\end{verbatim}
+
+
+\subsection{Higher-Order Functions}
+Higher-order functions take lambda expressions as arguments. They operate on lists and ndarrays. See Section~\ref{sec:lambda} for lambda syntax.
+
+\subsubsection{Map}
+The \texttt{map} function applies a lambda to each element of a list and returns a new list with the results. The input list is not modified.
+
+\paragraph{Morphology}
+\begin{verbatim}
+EBNF:
+"f.map", "(", list, ",", lambda, ")"
+\end{verbatim}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{map(list[T], L::(\$x [T])->\{...\})} $\rightarrow$ \texttt{list[U]}
+  (T and U can be different types)
+\item Works on any list: flat, nested, mixed types
+\item The lambda parameter type must match the element type
+\end{itemize}
+
+\paragraph{Examples}
+\begin{verbatim}
+f.map([1, 2, 3], L::($x [int])->{ $x * 2 })
+#c# Returns [2, 4, 6]
+
+f.map([1, 2, 3], L::($x [int])->{ $x > 2 })
+#c# Returns [False, False, True]  (type change: int -> bool)
+
+f.map(["a", "bb", "ccc"], L::($x [string])->{ f.len($x) })
+#c# Returns [1, 2, 3]  (type change: string -> int)
+
+f.map([1, 2, 3], L::($x [int])->{
+    $y [int]= $x * 10
+    $y + 1
+})
+#c# Returns [11, 21, 31]  (multi-line lambda)
+
+f.map([], L::($x [int])->{ $x * 2 })
+#c# Returns []  (empty list)
+\end{verbatim}
+
+\paragraph{Error Conditions}
+\begin{itemize}
+\item Type mismatch: lambda parameter type does not match element type raises a Runtime Error
+\end{itemize}
+
+\subsubsection{Filter}
+The \texttt{filter} function returns a new list containing only elements for which the lambda returns \texttt{True}. The input list is not modified.
+
+\paragraph{Morphology}
+\begin{verbatim}
+EBNF:
+"f.filter", "(", list, ",", lambda, ")"
+\end{verbatim}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{filter(list[T], L::(\$x [T])->\{bool\})} $\rightarrow$ \texttt{list[T]}
+  (return type is the same as input)
+\item The lambda must return \texttt{bool}
+\end{itemize}
+
+\paragraph{Examples}
+\begin{verbatim}
+f.filter([1, 2, 3, 4, 5], L::($x [int])->{ $x % 2 == 0 })
+#c# Returns [2, 4]
+
+f.filter([1, 2, 3, 4, 5], L::($x [int])->{ $x > 10 })
+#c# Returns []  (no matches)
+
+f.filter(["a", "bb", "ccc", "dd"], L::($x [string])->{ f.len($x) > 2 })
+#c# Returns ["ccc"]
+
+f.filter([-1, -2, 3, -4, 5], L::($x [int])->{ $x > 0 })
+#c# Returns [3, 5]
+
+f.filter([1, 2, 3], L::($x [int])->{ $x > 5 })
+#c# Returns []  (empty result)
+
+f.filter([], L::($x [int])->{ $x > 0 })
+#c# Returns []  (empty input)
+\end{verbatim}
+
+\paragraph{Error Conditions}
+\begin{itemize}
+\item Type mismatch: lambda parameter type does not match element type raises a Runtime Error
+\item Lambda does not return \texttt{bool} raises a Type Error
+\end{itemize}
+
+\subsubsection{Reduce}
+The \texttt{reduce} function folds a list to a single value by applying a binary lambda cumulatively. The lambda receives an accumulator and the current element. The \texttt{init} value is always required.
+
+\paragraph{Morphology}
+\begin{verbatim}
+EBNF:
+"f.reduce", "(", list, ",", lambda, ",", expression, ")"
+\end{verbatim}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{reduce(list[T], L::(\$acc [U], \$x [T])->\{U\}, init[U])} $\rightarrow$ \texttt{U}
+  (accumulator type U can differ from element type T)
+\item The \texttt{init} value type must match the accumulator type
+\end{itemize}
+
+\paragraph{Examples}
+\begin{verbatim}
+#c# Sum integers
+f.reduce([1, 2, 3, 4], L::($acc [int], $x [int])->{ $acc + $x }, 0)
+#c# Returns 10
+
+#c# Product integers
+f.reduce([2, 3, 4], L::($acc [int], $x [int])->{ $acc * $x }, 1)
+#c# Returns 24
+
+#c# Find maximum
+f.reduce([3, 1, 4, 1, 5], L::($acc [int], $x [int])->{ 
+    ($acc > $x)?->($acc)!($x) 
+}, 0)
+#c# Returns 5
+
+#c# Reduce with string concatenation
+f.reduce(["a", "b", "c"],
+    L::($acc [string], $x [string])->{ $acc + $x }, "")
+#c# Returns "abc"
+
+#c# Reduce on empty list returns init
+f.reduce([], L::($acc [int], $x [int])->{ $acc + $x }, 42)
+#c# Returns 42
+
+#c# Flatten with reduce (using concat)
+f.reduce([[1,2],[3,4]],
+    L::($acc [list], $x [list])->{ f.concat($acc, $x) }, [])
+#c# Returns [1, 2, 3, 4]
+\end{verbatim}
+
+\paragraph{Error Conditions}
+\begin{itemize}
+\item Type mismatch: lambda parameter types do not match accumulator/element types raises a Runtime Error
+\item Lambda does not return a type coercible to the accumulator type raises a Type Error
+\end{itemize}
+
+\subsubsection{Where}
+The \texttt{where} function returns a list of \textbf{indices} (ints) for which the lambda returns \texttt{True}. Indices are 0-based.
+
+\paragraph{Morphology}
+\begin{verbatim}
+EBNF:
+"f.where", "(", list, ",", lambda, ")"
+\end{verbatim}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{where(list[T], L::(\$x [T])->\{bool\})} $\rightarrow$ \texttt{list[int]}
+\item The lambda must return \texttt{bool}
+\end{itemize}
+
+\paragraph{Examples}
+\begin{verbatim}
+f.where([-1, 3, -2, 5], L::($x [int])->{ $x > 0 })
+#c# Returns [1, 3]
+
+f.where([10, 20, 30], L::($x [int])->{ $x >= 20 })
+#c# Returns [1, 2]
+
+f.where([1, 2, 3], L::($x [int])->{ $x > 10 })
+#c# Returns []  (no matches)
+
+f.where(["a", "bb", "ccc"], L::($x [string])->{ f.len($x) >= 2 })
+#c# Returns [1, 2]
+
+f.where([], L::($x [int])->{ $x > 0 })
+#c# Returns []  (empty input)
+\end{verbatim}
+
+\paragraph{Error Conditions}
+\begin{itemize}
+\item Type mismatch: lambda parameter type does not match element type raises a Runtime Error
+\item Lambda does not return \texttt{bool} raises a Type Error
+\end{itemize}
+
+\subsubsection{Count}
+The \texttt{count} function returns the number of elements for which the lambda returns \texttt{True}.
+
+\paragraph{Morphology}
+\begin{verbatim}
+EBNF:
+"f.count", "(", list, ",", lambda, ")"
+\end{verbatim}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{count(list[T], L::(\$x [T])->\{bool\})} $\rightarrow$ \texttt{int}
+\item The lambda must return \texttt{bool}
+\end{itemize}
+
+\paragraph{Examples}
+\begin{verbatim}
+f.count([1, 2, 3, 4, 5], L::($x [int])->{ $x > 3 })
+#c# Returns 2
+
+f.count([True, False, True, True], L::($x [bool])->{ $x })
+#c# Returns 3
+
+f.count([1, 2, 3], L::($x [int])->{ $x > 10 })
+#c# Returns 0
+
+f.count([], L::($x [int])->{ $x > 0 })
+#c# Returns 0
+\end{verbatim}
+
+\paragraph{Error Conditions}
+\begin{itemize}
+\item Type mismatch: lambda parameter type does not match element type raises a Runtime Error
+\item Lambda does not return \texttt{bool} raises a Type Error
+\end{itemize}
+
+\subsubsection{Find}
+The \texttt{find} function returns the first element for which the lambda returns \texttt{True}. If no element matches, a Value Error is raised.
+
+\paragraph{Morphology}
+\begin{verbatim}
+EBNF:
+"f.find", "(", list, ",", lambda, ")"
+\end{verbatim}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{find(list[T], L::(\$x [T])->\{bool\})} $\rightarrow$ \texttt{T}
+  (return type is the same as element type)
+\item The lambda must return \texttt{bool}
+\end{itemize}
+
+\paragraph{Examples}
+\begin{verbatim}
+f.find([1, 2, 3, 4, 5], L::($x [int])->{ $x > 2 })
+#c# Returns 3
+
+f.find([1, 2, 3, 4, 5], L::($x [int])->{ $x == 4 })
+#c# Returns 4
+
+f.find(["a", "bb", "ccc"], L::($x [string])->{ f.len($x) > 1 })
+#c# Returns "bb"
+
+f.find([1, 2, 3, 4, 5], L::($x [int])->{ $x > 10 })
+#c# Value Error: no matching element
+
+f.find([], L::($x [int])->{ $x > 0 })
+#c# Value Error: no matching element
+\end{verbatim}
+
+\paragraph{Error Conditions}
+\begin{itemize}
+\item Value Error: no element matches the lambda condition
+\item Type mismatch: lambda parameter type does not match element type raises a Runtime Error
+\item Lambda does not return \texttt{bool} raises a Type Error
+\end{itemize}
+
+\subsubsection{Sort with Comparator}
+The \texttt{sort} function returns a new sorted list. Without a comparator, default sort order is ascending. An optional lambda comparator can be provided for custom ordering.
+
+\paragraph{Morphology}
+\begin{verbatim}
+EBNF:
+"f.sort", "(", list, [ ",", lambda ], ")"
+\end{verbatim}
+
+\paragraph{Comparator Lambda}
+The comparator lambda receives two elements (\texttt{\$a} and \texttt{\$b}) and must return a numeric value:
+\begin{itemize}
+\item \textbf{Negative} value (e.g., \texttt{\$a - \$b}): \texttt{\$a} comes before \texttt{\$b}
+\item \textbf{Zero}: order unchanged (stable sort)
+\item \textbf{Positive} value (e.g., \texttt{\$b - \$a}): \texttt{\$b} comes before \texttt{\$a}
+\end{itemize}
+
+This is equivalent to the \texttt{cmp} convention used in many languages. The simplest ascending comparator is \texttt{\$a - \$b}, and descending is \texttt{\$b - \$a}.
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{sort(list[T])} $\rightarrow$ \texttt{list[T]} (default ascending)
+\item \texttt{sort(list[T], L::(\$a [T], \$b [T])->\{int\})} $\rightarrow$ \texttt{list[T]}
+  (custom comparator, must return \texttt{int} or \texttt{real})
+\end{itemize}
+
+\paragraph{Examples}
+\begin{verbatim}
+#c# Default sort (ascending)
+f.sort([5, 1, 3])
+#c# Returns [1, 3, 5]
+
+#c# Ascending with comparator
+f.sort([5, 1, 3], L::($a [int], $b [int])->{ $a - $b })
+#c# Returns [1, 3, 5]
+
+#c# Descending with comparator
+f.sort([5, 1, 3], L::($a [int], $b [int])->{ $b - $a })
+#c# Returns [5, 3, 1]
+
+#c# Sort strings by length
+f.sort(["bb", "a", "ccc"],
+    L::($a [string], $b [string])->{ f.len($a) - f.len($b) })
+#c# Returns ["a", "bb", "ccc"]
+
+#c# Sort reals ascending
+f.sort([3.14, 1.41, 2.72], L::($a [real], $b [real])->{ $a - $b })
+#c# Returns [1.41, 2.72, 3.14]
+
+#c# Sort with nested sort key (sort by absolute value)
+f.sort([-5, 3, -1, 4], L::($a [int], $b [int])->{ f.abs($a) - f.abs($b) })
+#c# Returns [-1, 3, 4, -5]
+
+#c# Sort preserves original (returns new list)
+$list [list]= [5, 3, 1]
+$sorted [list]= f.sort($list)
+#c# $list is still [5, 3, 1], $sorted is [1, 3, 5]
+\end{verbatim}
+
+\paragraph{Error Conditions}
+\begin{itemize}
+\item Type mismatch: comparator parameter types do not match element types raises a Runtime Error
+\item Comparator does not return a numeric type raises a Type Error
+\end{itemize}
+
+\subsection{Signal Processing Functions}
+Functions for frequency-domain analysis of signals.
+
+\subsubsection{Fast Fourier Transform}
+The \texttt{fft} function computes the Discrete Fourier Transform of a real-valued signal.
+\begin{verbatim}
+EBNF:
+"f.fft", "(", list, ")"
+\end{verbatim}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{fft(list[int])} $\rightarrow$ \texttt{list[complex]}
+\item \texttt{fft(list[real])} $\rightarrow$ \texttt{list[complex]}
+\item Output length equals input length
+\item The input signal is zero-padded to the next power of 2 if needed
+\end{itemize}
+
+\paragraph{Examples}
+\begin{verbatim}
+#c# FFT of a simple signal
+f.fft([1, 0, 1, 0])   #c# Returns [2+0i, 0+0i, 2+0i, 0+0i]
+
+#c# FFT of a single impulse
+f.fft([1, 0, 0, 0])   #c# Returns [1+0i, 1+0i, 1+0i, 1+0i]
+
+#c# FFT of a DC signal (constant value)
+f.fft([5, 5, 5, 5])   #c# Returns [20+0i, 0+0i, 0+0i, 0+0i]
+
+#c# Extract magnitude spectrum
+$freq [list]= f.fft([1, 0, 1, 0])
+$mags [list]= f.map($freq, L::($z [complex])->{ f.abs($z) })
+#c# $mags = [2.0, 0.0, 2.0, 0.0]
+\end{verbatim}
+
+\paragraph{Error Conditions}
+\begin{itemize}
+\item Empty list raises a Value Error
+\end{itemize}
+
+\subsubsection{Inverse Fast Fourier Transform}
+The \texttt{ifft} function computes the Inverse Discrete Fourier Transform, reconstructing a real signal from complex frequency components.
+\begin{verbatim}
+EBNF:
+"f.ifft", "(", list, ")"
+\end{verbatim}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{ifft(list[complex])} $\rightarrow$ \texttt{list[real]}
+\item Output length equals input length
+\item Imaginary parts are discarded (reconstructed signal is real)
+\end{itemize}
+
+\paragraph{Examples}
+\begin{verbatim}
+#c# Round-trip: fft then ifft
+$signal [list]= [1, 0, 1, 0]
+$freq [list]= f.fft($signal)
+$reconstructed [list]= f.ifft($freq)
+#c# $reconstructed is approximately [1, 0, 1, 0]
+
+#c# ifft of DC component
+f.ifft([4+0i, 0+0i, 0+0i, 0+0i])   #c# Returns [1, 1, 1, 1]
+
+#c# ifft of impulse in frequency domain
+f.ifft([1+0i, 1+0i, 1+0i, 1+0i])   #c# Returns [1, 0, 0, 0]
+\end{verbatim}
+
+\paragraph{Error Conditions}
+\begin{itemize}
+\item Empty list raises a Value Error
+\end{itemize}
+
+\subsection{Shared Functions}
+
+\subsubsection{Length/Size Function}
+The \texttt{len} function returns the length of a list or string, or the size of a set. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.len", "(", ( list | string | set ), ")"
+\end{verbatim}
+Examples:
+\begin{verbatim}
+f.len([1, 2, 3])     #c# Returns 3
+f.len("hello")       #c# Returns 5
+f.len({Q1, Q2, R5})  #c# Returns 3
+\end{verbatim}
+
+
+\subsection{Special Functions}
+
+\subsubsection{Print Function}
+The \texttt{f.print()} function outputs its argument to the console. Unlike \texttt{echo}, it can evaluate expressions and function calls directly. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.print", "(", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+f.print("Hello, World!")
+f.print(3 + 2 * 5)   #c# Outputs: 13
+\end{verbatim}
+
+\subsubsection{Type Function}
+The \texttt{type} function returns the type of an object as a string. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.type", "(", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+f.type(42)       #c# Returns "int"
+f.type(3.14)     #c# Returns "real"
+f.type("hello")  #c# Returns "string"
+f.type(Q1)       #c# Returns "part"
+\end{verbatim}
+
+\subsubsection{Reference Function}
+The \texttt{ref} function converts a string containing a part reference into the referenced part. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.ref", "(", string, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+f.ref("R1")   #c# Returns the part referenced as R1
+\end{verbatim}
+
+\subsubsection{No-Operation Function}
+The \texttt{noop} function is the identity function. It returns its argument unchanged. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.noop", "(", argument, ")"
+\end{verbatim}
+Example:
+\begin{verbatim}
+f.noop(42)       #c# Returns 42
+f.noop("hello")  #c# Returns "hello"
+f.noop(Q1)       #c# Returns Q1
+\end{verbatim}
+Use \texttt{noop} as a placeholder in queries where no transformation is needed.
+
+\subsubsection{Soft Integer Conversion}
+The \texttt{softint} function converts its argument to an integer if it is either already an integer or is a real number numerically equal to an integer. Otherwise it returns the argument unchanged. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.softint", "(", argument, ")"
+\end{verbatim}
+Examples:
+\begin{verbatim}
+f.softint(42)       #c# Returns 42 (already int)
+f.softint(5.0)      #c# Returns 5 (real equal to int)
+f.softint(3.7)      #c# Returns 3.7 (not equal to int, unchanged)
+f.softint("hello")  #c# Returns "hello" (not numeric, unchanged)
+\end{verbatim}
+
+\subsubsection{Soft Real Conversion}
+The \texttt{softreal} function converts its argument to a real if it is either already a real, an integer, or a complex number with zero imaginary part. Otherwise it returns the argument unchanged. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.softreal", "(", argument, ")"
+\end{verbatim}
+Examples:
+\begin{verbatim}
+f.softreal(42)        #c# Returns 42.0 (int promoted to real)
+f.softreal(3.14)      #c# Returns 3.14 (already real)
+f.softreal(5 + 0i)    #c# Returns 5.0 (complex with zero imag part)
+f.softreal(3 + 4i)
+    #c# Returns 3 + 4i (complex with non-zero imag, unchanged)
+f.softreal("hello")   #c# Returns "hello" (not numeric, unchanged)
+\end{verbatim}
+
+\section{User-defined Functions}
+User-defined functions allow creation of reusable code blocks with local scoping.
+
+\subsection{Function Definition}
+Functions are defined using the \texttt{function} keyword with the \texttt{f.u.} prefix:
+\begin{verbatim}
+EBNF:
+function_definition = "function", "f.u.", id, 
+  "(", [ { id, "," }, id], ")", "::", "{", 
+  f_statement, {f_statement}, "}"
+
+f_statement = statement | "return", [data]
+
+Example:
+function f.u.add( $a, $b )::{
+    $retval [int]= $a + $b
+}
+\end{verbatim}
+
+Function parameters are local variables scoped to the function body. To return a value, set the \texttt{\$retval} variable.
+
+\subsection{Function Calls}
+User-defined functions are called using the \texttt{f.u.} prefix:
+\begin{verbatim}
+EBNF:
+function_call_ud = "f.u.", id, "(", 
+                   [{ data, "," }, data], ")"
+
+Example:
+$result [int]= f.u.add( 3, 5 )   #c# $result = 8
+\end{verbatim}
+
+\subsection{Return Values}
+Functions return values by setting the \texttt{\$retval} variable. If \texttt{\$retval} is not set, the function returns nothing:
+\begin{verbatim}
+function f.u.square( $x )::{
+    $retval [int]= $x ^ 2
+}
+
+function f.u.greet( $name )::{
+    f.print( f.str( "Hello, ", $name, "!" ) )
+    #c# No return value
+}
+
+$sq [int]= f.u.square( 4 )     #c# $sq = 16
+f.u.greet( "World" )          #c# Prints: Hello, World!
+\end{verbatim}
+
+\subsection{Local Scoping}
+\label{sec:function-scope}
+Functions have local scoping. Variables declared inside a function are only accessible within that function. Parameters are also local variables.
+
+\paragraph{Scope Rules}
+\begin{itemize}
+\item Parameters (\$a, \$b, etc.) are local to the function body
+\item Variables declared inside the function with \texttt{\$var [type]= val} are local
+\item Local variables shadow global variables of the same name
+\item The \texttt{\$retval} variable is always local to the function
+\item Functions cannot access local variables from other function invocations
+\end{itemize}
+
+\paragraph{Return Values}
+Functions can return values using two equivalent mechanisms:
+\begin{itemize}
+\item Assign to \texttt{\$retval} and let execution fall through the closing \texttt{\}}
+\item Use the \texttt{return} keyword, which is syntactic sugar that assigns its argument to \texttt{\$retval} and immediately exits the function
+\end{itemize}
+Both \texttt{return \$value} and \texttt{\$retval [type]= \$value} followed by natural function exit are valid and equivalent.
+
+\paragraph{Examples}
+\begin{verbatim}
+$x [int]= 10      #c# Global variable
+
+function f.u.doublen()::{
+    $x [int]= $x * 2  #c# Local $x shadows global
+    f.print($x)            #c# Prints: 20
+}
+
+f.u.doublen()
+f.print($x)          #c# Prints: 10 (global unchanged)
+
+function f.u.addLocal( $a, $b )::{
+    $sum [int]= $a + $b   #c# $sum is local
+    $retval [int]= $sum
+}
+
+f.u.addLocal( 3, 4 )   #c# Returns 7
+#c# $sum is not accessible here
+\end{verbatim}
+
+\paragraph{Recursion}
+Local scoping enables recursion since each call has its own copy of parameters:
+\begin{verbatim}
+function f.u.factorial( $n )::{
+    if $n <= 1 ::{
+        $retval [int]= 1
+    } else ::{
+        $retval [int]= $n * 
+            f.u.factorial( $n - 1 )
+    }
+}
+
+$result [int]= f.u.factorial( 5 )  #c# = 120
+\end{verbatim}
+
+
+
+
+\part{Formal Semantics}

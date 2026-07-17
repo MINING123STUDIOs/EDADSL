@@ -1,0 +1,61 @@
+\chapter{Evaluation Model} %Abstract
+Expressions in EDADSL are evaluated according to standard mathematical precedence rules. The evaluation model is eager (strict), meaning all sub-expressions are evaluated before the operator is applied.
+
+\section{Operator Precedence}
+% Reference to Chapter 7 (Expressions)
+The complete operator precedence is defined in Section~\ref{sec:operators}.
+
+\section{Type Coercion}
+Type coercion follows the hierarchy: \texttt{int} $<$ \texttt{real} $<$ \texttt{complex}.
+\begin{itemize}
+\item \texttt{int} coerces to \texttt{real}: \texttt{5} becomes \texttt{5.0}
+\item \texttt{real} coerces to \texttt{complex}: \texttt{3.14} becomes \texttt{3.14 + 0i}
+\item \texttt{int} coerces to \texttt{complex}: \texttt{5} becomes \texttt{5 + 0i}
+\item \texttt{bool} coerces to \texttt{int}: \texttt{True} becomes \texttt{1}
+\item \texttt{bool} coerces to \texttt{real}: \texttt{True} becomes \texttt{1.0}
+\item \texttt{bool} coerces to \texttt{complex}: \texttt{True} becomes \texttt{1 + 0i}
+\item Mixed numeric operations promote to the wider type: \texttt{int + real} $\rightarrow$ \texttt{real}, \texttt{real + complex} $\rightarrow$ \texttt{complex}
+\item Coercion is never lossy in the upward direction
+\item Downward coercion (\texttt{complex} $\rightarrow$ \texttt{real}, \texttt{real} $\rightarrow$ \texttt{int}) requires explicit casting and may raise errors
+\end{itemize}
+
+
+\chapter{Execution Order}  %Concrete
+
+\section{Sequential Execution}
+Program statements are executed sequentially from the entry point (\texttt{start}).
+
+\section{Declaration Order}
+% TODO: Define whether declarations are processed before execution
+% Uncertain about:
+% - Can parts be referenced before they are declared?
+% - How does the order of elec.part and elec.connect statements affect the result?
+
+
+\chapter{Constraint Resolution}
+Physical constraints are resolved by the solver according to the priority system defined in Section~\ref{sec:physical-constraints}.
+
+\section{Conflict Resolution}
+When constraints conflict, the solver applies the higher-priority constraint and optimizes the lower-priority one. See Section~\ref{sec:solver-model} for the complete resolution rules.
+
+
+\chapter{Type System Rules}
+EDADSL uses a dynamic type system with distinct types for electrical and non-electrical objects.
+
+\section{Type Categories}
+\begin{itemize}
+\item Generic types: Boolean, Integer, Real, Complex, String, List, Set
+\item Electrical types: Part, Pin, Connection, Net
+\end{itemize}
+
+\section{Type Safety}
+% TODO: Define formal type safety guarantees
+% Uncertain about:
+% - Whether sets can contain mixed types
+% - How function argument type checking works
+% - Runtime vs compile-time type checking
+
+
+
+
+\part{Core Formal Model}

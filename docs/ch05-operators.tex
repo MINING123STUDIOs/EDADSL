@@ -1,0 +1,813 @@
+\chapter{Operators}
+\label{sec:operators}
+
+\section{Built-in Operators}
+
+\subsection{Arithmetic}
+Arithmetic operators perform mathematical operations. Most operators support multiple type combinations.
+\begin{verbatim}
+n + m  Addition / Concatenation
+n - m  Subtraction
+n * m  Multiplication
+n / m  Division (always returns real)
+n // m Floor Division (returns int)
+n % m  Modulo
+n ^ m  Exponentiation
+n << m Left Shift (returns int)
+n >> m Right Shift (returns int)
+n <<<[w] m Left Rotate (returns int, w-bit word)
+n >>>[w] m Right Rotate (returns int, w-bit word)
+\end{verbatim}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{+}: \texttt{int + int} $\rightarrow$ \texttt{int}
+\item \texttt{+}: \texttt{int + real} $\rightarrow$ \texttt{real}
+\item \texttt{+}: \texttt{real + int} $\rightarrow$ \texttt{real}
+\item \texttt{+}: \texttt{real + real} $\rightarrow$ \texttt{real}
+\item \texttt{+}: \texttt{string + string} $\rightarrow$ \texttt{string} (concatenation)
+\item \texttt{+}: \texttt{list + list} $\rightarrow$ \texttt{list} (append)
+\item \texttt{-}: \texttt{int - int} $\rightarrow$ \texttt{int}
+\item \texttt{-}: \texttt{int - real} $\rightarrow$ \texttt{real}
+\item \texttt{-}: \texttt{real - int} $\rightarrow$ \texttt{real}
+\item \texttt{-}: \texttt{real - real} $\rightarrow$ \texttt{real}
+\item \texttt{*}: \texttt{int * int} $\rightarrow$ \texttt{int}
+\item \texttt{*}: \texttt{int * real} $\rightarrow$ \texttt{real}
+\item \texttt{*}: \texttt{real * int} $\rightarrow$ \texttt{real}
+\item \texttt{*}: \texttt{real * real} $\rightarrow$ \texttt{real}
+\item \texttt{*}: \texttt{int * string} $\rightarrow$ \texttt{string} (repetition)
+\item \texttt{*}: \texttt{int * list} $\rightarrow$ \texttt{list} (replication)
+\item \texttt{/}: \texttt{int / int} $\rightarrow$ \texttt{real} (true division)
+\item \texttt{/}: \texttt{real / int} $\rightarrow$ \texttt{real}
+\item \texttt{/}: \texttt{int / real} $\rightarrow$ \texttt{real}
+\item \texttt{/}: \texttt{real / real} $\rightarrow$ \texttt{real}
+\item \texttt{//}: \texttt{int // int} $\rightarrow$ \texttt{int} (floor division)
+\item \texttt{\%}: \texttt{int \% int} $\rightarrow$ \texttt{int}
+\item \texttt{\%}: \texttt{real \% int} $\rightarrow$ \texttt{real}
+\item \texttt{\%}: \texttt{int \% real} $\rightarrow$ \texttt{real}
+\item \texttt{\%}: \texttt{real \% real} $\rightarrow$ \texttt{real}
+\item \texttt{\^{}}: \texttt{int \^{} int} $\rightarrow$ \texttt{int} (non-negative exponents)
+\item \texttt{\^{}}: \texttt{int \^{} real} $\rightarrow$ \texttt{real}
+\item \texttt{\^{}}: \texttt{real \^{} int} $\rightarrow$ \texttt{real}
+\item \texttt{\^{}}: \texttt{real \^{} real} $\rightarrow$ \texttt{real}
+\item \texttt{<<}: \texttt{int << int} $\rightarrow$ \texttt{int} (left shift)
+\item \texttt{>>}: \texttt{int >> int} $\rightarrow$ \texttt{int} (right shift)
+\item \texttt{<<<[w]}: \texttt{int <<<[w] int} $\rightarrow$ \texttt{int} (left rotate)
+\item \texttt{>>>[w]}: \texttt{int >>>[w] int} $\rightarrow$ \texttt{int} (right rotate)
+\item \texttt{+}: \texttt{int + complex} $\rightarrow$ \texttt{complex}
+\item \texttt{+}: \texttt{real + complex} $\rightarrow$ \texttt{complex}
+\item \texttt{+}: \texttt{complex + int} $\rightarrow$ \texttt{complex}
+\item \texttt{+}: \texttt{complex + real} $\rightarrow$ \texttt{complex}
+\item \texttt{+}: \texttt{complex + complex} $\rightarrow$ \texttt{complex}
+\item \texttt{-}: \texttt{int - complex} $\rightarrow$ \texttt{complex}
+\item \texttt{-}: \texttt{real - complex} $\rightarrow$ \texttt{complex}
+\item \texttt{-}: \texttt{complex - int} $\rightarrow$ \texttt{complex}
+\item \texttt{-}: \texttt{complex - real} $\rightarrow$ \texttt{complex}
+\item \texttt{-}: \texttt{complex - complex} $\rightarrow$ \texttt{complex}
+\item \texttt{*}: \texttt{int * complex} $\rightarrow$ \texttt{complex}
+\item \texttt{*}: \texttt{real * complex} $\rightarrow$ \texttt{complex}
+\item \texttt{*}: \texttt{complex * int} $\rightarrow$ \texttt{complex}
+\item \texttt{*}: \texttt{complex * real} $\rightarrow$ \texttt{complex}
+\item \texttt{*}: \texttt{complex * complex} $\rightarrow$ \texttt{complex}
+\item \texttt{/}: \texttt{int / complex} $\rightarrow$ \texttt{complex}
+\item \texttt{/}: \texttt{real / complex} $\rightarrow$ \texttt{complex}
+\item \texttt{/}: \texttt{complex / int} $\rightarrow$ \texttt{complex}
+\item \texttt{/}: \texttt{complex / real} $\rightarrow$ \texttt{complex}
+\item \texttt{/}: \texttt{complex / complex} $\rightarrow$ \texttt{complex}
+\item \texttt{\^{}}: \texttt{int \^{} complex} $\rightarrow$ \texttt{complex}
+\item \texttt{\^{}}: \texttt{real \^{} complex} $\rightarrow$ \texttt{complex}
+\item \texttt{\^{}}: \texttt{complex \^{} int} $\rightarrow$ \texttt{complex}
+\item \texttt{\^{}}: \texttt{complex \^{} real} $\rightarrow$ \texttt{complex}
+\item \texttt{\^{}}: \texttt{complex \^{} complex} $\rightarrow$ \texttt{complex}
+\end{itemize}
+
+Mixed-type operations promote to \texttt{real}. If any operand is \texttt{complex}, the result is \texttt{complex}. Division by zero raises a runtime error. Floor division (\texttt{//}) truncates toward negative infinity. Modulo uses truncated division (\texttt{sign(result) = sign(dividend)}). Exponentiation is right-associative: \texttt{-2\^{}3 = -8}. Shift operators (\texttt{<<}, \texttt{>>}) require \texttt{int} operands and return \texttt{int}; the right operand must be non-negative. Shift operators are not defined for \texttt{complex}. Rotation operators (\texttt{<<<[w]}, \texttt{>>>[w]}) require \texttt{int} operands and return \texttt{int}; the word width \texttt{w} must be a positive integer literal, and the rotation amount must be non-negative.
+
+\subsection{Increment / Decrement}
+Postfix increment and decrement operators add 1 or subtract 1 from an int or real variable. The variable must already be declared.
+\begin{verbatim}
+$var++    Increment $var by 1 (returns old value)
+$var--    Decrement $var by 1 (returns old value)
+\end{verbatim}
+
+\paragraph{Semantics}
+\texttt{\$var++} increments \texttt{\$var} by 1 and returns the original value before the increment.
+\texttt{\$var--} decrements \texttt{\$var} by 1 and returns the original value before the decrement.
+
+Examples:
+\begin{verbatim}
+$counter [int]= 0
+$counter++
+#c# $counter = 1
+
+$counter++
+#c# $counter = 2
+
+$counter--
+#c# $counter = 1
+
+#c# Can be used in expressions
+$val [int]= $counter++   #c# $val = 1, $counter = 2
+\end{verbatim}
+
+\subsection{Compound Assignment}
+Compound assignment operators combine an operation with assignment. They are available for all operators.
+
+\subsubsection{Arithmetic}
+\begin{verbatim}
+#c# forward
+$var += expr   $var = $var + expr
+$var -= expr   $var = $var - expr
+$var *= expr   $var = $var * expr
+$var /= expr   $var = $var / expr
+$var %= expr   $var = $var % expr
+$var ^= expr   $var = $var ^ expr
+
+#c# reverse (reversed operands)
+$var +r= expr  $var = expr + $var
+$var -r= expr  $var = expr - $var
+$var /r= expr  $var = expr / $var
+$var %r= expr  $var = expr % $var
+$var ^r= expr  $var = expr ^ $var
+\end{verbatim}
+
+\subsubsection{Set}
+\begin{verbatim}
+$var u= expr   $var = $var u expr
+$var n= expr   $var = $var n expr
+\end{verbatim}
+
+\subsubsection{Vector}
+\begin{verbatim}
+$var .= expr   $var = $var . expr   (dot product)
+$var x= expr   $var = $var x expr   (cross product)
+$var xr= expr  $var = expr x $var   (reverse cross product)
+\end{verbatim}
+
+\subsubsection{Tensor (Ndarray)}
+\begin{verbatim}
+$var .*= expr  $var = $var .* expr  (matrix multiply)
+$var .^= expr  $var = $var .^ expr  (matrix power)
+$var .*r= expr $var = expr .* $var  (reverse matrix multiply)
+$var .^r= expr $var = expr .^ $var  (reverse matrix power)
+$var ~.T       $var = $var .T       (transpose in place)
+\end{verbatim}
+
+\subsubsection{Bitwise / Shift}
+\begin{verbatim}
+$var <<= expr    $var = $var << expr
+$var >>= expr    $var = $var >> expr
+$var <<r= expr   $var = expr << $var
+$var >>r= expr   $var = expr >> $var
+$var <<<[w]= expr  $var = $var <<<[w] expr
+$var >>>[w]= expr  $var = $var >>>[w] expr
+$var <<<[w]r= expr $var = expr <<<[w] $var
+$var >>>[w]r= expr $var = expr >>>[w] $var
+\end{verbatim}
+
+\subsubsection{Boolean}
+\begin{verbatim}
+$var &&= expr  $var = $var && expr
+$var ||= expr  $var = $var || expr
+$var ^^= expr  $var = $var ^^ expr
+$var !&= expr  $var = !($var && expr)
+$var !|= expr  $var = !($var || expr)
+$var !^= expr  $var = $var == expr
+\end{verbatim}
+
+\subsubsection{IMPLY / NIMPLY}
+\begin{verbatim}
+$var ->= expr   $var = !$var || expr
+$var !->= expr  $var = $var && !expr
+$var ->r= expr  $var = !expr || $var
+$var !->r= expr $var = expr && !$var
+\end{verbatim}
+
+Examples:
+\begin{verbatim}
+$x [int]= 5
+$x += 3        #c# $x = 8
+$x *= 2        #c# $x = 16
+$x -= 4        #c# $x = 12
+$x /= 3        #c# $x = 4
+$x %= 3        #c# $x = 1
+$x ^= 3        #c# $x = 1
+
+$str [string]= "hello"
+$str += " " + "world"   #c# $str = "hello world"
+$str +r= "cd"           #c# $str = "cdhello"
+
+$list [list]= [1, 2, 3]
+$list += [4, 5]         #c# $list = [1, 2, 3, 4, 5]
+\end{verbatim}
+
+Reverse compound assignment operators reverse the operand order:
+\begin{verbatim}
+$x [int]= 5
+$x -r= 3    #c# $x = 3 - 5 = -2
+$x /r= 2    #c# $x = 2 / 5 = 0.4
+$x %r= 2    #c# $x = 2 % 5 = 2
+
+$str [string]= "hello"
+$str +r= "cd"  #c# $str = "cdhello"
+
+$v [list]= [1, 2, 3]
+$v xr= [0, 0, 1]  #c# $v = [0, 0, 1] x [1, 2, 3]
+
+$x [int]= 5
+$x .= 3    #c# $x = $x . 3 = 15  (in-place dot product)
+$x x= [1, 0, 0]  #c# $x = $x x [1, 0, 0]  (in-place cross product)
+
+$b [bool]= True
+$b !&= False  #c# $b = !(True && False) = True  (NAND)
+$b !|= False  #c# $b = !(True || False) = False (NOR)
+$b !^= False  #c# $b = True == False = False     (XNOR)
+$b ->= False  #c# $b = !True || False = False    (IMPLY)
+$b !->= False #c# $b = True && !False = True     (NIMPLY)
+$b ->r= True  #c# $b = !True || True = True      (reverse IMPLY)
+$b !->r= True #c# $b = True && !True = False     (reverse NIMPLY)
+
+$x [int]= 5
+$x <<= 2     #c# $x = 5 << 2 = 20
+$x >>= 1     #c# $x = 20 >> 1 = 10
+$x <<r= 3    #c# $x = 3 << $x = 3 << 10 = 3072
+$x >>r= 2    #c# $x = 2 >> $x = 2 >> 3072 = 0
+
+$x [int]= 0b1101
+$x <<<[4]= 1  #c# $x = 0b1101 <<<[4] 1 = 0b1011  (left rotate by 1)
+$x >>>[4]= 1  #c# $x = 0b1011 >>>[4] 1 = 0b1101  (right rotate by 1)
+$x <<<[4]r= 2  #c# $x = 2 <<<[4] $x = 2 <<<[4]
+                #c# 1101 = 0111 (reverse left rotate)
+$x >>>[4]r= 1  #c# $x = 1 >>>[4] $x = 1 >>>[4]
+                #c# 0111 = 1011 (reverse right rotate)
+
+$m [list]= [[1,2],[3,4]]
+$m .*= [[5,6],[7,8]]   #c# $m = [[19,22],[43,50]]  (matrix multiply)
+$m .^= 2               #c# $m = $m .^ 2            (matrix power)
+
+$n [list]= [[1,2],[3,4]]
+$n ~.T
+      #c# $n = [[1,3],[2,4]]       (transpose in place)
+
+$p [list]= [[1,2],[3,4]]
+$p .*r= [[5,7],[6,8]]
+      #c# $p = [[5,7],[6,8]] .* [[1,2],[3,4]]  (reverse)
+$p .^r= 2
+      #c# $p = 2 .^ $p            (reverse matrix power)
+\end{verbatim}
+
+Examples:
+\begin{verbatim}
+#c# Scalar arithmetic
+3 + 4       #c# = 7
+10 - 3      #c# = 7
+4 * 5       #c# = 20
+15 / 4      #c# = 3.75
+17 % 5      #c# = 2
+2 ^ 10      #c# = 1024
+5 << 3      #c# = 40 (5 * 2^3)
+40 >> 3     #c# = 5  (40 / 2^3)
+0b1101 <<<[4] 1  #c# = 0b1011 (left rotate 4-bit word by 1)
+0b1101 >>>[4] 1  #c# = 0b1110 (right rotate 4-bit word by 1)
+
+#c# String concatenation
+"hello" + " " + "world"  #c# = "hello world"
+
+#c# String repetition
+"ab" * 3                  #c# = "ababab"
+
+#c# List operations
+[1,2] + [3,4]            #c# = [1,2,3,4]
+[0] * 5                   #c# = [0,0,0,0,0]
+\end{verbatim}
+
+\subsection{Comparison}
+Comparison operators evaluate to \texttt{True} or \texttt{False}.
+\begin{verbatim}
+n <  m Less Than
+n <= m Less or Equal
+b == c Equal
+b != c Not Equal
+a =n= b Numeric Equal (cross-type)
+a >< b Three-way Numeric Compare
+n >= m Greater or Equal
+n >  m Greater Than
+a ~  b Approximately Equal (uses syst.flag.approx_eps)
+a ~* b Approximately Equal (uses syst.flag.approx_eps_mult)
+a ~+( c )~ b Approximately Equal with additive tolerance c
+a ~*( c )~ b Approximately Equal with multiplicative tolerance c
+\end{verbatim}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}: \texttt{int} or \texttt{real} $\rightarrow$ \texttt{bool} (ordered)
+\item \texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}: \texttt{string} $\rightarrow$ \texttt{bool} (lexicographic)
+\item \texttt{==}, \texttt{!=}: any $\rightarrow$ \texttt{bool} (strict equality)
+\item \texttt{=n=}: \texttt{int} or \texttt{real} $\rightarrow$ \texttt{bool} (numeric equality)
+\item \texttt{><}: \texttt{int} or \texttt{real} $\rightarrow$ \texttt{int} (three-way numeric compare)
+\item \texttt{\textasciitilde}, \texttt{\textasciitilde*}, \texttt{\textasciitilde+()\textasciitilde}, \texttt{\textasciitilde*()\textasciitilde}: \texttt{int} or \texttt{real} $\rightarrow$ \texttt{bool} (approximate equality)
+\end{itemize}
+
+Ordered comparisons (\texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}) only work on ints, reals, and strings. Equality (\texttt{==}, \texttt{!=}) works on any type including lists, sets, parts, and connections. \texttt{=n=} works only on numeric types.
+
+\paragraph{Numeric Equality}
+\texttt{=n=} compares values numerically across types. Unlike \texttt{==} which is type-strict, \texttt{=n=} returns \texttt{True} if the numeric values are equal regardless of whether the operands are \texttt{int} or \texttt{real}.
+
+\begin{itemize}
+\item \texttt{5 == 5.0} $\rightarrow$ \texttt{False} (strict: int vs real)
+\item \texttt{5 =n= 5.0} $\rightarrow$ \texttt{True} (numeric: same value)
+\end{itemize}
+
+\textbf{Note:} \texttt{==} is strict type equality. \texttt{5 == 5.0} is \texttt{False} because the left operand is \texttt{int} and the right is \texttt{real}. Use \texttt{=n=} when you want to compare values regardless of numeric type.
+
+\paragraph{Three-way Numeric Compare}
+\texttt{a >< b} performs a three-way numeric comparison using \texttt{=n=} semantics.
+\begin{itemize}
+\item Returns \texttt{1} if $a > b$
+\item Returns \texttt{0} if $a \mathbin{\texttt{=n=}} b$
+\item Returns \texttt{-1} if $a < b$
+\end{itemize}
+Raises a Type Error if either operand is not numeric.
+
+\paragraph{Approximate Equality}
+\texttt{a \textasciitilde b} returns \texttt{True} if $|a - b| \leq \texttt{syst.flag.approx\_eps}$.
+\texttt{a \textasciitilde* b} returns \texttt{True} if $|a - b| \leq \texttt{syst.flag.approx\_eps\_mult} \cdot \max(|a|, |b|)$.
+\texttt{a \textasciitilde+(c)\textasciitilde b} returns \texttt{True} if $|a - b| \leq c$.
+\texttt{a \textasciitilde*(c)\textasciitilde b} returns \texttt{True} if $|a - b| \leq c \cdot \max(|a|, |b|)$.
+The default value of \texttt{syst.flag.approx\_eps} is \texttt{1}.
+
+Examples:
+\begin{verbatim}
+3 < 5              #c# = True
+"a" < "b"          #c# = True (lexicographic)
+[1,2] == [1,2]     #c# = True (list equality)
+Q1 == Q1            #c# = True (part identity)
+
+#c# Numeric equality (cross-type)
+5 == 5.0           #c# = False (strict: int vs real)
+5 =n= 5.0          #c# = True  (numeric: same value)
+5 =n= 5.1          #c# = False (different values)
+3.14 =n= 3.14      #c# = True  (real vs real works too)
+
+#c# Three-way numeric compare
+5 >< 3             #c# =  1  (5 > 3)
+5 >< 5             #c# =  0  (5 =n= 5)
+5 >< 7             #c# = -1  (5 < 7)
+5 >< 5.0           #c# =  0  (numeric equality)
+3.14 >< 3.14       #c# =  0  (real vs real)
+
+#c# Approximate equality
+syst.flag.approx_eps [real]= 0.01
+3.0 ~ 3.005        #c# = True (within 0.01)
+3.0 ~ 3.1          #c# = False (not within 0.01)
+3.0 ~+(0.2)~ 3.1    #c# = True (within 0.2)
+3.0 ~+(0.05)~ 3.1   #c# = False (not within 0.05)
+
+#c# Execution mode
+syst.flag.exec_mode [string]= "strict"  #c# warnings become errors
+
+#c# Multiplicative approximate equality (relative tolerance)
+100 ~*(0.01)~ 100.5  #c# = True (within 1%)
+100 ~*(0.001)~ 100.5 #c# = False (not within 0.1%)
+
+#c# Multiplicative approximate equality with system default
+syst.flag.approx_eps_mult [real]= 0.01
+100 ~* 100.5         #c# = True (within 1%)
+\end{verbatim}
+
+\subsection{Boolean Logic}
+Boolean operators combine or negate boolean values.
+\begin{verbatim}
+b && c Logical And
+b || c Logical Or
+b ^^ c Logical Xor
+b !& c Nand (Not And)
+b !| c Nor (Not Or)
+b !^ c Xnor (Not Xor)
+b -> c Imply (a implies b)
+b !-> c Nimp (a does not imply b)
+!b     Negation
+\end{verbatim}
+
+\begin{itemize}
+\item Operands: \texttt{bool}, \texttt{bool}
+\item Result: \texttt{bool}
+\item Short-circuit evaluation: \texttt{a \&\& b} evaluates \texttt{b} only if \texttt{a} is \texttt{True}
+\end{itemize}
+
+Truth tables:
+\begin{verbatim}
+a  b  a!&b  a!|b  a!^b  a->b  a!->b
+T  T   F     F     T     T      F
+T  F   T     F     F     F      T
+F  T   T     F     F     T      F
+F  F   T     T     T     T      F
+\end{verbatim}
+
+Semantics:
+\begin{itemize}
+\item \texttt{!\&} (NAND): \texttt{!(a \&\& b)}
+\item \texttt{!|} (NOR): \texttt{!(a || b)}
+\item \texttt{!}\texttt{\^{}} (XNOR): \texttt{a == b} (logical equality)
+\item \texttt{->} (IMPLY): \texttt{!a || b}. Not commutative: \texttt{a -> b} $\neq$ \texttt{b -> a}
+\item \texttt{!->} (NIMPLY): \texttt{a \&\& !b}. Not commutative: \texttt{a !-> b} $\neq$ \texttt{b !-> a}
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+True && False   #c# = False
+True || False   #c# = True
+True ^^ False   #c# = True
+True ^^ True    #c# = False
+True !& False   #c# = True  (NAND)
+True !| False   #c# = False (NOR)
+True !^ False   #c# = True  (XNOR)
+True -> False   #c# = False (IMPLY)
+True !-> False  #c# = True  (NIMPLY)
+!True           #c# = False
+\end{verbatim}
+
+\subsection{Collection Operators}
+Collection operators manipulate sets, lists, and strings.
+\begin{verbatim}
+a u b  Union (sets only)
+a n b  Intersection (sets only)
+a / b  Difference (sets) / Division (numeric)
+||a    Cardinality / Length
+\end{verbatim}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{u}: \texttt{set + set} $\rightarrow$ \texttt{set} (union)
+\item \texttt{n}: \texttt{set + set} $\rightarrow$ \texttt{set} (intersection)
+\item \texttt{/}: \texttt{set / set} $\rightarrow$ \texttt{set} (difference)
+\item \texttt{/}: \texttt{int / int} $\rightarrow$ \texttt{real} (division)
+\item \texttt{||}: \texttt{||set} $\rightarrow$ \texttt{int} (cardinality)
+\item \texttt{||}: \texttt{||list} $\rightarrow$ \texttt{int} (length)
+\item \texttt{||}: \texttt{||string} $\rightarrow$ \texttt{int} (length)
+\end{itemize}
+
+Set operations (\texttt{u}, \texttt{n}) only work on sets. The \texttt{/} operator is overloaded: on sets it returns difference, on ints or reals it returns division. Cardinality (\texttt{||}) returns the element count for sets, lists, and strings.
+
+Examples:
+\begin{verbatim}
+#c# Set operations
+{1,2} u {2,3}     #c# = {1,2,3} (union)
+{1,2} n {2,3}     #c# = {2} (intersection)
+{1,2,3} / {2}     #c# = {1,3} (difference)
+
+#c# Cardinality
+||{1,2,3}          #c# = 3 (set size)
+||[1,2,3,4]        #c# = 4 (list length)
+||"hello"           #c# = 5 (string length)
+\end{verbatim}
+
+\subsection{List Operators}
+List operators perform vector and matrix operations on lists.
+\begin{verbatim}
+a . b  Dot product (real result)
+a x b  Cross product (list result)
+\end{verbatim}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{.}: \texttt{list . list} $\rightarrow$ \texttt{real} (dot product, n-dimensional)
+\item \texttt{x}: \texttt{list x list} $\rightarrow$ \texttt{list} (cross product, 3D only)
+\end{itemize}
+
+The dot product computes $\sum_{i} a_i \cdot b_i$ for n-dimensional vectors (any length). The cross product computes the vector cross product (both lists must have length 3).
+
+Examples:
+\begin{verbatim}
+#c# Dot product (n-dimensional)
+[1, 2, 3] . [4, 5, 6]     #c# = 32 (1*4 + 2*5 + 3*6)
+[1, 2] . [3, 4]           #c# = 11 (2D)
+[1, 2, 3, 4] . [5, 6, 7, 8] #c# = 70 (4D)
+
+#c# Cross product (3D only)
+[1, 0, 0] x [0, 1, 0]     #c# = [0, 0, 1]
+[1, 2, 3] x [4, 5, 6]     #c# = [-3, 6, -3]
+\end{verbatim}
+
+\subsection{Tensor (Ndarray) Operators}
+The \texttt{.} prefix on operators enables matrix/tensor operations on ndarrays. Without the prefix, operations are element-wise (see Section above).
+
+\subsubsection{Matrix Multiply}
+\begin{verbatim}
+a .* b  Matrix multiply (dot-product for 1D, matrix multiply for 2D)
+\end{verbatim}
+
+\begin{itemize}
+\item Operands: \texttt{ndarray}, \texttt{ndarray}
+\item Result: \texttt{ndarray} or \texttt{real}
+\item Shape rules:
+  \item 1D \texttt{.*} 1D $\rightarrow$ scalar (dot product, same as \texttt{.})
+  \item 2D(m$\times$k) \texttt{.*} 2D(k$\times$n) $\rightarrow$ 2D(m$\times$n)
+  \item 2D(m$\times$k) \texttt{.*} 1D(k) $\rightarrow$ 1D(m)
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+#c# 1D .* 1D = scalar (dot product)
+[1, 2, 3] .* [4, 5, 6]     #c# = 32
+
+#c# 2D .* 2D = matrix multiply
+[[1,2],[3,4]] .* [[5,6],[7,8]]  #c# = [[19,22],[43,50]]
+
+#c# 2D .* 1D = matrix-vector multiply
+[[1,2],[3,4]] .* [5, 6]        #c# = [17, 39]
+\end{verbatim}
+
+\subsubsection{Transpose}
+\begin{verbatim}
+a .T   Transpose (postfix operator)
+a ~.T  Transpose in place (no expression needed)
+\end{verbatim}
+
+\begin{itemize}
+\item Operands: \texttt{ndarray}
+\item Result: \texttt{ndarray}
+\item Swaps rows and columns: shape (m$\times$n) $\rightarrow$ (n$\times$m)
+\item 1D arrays are treated as row vectors and transposed to column vectors.
+\item \texttt{\textasciitilde.T} is shorthand for \texttt{[list]= \$var.T} — transposes in place without repeating the variable name.
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+[1, 2, 3] .T           #c# = [[1],[2],[3]]  (1D -> column)
+[[1,2,3]] .T           #c# = [[1],[2],[3]]  (row -> column)
+[[1,2],[3,4]] .T       #c# = [[1,3],[2,4]]
+
+$m [list]= [[1,2],[3,4]]
+$m ~.T                 #c# $m is now [[1,3],[2,4]]
+\end{verbatim}
+
+\subsubsection{Matrix Power}
+\begin{verbatim}
+a .^ n  Matrix power (repeated matrix multiply, n must be int >= 0)
+\end{verbatim}
+
+\begin{itemize}
+\item Operands: \texttt{ndarray}, \texttt{int}
+\item Result: \texttt{ndarray}
+\item \texttt{A .\^{} 0} returns the identity matrix (square matrices only)
+\item \texttt{A .\^{} n} = \texttt{A .* A .* ... .* A} (n times)
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+[[1,2],[3,4]] .^ 0     #c# = [[1,0],[0,1]]  (identity)
+[[1,2],[3,4]] .^ 1     #c# = [[1,2],[3,4]]  (unchanged)
+[[1,2],[3,4]] .^ 2     #c# = [[7,10],[15,22]]
+\end{verbatim}
+
+\subsection{Set Comparison}
+Set comparison operators test membership and subset relationships.
+\begin{verbatim}
+a c b  Subset of
+a E b  Element of
+a !E b Not element of
+\end{verbatim}
+
+\begin{itemize}
+\item Operands: \texttt{set}, \texttt{set} (subset)
+\item Operands: any, \texttt{set} (membership)
+\item Result: \texttt{bool}
+\item \texttt{a c b} is true if every element of \texttt{a} is in \texttt{b}
+\item \texttt{a E b} is true if \texttt{a} is an element of set \texttt{b}
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+{1,2} c {1,2,3}   #c# = True (subset)
+1 E {1,2,3}       #c# = True (membership)
+Q1 E *p            #c# = True (part in all parts)
+4 !E {1,2,3}      #c# = True (not element)
+\end{verbatim}
+
+\subsection{Conditional Expression}
+A ternary-like operator for inline conditional values.
+\begin{verbatim}
+(condition)?->(value_if_true)!(value_if_false)
+\end{verbatim}
+
+\begin{itemize}
+\item Operands: \texttt{bool}, any, any
+\item Result: type of the selected branch
+\item Evaluates condition, returns first value if \texttt{True}, second if \texttt{False}
+\item Both branches must be of the same type (or coercible)
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$x [int]= 5
+$result [int]= ($x > 3)?->("big")!("small")
+#c# $result = "big"
+
+$val [int]= 10
+$abs [int]= ($val >= 0)?->($val)!($val * -1)
+#c# $abs = 10
+
+$a [int]= 1
+$b [int]= 2
+$max [int]= ($a > $b)?->($a)!($b)
+#c# $max = 2
+\end{verbatim}
+
+\label{sec:lambda}
+\subsection{Lambda Expressions}
+Lambda expressions create anonymous functions that can be passed as arguments to higher-order functions. They are defined with the \texttt{L::} prefix (consistent with the \texttt{f.u.} prefix for user-defined functions).
+
+\subsubsection{Syntax}
+\begin{verbatim}
+EBNF:
+lambda = "L::", "(", [ parameter, { ",", parameter } ], ")", 
+         "->", "{", { statement }, expression, "}"
+parameter = "$", id, "[", type, "]"
+\end{verbatim}
+
+Parameters must always have explicit types. The last expression in the body is the implicit return value. Multi-line bodies are allowed (multiple statements in \texttt{\{\}}).
+
+\subsubsection{Type Overloading}
+\begin{itemize}
+\item Parameters may be any scalar type: \texttt{int}, \texttt{real}, \texttt{bool}, \texttt{string}
+\item Parameters may also be \texttt{list} when operating on lists of lists
+\item Return type is inferred from the body expression
+\item All parameter types must match the elements passed by the higher-order function
+\end{itemize}
+
+\subsubsection{Scope Rules}
+\begin{itemize}
+\item Lambdas have \textbf{read-only} access to outer/global variables (closures can read but not write)
+\item Lambdas \textbf{can} declare local variables inside their body
+\item Lambdas \textbf{cannot} modify outer variables
+\item Attempting to write to an outer variable raises a Compile Error
+\end{itemize}
+
+\subsubsection{Return Value}
+The last expression in the body is the implicit return value. There is no explicit \texttt{return} keyword inside lambdas. If the body contains only statements with no trailing expression, the lambda returns nothing (useful for side effects only, e.g., with \texttt{f.print}).
+
+\subsubsection{Examples}
+\begin{verbatim}
+#c# Basic lambda (passed to map)
+map([1, 2, 3], L::($x [int])->{ $x * 2 })
+#c# Returns [2, 4, 6]
+
+#c# Lambda with multiple parameters
+L::($x [int], $y [int])->{ $x + $y }
+#c# Returns a function object (used inline)
+
+#c# Multi-line lambda
+map([1, 2, 3], L::($x [int])->{
+    $y [int]= $x * 10
+    $y + 1
+})
+#c# Returns [11, 21, 31]
+
+#c# Closure (read-only access to outer variable)
+$factor [int]= 10
+map([1, 2, 3], L::($x [int])->{ $x * $factor })
+#c# Returns [10, 20, 30]
+
+#c# Lambda with real types
+map([1.5, 2.5, 3.5], L::($x [real])->{ $x * $x })
+#c# Returns [2.25, 6.25, 12.25]
+
+#c# Lambda with nested list (2D ndarray)
+map([[1,2],[3,4]], L::($row [list])->{ $row })
+#c# Returns [[1,2],[3,4]] (identity, demonstrates list parameter)
+
+#c# Lambda with bool parameter
+filter([True, False, True], L::($x [bool])->{ !$x })
+#c# Returns [False]
+\end{verbatim}
+
+\subsubsection{Error Conditions}
+\begin{itemize}
+\item Compile Error: parameter type is missing (e.g., \texttt{L::(\$x)->\{...\}} is invalid)
+\item Compile Error: attempting to write to an outer variable inside a lambda
+\item Runtime Error: type mismatch between parameter type and actual element type
+\end{itemize}
+
+\section{Operator Precedence}
+Operators are evaluated in the following order (highest to lowest):
+\begin{enumerate}
+\item \texttt{\^{}} -- Exponentiation (right-associative)
+\item \texttt{!} -- Boolean negation
+\item \texttt{\$var++}, \texttt{\$var--}, \texttt{.T} -- Postfix increment / decrement, transpose
+\item \texttt{||a} -- Cardinality / length
+\item \texttt{*}, \texttt{/}, \texttt{//}, \texttt{\%}, \texttt{.}, \texttt{x}, \texttt{.*}, \texttt{.\^{}} -- Multiplication, division, floor division, modulo, dot product, cross product, matrix multiply, matrix power
+\item \texttt{<<}, \texttt{>>}, \texttt{<<<}, \texttt{>>>} -- Left shift, right shift, left rotate, right rotate
+\item \texttt{+}, \texttt{-} -- Addition, subtraction
+\item \texttt{<}, \texttt{<=}, \texttt{==}, \texttt{!=}, \texttt{=n=}, \texttt{><}, \texttt{>=}, \texttt{>}, \texttt{\textasciitilde}, \texttt{\textasciitilde*}, \texttt{\textasciitilde+()\textasciitilde}, \texttt{\textasciitilde*()\textasciitilde} -- Comparison
+\item \texttt{c}, \texttt{E}, \texttt{!E} -- Set comparison
+\item \texttt{\&\&}, \texttt{!\&} -- Logical AND, NAND
+\item \texttt{||}, \texttt{!|} -- Logical OR, NOR
+\item \texttt{\^{}\^{}}, \texttt{!}\texttt{\^{}} -- Logical XOR, XNOR
+\item \texttt{->}, \texttt{!->} -- IMPLY, NIMPLY
+\item \texttt{?->...!...} -- Conditional expression
+\item \texttt{L::(...)->\{...\}} -- Lambda expression
+\item User-defined operators (\texttt{o.u.*})
+\end{enumerate}
+
+Note: \texttt{||} has two distinct meanings depending on position. As a \textbf{prefix} operator (\texttt{||expr}), it denotes cardinality/length and has high precedence (level 3). As an \textbf{infix} operator (\texttt{expr || expr}), it denotes logical OR and has low precedence (level 9). Parentheses override precedence. Function arguments are evaluated before the function is called.
+
+\section{User-defined Operators}
+User-defined operators extend the language with custom infix notation.
+
+\subsection{Definition}
+\begin{verbatim}
+EBNF:
+"letop", "o.u.", id, assigner, data
+\end{verbatim}
+
+The operator name must follow the pattern \texttt{o.u.[\_a-zA-Z0-9]+}.
+
+\subsection{Examples}
+\begin{verbatim}
+letop o.u.mod_minus_1 [int]= 
+    a % b - 1
+
+f.print( 4 o.u.mod_minus_1 3 )  #c# = 0
+
+letop o.u.parallel [int]= 
+    (a * b) / (a + b)
+
+f.print( 100 o.u.parallel 100 )  #c# = 50
+\end{verbatim}
+
+\subsection{Precedence}
+User-defined operators have the lowest precedence among all operators. Use parentheses to ensure correct evaluation order.
+
+
+
+\chapter{Constants}
+Constants are immutable values that cannot be reassigned after declaration.
+
+\section{Built-in Constants}
+\subsection{Proper Constants}
+Proper constants are fixed values provided by the language.
+
+\subsubsection{Mathematical Constants}
+\begin{itemize}
+\item \texttt{c.pi} -- The mathematical constant $\pi \approx 3.14159265...$
+\item \texttt{c.e} -- Euler's number $e \approx 2.71828182...$
+\item \texttt{c.i} -- Imaginary unit $\sqrt{-1}$ (complex type)
+\item \texttt{c.iinf} -- Integer positive infinity
+\item \texttt{c.rinf} -- Real positive infinity
+\item \texttt{c.inf} -- Unsigned infinity (numeric)
+\item \texttt{c.egamma} -- Euler-Mascheroni constant $\gamma \approx 0.5772156649...$
+\item \texttt{c.sqrt2} -- $\sqrt{2} \approx 1.4142135623...$ (RMS conversion: $V_{\text{rms}} = V_{\text{pk}} / \sqrt{2}$)
+\item \texttt{c.sqrt2\_inv} -- $1/\sqrt{2} \approx 0.7071067811...$ (the $-3\text{dB}$ point)
+\item \texttt{c.ln2} -- $\ln(2) \approx 0.6931471805...$ (half-life, RC time constants)
+\end{itemize}
+
+\subsubsection{Physical Constants}
+\begin{itemize}
+\item \texttt{c.c} -- Speed of light in vacuum $c \approx 2.998 \times 10^{8}$ m/s
+\item \texttt{c.h} -- Planck's constant $h \approx 6.626 \times 10^{-34}$ J$\cdot$s
+\item \texttt{c.hbar} -- Reduced Planck's constant $\hbar \approx 1.055 \times 10^{-34}$ J$\cdot$s
+\item \texttt{c.q} -- Elementary charge $e \approx 1.602 \times 10^{-19}$ C
+\item \texttt{c.kb} -- Boltzmann constant $k_B \approx 1.381 \times 10^{-23}$ J/K
+\item \texttt{c.me} -- Electron mass $m_e \approx 9.109 \times 10^{-31}$ kg
+\item \texttt{c.mp} -- Proton mass $m_p \approx 1.673 \times 10^{-27}$ kg
+\item \texttt{c.g} -- Standard gravitational acceleration $g \approx 9.80665$ m/s$^2$
+\item \texttt{c.atm} -- Standard atmosphere $1\text{ atm} = 101325$ Pa
+\item \texttt{c.sigma} -- Stefan-Boltzmann constant $\sigma \approx 5.670 \times 10^{-8}$ W/(m$^2 \cdot$ K$^4$)
+\item \texttt{c.k} -- Coulomb (electrostatic) constant $k_e \approx 8.988 \times 10^{9}$ N$\cdot$m$^2$/C$^2$
+\item \texttt{c.mu0} -- Vacuum permeability $\mu_0 \approx 4\pi \times 10^{-7}$ H/m
+\item \texttt{c.eps0} -- Vacuum permittivity $\varepsilon_0 \approx 8.854 \times 10^{-12}$ F/m
+\item \texttt{c.kT300} -- Thermal voltage at 300K $kT/q \approx 0.02585$ V (semiconductor bias point)
+\item \texttt{c.G0} -- Conductance quantum $G_0 = 2e^2/h \approx 7.748 \times 10^{-5}$ S
+\item \texttt{c.phi0} -- Magnetic flux quantum $\Phi_0 = h/(2e) \approx 2.068 \times 10^{-15}$ Wb
+\end{itemize}
+
+\subsection{Pseudo-Constants}
+Pseudo-constants are system-defined sets that provide access to electrical objects.
+
+\subsubsection{Set Pseudo-Constants}
+\begin{itemize}
+\item \texttt{*n} -- Empty set
+\item \texttt{*e} -- All parts, connections, pins, holes, and nets
+\item \texttt{*i} -- All pins and connections
+\item \texttt{*u} -- All parts, connections, and pins on the upper side of the board
+\item \texttt{*b} -- All parts, connections, and pins on the bottom side of the board
+\item \texttt{*h} -- All holes
+\item \texttt{*c} -- All connections
+\item \texttt{*p} -- All parts
+\item \texttt{*t} -- All pins
+\end{itemize}
+
+\section{User-defined Constants}
+User-defined constants are created using the \texttt{let} keyword with the \texttt{c.u.} prefix:
+\begin{verbatim}
+EBNF:
+constant_assignment = "let", "c.u.", id, assigner, 
+                      [";", "P", "=", boolean]
+
+Examples:
+let c.u.$max_current [int]= 30
+let c.u.$board_name [string]= "PowerSupply"
+\end{verbatim}
+Constants are immutable by definition and cannot be reassigned.
+
