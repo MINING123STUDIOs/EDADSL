@@ -170,8 +170,21 @@ Whitespace                    = [ \t\n\r]+
 Comments are defined using the following Regular Expressions:
 \begin{verbatim}
 RegEx:
-Line_Comments                 = "#"[^\n]*
-Multiline_Comments            = "#{" ... "}#"
+Line_Comments                 = "#c#"[^\n]*
+Multiline_Comments            = "#c#{" ... "}c#"
+\end{verbatim}
+
+Examples:
+\begin{verbatim}
+#c# This is a line comment
+$x [int]= 5  #c# Inline comment
+
+#c#{
+This is a
+multiline comment
+}c#
+
+$x [int]= 5 #c#{ inline }c# + 3
 \end{verbatim}
 
 \section{Identifiers}
@@ -184,9 +197,9 @@ id                            = [_a-zA-Z0-9]+
 \section{Keywords}
 The language uses the following Keywords defined using the following Regular Expressions:
 \begin{verbatim}
-Generic_Keywords:    start halt if for gotomarker gotojump 
+Generic_Keywords:    start halt if else for gotomarker gotojump 
                      writetolog make.pcb make.schematic export 
-                     echo return let skip
+                     echo return let letop skip
 
 Physical_Keywords:   phys\.[a-z]+
                      Known Physical Keywords:
@@ -225,14 +238,14 @@ EDADSL uses the following Delimiters:
 
 \section{Tokenization Rules}
 The Tokenization follows the following Rules: \\
-The Lexer uses the Longes Match Rule: in Cases where multiple valid tokizations are possible the longest token is chosen. \\
+The Lexer uses the Longest Match Rule: in Cases where multiple valid tokenizations are possible the longest token is chosen. \\
 If Lexeme matches both a Keyword and an Identifier it is classified as a Keyword. \\
 Whitespace and Comments are discarded.
 
 \section{Statement Separators}
 Statements within a code block are separated by implicit newlines. The \texttt{\%N} token acts as an explicit statement separator, allowing multiple statements on a single line:
 \begin{verbatim}
-# These are equivalent:
+#c# These are equivalent:
 ::{
     f.print("a")
     f.print("b")
@@ -501,17 +514,17 @@ hexdigit  = [0-9a-fA-F]
 
 SI prefixes >= k produce integers:
 \begin{verbatim}
-6.2k    # = 6200 (int)
-1M      # = 1000000 (int)
--5e9    # = -5000000000 (int)
-4Q      # = 4e30 (int)
+6.2k    #c# = 6200 (int)
+1M      #c# = 1000000 (int)
+-5e9    #c# = -5000000000 (int)
+4Q      #c# = 4e30 (int)
 \end{verbatim}
 
 Binary, octal, and hex literals always produce integers:
 \begin{verbatim}
-0x10    # = 16
-0b1010  # = 10
-0o17    # = 15
+0x10    #c# = 16
+0b1010  #c# = 10
+0o17    #c# = 15
 \end{verbatim}
 
 \subsubsection{Integer Data Type Casting and Coercion}
@@ -541,18 +554,18 @@ scientific_real = ["+" | "-"], digit, {digit},
 
 A literal with a decimal point or scientific notation produces a real, even if the fractional part is zero:
 \begin{verbatim}
-3.14    # = 3.14 (real)
-42.0    # = 42.0 (real)
-42e0    # = 42.0 (real)
-.4      # = 0.4 (real)
-2e-6    # = 0.000002 (real)
+3.14    #c# = 3.14 (real)
+42.0    #c# = 42.0 (real)
+42e0    #c# = 42.0 (real)
+.4      #c# = 0.4 (real)
+2e-6    #c# = 0.000002 (real)
 \end{verbatim}
 
 SI prefixes below k produce reals:
 \begin{verbatim}
-100n    # = 0.0000001 (real)
-1m      # = 0.001 (real)
-5c      # = 0.05 (real)
+100n    #c# = 0.0000001 (real)
+1m      #c# = 0.001 (real)
+5c      #c# = 0.05 (real)
 \end{verbatim}
 
 The full SI prefix table:
@@ -617,7 +630,7 @@ Sets can be created from Lists using the \texttt{f.set()} function. When convert
 Example:
 \begin{verbatim}
 $my_list [list]= [ 1, 2, 2, 3, 3, 3 ]
-$my_set [set]= f.set( $my_list )  # { 1, 2, 3 }
+$my_set [set]= f.set( $my_list )  #c# { 1, 2, 3 }
 \end{verbatim}
 Sets can be converted to Lists using the \texttt{f.list()} function. The order of elements in the resulting List is determined by the order they appear in the global set \texttt{*e}.
 \subsection{String}
@@ -644,7 +657,7 @@ Example:
 \begin{verbatim}
 $msg [string]= f.str( "The value is ", 42, 
     " and color is ", "red" )
-# $msg = "The value is 42 and color is red"
+#c# $msg = "The value is 42 and color is red"
 \end{verbatim}
 Additional string functions include \texttt{f.upperc()} (uppercase), \texttt{f.lowerc()} (lowercase), and \texttt{f.format()} (formatted output).
 \subsection{List}
@@ -659,16 +672,80 @@ list_literal = "[", [{ data, "," }, data], "]"
 Lists can be created from Sets using the \texttt{f.list()} function. The order is determined by the element order in \texttt{*e}.\\
 Lists support range generation using the syntax:
 \begin{verbatim}
-[start:increment:end]    # explicit increment
-[start:end]              # increment defaults to 1
-[start|end|count]        # evenly spaced, count elements
+[start:increment:end]    #c# explicit increment
+[start:end]              #c# increment defaults to 1
+[start|end|count]        #c# evenly spaced, count elements
 \end{verbatim}
 Examples:
 \begin{verbatim}
-$r1 [list]= [0:2:10]      # [0, 2, 4, 6, 8, 10]
-$r2 [list]= [0:5]         # [0, 1, 2, 3, 4, 5]
-$r3 [list]= [0|1|5]       # [0, 0.25, 0.5, 0.75, 1]
+$r1 [list]= [0:2:10]      #c# [0, 2, 4, 6, 8, 10]
+$r2 [list]= [0:5]         #c# [0, 1, 2, 3, 4, 5]
+$r3 [list]= [0|1|5]       #c# [0, 0.25, 0.5, 0.75, 1]
 \end{verbatim}
+\subsubsection{Ndarray (N-dimensional Array)}
+An ndarray is a list that is \textbf{rectangular} (all sublists have the same length) and contains only \textbf{numeric} values (\texttt{int} or \texttt{real}). Ndarray status is determined automatically -- no type annotation is needed. A list that is rectangular and all-numeric gains ndarray operations; all other lists remain standard lists.
+
+\paragraph{Detection Rules}
+\begin{itemize}
+\item A list is an ndarray if all elements are \texttt{int} or \texttt{real}, and all sublists (if any) have identical length.
+\item Nested lists of different lengths are NOT ndarrays: \texttt{[[1,2], [3,4,5]]} is a standard list.
+\item Lists containing strings, bools, or other non-numeric types are NOT ndarrays.
+\item Empty lists \texttt{[]} and flat numeric lists \texttt{[1, 2, 3]} are ndarrays (1D).
+\end{itemize}
+
+\paragraph{Shape}
+The shape of an ndarray is described by its dimensions:
+\begin{itemize}
+\item 1D: \texttt{[1, 2, 3]} has shape \texttt{(3)}
+\item 2D: \texttt{[[1,2], [3,4], [5,6]]} has shape \texttt{(3, 2)} (3 rows, 2 columns)
+\end{itemize}
+
+\paragraph{Broadcasting}
+When an ndarray is combined with a scalar, the scalar is broadcast to match the ndarray's shape:
+\begin{verbatim}
+[1, 2, 3] + 5          #c# = [6, 7, 8]
+[1, 2, 3] * 2          #c# = [2, 4, 6]
+[[1,2],[3,4]] + 10      #c# = [[11,12],[13,14]]
+\end{verbatim}
+
+\paragraph{Element-wise Operations}
+When two ndarrays of the same shape are combined with a standard operator (\texttt{+}, \texttt{-}, \texttt{*}, \texttt{/}, \texttt{\%}, \texttt{\^{}}), the operation is applied element-wise:
+\begin{verbatim}
+[1, 2, 3] + [4, 5, 6]     #c# = [5, 7, 9]
+[1, 2, 3] * [4, 5, 6]     #c# = [4, 10, 18]
+[10, 20, 30] - [1, 2, 3]  #c# = [9, 18, 27]
+[10, 20, 30] / [2, 4, 5]  #c# = [5.0, 5.0, 6.0]
+\end{verbatim}
+
+\paragraph{Slicing}
+Ndarrays (and all lists) support Python-style slicing with the syntax \texttt{list[start:stop:step]}:
+\begin{itemize}
+\item \texttt{list[start:stop]} -- elements from \texttt{start} up to (not including) \texttt{stop}
+\item \texttt{list[start:]} -- from \texttt{start} to end
+\item \texttt{list[:stop]} -- from beginning to \texttt{stop}
+\item \texttt{list[:]} -- full copy
+\item \texttt{list[start:stop:step]} -- with step size
+\item Negative indices count from the end: \texttt{list[-1]} is the last element
+\end{itemize}
+\begin{verbatim}
+$a [list]= [0, 1, 2, 3, 4, 5]
+$a[1:4]       #c# = [1, 2, 3]
+$a[2:]        #c# = [2, 3, 4, 5]
+$a[:3]        #c# = [0, 1, 2]
+$a[::2]       #c# = [0, 2, 4]  (every 2nd element)
+$a[-2:]       #c# = [4, 5]     (last 2 elements)
+$a[::-1]      #c# = [5, 4, 3, 2, 1, 0]  (reversed)
+\end{verbatim}
+
+\paragraph{Reshape}
+Ndarrays support reshaping via the \texttt{.reshape()} method. The total number of elements must remain constant.
+\begin{verbatim}
+$b [list]= [[1,2,3],[4,5,6]]
+$b.reshape(3, 2)   #c# = [[1,2],[3,4],[5,6]]
+$b.reshape(6)      #c# = [1, 2, 3, 4, 5, 6]  (flatten)
+$b.reshape(1, 6)   #c# = [[1,2,3,4,5,6]]     (row vector)
+\end{verbatim}
+
 \section{Electrical Types}
 \subsection{Part}
 \subsubsection{Part Data Type Definition}
@@ -715,10 +792,10 @@ Pins are created implicitly when Parts are instantiated. Pin references are form
 pin_literal = part_ref, "[", pin_ref, "]"
 
 Examples:
-R1[1]      # Pin 1 of resistor R1
-Q1[d]      # Drain pin of MOSFET Q1
-U1[v+]     # Non-inverting input of op-amp U1
-J1[3]      # Pin 3 of connector J1
+R1[1]      #c# Pin 1 of resistor R1
+Q1[d]      #c# Drain pin of MOSFET Q1
+U1[v+]     #c# Non-inverting input of op-amp U1
+J1[3]      #c# Pin 3 of connector J1
 \end{verbatim}
 The available pin references depend on the Part's footprint and model definition.
 \subsubsection{Pin Data Type Casting and Coercion}
@@ -737,7 +814,7 @@ Connections can be created using the pipe syntax:
 connection_literal = "(", pin, "|", pin, ")"
 
 Example:
-( R2[1] | J4[7] )  # R2 pin 1 to J4 pin 7
+( R2[1] | J4[7] )  #c# R2 pin 1 to J4 pin 7
 \end{verbatim}
 Connections are also created implicitly by \texttt{elec.connect} statements.
 \subsubsection{Connection Data Type Casting and Coercion}
@@ -792,10 +869,10 @@ type                = "bool" | "int" | "real" | "list" | "string"
 \subsection{Type-Inferred Assignment}
 As syntax sugar, \texttt{\$var t= val} is equivalent to \texttt{\$var [type(val)]= val}. The type is inferred from the value at assignment time.
 \begin{verbatim}
-$a t= 3              # Equivalent to $a [int]= 3
-$name t= "EDADSL"    # Equivalent to $name [string]= "EDADSL"
-$flag t= True        # Equivalent to $flag [bool]= True
-$colors t= [1, 2, 3] # Equivalent to $colors [list]= [1, 2, 3]
+$a t= 3              #c# Equivalent to $a [int]= 3
+$name t= "EDADSL"    #c# Equivalent to $name [string]= "EDADSL"
+$flag t= True        #c# Equivalent to $flag [bool]= True
+$colors t= [1, 2, 3] #c# Equivalent to $colors [list]= [1, 2, 3]
 \end{verbatim}
 
 The type determines the variable's data type:
@@ -816,7 +893,7 @@ The type determines the variable's data type:
 By default, variables are mutable (can be reassigned). To make a variable immutable, append \texttt{; M = False} after the assignment:
 \begin{verbatim}
 $immutable [int]= 42; M = False
-$mutable [int]= 100    # Can be reassigned
+$mutable [int]= 100    #c# Can be reassigned
 \end{verbatim}
 
 \section{Scope}
@@ -826,13 +903,13 @@ Variables have global scope once declared. They can be accessed from any point i
 \begin{verbatim}
 $a [int]= 3
 $b [int]= 5
-$result [int]= $a + $b        # Scalar assignment
+$result [int]= $a + $b        #c# Scalar assignment
 
-$name [string]= "EDADSL"         # String assignment
-$flag [bool]= True               # Boolean assignment
+$name [string]= "EDADSL"         #c# String assignment
+$flag [bool]= True               #c# Boolean assignment
 
-$colors [list]= ["red", "green", "blue"]  # List
-$hwset [set]= { Q1, Q2, R5 }              # Set
+$colors [list]= ["red", "green", "blue"]  #c# List
+$hwset [set]= { Q1, Q2, R5 }              #c# Set
 \end{verbatim}
 
 
@@ -851,9 +928,11 @@ expression          = arithmetic_expression
                     | "(" expression ")"
 
 arithmetic_expression = expression,
-    ("+" | "-" | "*" | "/" | "%" | "^" | "." | "x"),
+    ("+" | "-" | "*" | "/" | "%" | "^" | "." | "x"
+     | ".*" | ".^"),
     expression
   | "-" expression
+  | expression, ".T"
 
 boolean_expression = expression,
     ("&&" | "||" | "^^"), expression
@@ -872,9 +951,22 @@ set_expression = expression, ("u" | "n" | "/"), expression
 postfix_expression = variable, ("++" | "--")
 
 compound_assignment = variable,
+    #c# arithmetic
     ("+=" | "-=" | "*=" | "/=" | "%=" | "^=" 
-     | "&&=" | "||=" | "^^=" | "^r=" 
-     | "u=" | "n="), expression
+     | "+r=" | "-r=" | "/r=" | "%r=" | "^r=")
+    #c# set
+  | variable, ("u=" | "n=")
+    #c# vector
+  | variable, (".=" | "x=" | "xr=")
+    #c# tensor
+  | variable, (".*=" | ".^=" | ".*r=" | ".^r=")
+  | variable, "~.T"
+    #c# bitwise / shift
+  | variable, ("<<=" | ">>=" | "<<r=" | ">>r=")
+    #c# boolean
+  | variable, ("&&=" | "||=" | "^^=" | "!&=" | "!|=" | "!^=")
+    #c# imply / nimply
+  | variable, ("->=" | "!->=" | "->r=" | "!->r="), expression
 \end{verbatim}
 
 \section{Operator Precedence}
@@ -883,13 +975,15 @@ Operators are evaluated in the following order of precedence (highest to lowest)
 \item Exponentiation (\texttt{\^{}}) -- right-associative
 \item Boolean negation (\texttt{!})
 \item Set cardinality (\texttt{||a})
-\item Multiplication (\texttt{*}), Division (\texttt{/}), Floor Division (\texttt{//}), Modulo (\texttt{\%})
+\item Multiplication (\texttt{*}), Division (\texttt{/}), Floor Division (\texttt{//}), Modulo (\texttt{\%}), Dot Product (\texttt{.}), Cross Product (\texttt{x}), Matrix Multiply (\texttt{.*}), Matrix Power (\texttt{.\^{}})
+\item Left Shift (\texttt{<<}), Right Shift (\texttt{>>})
 \item Addition (\texttt{+}), Subtraction (\texttt{-})
 \item Comparison operators (\texttt{<}, \texttt{<=}, \texttt{==}, \texttt{!=}, \texttt{=n=}, \texttt{><}, \texttt{>=}, \texttt{>}, \texttt{\textasciitilde}, \texttt{\textasciitilde*}, \texttt{\textasciitilde+()\textasciitilde}, \texttt{\textasciitilde*()\textasciitilde})
 \item Set comparison (\texttt{c}, \texttt{E}, \texttt{!E})
-\item Logical AND (\texttt{\&\&})
-\item Logical OR (\texttt{||})
-\item Logical XOR (\texttt{\^{}}\texttt{\^{}})
+\item Logical AND (\texttt{\&\&}), NAND (\texttt{!\&})
+\item Logical OR (\texttt{||}), NOR (\texttt{!|})
+\item Logical XOR (\texttt{\^{}}\texttt{\^{}}), XNOR (\texttt{!}\texttt{\^{}})
+\item IMPLY (\texttt{->}), NIMPLY (\texttt{!->})
 \item Conditional expression (\texttt{?->...!...})
 \item User-defined operators (\texttt{o.u.*})
 \end{enumerate}
@@ -914,6 +1008,8 @@ n / m  Division (always returns real)
 n // m Floor Division (returns int)
 n % m  Modulo
 n ^ m  Exponentiation
+n << m Left Shift (returns int)
+n >> m Right Shift (returns int)
 \end{verbatim}
 
 \paragraph{Type Overloading}
@@ -947,9 +1043,11 @@ n ^ m  Exponentiation
 \item \texttt{\^{}}: \texttt{int \^{} real} $\rightarrow$ \texttt{real}
 \item \texttt{\^{}}: \texttt{real \^{} int} $\rightarrow$ \texttt{real}
 \item \texttt{\^{}}: \texttt{real \^{} real} $\rightarrow$ \texttt{real}
+\item \texttt{<<}: \texttt{int << int} $\rightarrow$ \texttt{int} (left shift)
+\item \texttt{>>}: \texttt{int >> int} $\rightarrow$ \texttt{int} (right shift)
 \end{itemize}
 
-Mixed-type operations promote to \texttt{real}. Division by zero raises a runtime error. Floor division (\texttt{//}) truncates toward negative infinity. Modulo uses truncated division (\texttt{sign(result) = sign(dividend)}). Exponentiation is right-associative: \texttt{-2\^{}3 = -8}.
+Mixed-type operations promote to \texttt{real}. Division by zero raises a runtime error. Floor division (\texttt{//}) truncates toward negative infinity. Modulo uses truncated division (\texttt{sign(result) = sign(dividend)}). Exponentiation is right-associative: \texttt{-2\^{}3 = -8}. Shift operators (\texttt{<<}, \texttt{>>}) require \texttt{int} operands and return \texttt{int}; the right operand must be non-negative.
 
 \subsection{Increment / Decrement}
 Postfix increment and decrement operators add 1 or subtract 1 from an int or real variable. The variable must already be declared.
@@ -966,71 +1064,170 @@ Examples:
 \begin{verbatim}
 $counter [int]= 0
 $counter++
-# $counter = 1
+#c# $counter = 1
 
 $counter++
-# $counter = 2
+#c# $counter = 2
 
 $counter--
-# $counter = 1
+#c# $counter = 1
 
-# Can be used in expressions
-$val [int]= $counter++   # $val = 1, $counter = 2
+#c# Can be used in expressions
+$val [int]= $counter++   #c# $val = 1, $counter = 2
 \end{verbatim}
 
 \subsection{Compound Assignment}
 Compound assignment operators combine an operation with assignment. They are available for all operators.
+
+\subsubsection{Arithmetic}
 \begin{verbatim}
+#c# forward
 $var += expr   $var = $var + expr
 $var -= expr   $var = $var - expr
 $var *= expr   $var = $var * expr
 $var /= expr   $var = $var / expr
 $var %= expr   $var = $var % expr
 $var ^= expr   $var = $var ^ expr
+
+#c# reverse (reversed operands)
+$var +r= expr  $var = expr + $var
+$var -r= expr  $var = expr - $var
+$var /r= expr  $var = expr / $var
+$var %r= expr  $var = expr % $var
+$var ^r= expr  $var = expr ^ $var
+\end{verbatim}
+
+\subsubsection{Set}
+\begin{verbatim}
+$var u= expr   $var = $var u expr
+$var n= expr   $var = $var n expr
+\end{verbatim}
+
+\subsubsection{Vector}
+\begin{verbatim}
+$var .= expr   $var = $var . expr   (dot product)
+$var x= expr   $var = $var x expr   (cross product)
+$var xr= expr  $var = expr x $var   (reverse cross product)
+\end{verbatim}
+
+\subsubsection{Tensor (Ndarray)}
+\begin{verbatim}
+$var .*= expr  $var = $var .* expr  (matrix multiply)
+$var .^= expr  $var = $var .^ expr  (matrix power)
+$var .*r= expr $var = expr .* $var  (reverse matrix multiply)
+$var .^r= expr $var = expr .^ $var  (reverse matrix power)
+$var ~.T       $var = $var .T       (transpose in place)
+\end{verbatim}
+
+\subsubsection{Bitwise / Shift}
+\begin{verbatim}
+$var <<= expr  $var = $var << expr
+$var >>= expr  $var = $var >> expr
+$var <<r= expr $var = expr << $var
+$var >>r= expr $var = expr >> $var
+\end{verbatim}
+
+\subsubsection{Boolean}
+\begin{verbatim}
 $var &&= expr  $var = $var && expr
 $var ||= expr  $var = $var || expr
 $var ^^= expr  $var = $var ^^ expr
-$var ^r= expr  $var = expr ^ $var
-$var u= expr   $var = $var u expr
-$var n= expr   $var = $var n expr
+$var !&= expr  $var = !($var && expr)
+$var !|= expr  $var = !($var || expr)
+$var !^= expr  $var = $var == expr
+\end{verbatim}
+
+\subsubsection{IMPLY / NIMPLY}
+\begin{verbatim}
+$var ->= expr   $var = !$var || expr
+$var !->= expr  $var = $var && !expr
+$var ->r= expr  $var = !expr || $var
+$var !->r= expr $var = expr && !$var
 \end{verbatim}
 
 Examples:
 \begin{verbatim}
 $x [int]= 5
-$x += 3        # $x = 8
-$x *= 2        # $x = 16
-$x -= 4        # $x = 12
-$x /= 3        # $x = 4
-$x %= 3        # $x = 1
-$x ^= 3        # $x = 1
+$x += 3        #c# $x = 8
+$x *= 2        #c# $x = 16
+$x -= 4        #c# $x = 12
+$x /= 3        #c# $x = 4
+$x %= 3        #c# $x = 1
+$x ^= 3        #c# $x = 1
 
 $str [string]= "hello"
-$str += " " + "world"   # $str = "hello world"
+$str += " " + "world"   #c# $str = "hello world"
+$str +r= "cd"           #c# $str = "cdhello"
 
 $list [list]= [1, 2, 3]
-$list += [4, 5]         # $list = [1, 2, 3, 4, 5]
+$list += [4, 5]         #c# $list = [1, 2, 3, 4, 5]
+\end{verbatim}
+
+Reverse compound assignment operators reverse the operand order:
+\begin{verbatim}
+$x [int]= 5
+$x -r= 3    #c# $x = 3 - 5 = -2
+$x /r= 2    #c# $x = 2 / 5 = 0.4
+$x %r= 2    #c# $x = 2 % 5 = 2
+
+$str [string]= "hello"
+$str +r= "cd"  #c# $str = "cdhello"
+
+$v [list]= [1, 2, 3]
+$v xr= [0, 0, 1]  #c# $v = [0, 0, 1] x [1, 2, 3]
+
+$x [int]= 5
+$x .= 3    #c# $x = $x . 3 = 15  (in-place dot product)
+$x x= [1, 0, 0]  #c# $x = $x x [1, 0, 0]  (in-place cross product)
+
+$b [bool]= True
+$b !&= False  #c# $b = !(True && False) = True  (NAND)
+$b !|= False  #c# $b = !(True || False) = False (NOR)
+$b !^= False  #c# $b = True == False = False     (XNOR)
+$b ->= False  #c# $b = !True || False = False    (IMPLY)
+$b !->= False #c# $b = True && !False = True     (NIMPLY)
+$b ->r= True  #c# $b = !True || True = True      (reverse IMPLY)
+$b !->r= True #c# $b = True && !True = False     (reverse NIMPLY)
+
+$x [int]= 5
+$x <<= 2     #c# $x = 5 << 2 = 20
+$x >>= 1     #c# $x = 20 >> 1 = 10
+$x <<r= 3    #c# $x = 3 << $x = 3 << 10 = 3072
+$x >>r= 2    #c# $x = 2 >> $x = 2 >> 3072 = 0
+
+$m [list]= [[1,2],[3,4]]
+$m .*= [[5,6],[7,8]]   #c# $m = [[19,22],[43,50]]  (matrix multiply)
+$m .^= 2               #c# $m = $m .^ 2            (matrix power)
+
+$n [list]= [[1,2],[3,4]]
+$n ~.T                 #c# $n = [[1,3],[2,4]]       (transpose in place)
+
+$p [list]= [[1,2],[3,4]]
+$p .*r= [[5,7],[6,8]]  #c# $p = [[5,7],[6,8]] .* [[1,2],[3,4]]  (reverse)
+$p .^r= 2              #c# $p = 2 .^ $p            (reverse matrix power)
 \end{verbatim}
 
 Examples:
 \begin{verbatim}
-# Scalar arithmetic
-3 + 4       # = 7
-10 - 3      # = 7
-4 * 5       # = 20
-15 / 4      # = 3.75
-17 % 5      # = 2
-2 ^ 10      # = 1024
+#c# Scalar arithmetic
+3 + 4       #c# = 7
+10 - 3      #c# = 7
+4 * 5       #c# = 20
+15 / 4      #c# = 3.75
+17 % 5      #c# = 2
+2 ^ 10      #c# = 1024
+5 << 3      #c# = 40 (5 * 2^3)
+40 >> 3     #c# = 5  (40 / 2^3)
 
-# String concatenation
-"hello" + " " + "world"  # = "hello world"
+#c# String concatenation
+"hello" + " " + "world"  #c# = "hello world"
 
-# String repetition
-"ab" * 3                  # = "ababab"
+#c# String repetition
+"ab" * 3                  #c# = "ababab"
 
-# List operations
-[1,2] + [3,4]            # = [1,2,3,4]
-[0] * 5                   # = [0,0,0,0,0]
+#c# List operations
+[1,2] + [3,4]            #c# = [1,2,3,4]
+[0] * 5                   #c# = [0,0,0,0,0]
 \end{verbatim}
 
 \subsection{Comparison}
@@ -1075,9 +1272,9 @@ Ordered comparisons (\texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}) only work
 \paragraph{Three-way Numeric Compare}
 \texttt{a >< b} performs a three-way numeric comparison using \texttt{=n=} semantics.
 \begin{itemize}
-\item Returns \texttt{-1} if $a > b$
+\item Returns \texttt{1} if $a > b$
 \item Returns \texttt{0} if $a \mathbin{\texttt{=n=}} b$
-\item Returns \texttt{1} if $a < b$
+\item Returns \texttt{-1} if $a < b$
 \end{itemize}
 Raises a Type Error if either operand is not numeric.
 
@@ -1090,38 +1287,41 @@ The default value of \texttt{syst.flag.approx\_eps} is \texttt{1}.
 
 Examples:
 \begin{verbatim}
-3 < 5              # = True
-"a" < "b"          # = True (lexicographic)
-[1,2] == [1,2]     # = True (list equality)
-Q1 == Q1            # = True (part identity)
+3 < 5              #c# = True
+"a" < "b"          #c# = True (lexicographic)
+[1,2] == [1,2]     #c# = True (list equality)
+Q1 == Q1            #c# = True (part identity)
 
-# Numeric equality (cross-type)
-5 == 5.0           # = False (strict: int vs real)
-5 =n= 5.0          # = True  (numeric: same value)
-5 =n= 5.1          # = False (different values)
-3.14 =n= 3.14      # = True  (real vs real works too)
+#c# Numeric equality (cross-type)
+5 == 5.0           #c# = False (strict: int vs real)
+5 =n= 5.0          #c# = True  (numeric: same value)
+5 =n= 5.1          #c# = False (different values)
+3.14 =n= 3.14      #c# = True  (real vs real works too)
 
-# Three-way numeric compare
-5 >< 3             # = -1  (5 > 3)
-5 >< 5             # =  0  (5 =n= 5)
-5 >< 7             # =  1  (5 < 7)
-5 >< 5.0           # =  0  (numeric equality)
-3.14 >< 3.14       # =  0  (real vs real)
+#c# Three-way numeric compare
+5 >< 3             #c# =  1  (5 > 3)
+5 >< 5             #c# =  0  (5 =n= 5)
+5 >< 7             #c# = -1  (5 < 7)
+5 >< 5.0           #c# =  0  (numeric equality)
+3.14 >< 3.14       #c# =  0  (real vs real)
 
-# Approximate equality
+#c# Approximate equality
 syst.flag.approx_eps [real]= 0.01
-3.0 ~ 3.005        # = True (within 0.01)
-3.0 ~ 3.1          # = False (not within 0.01)
-3.0 ~+(0.2)~ 3.1    # = True (within 0.2)
-3.0 ~+(0.05)~ 3.1   # = False (not within 0.05)
+3.0 ~ 3.005        #c# = True (within 0.01)
+3.0 ~ 3.1          #c# = False (not within 0.01)
+3.0 ~+(0.2)~ 3.1    #c# = True (within 0.2)
+3.0 ~+(0.05)~ 3.1   #c# = False (not within 0.05)
 
-# Multiplicative approximate equality (relative tolerance)
-100 ~*(0.01)~ 100.5  # = True (within 1%)
-100 ~*(0.001)~ 100.5 # = False (not within 0.1%)
+#c# Execution mode
+syst.flag.exec_mode [string]= "strict"  #c# warnings become errors
 
-# Multiplicative approximate equality with system default
+#c# Multiplicative approximate equality (relative tolerance)
+100 ~*(0.01)~ 100.5  #c# = True (within 1%)
+100 ~*(0.001)~ 100.5 #c# = False (not within 0.1%)
+
+#c# Multiplicative approximate equality with system default
 syst.flag.approx_eps_mult [real]= 0.01
-100 ~* 100.5         # = True (within 1%)
+100 ~* 100.5         #c# = True (within 1%)
 \end{verbatim}
 
 \subsection{Boolean Logic}
@@ -1130,6 +1330,11 @@ Boolean operators combine or negate boolean values.
 b && c Logical And
 b || c Logical Or
 b ^^ c Logical Xor
+b !& c Nand (Not And)
+b !| c Nor (Not Or)
+b !^ c Xnor (Not Xor)
+b -> c Imply (a implies b)
+b !-> c Nimp (a does not imply b)
 !b     Negation
 \end{verbatim}
 
@@ -1139,13 +1344,36 @@ b ^^ c Logical Xor
 \item Short-circuit evaluation: \texttt{a \&\& b} evaluates \texttt{b} only if \texttt{a} is \texttt{True}
 \end{itemize}
 
+Truth tables:
+\begin{verbatim}
+a  b  a!&b  a!|b  a!^b  a->b  a!->b
+T  T   F     F     T     T      F
+T  F   T     F     F     F      T
+F  T   T     F     F     T      F
+F  F   T     T     T     T      F
+\end{verbatim}
+
+Semantics:
+\begin{itemize}
+\item \texttt{!\&} (NAND): \texttt{!(a \&\& b)}
+\item \texttt{!|} (NOR): \texttt{!(a || b)}
+\item \texttt{!}\texttt{\^{}} (XNOR): \texttt{a == b} (logical equality)
+\item \texttt{->} (IMPLY): \texttt{!a || b}. Not commutative: \texttt{a -> b} $\neq$ \texttt{b -> a}
+\item \texttt{!->} (NIMPLY): \texttt{a \&\& !b}. Not commutative: \texttt{a !-> b} $\neq$ \texttt{b !-> a}
+\end{itemize}
+
 Examples:
 \begin{verbatim}
-True && False   # = False
-True || False   # = True
-True ^^ False   # = True
-True ^^ True    # = False
-!True           # = False
+True && False   #c# = False
+True || False   #c# = True
+True ^^ False   #c# = True
+True ^^ True    #c# = False
+True !& False   #c# = True  (NAND)
+True !| False   #c# = False (NOR)
+True !^ False   #c# = True  (XNOR)
+True -> False   #c# = False (IMPLY)
+True !-> False  #c# = True  (NIMPLY)
+!True           #c# = False
 \end{verbatim}
 
 \subsection{Collection Operators}
@@ -1172,15 +1400,15 @@ Set operations (\texttt{u}, \texttt{n}) only work on sets. The \texttt{/} operat
 
 Examples:
 \begin{verbatim}
-# Set operations
-{1,2} u {2,3}     # = {1,2,3} (union)
-{1,2} n {2,3}     # = {2} (intersection)
-{1,2,3} / {2}     # = {1,3} (difference)
+#c# Set operations
+{1,2} u {2,3}     #c# = {1,2,3} (union)
+{1,2} n {2,3}     #c# = {2} (intersection)
+{1,2,3} / {2}     #c# = {1,3} (difference)
 
-# Cardinality
-||{1,2,3}          # = 3 (set size)
-||[1,2,3,4]        # = 4 (list length)
-||"hello"           # = 5 (string length)
+#c# Cardinality
+||{1,2,3}          #c# = 3 (set size)
+||[1,2,3,4]        #c# = 4 (list length)
+||"hello"           #c# = 5 (string length)
 \end{verbatim}
 
 \subsection{List Operators}
@@ -1200,14 +1428,86 @@ The dot product computes $\sum_{i} a_i \cdot b_i$ for n-dimensional vectors (any
 
 Examples:
 \begin{verbatim}
-# Dot product (n-dimensional)
-[1, 2, 3] . [4, 5, 6]     # = 32 (1*4 + 2*5 + 3*6)
-[1, 2] . [3, 4]           # = 11 (2D)
-[1, 2, 3, 4] . [5, 6, 7, 8] # = 70 (4D)
+#c# Dot product (n-dimensional)
+[1, 2, 3] . [4, 5, 6]     #c# = 32 (1*4 + 2*5 + 3*6)
+[1, 2] . [3, 4]           #c# = 11 (2D)
+[1, 2, 3, 4] . [5, 6, 7, 8] #c# = 70 (4D)
 
-# Cross product (3D only)
-[1, 0, 0] x [0, 1, 0]     # = [0, 0, 1]
-[1, 2, 3] x [4, 5, 6]     # = [-3, 6, -3]
+#c# Cross product (3D only)
+[1, 0, 0] x [0, 1, 0]     #c# = [0, 0, 1]
+[1, 2, 3] x [4, 5, 6]     #c# = [-3, 6, -3]
+\end{verbatim}
+
+\subsection{Tensor (Ndarray) Operators}
+The \texttt{.} prefix on operators enables matrix/tensor operations on ndarrays. Without the prefix, operations are element-wise (see Section above).
+
+\subsubsection{Matrix Multiply}
+\begin{verbatim}
+a .* b  Matrix multiply (dot-product for 1D, matrix multiply for 2D)
+\end{verbatim}
+
+\begin{itemize}
+\item Operands: \texttt{ndarray}, \texttt{ndarray}
+\item Result: \texttt{ndarray} or \texttt{real}
+\item Shape rules:
+  \item 1D \texttt{.*} 1D $\rightarrow$ scalar (dot product, same as \texttt{.})
+  \item 2D(m$\times$k) \texttt{.*} 2D(k$\times$n) $\rightarrow$ 2D(m$\times$n)
+  \item 2D(m$\times$k) \texttt{.*} 1D(k) $\rightarrow$ 1D(m)
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+#c# 1D .* 1D = scalar (dot product)
+[1, 2, 3] .* [4, 5, 6]     #c# = 32
+
+#c# 2D .* 2D = matrix multiply
+[[1,2],[3,4]] .* [[5,6],[7,8]]  #c# = [[19,22],[43,50]]
+
+#c# 2D .* 1D = matrix-vector multiply
+[[1,2],[3,4]] .* [5, 6]        #c# = [17, 39]
+\end{verbatim}
+
+\subsubsection{Transpose}
+\begin{verbatim}
+a .T   Transpose (postfix operator)
+a ~.T  Transpose in place (no expression needed)
+\end{verbatim}
+
+\begin{itemize}
+\item Operands: \texttt{ndarray}
+\item Result: \texttt{ndarray}
+\item Swaps rows and columns: shape (m$\times$n) $\rightarrow$ (n$\times$m)
+\item 1D arrays are treated as row vectors and transposed to column vectors.
+\item \texttt{\textasciitilde.T} is shorthand for \texttt{[list]= \$var.T} — transposes in place without repeating the variable name.
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+[1, 2, 3] .T           #c# = [[1],[2],[3]]  (1D -> column)
+[[1,2,3]] .T           #c# = [[1],[2],[3]]  (row -> column)
+[[1,2],[3,4]] .T       #c# = [[1,3],[2,4]]
+
+$m [list]= [[1,2],[3,4]]
+$m ~.T                 #c# $m is now [[1,3],[2,4]]
+\end{verbatim}
+
+\subsubsection{Matrix Power}
+\begin{verbatim}
+a .^ n  Matrix power (repeated matrix multiply, n must be int >= 0)
+\end{verbatim}
+
+\begin{itemize}
+\item Operands: \texttt{ndarray}, \texttt{int}
+\item Result: \texttt{ndarray}
+\item \texttt{A .\^{} 0} returns the identity matrix (square matrices only)
+\item \texttt{A .\^{} n} = \texttt{A .* A .* ... .* A} (n times)
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+[[1,2],[3,4]] .^ 0     #c# = [[1,0],[0,1]]  (identity)
+[[1,2],[3,4]] .^ 1     #c# = [[1,2],[3,4]]  (unchanged)
+[[1,2],[3,4]] .^ 2     #c# = [[7,10],[15,22]]
 \end{verbatim}
 
 \subsection{Set Comparison}
@@ -1228,10 +1528,10 @@ a !E b Not element of
 
 Examples:
 \begin{verbatim}
-{1,2} c {1,2,3}   # = True (subset)
-1 E {1,2,3}       # = True (membership)
-Q1 E *p            # = True (part in all parts)
-4 !E {1,2,3}      # = True (not element)
+{1,2} c {1,2,3}   #c# = True (subset)
+1 E {1,2,3}       #c# = True (membership)
+Q1 E *p            #c# = True (part in all parts)
+4 !E {1,2,3}      #c# = True (not element)
 \end{verbatim}
 
 \subsection{Conditional Expression}
@@ -1251,16 +1551,16 @@ Examples:
 \begin{verbatim}
 $x [int]= 5
 $result [int]= ($x > 3)?->("big")!("small")
-# $result = "big"
+#c# $result = "big"
 
 $val [int]= 10
 $abs [int]= ($val >= 0)?->($val)!($val * -1)
-# $abs = 10
+#c# $abs = 10
 
 $a [int]= 1
 $b [int]= 2
 $max [int]= ($a > $b)?->($a)!($b)
-# $max = 2
+#c# $max = 2
 \end{verbatim}
 
 \section{Operator Precedence}
@@ -1268,15 +1568,17 @@ Operators are evaluated in the following order (highest to lowest):
 \begin{enumerate}
 \item \texttt{\^{}} -- Exponentiation (right-associative)
 \item \texttt{!} -- Boolean negation
-\item \texttt{\$var++}, \texttt{\$var--} -- Postfix increment / decrement
+\item \texttt{\$var++}, \texttt{\$var--}, \texttt{.T} -- Postfix increment / decrement, transpose
 \item \texttt{||a} -- Cardinality / length
-\item \texttt{*}, \texttt{/}, \texttt{//}, \texttt{\%} -- Multiplication, division, floor division, modulo
+\item \texttt{*}, \texttt{/}, \texttt{//}, \texttt{\%}, \texttt{.}, \texttt{x}, \texttt{.*}, \texttt{.\^{}} -- Multiplication, division, floor division, modulo, dot product, cross product, matrix multiply, matrix power
+\item \texttt{<<}, \texttt{>>} -- Left shift, right shift
 \item \texttt{+}, \texttt{-} -- Addition, subtraction
-\item \texttt{<}, \texttt{<=}, \texttt{==}, \texttt{!=}, \texttt{>=}, \texttt{>}, \texttt{\textasciitilde}, \texttt{\textasciitilde+()} -- Comparison
+\item \texttt{<}, \texttt{<=}, \texttt{==}, \texttt{!=}, \texttt{=n=}, \texttt{><}, \texttt{>=}, \texttt{>}, \texttt{\textasciitilde}, \texttt{\textasciitilde*}, \texttt{\textasciitilde+()\textasciitilde}, \texttt{\textasciitilde*()\textasciitilde} -- Comparison
 \item \texttt{c}, \texttt{E}, \texttt{!E} -- Set comparison
-\item \texttt{\&\&} -- Logical AND
-\item \texttt{||} -- Logical OR
-\item \texttt{\^{}} -- Logical XOR
+\item \texttt{\&\&}, \texttt{!\&} -- Logical AND, NAND
+\item \texttt{||}, \texttt{!|} -- Logical OR, NOR
+\item \texttt{\^{}\^{}}, \texttt{!}\texttt{\^{}} -- Logical XOR, XNOR
+\item \texttt{->}, \texttt{!->} -- IMPLY, NIMPLY
 \item \texttt{?->...!...} -- Conditional expression
 \item User-defined operators (\texttt{o.u.*})
 \end{enumerate}
@@ -1299,12 +1601,12 @@ The operator name must follow the pattern \texttt{o.u.[\_a-zA-Z0-9]+}.
 letop o.u.mod_minus_1 [int]= 
     a % b - 1
 
-print( 4 o.u.mod_minus_1 3 )  # = 0
+f.print( 4 o.u.mod_minus_1 3 )  #c# = 0
 
 letop o.u.parallel [int]= 
     (a * b) / (a + b)
 
-print( 100 o.u.parallel 100 )  # = 50
+f.print( 100 o.u.parallel 100 )  #c# = 50
 \end{verbatim}
 
 \subsection{Precedence}
@@ -1438,7 +1740,7 @@ noop = "skip"
 \section{Output and Logging}
 \begin{verbatim}
 EBNF:
-echo_statement = "echo", expression
+echo_statement = "echo", variable
 writetolog     = "writetolog", string_expression
 
 Example:
@@ -1446,8 +1748,8 @@ f.print("Hello, EDADSL!")
 writetolog "Board design completed successfully"
 \end{verbatim}
 \begin{itemize}
-\item \texttt{echo} -- Prints a value to the console
-\item \texttt{writetolog} -- Appends a message to the log file
+\item \texttt{echo} -- Keyword that prints a variable reference to the console
+\item \texttt{writetolog} -- Keyword that appends a message to the log file
 \end{itemize}
 
 \chapter{Functions}
@@ -1565,7 +1867,7 @@ arcsin([0, 0.5, 1], unit = "deg" )
 \end{verbatim}
 This Example would return \texttt{[0, 30, 90]}.\\
 For Arctangent there is no Domain-Restrictions for the functions inside $\mathbb{R}^n$. \\
-For Arcsine and Arccosine the Domain is Restricted to $[0,1]^n$.\\
+For Arcsine and Arccosine the Domain is Restricted to $[-1,1]^n$.\\
 
 \subsubsection{Inverse Tangent Function based on a Vector Argument}
 
@@ -1618,7 +1920,7 @@ arcsinh( [0, 0.5, 1] )
 \end{verbatim}
 This Example would return \texttt{[0, 0.481, 0.881]}.\\
 For the Hyperbolic Arcsine there is no Domain-Restrictions for the function inside $\mathbb{R}^n$. \\
-For Hyperbolic Arctangent and Hyperbolic Arccosine the Domain is Restricted to $(-1,1)^n$ and $[1,\infty)^n$ respektively.\\
+For Hyperbolic Arctangent and Hyperbolic Arccosine the Domain is Restricted to $(-1,1)^n$ and $[1,\infty)^n$ respectively.\\
 
 \subsubsection{Exponential Functions and Logarithms}
 \paragraph{Exponential Function}
@@ -1630,8 +1932,8 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-exp(0)    # Returns 1.0
-exp(1)    # Returns approximately 2.71828
+exp(0)    #c# Returns 1.0
+exp(1)    #c# Returns approximately 2.71828
 \end{verbatim}
 
 \paragraph{Square Root Function}
@@ -1643,8 +1945,8 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-sqrt(9)   # Returns 3.0
-sqrt(2)   # Returns approximately 1.41421
+sqrt(9)   #c# Returns 3.0
+sqrt(2)   #c# Returns approximately 1.41421
 \end{verbatim}
 Domain: $[0, \infty)$
 
@@ -1657,8 +1959,8 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-pow(2, 3)   # Returns 8.0
-pow(9, 0.5) # Returns 3.0
+pow(2, 3)   #c# Returns 8.0
+pow(9, 0.5) #c# Returns 3.0
 \end{verbatim}
 
 \paragraph{Natural Logarithm}
@@ -1670,8 +1972,8 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-ln(1)      # Returns 0.0
-ln(e)      # Returns 1.0
+ln(1)      #c# Returns 0.0
+ln(e)      #c# Returns 1.0
 \end{verbatim}
 Domain: $(0, \infty)$
 
@@ -1684,8 +1986,8 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-log(100)   # Returns 2.0
-log(1)     # Returns 0.0
+log(100)   #c# Returns 2.0
+log(1)     #c# Returns 0.0
 \end{verbatim}
 Domain: $(0, \infty)$
 
@@ -1699,8 +2001,8 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-floor(2.7)   # Returns 2
-floor(-1.3)  # Returns -2
+floor(2.7)   #c# Returns 2
+floor(-1.3)  #c# Returns -2
 \end{verbatim}
 
 \paragraph{Ceiling Function}
@@ -1712,8 +2014,8 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-ceil(2.3)    # Returns 3
-ceil(-2.7)   # Returns -2
+ceil(2.3)    #c# Returns 3
+ceil(-2.7)   #c# Returns -2
 \end{verbatim}
 
 \paragraph{Round Function}
@@ -1725,9 +2027,30 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-round(2.5)   # Returns 3
-round(2.4)   # Returns 2
+round(2.5)   #c# Returns 3
+round(2.4)   #c# Returns 2
 \end{verbatim}
+
+\subsubsection{Power and Modular Exponentiation Function}
+The \texttt{pow} function computes exponentiation and optional modular exponentiation. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"pow", "(", argument, ",", argument, 
+  [ ",", argument ], ")"
+\end{verbatim}
+With two arguments, \texttt{pow(a, b)} returns $a^b$. With three arguments, \texttt{pow(a, b, c)} returns $a^b \bmod c$ (modular exponentiation). Modular exponentiation is efficient for large exponents and is used in cryptographic and hardware applications. \\
+Examples:
+\begin{verbatim}
+pow(2, 10)        #c# Returns 1024
+pow(3, 4, 7)      #c# Returns 4  (81 mod 7)
+pow(2, 32, 100)   #c# Returns 96  (4294967296 mod 100)
+pow(3, -1, 7)     #c# Returns 5  (modular inverse: 3*5=15==1 mod 7)
+pow(3, -2, 7)     #c# Returns 4  (5^2=25==4 mod 7, i.e. 3^(-2) mod 7)
+pow(3, -3, 7)     #c# Returns 6  (5^3=125==6 mod 7, i.e. 3^(-3) mod 7)
+pow(5, -1, 13)    #c# Returns 8  (5*8=40==1 mod 13)
+\end{verbatim}
+Domain restrictions: When \texttt{c} is provided, \texttt{a} and \texttt{c} must be \texttt{int} and \texttt{c} must be positive. Without \texttt{c}, \texttt{b} must be non-negative (negative exponents on \texttt{int} would produce fractions). With \texttt{c}, negative \texttt{b} computes $a^b \bmod c$ via the modular multiplicative inverse: first find $a^{-1} \bmod c$ (which exists when $\gcd(a, c) = 1$), then raise to $|b|$.
 
 \subsubsection{Extrema Functions}
 \paragraph{Minimum Function}
@@ -1739,7 +2062,7 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-min([3, 1, 4, 1, 5])   # Returns 1
+min([3, 1, 4, 1, 5])   #c# Returns 1
 \end{verbatim}
 
 \paragraph{Maximum Function}
@@ -1751,7 +2074,7 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-max([3, 1, 4, 1, 5])   # Returns 5
+max([3, 1, 4, 1, 5])   #c# Returns 5
 \end{verbatim}
 
 \subsubsection{Inverse Tangent Function based on a Vector Argument}
@@ -1763,8 +2086,8 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-atan2(1, 0)    # Returns approximately 1.5708 (pi/2)
-atan2(0, 1)    # Returns 0.0
+atan2(1, 0)    #c# Returns approximately 1.5708 (pi/2)
+atan2(0, 1)    #c# Returns 0.0
 \end{verbatim}
 
 \subsubsection{Norm and Normalization Functions}
@@ -1795,10 +2118,10 @@ Supported norms:
 
 Examples:
 \begin{verbatim}
-norm([3, 4])            # Returns 5.0 (L2 norm)
-norm([3, 4], p=1)       # Returns 7 (L1 norm)
-norm([3, 4], p=0)       # Returns 2 (L0 norm)
-norm([-3, 4, -2], p=-1) # Returns 4 (L-inf norm)
+norm([3, 4])            #c# Returns 5.0 (L2 norm)
+norm([3, 4], p=1)       #c# Returns 7 (L1 norm)
+norm([3, 4], p=0)       #c# Returns 2 (L0 norm)
+norm([-3, 4, -2], p=-1) #c# Returns 4 (L-inf norm)
 \end{verbatim}
 
 If the argument is not a list of ints or reals, a Value Error is raised.
@@ -1821,9 +2144,9 @@ The function computes: $\hat{\mathbf{x}} = \frac{\mathbf{x}}{\|\mathbf{x}\|_p}$
 
 Examples:
 \begin{verbatim}
-normalize([3, 4])        # Returns [0.6, 0.8] (L2)
-normalize([3, 4], p=1)   # Returns [0.43, 0.57] (L1)
-normalize([6, 8], p=2)   # Returns [0.6, 0.8] (L2)
+normalize([3, 4])        #c# Returns [0.6, 0.8] (L2)
+normalize([3, 4], p=1)   #c# Returns [0.43, 0.57] (L1)
+normalize([6, 8], p=2)   #c# Returns [0.6, 0.8] (L2)
 \end{verbatim}
 
 If the norm of the vector is zero, a Division by Zero Error is raised.
@@ -1843,9 +2166,9 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-str("Hello")           # Returns "Hello"
-str(42)                # Returns "42"
-str("Value: ", 3.14)   # Returns "Value: 3.14"
+str("Hello")           #c# Returns "Hello"
+str(42)                #c# Returns "42"
+str("Value: ", 3.14)   #c# Returns "Value: 3.14"
 \end{verbatim}
 
 \subsubsection{String Formatting}
@@ -1867,7 +2190,7 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-upperc("hello")   # Returns "HELLO"
+upperc("hello")   #c# Returns "HELLO"
 \end{verbatim}
 
 \paragraph{Lowercase}
@@ -1879,7 +2202,7 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-lowerc("HELLO")   # Returns "hello"
+lowerc("HELLO")   #c# Returns "hello"
 \end{verbatim}
 
 
@@ -1894,8 +2217,8 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-concat([1, 2], [3, 4])        # Returns [1, 2, 3, 4]
-concat("a", "b", "c")         # Returns ["a", "b", "c"]
+concat([1, 2], [3, 4])        #c# Returns [1, 2, 3, 4]
+concat("a", "b", "c")         #c# Returns ["a", "b", "c"]
 \end{verbatim}
 
 \subsubsection{Type Conversion}
@@ -1908,7 +2231,7 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-set([Q1, Q2, R5])   # Returns {Q1, Q2, R5}
+set([Q1, Q2, R5])   #c# Returns {Q1, Q2, R5}
 \end{verbatim}
 
 \paragraph{Set to List}
@@ -1920,7 +2243,7 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-list({Q1, Q2})   # Returns [Q1, Q2] (order from *e)
+list({Q1, Q2})   #c# Returns [Q1, Q2] (order from *e)
 \end{verbatim}
 
 
@@ -1935,25 +2258,25 @@ EBNF:
 \end{verbatim}
 Examples:
 \begin{verbatim}
-len([1, 2, 3])     # Returns 3
-len("hello")       # Returns 5
-len({Q1, Q2, R5})  # Returns 3
+len([1, 2, 3])     #c# Returns 3
+len("hello")       #c# Returns 5
+len({Q1, Q2, R5})  #c# Returns 3
 \end{verbatim}
 
 
 \subsection{Special Functions}
 
 \subsubsection{Print Function}
-The \texttt{print} function outputs its argument to the console. Unlike \texttt{echo}, it can directly evaluate certain expressions. \\
+The \texttt{f.print()} function outputs its argument to the console. Unlike \texttt{echo}, it can evaluate expressions and function calls directly. \\
 Morphology:
 \begin{verbatim}
 EBNF:
-"print", "(", argument, ")"
+"f.print", "(", argument, ")"
 \end{verbatim}
 Example:
 \begin{verbatim}
-print("Hello, World!")
-print(3 + 2 * 5)   # Outputs: 13
+f.print("Hello, World!")
+f.print(3 + 2 * 5)   #c# Outputs: 13
 \end{verbatim}
 
 \subsubsection{Type Function}
@@ -1965,10 +2288,10 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-type(42)       # Returns "int"
-type(3.14)     # Returns "real"
-type("hello")  # Returns "string"
-type(Q1)       # Returns "part"
+type(42)       #c# Returns "int"
+type(3.14)     #c# Returns "real"
+type("hello")  #c# Returns "string"
+type(Q1)       #c# Returns "part"
 \end{verbatim}
 
 \subsubsection{Reference Function}
@@ -1980,7 +2303,7 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-ref("R1")   # Returns the part referenced as R1
+ref("R1")   #c# Returns the part referenced as R1
 \end{verbatim}
 
 \subsubsection{No-Operation Function}
@@ -1992,9 +2315,9 @@ EBNF:
 \end{verbatim}
 Example:
 \begin{verbatim}
-noop(42)       # Returns 42
-noop("hello")  # Returns "hello"
-noop(Q1)       # Returns Q1
+noop(42)       #c# Returns 42
+noop("hello")  #c# Returns "hello"
+noop(Q1)       #c# Returns Q1
 \end{verbatim}
 Use \texttt{noop} as a placeholder in queries where no transformation is needed.
 
@@ -2007,10 +2330,10 @@ EBNF:
 \end{verbatim}
 Examples:
 \begin{verbatim}
-softint(42)       # Returns 42 (already int)
-softint(5.0)      # Returns 5 (real equal to int)
-softint(3.7)      # Returns 3.7 (not equal to int, unchanged)
-softint("hello")  # Returns "hello" (not numeric, unchanged)
+softint(42)       #c# Returns 42 (already int)
+softint(5.0)      #c# Returns 5 (real equal to int)
+softint(3.7)      #c# Returns 3.7 (not equal to int, unchanged)
+softint("hello")  #c# Returns "hello" (not numeric, unchanged)
 \end{verbatim}
 
 \section{User-defined Functions}
@@ -2042,7 +2365,7 @@ function_call_ud = "f.u.", id, "(",
                    [{ data, "," }, data], ")"
 
 Example:
-$result [int]= f.u.add( 3, 5 )   # $result = 8
+$result [int]= f.u.add( 3, 5 )   #c# $result = 8
 \end{verbatim}
 
 \subsection{Return Values}
@@ -2054,11 +2377,11 @@ function f.u.square( $x )::{
 
 function f.u.greet( $name )::{
     f.print( f.str( "Hello, ", $name, "!" ) )
-    # No return value
+    #c# No return value
 }
 
-$sq [int]= f.u.square( 4 )     # $sq = 16
-f.u.greet( "World" )          # Prints: Hello, World!
+$sq [int]= f.u.square( 4 )     #c# $sq = 16
+f.u.greet( "World" )          #c# Prints: Hello, World!
 \end{verbatim}
 
 \subsection{Local Scoping}
@@ -2084,23 +2407,23 @@ Both \texttt{return \$value} and \texttt{\$retval [type]= \$value} followed by n
 
 \paragraph{Examples}
 \begin{verbatim}
-$x [int]= 10      # Global variable
+$x [int]= 10      #c# Global variable
 
 function f.u.doublen()::{
-    $x [int]= $x * 2  # Local $x shadows global
-    f.print($x)            # Prints: 20
+    $x [int]= $x * 2  #c# Local $x shadows global
+    f.print($x)            #c# Prints: 20
 }
 
 f.u.doublen()
-f.print($x)          # Prints: 10 (global unchanged)
+f.print($x)          #c# Prints: 10 (global unchanged)
 
 function f.u.addLocal( $a, $b )::{
-    $sum [int]= $a + $b   # $sum is local
+    $sum [int]= $a + $b   #c# $sum is local
     $retval [int]= $sum
 }
 
-f.u.addLocal( 3, 4 )   # Returns 7
-# $sum is not accessible here
+f.u.addLocal( 3, 4 )   #c# Returns 7
+#c# $sum is not accessible here
 \end{verbatim}
 
 \paragraph{Recursion}
@@ -2115,7 +2438,7 @@ function f.u.factorial( $n )::{
     }
 }
 
-$result [int]= f.u.factorial( 5 )  # = 120
+$result [int]= f.u.factorial( 5 )  #c# = 120
 \end{verbatim}
 
 
@@ -2304,9 +2627,9 @@ Pins are created implicitly when Parts are instantiated.
 <part_ref>[<pin_ref>]
 
 Examples:
-R1[1]    # Pin 1 of resistor R1
-Q1[d]    # Drain pin of MOSFET Q1
-U1[v+]   # Non-inverting input of op-amp U1
+R1[1]    #c# Pin 1 of resistor R1
+Q1[d]    #c# Drain pin of MOSFET Q1
+U1[v+]   #c# Non-inverting input of op-amp U1
 \end{verbatim}
 
 \section{Connections}
@@ -2315,10 +2638,10 @@ A Connection is a binary electrical connection between exactly two Pins.
 \subsection{Creation}
 Connections can be created using the pipe syntax or \texttt{elec.connect}:
 \begin{verbatim}
-# Pipe syntax (creates a Connection object):
+#c# Pipe syntax (creates a Connection object):
 ( R2[1] | J4[7] )
 
-# Connect statement (joins pins to a Net):
+#c# Connect statement (joins pins to a Net):
 elec.connect <net> <pin1> <pin2> ... <pin n>
 
 Example:
@@ -2429,12 +2752,12 @@ The quantifier syntax selects objects connected to a net:
 \section{Net based Querying}
 Quantifiers filter by object type:
 \begin{verbatim}
-P@<net>    # Parts connected to net
-C@<net>    # Connections on net
-T@<net>    # Pins connected to net
-I@<net>    # Connections and Pins on net
-H@<net>    # Holes on net
-E@<net>    # Everything on net (or just @<net>)
+P@<net>    #c# Parts connected to net
+C@<net>    #c# Connections on net
+T@<net>    #c# Pins connected to net
+I@<net>    #c# Connections and Pins on net
+H@<net>    #c# Holes on net
+E@<net>    #c# Everything on net (or just @<net>)
 \end{verbatim}
 
 Example:
@@ -2453,8 +2776,8 @@ Example:
 \begin{verbatim}
 elec.tag Vin "sensitive"
 elec.tag Vfb "sensitive"
-I@^sensitive  # All connections/pins on 
-              # nets tagged "sensitive"
+I@^sensitive  #c# All connections/pins on 
+              #c# nets tagged "sensitive"
 \end{verbatim}
 
 \section{General Querying}
@@ -2468,24 +2791,24 @@ EBNF:
 set_builder = "{", variable, "E", ( set | list ), 
               ":", filter_expr, [ "~", transform_expr ], "}"
 
-filter_expr   = function_call   # returns bool
-transform_expr = function_call  # applied to filtered elements
+filter_expr   = function_call   #c# returns bool
+transform_expr = function_call  #c# applied to filtered elements
 \end{verbatim}
 
 The filter function receives each element and returns \texttt{True} to keep it. The transform function is applied \textbf{per-element} to each item that passes the filter; the result set contains the transformed values. If transform is omitted, elements are returned as-is.
 
 Examples:
 \begin{verbatim}
-# Filter: only active parts
+#c# Filter: only active parts
 { $x E *p : f.u.is_active($x) ~ noop($x) }
 
-# Filter and transform: get names of large caps
+#c# Filter and transform: get names of large caps
 { $x E *p : f.u.is_capacitor($x) && 
              f.u.value($x) > 100u ~ 
              f.u.name($x) }
 
-# Nested: find all nets connected to parts 
-# in a set
+#c# Nested: find all nets connected to parts 
+#c# in a set
 { $x E *p : f.u.is_mosfet($x) ~ 
     { $y E *n : f.u.connected($y, $x) ~ 
         noop($y) } }
@@ -2505,18 +2828,18 @@ The \texttt{@\~} operator queries the set. The trailing \texttt{\~{}>} optionall
 
 Examples:
 \begin{verbatim}
-# Query with filter only
+#c# Query with filter only
 { *p @~[f.u.is_active] ~> }
 
-# Query with filter and transform
+#c# Query with filter and transform
 { *p @~[f.u.is_mosfet] 
       ~[f.u.name] ~> }
 
-# Store result in variable
+#c# Store result in variable
 { *p @~[f.u.is_capacitor] 
       ~[f.u.value] ~> $cap_values }
 
-# Query connections on a net
+#c# Query connections on a net
 { C@Vin @~[f.u.is_high_current] ~> }
 \end{verbatim}
 
@@ -2525,8 +2848,8 @@ Both forms can be nested to any depth. Each nested query creates a new scope for
 
 Example:
 \begin{verbatim}
-# For each MOSFET, find all connected nets,
-# then filter to high-voltage nets
+#c# For each MOSFET, find all connected nets,
+#c# then filter to high-voltage nets
 { $q E *p : f.u.is_mosfet($q) ~ 
     { C@^power @~[f.u.connected_to($q)] 
                ~[f.u.voltage_rating] ~> 
@@ -2725,16 +3048,16 @@ phys.viafill Q1[d] v=0.25m d=0.5m p=random
 
 \subsection{Examples}
 \begin{verbatim}
-# Standard grid fill for MOSFET drain
+#c# Standard grid fill for MOSFET drain
 phys.viafill Q1[d] v=0.25m d=0.5m p=grid
 
-# Dense hex fill for high-current pad
+#c# Dense hex fill for high-current pad
 phys.viafill Q1[d] v=0.2m d=0.4m p=hex
 
-# Radial fill for IC thermal pad
+#c# Radial fill for IC thermal pad
 phys.viafill U1[pin5] v=0.3m d=0.8m p=radial
 
-# Random fill to avoid EMI resonance
+#c# Random fill to avoid EMI resonance
 phys.viafill Q1[d] v=0.25m d=0.5m p=random
 \end{verbatim}
 
@@ -3393,22 +3716,44 @@ The verified layout is exported to KiCad format:
 \end{enumerate}
 
 \section{Ordering of Global Set Constant *e}
-Inside the \texttt{*e} pseudo-constant, element order is determined by:
-\begin{enumerate}
-\item Type ordering: part, pin, connection, net
-\item Within the same type: order of creation
-\item Within pins: pad number order from the footprint
-\end{enumerate}
+Inside the \texttt{*e} pseudo-constant (and when converting any set to a list via \texttt{f.list()}), element order is determined by lexicographic sorting of each element's \textbf{canonical string representation}.
 
-Example:
+\subsection{Canonical String Rules}
+Each data type produces a deterministic canonical string:
+\begin{itemize}
+\item \textbf{int} -- decimal string (e.g., \texttt{42} $\rightarrow$ \texttt{"42"})
+\item \textbf{real} -- decimal string (e.g., \texttt{3.14} $\rightarrow$ \texttt{"3.14"})
+\item \textbf{bool} -- literal (e.g., \texttt{True} $\rightarrow$ \texttt{"True"})
+\item \textbf{string} -- quoted (e.g., \texttt{"a"} $\rightarrow$ \texttt{'"a"'})
+\item \textbf{list} -- bracket-enclosed, preserving element order (e.g., \texttt{[3, 1, 2]} $\rightarrow$ \texttt{"[3, 1, 2]"})
+\item \textbf{set} -- brace-enclosed, elements sorted first (e.g., \texttt{\{Q1, R5, Q2\}} $\rightarrow$ \texttt{"\{Q1, Q2, R5\}"})
+\item \textbf{part} -- reference designator (e.g., \texttt{R1} $\rightarrow$ \texttt{"R1"})
+\item \textbf{pin} -- parent ref and pad id (e.g., \texttt{U1[3]} $\rightarrow$ \texttt{"U1[3]"})
+\item \textbf{connection} -- sorted pin pair in parentheses (e.g., \texttt{(R1[1], U1[+])} $\rightarrow$ \texttt{"(R1[1],U1[+])"})
+\item \textbf{net} -- name (e.g., \texttt{Gnd} $\rightarrow$ \texttt{"Gnd"})
+\end{itemize}
+
+Elements are then sorted lexicographically by their canonical strings.
+
+\subsection{Example}
 \begin{verbatim}
 elec.part U1: opamp(type="LM741"); des=""; 
     fp="Package_DIP:DIP-8_W7.62mm"
 elec.net "V-"
 elec.connect V- U1[v-]
 
-# *e = { U1, U1[v+], U1[v-], U1[-], U1[+], 
-#   U1[out], (U1[v-] | V-), V- }
+#c# Canonical strings:
+#c# (U1[V-],U1[v-])  -- connection
+#c# U1                -- part
+#c# U1[+]             -- pin
+#c# U1[-]             -- pin
+#c# U1[out]           -- pin
+#c# U1[v+]            -- pin
+#c# U1[v-]            -- pin
+#c# V-                -- net
+#c#
+#c# *e = { (U1[V-],U1[v-]), U1, U1[+], U1[-], 
+#c#   U1[out], U1[v+], U1[v-], V- }
 \end{verbatim}
 
 
@@ -3420,6 +3765,7 @@ syst.flag.<flag_name> <value>
 
 \section{Available Flags}
 \begin{itemize}
+\item \texttt{exec\_mode} -- Execution mode: \texttt{lenient} (default) or \texttt{strict}. In strict mode, all warnings become errors and halt execution.
 \item \texttt{vias} -- Controls whether vias are allowed
 \item \texttt{slots} -- Controls whether slots / PCB cuts are allowed
 \item \texttt{jumpers} -- Controls whether jumper wires are allowed
@@ -3496,7 +3842,7 @@ f.print("Message: ", $variable)
 \end{verbatim}
 
 \section{Log File}
-The \texttt{writetolog} function appends messages to the log file:
+The \texttt{writetolog} keyword appends a message to the log file:
 \begin{verbatim}
 writetolog "Checkpoint reached"
 \end{verbatim}
@@ -3654,7 +4000,7 @@ The circuit connects a 330$\Omega$ resistor in series with an LED between Vcc an
 
 
 \chapter{Diagrams}
-\section{Execution-phase Diagramm}
+\section{Execution-phase Diagram}
 % TODO: Add execution flow diagram
 % Uncertain about:
 % - Exact execution phases
