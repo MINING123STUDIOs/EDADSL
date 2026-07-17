@@ -1,16 +1,16 @@
-# some test circuit for parametric design.
+#c# some test circuit for parametric design.
 
-$n [int]= 8   # LED count
-$v [real]= 5.0 # input voltage
-$i [real]= 10m # forward current
-$color [string]= "red" # red / green / blue
+$n [int]= 8   #c# LED count
+$v [real]= 5.0 #c# input voltage
+$i [real]= 10m #c# forward current
+$color [string]= "red" #c# red / green / blue
 
 
 
 
 $colors [list]= ["red", "green", "blue"]
 
-if $color !E $colors::{print("enter a valid color!")%N halt}
+if $color !E $colors::{f.print("enter a valid color!")%N halt}
 
 for $idx E [0:1:2] ::{
 if $color == $colors[$idx]::{

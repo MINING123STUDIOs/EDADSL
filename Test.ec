@@ -1,4 +1,4 @@
-# buck regulator board In: 5-24V, Out: 3.3V 2A
+#c# buck regulator board In: 5-24V, Out: 3.3V 2A
 
 elec.part         "J1": pinheader( N = 4 )                                        ; des = "main io"                                                                                              ; fp = "TerminalBlock_CUI:TerminalBlock_CUI_TB007-508-04_1x04_P5.08mm_Horizontal"
 elec.part         "U1": buckregulator( type = "APE1707S-33-HF" )                  ; des = "main switching IC, 2A, 150KHz PWM Buck DC/DC Converter, fixed 3.3V output voltage, TO-263-5 (DD-PAK)" ; fp = "Package_TO_SOT_SMD:TO-263-5_TabPin3"
@@ -12,7 +12,7 @@ elec.net "Vin"
 elec.net "Vout"
 elec.net "Vsw"
 
-#       net  J1    J1    C1    C2    C3    C4    D1    U1      U1     L1
+#c#       net  J1    J1    C1    C2    C3    C4    D1    U1      U1     L1
 elec.connect Gnd  J1[2] J1[4] C1[2] C2[-] C3[2] C4[-] D1[a] U1[vss] U1[en]
 elec.connect Vin  J1[1]       C1[1] C2[+]                   U1[vcc]
 elec.connect Vout J1[3]                   C3[1] C4[+]                      L1[2]

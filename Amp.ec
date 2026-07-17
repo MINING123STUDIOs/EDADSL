@@ -1,5 +1,5 @@
-# This is a non inverting amplifier test board.
-#deprecated.
+#c# This is a non inverting amplifier test board.
+#c#deprecated.
 $base_r [real]= 1k
 $max_gain [int]= 5
 

@@ -1,7 +1,7 @@
-# high power high current AC and DC solid state relay module. 80A 1kV
+#c# high power high current AC and DC solid state relay module. 80A 1kV
 
-#part "": (); des = ""; fp = ""
-#    refrence              part model                                                  part description                                                                                                                           footprint
+#c#part "": (); des = ""; fp = ""
+#c#    refrence              part model                                                  part description                                                                                                                           footprint
 elec.part       [ "Q1", "Q2" ]: mosfet( type = "C2M0025120D" )                            ; des = "90A Id, 1200V Vds, 25mOhm, N-Channel SiC MOSFET, TO-247"                                                                          ; fp = "Package_TO_SOT_THT:TO-247-3_Horizontal_TabUp"
 elec.part               "U1"  : isolator( type = "SFH617A-1" )                            ; des = "Optocoupler, Phototransistor Output, 5300 VRMS, VCEO 70V, CTR% 40-80, -55 to +110 degree Celsius, UL, BSI, FIMKO, cUL, THT PDIP-4"; fp = "Package_DIP:DIP-4_W10.16mm"
 elec.part               "U2"  : dcdc_converter( type = "ATA00C18S-L" )                    ; des = "Artesyn 3W Isolated DC/DC Converter Module, 15V Output Voltage, 9-36V Input Voltage, 1.5kV insolation"                            ; fp = "Converter_DCDC:Converter_DCDC_Artesyn_ATA_SMD"
@@ -37,7 +37,7 @@ elec.net "tnet1"  "lv"
 elec.net "tnet2"  "lv"
 elec.net "tnet3"  "lv"
 
-# IO connections
+#c# IO connections
 elec.connect Vswa   H1[1] Q1[d]
 elec.connect Vswb   H2[1] Q2[d]
 elec.connect Gnd_hv Q1[s] Q2[s]
@@ -46,33 +46,33 @@ elec.connect Gnd_lv J1[1]
 elec.connect sig_lv J1[1] R5[1]
 elec.connect Vcc_lv J1[3]
 
-# lv side 3.0V supply derivation
+#c# lv side 3.0V supply derivation
 elec.connect Vcc_lv R4[1]
 elec.connect Vstab  R4[2] D3[k] C5[1]
 elec.connect Gnd_lv D3[a] C5[2]
 
-# lv side switching of the isolator LED
+#c# lv side switching of the isolator LED
 elec.connect Vstab  R3[1]
 elec.connect tnet1  R3[2] U1[a]
 elec.connect tnet2  U1[k] Q3[d]
 elec.connect tnet3  Q3[g] R5[2] R2[1] D2[k]
 elec.connect Gnd_lv Q3[s]       R2[2] D2[a]
 
-# lv side of the dcdc Converter
+#c# lv side of the dcdc Converter
 elec.connect Vcc_lv C1[1] C3[+] U2[+vin] U2[en]
 elec.connect Gnd_lv C1[2] C3[-] U2[-vin]
 
 
-# lv side of the dcdc Converter
+#c# lv side of the dcdc Converter
 elec.connect Vcc_hv C2[1] C4[+] U2[+vout]
 elec.connect Gnd_hv C2[2] C4[-] U2[-vout]
 
-# hv side MOSFET
+#c# hv side MOSFET
 elec.connect gn     Q1[g] Q2[g] TP1[1]
 elec.connect gate   R1[1] D1[k] TP1[1] U3[out]
 elec.connect Gnd_hv             R1[2] D1[a]
 
-# hv side gate drive
+#c# hv side gate drive
 elec.connect Vcc_hv U3[vdd] R6[1]
 elec.connect Gnd_hv U3[gnd]       U1[e]
 elec.connect sig_hv U3[inp] R6[2] U1[c]
@@ -98,7 +98,7 @@ phys.layer      $big_q 1 -ne
 $high_I [set]= C@^I u { ( Q1[s] | Q2[s] ) }
 phys.connectioncurrent $high_I 90 -vimp
 
-phys.connmatch imp ( TP1[1] | { Q1[g], Q2[g] } ) -vimp # ensure gate drive symmetry.
+phys.connmatch imp ( TP1[1] | { Q1[g], Q2[g] } ) -vimp #c# ensure gate drive symmetry.
 
 phys.mkpcb
 

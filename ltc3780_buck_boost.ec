@@ -1,19 +1,19 @@
-# LTC3780 High-Efficiency Buck-Boost Converter
-# Input: 4.5V - 30V, Output: 12V @ 3A
-# Synchronous 4-switch buck-boost topology
+#c# LTC3780 High-Efficiency Buck-Boost Converter
+#c# Input: 4.5V - 30V, Output: 12V @ 3A
+#c# Synchronous 4-switch buck-boost topology
 
-# Design parameters
-$v_in_min [real]= 4.5    # minimum input voltage
-$v_in_max [int]= 30     # maximum input voltage
-$v_out    [int]= 12     # output voltage
-$i_out    [int]= 3      # output current
-$f_sw     [int]= 300k   # switching frequency
+#c# Design parameters
+$v_in_min [real]= 4.5    #c# minimum input voltage
+$v_in_max [int]= 30     #c# maximum input voltage
+$v_out    [int]= 12     #c# output voltage
+$i_out    [int]= 3      #c# output current
+$f_sw     [int]= 300k   #c# switching frequency
 
-# Component selection
-$r_sense  [real]= 10m    # current sense resistance (50mV threshold / 5A = 10m)
-$r_freq   [int]= 100k   # frequency set resistor (sets ~300kHz)
+#c# Component selection
+$r_sense  [real]= 10m    #c# current sense resistance (50mV threshold / 5A = 10m)
+$r_freq   [int]= 100k   #c# frequency set resistor (sets ~300kHz)
 
-# Parts
+#c# Parts
 elec.part         "U1": ltc3780()                                                                                              ; des = "LTC3780 buck-boost controller"                                        ; fp = "Package_DIP:DIP-16_W7.62mm"
 elec.part ["Q1", "Q3"]: mosfet( type = "IRF9540NPBF" )                                                                        ; des = "P-Channel MOSFET, -23A, -100V, 117mOhm, TO-220"                       ; fp = "Package_TO_SOT_THT:TO-220-3_Vertical"
 elec.part ["Q2", "Q4"]: mosfet( type = "IRF3205PBF" )                                                                         ; des = "N-Channel MOSFET, 110A, 55V, 8mOhm, TO-220"                           ; fp = "Package_TO_SOT_THT:TO-220-3_Vertical"
@@ -38,12 +38,12 @@ elec.part         "J2": pinheader( N = 2 )                                      
 elec.part        "TP1": testpoint()                                                                                            ; des = "Output voltage test point"                                              ; fp = "TestPoint:TestPoint_Pad_1.0x1.0mm"
 elec.part        "TP2": testpoint()                                                                                            ; des = "Switch node test point"                                                 ; fp = "TestPoint:TestPoint_Pad_1.0x1.0mm"
 
-# Nets
+#c# Nets
 elec.net "Vin"       "power"
 elec.net "Vout"      "power"
 elec.net "Gnd"       "power" "ground"
-elec.net "Vsw_h"     "power" "switching"    # high-side switch node (Q1, Q3 drains)
-elec.net "Vsw_l"     "power" "switching"    # low-side switch node (Q2, Q4 sources)
+elec.net "Vsw_h"     "power" "switching"    #c# high-side switch node (Q1, Q3 drains)
+elec.net "Vsw_l"     "power" "switching"    #c# low-side switch node (Q2, Q4 sources)
 elec.net "Vcc"       "power"
 elec.net "Vfb"       "sensitive"
 elec.net "Isense"    "sensitive"
@@ -51,69 +51,69 @@ elec.net "Vcomp"     "sensitive"
 elec.net "Vboost"    "power"
 elec.net "Vsn"       "sensitive"
 
-# Input power connections
+#c# Input power connections
 elec.connect Vin   J1[1] C1[1] C2[1] C5[+] U1[vin]
 elec.connect Gnd   J1[2] C1[2] C2[2] C5[-] C7[2] C8[2] C9[2] Q2[s] Q4[s] R2[2] R4[2] U1[gnd] R7[2]
 
-# Output power connections
+#c# Output power connections
 elec.connect Vout  J2[1] C3[1] C4[1] C6[+] TP1[1]
 elec.connect Gnd   J2[2] C3[2] C4[2] C6[-]
 
-# Enable jumper (pulls RUN high through R5 when jumper installed)
+#c# Enable jumper (pulls RUN high through R5 when jumper installed)
 elec.connect Vin   JP1[1] R5[1]
 elec.connect Vcc   JP1[2] R5[2] U1[run]
 
-# High-side P-MOSFETs (Q1 = input side, Q3 = output side)
+#c# High-side P-MOSFETs (Q1 = input side, Q3 = output side)
 elec.connect Vin   Q1[s]
 elec.connect Vsw_h Q1[d] Q2[d] L1[1]
 elec.connect Q3[s] Vout
 elec.connect Vsw_h Q3[d] C9[1]
 
-# Low-side N-MOSFETs (Q2 = input side, Q4 = output side)
+#c# Low-side N-MOSFETs (Q2 = input side, Q4 = output side)
 elec.connect Vsw_l Q2[s] Q4[s] R4[1]
 elec.connect Q4[d] D1[k]
 
-# Inductor and bootstrap diode
+#c# Inductor and bootstrap diode
 elec.connect L1[2] Vsw_l D1[a]
 
-# Current sense (across R4)
+#c# Current sense (across R4)
 elec.connect Vsn   R4[1] U1[sense-]
 elec.connect Vsw_l R4[2] U1[sense+]
 
-# Gate drive connections
-elec.connect U1[tg] Q1[g]   # top gate (high-side)
-elec.connect U1[bg] Q2[g]   # bottom gate (low-side)
-elec.connect U1[ext] Q3[g]   # external gate driver output
-elec.connect Vboost U1[boost] C8[1]  # bootstrap capacitor
+#c# Gate drive connections
+elec.connect U1[tg] Q1[g]   #c# top gate (high-side)
+elec.connect U1[bg] Q2[g]   #c# bottom gate (low-side)
+elec.connect U1[ext] Q3[g]   #c# external gate driver output
+elec.connect Vboost U1[boost] C8[1]  #c# bootstrap capacitor
 
-# Feedback voltage divider (sets output voltage)
-# Vout = 0.8V * (1 + R1/R2) = 0.8V * (1 + 10k/3.3k) = ~3.22V (adjust R1/R2 for 12V)
+#c# Feedback voltage divider (sets output voltage)
+#c# Vout = 0.8V * (1 + R1/R2) = 0.8V * (1 + 10k/3.3k) = ~3.22V (adjust R1/R2 for 12V)
 elec.connect Vout  R1[1] TP1[1]
 elec.connect Vfb   R1[2] R2[1] U1[fb]
 elec.connect Gnd   R2[2]
 
-# Frequency set resistor
+#c# Frequency set resistor
 elec.connect U1[freq] R3[1] C7[1]
 elec.connect Gnd       R3[2]
 
-# Compensation network (on ITH pin)
+#c# Compensation network (on ITH pin)
 elec.connect U1[ith] R6[1] C10[1]
 elec.connect Gnd     R6[2] C10[2]
 
-# Soft-start capacitor
+#c# Soft-start capacitor
 elec.connect U1[ss] C10[1]
 
-# Bypass capacitor on VIN
+#c# Bypass capacitor on VIN
 elec.connect U1[vin] C9[1]
 elec.connect Gnd      C9[2]
 
-# Switch node to controller
+#c# Switch node to controller
 elec.connect Vsw_h U1[sw] TP2[1]
 
-# Physical constraints
+#c# Physical constraints
 phys.board N = 4 T = [0.3m, 1.0m, 0.3m] W = [2] + [1] * 2 + [2] M = ["FR4", "copper", "ENIG"]
 
-# Keep input and output capacitors close to MOSFETs
+#c# Keep input and output capacitors close to MOSFETs
 $in_caps [set]= { C1, C2, C5 }
 $out_caps [set]= { C3, C4, C6 }
 $mosfets [set]= { Q1, Q2, Q3, Q4 }
@@ -121,36 +121,36 @@ $mosfets [set]= { Q1, Q2, Q3, Q4 }
 phys.prox $in_caps $mosfets max = 15m -imp
 phys.prox $out_caps $mosfets max = 15m -imp
 
-# Minimize hot loop (input cap to MOSFETs)
+#c# Minimize hot loop (input cap to MOSFETs)
 $hotloop [set]= { C1[1], Q1[s], Q1[d], Q2[d], Q2[s], R4[1] }
 phys.prox $hotloop minim -vimp
 
-# Input and output isolation
+#c# Input and output isolation
 $insys  [set]= E@^power u { ( J1[1] | C1[1] | C2[1] | C5[+] | U1[vin] ) }
 $outsys [set]= E@^power u { ( J2[1] | C3[1] | C4[1] | C6[+] ) }
 phys.prox $insys $outsys min = 10m -imp
 
-# High current paths
+#c# High current paths
 $hv_input [set]= C@^power u { ( J1[1] | Q1[s] ) }
 phys.connectioncurrent $hv_input 5 -imp
 
 $hv_output [set]= C@^power u { ( J2[1] | Q3[s] ) }
 phys.connectioncurrent $hv_output 5 -imp
 
-# Switching node on inner layer for EMI reduction
+#c# Switching node on inner layer for EMI reduction
 phys.layer { Q1[d], Q2[d], Q3[d], Q4[d], L1[1], D1[a], D1[k] } 1 -imp
 
-# Ground plane on bottom layer
+#c# Ground plane on bottom layer
 phys.mkplane 3 Gnd
 
-# Ensure gate drive symmetry
+#c# Ensure gate drive symmetry
 phys.connmatch imp ( U1[tg] | U1[bg] ) -imp
 
-# Component alignment
+#c# Component alignment
 phys.align [ Q1, Q2 ] axis = x d = 5m -vimp
 phys.align [ Q3, Q4 ] axis = x d = 5m -vimp
 
-# Via fill on power MOSFET thermal pads
+#c# Via fill on power MOSFET thermal pads
 phys.viafill Q1[d] v = 0.3m d = 1.0m
 phys.viafill Q3[d] v = 0.3m d = 1.0m
 
