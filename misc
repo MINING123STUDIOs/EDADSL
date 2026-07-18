@@ -1331,3 +1331,117 @@ in              # membership alternative
 :=              # immutable binding
 
 =>              # pattern/lambda shorthand
+
+
+
+log(a, b)
+
+ilog2(n)          # integer floor(log2(n))
+ceilLog2(n)       # smallest integer k where 2^k >= n
+
+
+# ============================================================
+# BASE CONVERSION FUNCTIONS
+# ============================================================
+
+toBase(value, base)              # convert integer to string in base
+fromBase(string, base)           # parse string in base to integer
+
+base(value)                      # get current/default representation
+convertBase(value, from, to)     # convert between bases
+
+# Common shortcuts
+
+bin(value)                       # binary representation
+oct(value)                       # octal representation
+hex(value)                       # hexadecimal representation
+
+fromBin(string)
+fromOct(string)
+fromHex(string)
+
+# ============================================================
+# SPECIAL FUNCTIONS
+# ============================================================
+
+# ============================================================
+# Lambert W FUNCTION
+# ============================================================
+
+lambertW(x)                 # principal branch W0(x)
+lambertW(x, branch)         # specify branch
+
+# Solves:
+# W(x) * e^W(x) = x
+
+# Examples:
+lambertW(0)
+#c# = 0
+
+lambertW(e)
+#c# ≈ 1
+
+lambertW(-1/e)
+#c# = -1 (branch dependent)
+
+
+# ============================================================
+# POLYLOGARITHMS
+# ============================================================
+
+Li2(x)                      # dilogarithm
+Li3(x)                      # trilogarithm
+Li(n, x)                    # general polylogarithm
+
+# Definition:
+# Li_s(x) = Σ(k=1 to infinity) x^k / k^s
+
+
+# ============================================================
+# GAMMA / RELATED FUNCTIONS
+# ============================================================
+
+gamma(x)                    # Gamma function Γ(x)
+logGamma(x)                 # ln(Γ(x))
+digamma(x)                  # ψ(x)
+trigamma(x)                 # ψ'(x)
+
+beta(a, b)                  # Beta function
+
+
+# ============================================================
+# ERROR FUNCTIONS
+# ============================================================
+
+erf(x)                      # error function
+erfc(x)                     # complementary error function
+erfi(x)                     # imaginary error function
+
+
+# ============================================================
+# BESSEL FUNCTIONS
+# ============================================================
+
+besselJ(n, x)               # first kind
+besselY(n, x)               # second kind
+besselI(n, x)               # modified first kind
+besselK(n, x)               # modified second kind
+
+
+# ============================================================
+# LEGENDRE FUNCTIONS
+# ============================================================
+
+legendreP(n, x)
+legendreQ(n, x)
+
+associatedLegendre(l, m, x)
+
+
+# ============================================================
+# ORTHOGONAL POLYNOMIALS
+# ============================================================
+
+hermite(n, x)
+laguerre(n, x)
+chebyshev(n, x)
