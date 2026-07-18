@@ -1230,3 +1230,21 @@ log2Int(n)                  # integer base-2 logarithm
 popcount(n)                 # count set bits
 parity(n)                   # XOR of all bits
 bitLength(n)                # number of bits required
+
+
+
+# ============================================================
+# SIGNAL PROCESSING FUNCTIONS
+# ============================================================
+
+fft(signal)
+ifft(signal)
+
+convolve(a, b)
+correlate(a, b)
+
+window(type, size)
+
+lowPass(signal, cutoff)
+highPass(signal, cutoff)
+bandPass(signal, low, high)
