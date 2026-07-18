@@ -1,17 +1,17 @@
 \chapter{Formal Grammar}
 The Formal Grammar of EDADSL is defined using Extended Backus–Naur form, while Primitives are given using Regular Expressions.
 \section{Primitives}
-The Primitives are defined using Regular Expressions. For more Information on Lexical structure see Part I Chapter 3.
+The Primitives are defined using Regular Expressions. For more Information on Lexical structure see Part I Chapter 2.
 \begin{verbatim}
 idchar  = [_a-zA-Z0-9]
-id      = [_a-zA-Z0-9]+
+id      = [_a-zA-Z][_a-zA-Z0-9]*
 letter  = [a-zA-Z]
 \end{verbatim}
 
 \section{General Grammar}
 \begin{verbatim}
-program                       = "start", { statement, 
-                                { ("%N" | newline) } }
+program                       = "start", statement,
+                                { ("%N" | newline), statement }
 
 statement                     = assignment
                               | flow_control
@@ -19,6 +19,9 @@ statement                     = assignment
                               | electrical_system_statement
                               | compound_assignment
                               | postfix_expression
+                              | echo_statement
+                              | writetolog
+                              | letop
 
 assignment                    = variable_assignment          
                               | constant_assignment
@@ -29,20 +32,43 @@ function                      = function_call_built_in
 
 flow_control                  = conditional
                               | iterator
+                              | while_loop
+                              | do_while
+                              | break_stmt
+                              | continue_stmt
                               | jump
                               | halt
                               | noop
 
-conditional                   = "if", boolean, "::", code_block,
+conditional                   = "if", boolean_expression, "::", code_block,
+                              { "otherwise", boolean_expression, "::", code_block },
                               ["else", "::", code_block]
 
 iterator                      = "for", variable, "E",
                                 (list | set), "::", code_block
+#c# Note: "E" in the iterator is disambiguated from the set comparison "E"
+#c# by parser context — after "for $var" it is the iterator keyword.
+
+while_loop                    = "while", boolean_expression, "::", code_block,
+                                ["else", "::", code_block]
+
+do_while                      = "do", "::", code_block,
+                                "while", boolean_data_type
+
+break_stmt                    = "break"
+
+continue_stmt                 = "continue"
 
 jump                          = ( "gotomarker" | "gotojump" ), id
 
+echo_statement                = "echo", variable
+
+writetolog                    = "writetolog", string_expression
+
+letop                         = "letop", "o.u.", id, assigner, data
+
 function_definition = "function", "f.u.", id, 
-                      "(", [ { id, "," }, id], 
+                      "(", [ { variable, "," }, variable], 
                       ")", "::", "{", f_statement, 
                       {f_statement}, "}"
 
@@ -56,7 +82,7 @@ function_call_built_in        = "f.", id, "(",
 
 variable_assignment           = variable,
                                 (typed_assign | inferred_assign),
-                                [";", "M", "=", boolean]
+                                [";", "M", "=", boolean_data_type]
 
 typed_assign                  = assigner
 inferred_assign               = "t", "=", data
@@ -70,7 +96,7 @@ assigner                      = "[bool]=",   boolean_type
                               | electrical_system_assigner
 
 constant_assignment = "let", "c.u.", id, assigner, 
-                      [";", "P", "=", boolean]
+                      [";", "P", "=", boolean_data_type]
 
 
 halt                          = "halt"
@@ -80,15 +106,16 @@ list                          = "[", [{ data, "," }, data], "]"
 
 variable                      = "$", id
 
-code_block                    = "{", statement, 
-                                { ("%N" | newline), statement }, "}"
+code_block                    = "{", { ("%N" | newline), statement }, "}"
+
+boolean_data_type             = expression  (any expression evaluating to bool)
 
 data                          = variable
                               | literal
                               | constant
                               | function_call_built_in
                               | function_call_ud
-                              | expression
+                              | expression  (see Chapter 4 for expression grammar)
 \end{verbatim}
 
 \newpage
@@ -124,33 +151,46 @@ elec_statement = "elec.",
     { string_type }, ["-remove"]
   | "untag", net_type, string_type,
     { string_type }
+  | "makemodel", model_name, ":",
+    "{", pin_entries, [metadata], "}"
+  | "makemodule", id, "(", [variable, {",", variable}], ")",
+    "{", module_body, "}"
   )
 
 part_reference = string_type
                | "[", { string_type, "," }, string_type, "]"
 
-model_name     = id
+model_name     = id, ["/", id]
 model_params   = [{ id, "=", data, "," }, id, "=", data]
+
+pin_entries    = { pin_entry, ";" }
+pin_entry      = id, "->", integer, ";", "T", "=", pin_type
+pin_type       = "input" | "power" | "output"
+metadata       = des_entry | dts_entry | fp_entry
+des_entry      = "des", "=", string_type
+dts_entry      = "dts", "=", string_type
+fp_entry       = "fp", "=", string_type
+
+module_body    = { statement }
 \end{verbatim}
 
 \subsection{Physical Constraints}
 \begin{verbatim}
 phys_statement = phys_prox | phys_creep | phys_layer
-               | phys_side | phys_board | phys_shrinknet
+               | phys_board | phys_shrinknet
                | phys_mkplane | phys_viafill
                | phys_connectioncurrent | phys_align
                | phys_connmatch | phys_mktext
+               | phys_unite
 
 phys_prox   = "phys.prox", set,
-              ( set, "min", real, "max", real
+              ( set, "min", "=", real, "max", "=", real
               | "minim" ), priority
 
 phys_creep  = "phys.creep", set, set,
-              "d", real, priority
+              "d", "=", real, priority
 
 phys_layer  = "phys.layer", set, layer_ref, priority
-
-phys_side   = "phys.side", set, layer_ref, priority
 
 phys_board  = "phys.board",
               "N=", int,
@@ -163,15 +203,16 @@ phys_shrinknet = "phys.shrinknet", net, priority
 phys_mkplane   = "phys.mkplane", layer_ref, net
 
 phys_viafill   = "phys.viafill", pad,
-              "v", real, "d", real,
-              ["p", pattern]
+              "v", "=", real, "d", "=", real,
+              ["p", "=", pattern],
+              ["l", "=", int]
 
 phys_connectioncurrent = "phys.connectioncurrent",
               (connection | set), real, priority
 
 phys_align  = "phys.align", list,
-              "axis", ("x" | "y"),
-              "d", real, priority
+              "axis", "=", ("x" | "y"),
+              "d", "=", real, priority
 
 phys_connmatch = "phys.connmatch",
               match_property, set, priority
@@ -182,13 +223,18 @@ phys_mktext = "phys.mktext",
               ["size", real],
               ["material", string],
               ["layer", layer_ref]
+
+phys_unite   = "phys.unite", "{", part, {",", part}, "}"
+part         = id
 \end{verbatim}
 
 \subsection{System Statements}
 \begin{verbatim}
 syst_statement = syst_flag | syst_cm | syst_alg
 
-syst_flag = "syst.flag.", flag_name, real
+syst_flag = "syst.flag.", flag_name, (real | string_type)
+
+flag_name = id
 
 syst_cm   = "syst.cm.calc",
             ("approx" | "calculus" | "hybrid")
@@ -196,19 +242,37 @@ syst_cm   = "syst.cm.calc",
 syst_alg  = "syst.alg", id
 \end{verbatim}
 
+\subsection{Additional Grammar Rules}
+\begin{verbatim}
+set_builder    = "{", variable, "E", ( set | list ),
+                 ":", expression, [ "~", expression ], "}"
+
+set_query      = "{", set_expr, "@~", "[",
+                 expression, "]",
+                 [ "~[", expression, "]" ],
+                 "~>", [ variable ], "}"
+
+lambda         = "L::", "(", [variable, {",", variable}], ")",
+                 "->", "{", { statement }, expression, "}"
+
+conditional_expr = expression, "?->",
+                   "(", expression, ")",
+                   "!", "(", expression, ")"
+
+pipe_syntax    = elec_connect, { "->", elec_connect }
+\end{verbatim}
+
 \subsection{Common Rules}
 \begin{verbatim}
 layer_ref      = int | "T" | "B"
 priority       = ["-d" | "-nth" | "-imp" | "-vimp"
-                | "-oeo" | "-eo" | "-ne"]
+                | "-oeo" | "-eo" | "-ne" | "-nonneg"]
 pattern        = "grid" | "hex" | "stagger"
                | "radial" | "random"
 match_property = "l" | "res" | "L" | "cap"
                | "imp" | "t"
-flag_name      = "vias" | "slots" | "jumpers"
-               | "solder_reinforced_tracks"
-               | "buried_vias"
-               | "approx_eps" | "approx_eps_mult"
+net            = id
+pad            = id | int
 \end{verbatim}
 
 

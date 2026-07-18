@@ -46,7 +46,7 @@ n >>>[w] m Right Rotate (returns int, w-bit word)
 \item \texttt{\%}: \texttt{real \% int} $\rightarrow$ \texttt{real}
 \item \texttt{\%}: \texttt{int \% real} $\rightarrow$ \texttt{real}
 \item \texttt{\%}: \texttt{real \% real} $\rightarrow$ \texttt{real}
-\item \texttt{\^{}}: \texttt{int \^{} int} $\rightarrow$ \texttt{int} (non-negative exponents)
+\item \texttt{\^{}}: \texttt{int \^{} int} $\rightarrow$ \texttt{int} (non-negative exponents) or \texttt{real} (negative exponents)
 \item \texttt{\^{}}: \texttt{int \^{} real} $\rightarrow$ \texttt{real}
 \item \texttt{\^{}}: \texttt{real \^{} int} $\rightarrow$ \texttt{real}
 \item \texttt{\^{}}: \texttt{real \^{} real} $\rightarrow$ \texttt{real}
@@ -81,7 +81,16 @@ n >>>[w] m Right Rotate (returns int, w-bit word)
 \item \texttt{\^{}}: \texttt{complex \^{} complex} $\rightarrow$ \texttt{complex}
 \end{itemize}
 
-Mixed-type operations promote to \texttt{real}. If any operand is \texttt{complex}, the result is \texttt{complex}. Division by zero raises a runtime error. Floor division (\texttt{//}) truncates toward negative infinity. Modulo uses truncated division (\texttt{sign(result) = sign(dividend)}). Exponentiation is right-associative: \texttt{-2\^{}3 = -8}. Shift operators (\texttt{<<}, \texttt{>>}) require \texttt{int} operands and return \texttt{int}; the right operand must be non-negative. Shift operators are not defined for \texttt{complex}. Rotation operators (\texttt{<<<[w]}, \texttt{>>>[w]}) require \texttt{int} operands and return \texttt{int}; the word width \texttt{w} must be a positive integer literal, and the rotation amount must be non-negative.
+Mixed-type operations promote to \texttt{real}. If any operand is \texttt{complex}, the result is \texttt{complex}. Floor division (\texttt{//}) truncates toward negative infinity. Modulo uses truncated division (\texttt{sign(result) = sign(dividend)}). Exponentiation is right-associative: \texttt{-2\^{}3 = -8}.
+
+\paragraph{Edge Cases}
+\begin{itemize}
+\item Division by zero (\texttt{/}, \texttt{//}, \texttt{\%}) raises a \texttt{Division by Zero Error}.
+\item Negative exponent on \texttt{int} base auto-promotes to \texttt{real}: \texttt{2 \^{} -1} returns \texttt{0.5}.
+\item Shift operators (\texttt{<<}, \texttt{>>}) require \texttt{int} operands; a \texttt{Type Error} is raised otherwise. The right operand must be non-negative; a \texttt{Value Error} is raised for negative shift amounts.
+\item Rotation operators (\texttt{<<<[w]}, \texttt{>>>[w]}) require \texttt{int} operands; a \texttt{Type Error} is raised otherwise. The word width \texttt{w} must be a positive integer literal. The rotation amount must be non-negative; a \texttt{Value Error} is raised otherwise.
+\item A \texttt{Type Error} is raised when operands are incompatible (e.g., \texttt{string + int}).
+\end{itemize}
 
 \subsection{Increment / Decrement}
 Postfix increment and decrement operators add 1 or subtract 1 from an int or real variable. The variable must already be declared.
@@ -308,7 +317,7 @@ a ~*( c )~ b Approximately Equal with multiplicative tolerance c
 \item \texttt{\textasciitilde}, \texttt{\textasciitilde*}, \texttt{\textasciitilde+()\textasciitilde}, \texttt{\textasciitilde*()\textasciitilde}: \texttt{int} or \texttt{real} $\rightarrow$ \texttt{bool} (approximate equality)
 \end{itemize}
 
-Ordered comparisons (\texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}) only work on ints, reals, and strings. Equality (\texttt{==}, \texttt{!=}) works on any type including lists, sets, parts, and connections. \texttt{=n=} works only on numeric types.
+Ordered comparisons (\texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}) only work on ints, reals, and strings. Using them on complex numbers raises a \texttt{Type Error}. Equality (\texttt{==}, \texttt{!=}) works on any type including lists, sets, parts, and connections. \texttt{=n=} works only on numeric types.
 
 \paragraph{Numeric Equality}
 \texttt{=n=} compares values numerically across types. Unlike \texttt{==} which is type-strict, \texttt{=n=} returns \texttt{True} if the numeric values are equal regardless of whether the operands are \texttt{int} or \texttt{real}.
@@ -357,21 +366,21 @@ Q1 == Q1            #c# = True (part identity)
 3.14 >< 3.14       #c# =  0  (real vs real)
 
 #c# Approximate equality
-syst.flag.approx_eps [real]= 0.01
+syst.flag.approx_eps 0.01
 3.0 ~ 3.005        #c# = True (within 0.01)
 3.0 ~ 3.1          #c# = False (not within 0.01)
 3.0 ~+(0.2)~ 3.1    #c# = True (within 0.2)
 3.0 ~+(0.05)~ 3.1   #c# = False (not within 0.05)
 
 #c# Execution mode
-syst.flag.exec_mode [string]= "strict"  #c# warnings become errors
+syst.flag.exec_mode "strict"  #c# warnings become errors
 
 #c# Multiplicative approximate equality (relative tolerance)
 100 ~*(0.01)~ 100.5  #c# = True (within 1%)
 100 ~*(0.001)~ 100.5 #c# = False (not within 0.1%)
 
 #c# Multiplicative approximate equality with system default
-syst.flag.approx_eps_mult [real]= 0.01
+syst.flag.approx_eps_mult 0.01
 100 ~* 100.5         #c# = True (within 1%)
 \end{verbatim}
 
@@ -392,7 +401,7 @@ b !-> c Nimp (a does not imply b)
 \begin{itemize}
 \item Operands: \texttt{bool}, \texttt{bool}
 \item Result: \texttt{bool}
-\item Short-circuit evaluation: \texttt{a \&\& b} evaluates \texttt{b} only if \texttt{a} is \texttt{True}
+\item Short-circuit evaluation: \texttt{a \&\& b} evaluates \texttt{b} only if \texttt{a} is \texttt{True}. \texttt{a || b} evaluates \texttt{b} only if \texttt{a} is \texttt{False}.
 \end{itemize}
 
 Truth tables:
@@ -449,6 +458,13 @@ a / b  Difference (sets) / Division (numeric)
 
 Set operations (\texttt{u}, \texttt{n}) only work on sets. The \texttt{/} operator is overloaded: on sets it returns difference, on ints or reals it returns division. Cardinality (\texttt{||}) returns the element count for sets, lists, and strings.
 
+\paragraph{Edge Cases}
+\begin{itemize}
+\item A \texttt{Type Error} is raised for \texttt{u} or \texttt{n} if either operand is not a set.
+\item A \texttt{Type Error} is raised for \texttt{||} if the operand is not a set, list, or string.
+\item A \texttt{Type Error} is raised for \texttt{/} if the operands are a set and a non-set type (e.g., \texttt{set / int}).
+\end{itemize}
+
 Examples:
 \begin{verbatim}
 #c# Set operations
@@ -472,10 +488,19 @@ a x b  Cross product (list result)
 \paragraph{Type Overloading}
 \begin{itemize}
 \item \texttt{.}: \texttt{list . list} $\rightarrow$ \texttt{real} (dot product, n-dimensional)
-\item \texttt{x}: \texttt{list x list} $\rightarrow$ \texttt{list} (cross product, 3D only)
+\item \texttt{x}: \texttt{list x list} $\rightarrow$ \texttt{ndarray} (cross product, 3D only)
 \end{itemize}
 
 The dot product computes $\sum_{i} a_i \cdot b_i$ for n-dimensional vectors (any length). The cross product computes the vector cross product (both lists must have length 3).
+
+\paragraph{Edge Cases}
+\begin{itemize}
+\item Dot product: A \texttt{Value Error} is raised if the vectors have different lengths.
+\item Dot product: A \texttt{Type Error} is raised if any element is not numeric (\texttt{int} or \texttt{real}).
+\item Dot product: Two empty vectors return \texttt{0}.
+\item Cross product: A \texttt{Value Error} is raised if either vector does not have length 3.
+\item Cross product: A \texttt{Type Error} is raised if any element is not numeric.
+\end{itemize}
 
 Examples:
 \begin{verbatim}
@@ -504,6 +529,13 @@ a .* b  Matrix multiply (dot-product for 1D, matrix multiply for 2D)
   \item 1D \texttt{.*} 1D $\rightarrow$ scalar (dot product, same as \texttt{.})
   \item 2D(m$\times$k) \texttt{.*} 2D(k$\times$n) $\rightarrow$ 2D(m$\times$n)
   \item 2D(m$\times$k) \texttt{.*} 1D(k) $\rightarrow$ 1D(m)
+\end{itemize}
+
+\paragraph{Edge Cases}
+\begin{itemize}
+\item A \texttt{Value Error} is raised if inner dimensions do not match (e.g., 2D(2$\times$3) \texttt{.*} 2D(2$\times$2)).
+\item A \texttt{Value Error} is raised if 2D \texttt{.*} 1D dimension is incompatible (e.g., 2D(2$\times$3) \texttt{.*} 1D(2)).
+\item A \texttt{Type Error} is raised if any element is not numeric.
 \end{itemize}
 
 Examples:
@@ -554,6 +586,13 @@ a .^ n  Matrix power (repeated matrix multiply, n must be int >= 0)
 \item \texttt{A .\^{} n} = \texttt{A .* A .* ... .* A} (n times)
 \end{itemize}
 
+\paragraph{Edge Cases}
+\begin{itemize}
+\item A \texttt{Value Error} is raised if the matrix is not square.
+\item A \texttt{Value Error} is raised if the exponent is negative.
+\item A \texttt{Type Error} is raised if the exponent is not \texttt{int}.
+\end{itemize}
+
 Examples:
 \begin{verbatim}
 [[1,2],[3,4]] .^ 0     #c# = [[1,0],[0,1]]  (identity)
@@ -595,7 +634,7 @@ A ternary-like operator for inline conditional values.
 \item Operands: \texttt{bool}, any, any
 \item Result: type of the selected branch
 \item Evaluates condition, returns first value if \texttt{True}, second if \texttt{False}
-\item Both branches must be of the same type (or coercible)
+\item Both branches must be of the same type (or coercible per the type coercion hierarchy: \texttt{int} $<$ \texttt{real} $<$ \texttt{complex})
 \end{itemize}
 
 Examples:
@@ -638,10 +677,10 @@ Parameters must always have explicit types. The last expression in the body is t
 
 \subsubsection{Scope Rules}
 \begin{itemize}
-\item Lambdas have \textbf{read-only} access to outer/global variables (closures can read but not write)
-\item Lambdas \textbf{can} declare local variables inside their body
-\item Lambdas \textbf{cannot} modify outer variables
-\item Attempting to write to an outer variable raises a Compile Error
+\item Lambdas have \textbf{read-only} access to variables from the enclosing scope (closures can read but not write)
+\item Lambdas \textbf{can} declare local variables inside their body (block-scoped to the lambda)
+\item Lambdas \textbf{cannot} modify variables from the enclosing scope
+\item Attempting to write to an enclosing variable raises a Compile Error
 \end{itemize}
 
 \subsubsection{Return Value}
@@ -798,12 +837,18 @@ Pseudo-constants are system-defined sets that provide access to electrical objec
 \item \texttt{*t} -- All pins
 \end{itemize}
 
+Example:
+\begin{verbatim}
+$my_set = *n   #c# Initialize with empty set
+$my_set = $my_set u { R1, R2 }   #c# Add elements
+\end{verbatim}
+
 \section{User-defined Constants}
 User-defined constants are created using the \texttt{let} keyword with the \texttt{c.u.} prefix:
 \begin{verbatim}
 EBNF:
 constant_assignment = "let", "c.u.", id, assigner, 
-                      [";", "P", "=", boolean]
+                      [";", "P", "=", boolean_data_type]
 
 Examples:
 let c.u.$max_current [int]= 30

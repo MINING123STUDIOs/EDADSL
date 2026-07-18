@@ -1,4 +1,5 @@
 \chapter{Flags}
+\label{ch:flags}
 System flags control PCB manufacturing capabilities using the \texttt{syst.flag.} prefix:
 \begin{verbatim}
 syst.flag.<flag_name> <value>
@@ -7,6 +8,12 @@ syst.flag.<flag_name> <value>
 \section{Available Flags}
 \begin{itemize}
 \item \texttt{exec\_mode} -- Execution mode: \texttt{lenient} (default) or \texttt{strict}. In strict mode, all warnings become errors and halt execution.
+\item \texttt{phy\_mode} -- Physical constraint enforcement mode (default: \texttt{phylenient}):
+\begin{itemize}
+\item \texttt{phystrict} -- All physical constraints must be met exactly. Violations halt execution immediately.
+\item \texttt{phylenient} -- Physical constraints are enforced best-effort. Violations produce warnings but execution continues.
+\item \texttt{phyrelaxed} -- The solver may relax or ignore physical constraints to find any valid layout.
+\end{itemize}
 \item \texttt{vias} -- Controls whether vias are allowed
 \item \texttt{slots} -- Controls whether slots / PCB cuts are allowed
 \item \texttt{jumpers} -- Controls whether jumper wires are allowed
@@ -14,7 +21,28 @@ syst.flag.<flag_name> <value>
 \item \texttt{buried\_vias} -- Controls whether buried vias are allowed
 \item \texttt{approx\_eps} -- Additive tolerance for approximate equality operator \texttt{\textasciitilde} (default: 1)
 \item \texttt{approx\_eps\_mult} -- Multiplicative tolerance for approximate equality operator \texttt{\textasciitilde*} (default: 1)
+\item \texttt{max\_loop\_iter} -- Maximum iterations per while/do-while loop before raising a \texttt{Value Error} (default: 100000)
+\item \texttt{show\_pcb\_part\_ref} -- Show reference designator on PCB (default: \texttt{true})
+\item \texttt{show\_pcb\_part\_value} -- Show component value on PCB (default: \texttt{true})
+\item \texttt{show\_pcb\_part\_tol} -- Show tolerance/rating on PCB (default: \texttt{true})
+\item \texttt{show\_pcb\_part\_mpn} -- Show MPN/manufacturer on PCB (default: \texttt{true})
+\item \texttt{debug\_mode} -- Enable debug functions (\texttt{debg.*}). When \texttt{false}, all debug functions are no-ops (default: \texttt{false})
+\item \texttt{debug\_output} -- Default output destination for \texttt{debg.print}: \texttt{"console"}, \texttt{"log"}, or \texttt{"both"} (default: \texttt{"console"})
 \end{itemize}
+
+\section{PCB Part Text Visibility}
+Global flags control which part text fields are visible on the PCB. Each field can be toggled independently:
+\begin{verbatim}
+syst.flag.show_pcb_part_ref False
+syst.flag.show_pcb_part_value True
+\end{verbatim}
+
+Per-component overrides can be set in the \texttt{elec.part} property list (see Section~\ref{sec:part-creation}). If a per-component flag is set, it overrides the global flag for that component:
+\begin{verbatim}
+elec.part "R3": R(R=220); des="220R"; fp="R_Axial_DIN0309";
+    show_ref=True; show_value=False
+\end{verbatim}
+Available per-component flags: \texttt{show\_ref}, \texttt{show\_value}, \texttt{show\_tol}, \texttt{show\_mpn}.
 
 
 \part{Toolchain}
@@ -58,28 +86,47 @@ halt
 
 
 \chapter{Standard Library}
-% TODO: Document the standard library contents
-% Uncertain about:
-% - Complete list of available component models
-% - Footprint library organization
-% - Material library contents
+The standard library provides built-in component models, footprint libraries, and material definitions.
+
+\section{Component Models}
+Built-in models include: \texttt{R} (Resistor), \texttt{C} (Capacitor), \texttt{L} (Inductor), \texttt{opamp} (Operational Amplifier), \texttt{MOSFET} (MOSFET transistor), \texttt{LED} (Light Emitting Diode), \texttt{D} (Diode), \texttt{Q} (BJT Transistor), \texttt{X} (Crystal/Oscillator), \texttt{J} (Connector), \texttt{F} (Fuse), \texttt{Y} (Transformer).
+
+\section{Footprint Libraries}
+Footprints are organized by package type: \texttt{Package\_SMD}, \texttt{Package\_TH}, \texttt{Package\_BGA}, \texttt{Package\_Power}, \texttt{Package\_Connector}. Each library contains standard footprints following IPC naming conventions.
+
+\section{Material Library}
+Materials define physical properties for PCB stackup: \texttt{FR4} (fiberglass-epoxy), \texttt{copper} (conductor), \texttt{ENIG} (surface finish), \texttt{soldermask} (insulator).
 
 
 \chapter{External Library}
-% TODO: Document external library integration
-% Uncertain about:
-% - How external libraries are imported
-% - Supported library formats
-% - KiCad library integration details
+External libraries extend EDADSL with additional component models and footprints.
+
+\section{Importing Libraries}
+TODO: Document how external libraries are integrated with EDADSL.
+
+\section{Supported Formats}
+EDADSL supports integration with:
+\begin{itemize}
+\item KiCad symbol libraries (\texttt{.kicad\_sym})
+\item KiCad footprint libraries (\texttt{.kicad\_mod})
+\item SPICE models (\texttt{.lib}, \texttt{.sub})
+\item IPC-2581 component databases
+\end{itemize}
 
 
 \chapter{Debugging and Logging}
+
+\section{Debug Mode}
+Debug functions (\texttt{debg.*}) are enabled by the \texttt{debug\_mode} flag. When disabled (default), all debug functions are no-ops:
+\begin{verbatim}
+syst.flag.debug_mode True
+\end{verbatim}
 
 \section{Console Output}
 The \texttt{echo} and \texttt{f.print()} functions output to the console:
 \begin{verbatim}
 echo $variable
-f.print("Message: ", $variable)
+f.print("Message: " + $variable)
 \end{verbatim}
 
 \section{Log File}
@@ -88,6 +135,52 @@ The \texttt{writetolog} keyword appends a message to the log file:
 writetolog "Checkpoint reached"
 \end{verbatim}
 The log file is exported when \texttt{halt} is executed.
+
+\section{Debug Print}
+The \texttt{debg.print} function outputs variable value and type. The destination is controlled by the \texttt{mode} parameter or the global \texttt{debug\_output} flag:
+\begin{verbatim}
+debg.print($variable)
+debg.print($variable, mode="log")
+debg.print($variable, mode="both")
+\end{verbatim}
+
+Modes:
+\begin{itemize}
+\item \texttt{"console"} (default) -- Output to console
+\item \texttt{"log"} -- Output to debug log file
+\item \texttt{"both"} -- Output to console and debug log file
+\end{itemize}
+
+\section{Breakpoints}
+The \texttt{debg.breakpoint} function pauses execution and prints the current state (variables, stack). An optional condition can be provided:
+\begin{verbatim}
+debg.breakpoint()
+debg.breakpoint($voltage > 5.0)
+debg.breakpoint($count == 10)
+\end{verbatim}
+
+If a condition is provided, execution only pauses when the condition is \texttt{True}. When \texttt{debug\_mode} is \texttt{false}, breakpoints are no-ops and execution continues uninterrupted.
+
+\section{Graph Inspection}
+The \texttt{debg.graph} function dumps the full electrical graph state (parts, nets, connections, pins):
+\begin{verbatim}
+debg.graph()
+\end{verbatim}
+
+Output includes all parts with their models and parameters, all nets with their tags, all connections, and all pin assignments.
+
+\section{Resource Monitoring}
+The \texttt{debg.resources} function prints current resource usage:
+\begin{verbatim}
+debg.resources()
+\end{verbatim}
+
+Output includes:
+\begin{itemize}
+\item Memory usage
+\item CPU time elapsed
+\item Object counts (parts, nets, connections, pins)
+\end{itemize}
 
 
 
@@ -118,20 +211,27 @@ Warnings are printed for constraint conflicts between different priorities. The 
 
 
 \chapter{Future Improvements}
-% TODO: Document planned language features and improvements
-% Uncertain about:
-% - What features are planned for future versions
-% - Deprecation timeline for any features
+Planned features for future versions:
+\begin{itemize}
+\item Differential pair routing constraints
+\item Impedance-controlled routing
+\item 3D component placement visualization
+\item Signal integrity analysis integration
+\item Power integrity analysis
+\item Automated thermal relief generation
+\end{itemize}
 
 
 \chapter{Implementations}
 
 \section{Reference Implementation}
-% TODO: Document the reference implementation details
-% Uncertain about:
-% - Programming language of the implementation
-% - Current version number
-% - Supported platforms
+The reference implementation is written in Rust for performance and safety. Current version: 0.1.0 (pre-release). Supported platforms: Linux (x86\_64), macOS (x86\_64, aarch64), Windows (x86\_64).
+
+\section{Build and Installation}
+The reference implementation can be built from source using Cargo:
+\begin{verbatim}
+cargo build --release
+\end{verbatim}
 
 
 \chapter{References}
@@ -140,7 +240,12 @@ Warnings are printed for constraint conflicts between different priorities. The 
 This document serves as the authoritative specification for the EDADSL language.
 
 \section{Related Standards}
-% TODO: Reference relevant EDA standards (e.g., KiCad file formats, IPC standards)
+\begin{itemize}
+\item IPC-2581 — Generic Standard for Printed Board Assembly Products
+\item IPC-7351 — Land Pattern Naming Conventions for Surface Mount Designs
+\item KiCad File Formats — Schematic and PCB file format specifications
+\item SPICE — Simulation Program with Integrated Circuit Emphasis
+\end{itemize}
 
 
 

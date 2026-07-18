@@ -11,6 +11,7 @@ The Boolean data type represents logical truth values. It has exactly two possib
 \begin{verbatim}
 boolean_literal = "True" | "False"
 \end{verbatim}
+Boolean literals are case-sensitive: only \texttt{True} and \texttt{False} (capitalized) are valid. Lowercase \texttt{true}/\texttt{false} are not recognized as boolean literals.
 \subsubsection{Boolean Data Type Casting and Coercion}
 Boolean values can be coerced from other types:
 \begin{itemize}
@@ -43,11 +44,12 @@ octdigit  = [0-7]
 hexdigit  = [0-9a-fA-F]
 \end{verbatim}
 
-SI prefixes >= k produce integers:
+SI prefixes >= k and scientific notation produce integers when the result is numerically equal to an integer:
 \begin{verbatim}
 6.2k    #c# = 6200 (int)
 1M      #c# = 1000000 (int)
--5e9    #c# = -5000000000 (int)
+-5e9    #c# = -5000000000 (int, exact)
+5e-1    #c# = 0.5 (real, not exact)
 4Q      #c# = 4e30 (int)
 \end{verbatim}
 
@@ -63,7 +65,7 @@ Integers can be coerced from other types:
 \begin{itemize}
 \item Booleans coerce to \texttt{0} (False) or \texttt{1} (True)
 \item Numeric strings with no decimal point are parsed as integers (e.g., \texttt{"42"} becomes \texttt{42})
-\item \texttt{real} values are truncated (e.g., \texttt{int(3.7)} becomes \texttt{3})
+\item \texttt{real} values are truncated (e.g., \texttt{f.int(3.7)} becomes \texttt{3})
 \end{itemize}
 
 \subsection{Real}
@@ -167,7 +169,7 @@ The \texttt{i} suffix on a number creates a complex literal. The \texttt{<|} ope
 3.14 + 2.71i  #c# real=3.14, imag=2.71
 \end{verbatim}
 
-Note: \texttt{3 + 4i} is parsed as \texttt{3 + (4i)} -- the \texttt{+} is the addition operator, and \texttt{4i} is a single complex literal. This means complex arithmetic uses the same operators as other numeric types.
+Note: \texttt{3 + 4i} is a single complex literal in rectangular form. The \texttt{+} is part of the literal, not the addition operator.
 
 \paragraph{Polar Form}
 \begin{verbatim}
@@ -213,6 +215,7 @@ Sets containing mixed types are allowed. Duplicate elements are automatically re
 \begin{verbatim}
 EBNF:
 set_literal = "{", [ { data, ","}, data ], "}"
+            | "{", range_spec, "}"
 \end{verbatim}
 
 Examples:
@@ -274,11 +277,23 @@ $msg [string]= f.str( "The value is ", 42,
 Additional string functions include \texttt{f.upperc()} (uppercase), \texttt{f.lowerc()} (lowercase), and \texttt{f.format()} (formatted output).
 \subsection{List}
 \subsubsection{List Data Type Definition}
-The List data type represents an ordered, indexed collection of objects. Lists support 0-based indexing, slicing, and can contain elements of different types. Lists are mutable and can be dynamically resized.
+The List data type represents an ordered, indexed collection of objects. Lists support 0-based indexing, slicing, and can contain elements of different types. Lists are mutable and can be dynamically resized. Assignment creates a copy (not a reference).
 \subsubsection{List Data Type Literals}
 \begin{verbatim}
 EBNF:
 list_literal = "[", [{ data, "," }, data], "]"
+             | "[", range_spec, "]"
+
+set_literal = "{", [ { data, ","}, data ], "}"
+            | "{", range_spec, "}"
+
+range_spec  = expression, ":", expression, [":", expression]
+            | expression, ":", expression
+            | expression, "|", expression, "|", expression
+
+slice       = [expression], ":", [expression], [":", expression]
+
+reshape     = ".", "reshape", "(", int, {",", int}, ")"
 \end{verbatim}
 \subsubsection{List Data Type Casting and Coercion}
 Lists can be created from Sets using the \texttt{f.list()} function. The order is determined by the element order in \texttt{*e}.\\
@@ -298,11 +313,31 @@ $r3 [list]= [0|1|5]       #c# [0, 0.25, 0.5, 0.75, 1]
 An ndarray is a list that is \textbf{rectangular} (all sublists have the same length) and contains only \textbf{numeric} values (\texttt{int} or \texttt{real}). Ndarray status is determined automatically -- no type annotation is needed. A list that is rectangular and all-numeric gains ndarray operations; all other lists remain standard lists.
 
 \paragraph{Detection Rules}
+A list is an ndarray if and only if it satisfies all of the following:
+\begin{enumerate}
+\item All elements are \texttt{int} or \texttt{real} (no strings, bools, or other types).
+\item All sublists (if any) have identical length (rectangular).
+\item Nesting is consistent: if element $i$ is a list, all elements $j \neq i$ must also be lists of the same length.
+\end{enumerate}
+
+\paragraph{Detection Algorithm}
+\begin{verbatim}
+is_ndarray(list):
+    if list is empty: return True  (1D ndarray)
+    if all elements are int or real: return True  (1D ndarray)
+    if any element is not a list: return False
+    lengths = [len(x) for x in list if x is list]
+    if not all equal(lengths): return False
+    return all(is_ndarray(x) for x in list if x is list)
+\end{verbatim}
+
+\paragraph{Examples}
 \begin{itemize}
-\item A list is an ndarray if all elements are \texttt{int} or \texttt{real}, and all sublists (if any) have identical length.
-\item Nested lists of different lengths are NOT ndarrays: \texttt{[[1,2], [3,4,5]]} is a standard list.
-\item Lists containing strings, bools, or other non-numeric types are NOT ndarrays.
-\item Empty lists \texttt{[]} and flat numeric lists \texttt{[1, 2, 3]} are ndarrays (1D).
+\item \texttt{[1, 2, 3]} — ndarray (1D, shape (3))
+\item \texttt{[[1,2], [3,4], [5,6]]} — ndarray (2D, shape (3,2))
+\item \texttt{[[1,2], [3,4,5]]} — NOT ndarray (different lengths)
+\item \texttt{[1, "hello", True]} — NOT ndarray (non-numeric)
+\item \texttt{[]} — ndarray (1D, shape (0))
 \end{itemize}
 
 \paragraph{Shape}
@@ -338,6 +373,7 @@ Ndarrays (and all lists) support Python-style slicing with the syntax \texttt{li
 \item \texttt{list[:]} -- full copy
 \item \texttt{list[start:stop:step]} -- with step size
 \item Negative indices count from the end: \texttt{list[-1]} is the last element
+\item Negative zero is equivalent to zero: \texttt{list[-0]} is the same as \texttt{list[0]}
 \end{itemize}
 \begin{verbatim}
 $a [list]= [0, 1, 2, 3, 4, 5]
@@ -367,9 +403,9 @@ Parts are created using the \texttt{elec.part} statement:
 \begin{verbatim}
 EBNF:
 part_statement = "elec.part", part_reference, 
-  ":", model_name, "(", [model_params], ")", 
-  ";", "des", "=", string_type, 
-  ";", "fp", "=", string_type
+  ":", model_name, "(", [model_params], ")",
+  [";", "des", "=", string_type], 
+  [";", "fp", "=", string_type]
 
 part_reference = string_type | 
   "[", { string_type, "," }, string_type, "]"
@@ -423,7 +459,7 @@ A Connection represents an electrical connection between two Pins. Connections a
 \subsubsection{Connection Data Type Literals}
 Connections can be created using the pipe syntax:
 \begin{verbatim}
-connection_literal = "(", pin, "|", pin, ")"
+connection_literal = "(", pin_literal, "|", pin_literal, ")"
 
 Example:
 ( R2[1] | J4[7] )  #c# R2 pin 1 to J4 pin 7
@@ -468,13 +504,14 @@ Variables are declared and assigned simultaneously using the following syntax:
 EBNF:
 variable            = "$", id
 variable_assignment = variable, (typed_assign | inferred_assign),
-                      [",", "M", "=", boolean]
+                      [";", "M", "=", boolean_data_type]
 
 typed_assign        = "[", type, "]", "=", data
 inferred_assign     = "t", "=", data
 
-type                = "bool" | "int" | "real" | "list" | "string" 
-                    | "set" | "part" | "connection" | "pin" 
+type                = "bool" | "int" | "real" | "complex" 
+                    | "list" | "string" | "set" 
+                    | "part" | "connection" | "pin" 
                     | "net"
 \end{verbatim}
 
@@ -485,6 +522,14 @@ $a t= 3              #c# Equivalent to $a [int]= 3
 $name t= "EDADSL"    #c# Equivalent to $name [string]= "EDADSL"
 $flag t= True        #c# Equivalent to $flag [bool]= True
 $colors t= [1, 2, 3] #c# Equivalent to $colors [list]= [1, 2, 3]
+\end{verbatim}
+
+\subsection{Variable Redeclaration}
+Variables can be redeclared with a different type. The new declaration overwrites the previous value and type:
+\begin{verbatim}
+$x [int]= 5        #c# $x is int
+$x [real]= 3.14    #c# $x is now real
+$x [string]= "hi"  #c# $x is now string
 \end{verbatim}
 
 The type determines the variable's data type:
@@ -510,7 +555,7 @@ $mutable [int]= 100    #c# Can be reassigned
 \end{verbatim}
 
 \section{Scope}
-Variables have global scope once declared. They can be accessed from any point in the program after their declaration. There is no block scoping for \texttt{if} or \texttt{for} blocks; variables declared inside these remain accessible outside. However, variables declared inside functions are local to that function and shadow any global variables of the same name (see Section~\ref{sec:function-scope}).
+Variables declared at the top level of the program have \textbf{global scope} and are visible from their declaration to the end of the program. Variables declared inside a code block (\texttt{if}, \texttt{for}, \texttt{while}, \texttt{do-while}) are \textbf{local to that block} and are destroyed when the block exits. Variables declared inside a function are local to that function (see Section~\ref{sec:function-scope}). A variable may be re-declared at the same scope level; the new declaration silently replaces the previous binding. Variables must be declared before they are accessed; reading an uninitialized variable raises a \texttt{Runtime Error}.
 
 \section{Examples}
 \begin{verbatim}
@@ -592,6 +637,7 @@ Operators are evaluated in the following order of precedence (highest to lowest)
 \begin{enumerate}
 \item Exponentiation (\texttt{\^{}}) -- right-associative
 \item Boolean negation (\texttt{!})
+\item Postfix increment/decrement (\texttt{\$var++}, \texttt{\$var--}), transpose (\texttt{.T})
 \item Set cardinality (\texttt{||a})
 \item Multiplication (\texttt{*}), Division (\texttt{/}), Floor Division (\texttt{//}), Modulo (\texttt{\%}), Dot Product (\texttt{.}), Cross Product (\texttt{x}), Matrix Multiply (\texttt{.*}), Matrix Power (\texttt{.\^{}})
 \item Left Shift (\texttt{<<}), Right Shift (\texttt{>>}), Left Rotate (\texttt{<<<[w]}), Right Rotate (\texttt{>>>[w]})
@@ -607,7 +653,7 @@ Operators are evaluated in the following order of precedence (highest to lowest)
 \item User-defined operators (\texttt{o.u.*})
 \end{enumerate}
 
-Parentheses override precedence. See Section~\ref{sec:operators} for detailed operator descriptions.
+Note: \texttt{||} has two distinct meanings depending on position. As a \textbf{prefix} operator (\texttt{||expr}), it denotes cardinality/length and has high precedence (level 4). As an \textbf{infix} operator (\texttt{expr || expr}), it denotes logical OR and has low precedence (level 10). Parentheses override precedence. See Section~\ref{sec:operators} for detailed operator descriptions.
 
 \section{Evaluation Order}
 Expressions are evaluated left-to-right for operators of equal precedence. Parentheses can be used to override precedence. Function arguments are evaluated before the function is called.

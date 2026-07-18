@@ -1,3 +1,4 @@
+\part{Physical System}
 \chapter{Physical Constraints}
 \label{sec:physical-constraints}
 Physical constraints are specified using the \texttt{phys.} prefix and control the physical layout and manufacturing requirements of the PCB.
@@ -12,7 +13,7 @@ Always use SI prefixes for typical PCB dimensions:
 \item \texttt{d=0.25m} -- 0.25 millimeters (250 $\mu$m)
 \end{itemize}
 
-SI prefixes available: \texttt{n} ($10^{-9}$), \texttt{u} ($10^{-6}$), \texttt{m} ($10^{-3}$), \texttt{k} ($10^{3}$), \texttt{M} ($10^{6}$), \texttt{G} ($10^{9}$). See Section~\ref{sec:generic-types} for details.
+SI prefixes commonly used in PCB design: \texttt{n} ($10^{-9}$), \texttt{u} ($10^{-6}$), \texttt{m} ($10^{-3}$), \texttt{k} ($10^{3}$), \texttt{M} ($10^{6}$), \texttt{G} ($10^{9}$). All SI prefixes (quecto through quetta) are supported — see Section~\ref{sec:generic-types} for the full table.
 
 \section{Priority System}
 All physical constraints accept a priority parameter that determines how conflicts are resolved:
@@ -77,25 +78,46 @@ phys.layer *p 0 -oeo
 \end{verbatim}
 
 \section{Board Definition}
-Defines the PCB stackup characteristics. Can only be invoked once:
+Defines the PCB stackup characteristics. Can only be invoked once; a \texttt{Runtime Error} is raised if called a second time.
 \begin{verbatim}
 phys.board N=<layers> T=[<thicknesses>] 
            W=[<weights>] M=[<materials>]
 \end{verbatim}
 \begin{itemize}
 \item \texttt{N} -- Number of board layers
-\item \texttt{T} -- List of thicknesses between layers in mm (length $n-1$)
+\item \texttt{T} -- List of thicknesses between layers in meters (length $n-1$)
 \item \texttt{W} -- List of copper weights in oz/ft$^2$ (length $n$)
 \item \texttt{M} -- List: [dielectric, conductor, surface-plating]
 \end{itemize}
 
-Default: \texttt{phys.board N=2 T=[1.6] W=[1, 1] 
+Default: \texttt{phys.board N=2 T=[0.0016] W=[1, 1] 
          M=["FR4", "copper", "HASL"]}
 
 Example:
 \begin{verbatim}
-phys.board N=2 T=[1.6] W=[2, 2] 
+phys.board N=2 T=[0.0016] W=[2, 2] 
            M=["FR4", "copper", "ENIG"]
+\end{verbatim}
+
+\section{Footprint Unification}
+Merges multiple parts into a single physical unit on the PCB. The parts share one combined footprint and reference designator, but retain independent electrical pins. In the schematic, united parts are grouped together.
+\begin{verbatim}
+phys.unite { <part>, <part>, ... }
+\end{verbatim}
+
+\begin{itemize}
+\item The argument is a set of part references.
+\item United parts share a single footprint on the PCB.
+\item Reference designators are combined (e.g., \texttt{R1.R2.R3}).
+\item Pins remain independently accessible for net connections.
+\end{itemize}
+
+Example:
+\begin{verbatim}
+phys.unite { R1, R2, R3 }
+#c# R1, R2, R3 share one footprint on the PCB
+#c# Schematic groups them together
+#c# R1[1], R2[1], R3[1] are still individually accessible
 \end{verbatim}
 
 \section{Net Shrink}
@@ -103,6 +125,8 @@ Minimizes the physical extent of a net:
 \begin{verbatim}
 phys.shrinknet <net> <priority>
 \end{verbatim}
+
+A \texttt{Value Error} is raised if the referenced net does not exist.
 
 Example:
 \begin{verbatim}
@@ -115,6 +139,8 @@ Creates a copper plane on a layer connected to a net:
 \begin{verbatim}
 phys.mkplane <layer_number> <net>
 \end{verbatim}
+
+A \texttt{Value Error} is raised if the referenced net or layer does not exist.
 
 Example:
 \begin{verbatim}
@@ -136,7 +162,7 @@ phys.mktext txt = <text>
 \item \texttt{font} -- Font name (e.g., \texttt{"Ubuntu Mono"})
 \item \texttt{size} -- Font size in points
 \item \texttt{material} -- Material (\texttt{"cu"} for copper silkscreen)
-\item \texttt{layer} -- Target layer (e.g., \texttt{T} for top silkscreen)
+\item \texttt{layer} -- Target layer (e.g., \texttt{T} for top silkscreen). Note: In \texttt{phys.mktext}, \texttt{T} refers to the top silkscreen layer, not the top copper layer as in \texttt{phys.layer}.
 \end{itemize}
 
 Example:
@@ -149,42 +175,54 @@ phys.mktext txt = "HV" font = "Ubuntu Mono"
 Fills a pad with vias for thermal management:
 \begin{verbatim}
 phys.viafill <pad> v=<via_hole_diameter> 
-    d=<via_spacing> [p=<pattern>]
+    d=<via_spacing> [p=<pattern>] [l=<layers>]
 \end{verbatim}
 \begin{itemize}
 \item \texttt{v} -- Via hole diameter (use \texttt{m} for mm)
 \item \texttt{d} -- Minimum spacing between via centers
 \item \texttt{p} -- Fill pattern (default: \texttt{grid})
+\item \texttt{l} -- Layer span (default: \texttt{all}). Can be \texttt{all} or a pair like \texttt{1-2}
+\end{itemize}
+
+\paragraph{Edge Cases}
+\begin{itemize}
+\item A \texttt{Value Error} is raised if \texttt{v} or \texttt{d} is $\leq 0$.
+\item A \texttt{Value Error} is raised if \texttt{d} $<$ \texttt{v} (vias would overlap).
+\item A \texttt{Value Error} is raised if an invalid pattern is specified.
+\item A \texttt{Value Error} is raised if \texttt{l} references layers outside the board stackup.
+\item A \texttt{Type Error} is raised if the pad argument is not a valid pin reference.
 \end{itemize}
 
 \subsection{Pattern Types}
 
+All patterns tile the pad area with vias at spacing \texttt{d}. Each via is placed at the vertices of the respective tiling.
+
 \paragraph{grid}
-Regular rectangular matrix of vias. Simple, predictable routing channels.
+Rectangular lattice. Vias at $(i \cdot d, \; j \cdot d)$ for integers $i, j$.
 \begin{verbatim}
 phys.viafill Q1[d] v=0.25m d=0.5m p=grid
 \end{verbatim}
 
 \paragraph{hex}
-Hexagonal honeycomb packing. Approximately 15\% denser than grid, better thermal performance.
+Densest circle packing arrangement. Each via has 6 nearest neighbors at distance $d$. Approximately 15\% denser than grid, best thermal performance due to maximized copper coverage.
 \begin{verbatim}
 phys.viafill Q1[d] v=0.25m d=0.5m p=hex
 \end{verbatim}
 
 \paragraph{stagger}
-Offset rows forming triangular lattice. Balances density with routing space between rows.
+Offset rows forming the same spacing as hex but with alternating row offsets. Equivalent to hex for thermal purposes but creates straighter routing channels between rows.
 \begin{verbatim}
 phys.viafill Q1[d] v=0.25m d=0.5m p=stagger
 \end{verbatim}
 
 \paragraph{radial}
-Concentric rings emanating from pad center. Optimal for round thermal pads under ICs.
+Concentric rings emanating from pad center. Ring radii at $r_n = d \cdot n$ for integer $n \geq 1$. Optimal for round thermal pads under ICs.
 \begin{verbatim}
 phys.viafill U1[pin5] v=0.3m d=0.8m p=radial
 \end{verbatim}
 
 \paragraph{random}
-Poisson-disk distributed vias. Avoids periodic structures that can cause resonance or EMI.
+Poisson-disk distributed vias with minimum spacing $d$. Avoids periodic structures that can cause resonance or EMI.
 \begin{verbatim}
 phys.viafill Q1[d] v=0.25m d=0.5m p=random
 \end{verbatim}
@@ -234,6 +272,7 @@ Minimizes variance of a property across a set of connections:
 phys.connmatch <property> 
     <set_of_connections> <priority>
 \end{verbatim}
+The set of connections is a \texttt{set} of connection objects (e.g., connections between parts and nets), or a variable holding such a set.
 
 \subsection{Properties}
 \begin{itemize}
@@ -880,7 +919,7 @@ Elements are then sorted lexicographically by their canonical strings.
 
 \subsection{Example}
 \begin{verbatim}
-elec.part U1: opamp(type="LM741"); des=""; 
+elec.part "U1": opamp(type="LM741"); des=""; 
     fp="Package_DIP:DIP-8_W7.62mm"
 elec.net "V-"
 elec.connect V- U1[v-]

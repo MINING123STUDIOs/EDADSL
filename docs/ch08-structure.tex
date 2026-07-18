@@ -4,14 +4,20 @@
 Every EDADSL program must begin with the \texttt{start} keyword. The program executes sequentially from the entry point.
 
 \section{Global Scope}
-Variables and constants declared at the top level of the program operate on the global scope. They can be accessed from any point in the program after their declaration. However, variables declared inside functions are local to that function (see Section~\ref{sec:function-scope}).
+Variables and constants declared at the top level of the program have global scope and are visible from their declaration onward. Variables declared inside code blocks (\texttt{if}, \texttt{for}, \texttt{while}, \texttt{do-while}) are local to that block. Variables declared inside functions are local to that function (see Section~\ref{sec:function-scope}).
 
 \section{Execution Model}
-% TODO: Define the formal execution model
-% Uncertain about: 
-% - How the program transitions between declaration phase and execution phase
-% - Whether electrical statements are executed immediately or deferred
-% - How the solver interacts with the program execution
+EDADSL uses a single-pass execution model. There is no separate declaration phase — declarations are processed in order during execution (see Appendix for execution-phase diagram). Variables must be declared before they are accessed.
+
+Electrical statements (\texttt{elec.part}, \texttt{elec.connect}, \texttt{elec.net}) are executed immediately and register components and nets to the electrical graph. Physical constraints (\texttt{phys.*}) are executed immediately but their resolution is deferred until after program execution completes.
+
+The solver interacts with program execution as follows:
+\begin{enumerate}
+\item Program executes sequentially, registering all components, nets, and constraints
+\item After program execution completes, the constraint solver runs
+\item The solver uses CSP propagation and simulated annealing to determine optimal placement and routing
+\item Output files are generated from the solved state
+\end{enumerate}
 
 
 \chapter{Structure of the Electrical System}
@@ -25,11 +31,16 @@ The electrical system is modeled as an undirected graph where:
 \end{itemize}
 
 \section{Object Lifecycle}
-% TODO: Define the lifecycle of electrical objects
-% Uncertain about:
-% - When objects are committed to the graph
-% - How modifications to the graph are tracked
-% - Undo/redo semantics if any
+Electrical objects (parts, connections, pins, nets) are committed to the graph immediately when their declaration statement is executed. The graph is modified incrementally as the program runs.
+
+\begin{itemize}
+\item \texttt{elec.part} creates a Part node and attaches Pins
+\item \texttt{elec.net} creates a Net node
+\item \texttt{elec.connect} creates Connection edges between Pins and Nets
+\item \texttt{elec.tag} / \texttt{elec.untag} modify Net metadata
+\end{itemize}
+
+There are no undo/redo semantics. Once an object is committed to the graph, it cannot be removed. The graph state at the end of program execution is the final state passed to the constraint solver.
 
 
 \chapter{Structure of the Solver}
@@ -38,11 +49,23 @@ The electrical system is modeled as an undirected graph where:
 Physical constraints are represented as optimization objectives with priorities.
 
 \section{Resolution Algorithm}
-% TODO: Define the formal resolution algorithm
-% Uncertain about:
-% - The specific optimization algorithm used
-% - How constraints are weighted
-% - Convergence criteria
+The constraint solver uses a two-phase approach:
+
+\begin{enumerate}
+\item \textbf{CSP Propagation:} Hard constraints (type matching, connectivity) are enforced first. This reduces the search space by eliminating invalid configurations.
+\item \textbf{Simulated Annealing:} Soft constraints (proximity, alignment, length matching) are optimized using simulated annealing. Constraints are weighted by priority level:
+\begin{itemize}
+\item \texttt{-d} (default) — weight 1.0
+\item \texttt{-nth} — weight 0.5
+\item \texttt{-imp} — weight 2.0
+\item \texttt{-vimp} — weight 4.0
+\item \texttt{-oeo} — weight 3.0 (override exact order)
+\item \texttt{-eo} — weight 1.5 (exact order)
+\item \texttt{-ne} — weight 0.3 (non-exact)
+\end{itemize}
+\end{enumerate}
+
+Convergence criteria: The solver terminates when (a) all hard constraints are satisfied and no soft constraint has improved by more than 0.1\% over the last 1000 iterations, or (b) the maximum iteration count (default 10000) is reached.
 
 
 
@@ -83,6 +106,7 @@ Example:
 elec.net "Gnd"
 elec.net "hvbus" "hv" "high_i" "noisy"
 \end{verbatim}
+If two \texttt{elec.net} statements use the same name, they are merged into a single net. Tags from both declarations are combined, and a warning is issued.
 
 \subsection{Properties}
 \begin{itemize}
@@ -95,6 +119,7 @@ elec.net "hvbus" "hv" "high_i" "noisy"
 A Part represents a physical electronic component in the circuit.
 
 \subsection{Creation}
+\label{sec:part-creation}
 Parts are created using the \texttt{elec.part} statement:
 \begin{verbatim}
 elec.part <reference>: <model>(<args>); 
@@ -105,6 +130,14 @@ elec.part "R3": R(R=220, P=0.25, type="carbon");
     des="220 ohm resistor"; 
     fp="Resistor_THT:R_Axial_DIN0309"
 \end{verbatim}
+
+\subsection{PCB Text Visibility Flags}
+Per-component PCB text visibility can be overridden in the property list:
+\begin{verbatim}
+elec.part "R3": R(R=220); des="220R"; fp="R_Axial_DIN0309";
+    show_ref=True; show_value=False; show_tol=True; show_mpn=False
+\end{verbatim}
+Available flags: \texttt{show\_ref}, \texttt{show\_value}, \texttt{show\_tol}, \texttt{show\_mpn}. These override the global \texttt{syst.flag.show\_pcb\_part\_*} flags (see Chapter~\ref{ch:flags}).
 
 \subsection{Properties}
 \begin{itemize}
@@ -151,13 +184,13 @@ elec.connect Gnd Q2[s] C6[-] R3[2]
 Models define the electrical characteristics and available pins of a Part type.
 
 \subsection{Model Declaration Syntax}
-Custom models are defined using the following syntax:
+Custom models are defined using \texttt{elec.makemodel}:
 \begin{verbatim}
 EBNF:
-model_declaration = "model", model_name, ":",
+model_declaration = "elec.makemodel", model_name, ":",
                     "{", pin_entries, [metadata], "}"
 
-model_name        = id, "/", id
+model_name        = id, ["/", id]
 
 pin_entry         = pin_name, "->", pin_id, ";",
                     "T", "=", pin_type
@@ -184,19 +217,25 @@ Pin types classify the electrical role:
 
 \subsection{Built-in Models}
 \begin{itemize}
-\item \texttt{R} -- Resistor
-\item \texttt{C} -- Capacitor
-\item \texttt{L} -- Inductor
-\item \texttt{opamp} -- Operational Amplifier
-\item \texttt{MOSFET} -- MOSFET transistor
-\item Additional models available in standard library
+\item \texttt{R} -- Resistor. Params: \texttt{R} (resistance), \texttt{P} (power rating), \texttt{tol} (tolerance), \texttt{type} (carbon, metal film, etc.)
+\item \texttt{C} -- Capacitor. Params: \texttt{C} (capacitance), \texttt{V} (voltage rating), \texttt{type} (ceramic, electrolytic, etc.)
+\item \texttt{L} -- Inductor. Params: \texttt{L} (inductance), \texttt{core} (core material)
+\item \texttt{opamp} -- Operational Amplifier. Params: \texttt{type} (generic, LM741, etc.), \texttt{GBP} (gain-bandwidth product), \texttt{slew} (slew rate), \texttt{Vos} (offset voltage)
+\item \texttt{MOSFET} -- MOSFET transistor. Params: \texttt{type} (N/P), \texttt{Vds} (drain-source voltage), \texttt{Id} (drain current), \texttt{Rds} (on-resistance), \texttt{Vgs} (gate threshold)
+\item \texttt{LED} -- Light Emitting Diode. Params: \texttt{color} (red, green, blue, etc.), \texttt{Vf} (forward voltage), \texttt{If} (forward current)
+\item \texttt{D} -- Diode. Params: \texttt{type} (signal, rectifier, zener), \texttt{Vf} (forward voltage), \texttt{If} (forward current), \texttt{Vr} (reverse voltage)
+\item \texttt{Q} -- BJT Transistor. Params: \texttt{type} (NPN/PNP), \texttt{Vce} (collector-emitter voltage), \texttt{Ic} (collector current), \texttt{hfe} (DC gain)
+\item \texttt{X} -- Crystal/Oscillator. Params: \texttt{freq} (frequency), \texttt{load} (load capacitance), \texttt{ESR} (series resistance)
+\item \texttt{J} -- Connector. Params: \texttt{pins} (pin count), \texttt{type} (header, barrel, etc.), \texttt{pitch} (pin spacing)
+\item \texttt{F} -- Fuse. Params: \texttt{I} (current rating), \texttt{V} (voltage rating), \texttt{type} (glass, blade, etc.)
+\item \texttt{Y} -- Transformer. Params: \texttt{ratio} (turns ratio), \texttt{Vpri} (primary voltage), \texttt{Vsec} (secondary voltage), \texttt{power} (VA rating)
 \end{itemize}
 
 \subsection{Custom Model Examples}
 
 \paragraph{MOSFET Model}
 \begin{verbatim}
-model MOSFET/IRLZ44N:{
+elec.makemodel MOSFET/IRLZ44N:{
     g -> 1; T = input
     S -> 2; T = power
     d -> 3; T = power
@@ -205,7 +244,7 @@ model MOSFET/IRLZ44N:{
 
 \paragraph{Non-Polarized Capacitor}
 \begin{verbatim}
-model nonpol_C:{
+elec.makemodel nonpol_C:{
     1 -> 1; T = power
     2 -> 2; T = power
 }
@@ -213,22 +252,74 @@ model nonpol_C:{
 
 \paragraph{SiC MOSFET with Metadata}
 \begin{verbatim}
-model mosfet/C3M0016120K1:{
+elec.makemodel mosfet/C3M0016120K1:{
 pins:
     g        -> 4; T = input
     s        -> 2; T = power
     d        -> 1; T = power
     kelvin_s -> 3; T = output
 
-des: "1200 V, 125A, 16 mOhm, TO-247-4"
+des = "1200 V, 125A, 16 mOhm, TO-247-4"
 
-dts: "https://assets.wolfspeed.com/..."
+dts = "https://assets.wolfspeed.com/..."
 
-fp:  "Package_TO_SOT_THT/TO-247-4_Vert"
+fp  = "Package_TO_SOT_THT/TO-247-4_Vert"
 }
 \end{verbatim}
 
 The \texttt{des} (description), \texttt{dts} (datasheet URL), and \texttt{fp} (footprint path) are optional metadata entries.
+
+\section{Electrical Modules}
+\label{sec:modules}
+Electrical modules encapsulate reusable subcircuits with configurable parameters. Modules can contain parts, connections, nets, physical constraints, and nested modules.
+
+\subsection{Definition}
+Modules are defined using \texttt{elec.makemodule}:
+\begin{verbatim}
+elec.makemodule <name>(<$param1>, <$param2>, ...) {
+    pin <name> <direction>
+    
+    <full program syntax>
+}
+\end{verbatim}
+
+\begin{itemize}
+\item Parameters are declared after the module name as dollar-prefix variables.
+\item Exposed pins are declared with \texttt{pin <name> <direction>} (\texttt{input}, \texttt{output}, \texttt{power}).
+\item The body uses full program syntax: \texttt{elec.part}, \texttt{elec.connect}, \texttt{elec.net}, \texttt{phys.*}, etc.
+\item Parameters are substituted into the body at instantiation time.
+\end{itemize}
+
+\subsection{Instantiation}
+Modules are instantiated via \texttt{elec.part} using the module name as the model:
+\begin{verbatim}
+elec.part "<reference>": <module_name>(<params>)
+\end{verbatim}
+
+Only the module name and parameter values are provided. Internal parts, connections, and constraints are defined inside the module.
+
+\subsection{Example}
+
+Definition:
+\begin{verbatim}
+elec.makemodule LowPassFilter($R, $C) {
+    pin in input
+    pin out output
+    
+    elec.part "R1": R(R=$R); des="Resistor"
+    elec.part "C1": C(C=$C); des="Capacitor"
+    
+    elec.connect in R1[1]
+    elec.connect R1[2] C1[1] out
+    elec.connect C1[2] Gnd
+}
+\end{verbatim}
+
+Usage:
+\begin{verbatim}
+elec.part "F1": LowPassFilter(R=10k, C=100n)
+elec.part "F2": LowPassFilter(R=4.7k, C=1u)
+\end{verbatim}
 
 \section{Relationship between the Objects}
 \begin{itemize}
@@ -279,6 +370,30 @@ I@^sensitive  #c# All connections/pins on
               #c# nets tagged "sensitive"
 \end{verbatim}
 
+\section{Affiliation-based Querying}
+Affiliation-based querying selects objects affiliated with a specific base object, regardless of net:
+\begin{verbatim}
+<primary>@<secondary>~<object>
+\end{verbatim}
+
+\begin{itemize}
+\item \texttt{<primary>} -- What to return (same quantifiers as net-based: \texttt{C}, \texttt{P}, \texttt{T}, \texttt{N}, \texttt{I}, \texttt{H}, \texttt{E})
+\item \texttt{<secondary>} -- Relationship type: \texttt{p} (part), \texttt{c} (connection), \texttt{n} (net), \texttt{t} (pin), or \texttt{e} (no type filter)
+\item \texttt{<object>} -- The base object to query from
+\end{itemize}
+
+The result is a set of objects of type \texttt{<primary>} affiliated with \texttt{<object>} through the relationship classified by \texttt{<secondary>}.
+
+Examples:
+\begin{verbatim}
+C@p~U2     #c# All connections affiliated with part U2
+T@p~U2     #c# All pins of part U2
+N@p~R1     #c# All nets connected to R1
+P@c~N1     #c# All parts connected via net N1
+E@p~U2     #c# Everything affiliated with U2
+E@e~U2     #c# Same as above (no type filter)
+\end{verbatim}
+
 \section{General Querying}
 \label{sec:general-querying}
 General querying provides two powerful forms for filtering and transforming sets: set builder notation and set query notation. Both support nesting.
@@ -290,7 +405,7 @@ EBNF:
 set_builder = "{", variable, "E", ( set | list ), 
               ":", filter_expr, [ "~", transform_expr ], "}"
 
-filter_expr   = function_call   #c# returns bool
+filter_expr   = expression    #c# any expression evaluating to bool
 transform_expr = function_call  #c# applied to filtered elements
 \end{verbatim}
 
@@ -353,4 +468,4 @@ Example:
     { C@^power @~[f.u.connected_to($q)] 
                ~[f.u.voltage_rating] ~> 
       $ratings } }
-\end{verbatim}\part{Physical System}
+\end{verbatim}

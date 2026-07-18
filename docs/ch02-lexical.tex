@@ -1,6 +1,6 @@
 \chapter{Lexical Structure}
 \section{Character Set}
-EDADSL supports the Full Unicode Character-set, but the Language itself only uses ASCII.
+EDADSL uses ASCII for identifiers, keywords, operators, and grammar symbols. Unicode characters are permitted within string literals and comments.
 \section{Whitespace}
 Whitespace is defined using the following Regular Expression:
 \begin{verbatim}
@@ -13,8 +13,10 @@ Comments are defined using the following Regular Expressions:
 \begin{verbatim}
 RegEx:
 Line_Comments                 = "#c#"[^\n]*
-Multiline_Comments            = "#c#{" ... "}c#"
+Multiline_Comments            = "#c#", "{", [any characters], "}#c#"
 \end{verbatim}
+
+Multiline comments start with \texttt{\#c\#\{} and end with \texttt{\}#c\#}. Nested multiline comments are not supported.
 
 Examples:
 \begin{verbatim}
@@ -24,29 +26,30 @@ $x [int]= 5  #c# Inline comment
 #c#{
 This is a
 multiline comment
-}c#
+}#c#
 
-$x [int]= 5 #c#{ inline }c# + 3
+$x [int]= 5 #c#{ inline }#c# + 3
 \end{verbatim}
 
 \section{Identifiers}
 Identifiers are defined using the following Regular Expressions:
 \begin{verbatim}
 RegEx:
-id                            = [_a-zA-Z0-9]+
+id                            = [_a-zA-Z][_a-zA-Z0-9]*
 \end{verbatim}
 
 \section{Keywords}
 The language uses the following Keywords defined using the following Regular Expressions:
 \begin{verbatim}
-Generic_Keywords:    start halt if else for gotomarker gotojump 
+Generic_Keywords:    start halt if else otherwise for while do break continue
+                     gotomarker gotojump 
                      writetolog make.pcb make.schematic export 
-                     echo return let letop skip
+                     echo return let letop skip function L::
 
 Physical_Keywords:   phys\.[a-z]+
                      Known Physical Keywords:
                      phys.prox  phys.creep  phys.layer
-                     phys.side  phys.shrinknet  phys.mkplane
+                     phys.shrinknet  phys.mkplane
                      phys.viafill  phys.connectioncurrent
                      phys.align  phys.connmatch  phys.board
                      phys.mktext
@@ -60,7 +63,7 @@ System_Keywords:     syst\.[a-z]+
                      Known System Keywords:
                      syst.flag\.[a-z]+
 \end{verbatim}
-Keywords are reserved identifiers and may not be used as variable names, function names, or constant names.
+Keywords are reserved identifiers and may not be used as variable names, function names, or constant names. Keywords are case-sensitive: \texttt{if} is a keyword, but \texttt{If} or \texttt{IF} is an identifier.
 
 \section{Literals}
 For the Lexical Structure of Literals see:  Section~\ref{sec:generic-types} (Types).
@@ -71,12 +74,15 @@ User-defined Operators are defined using the following Regular Expressions:
 \begin{verbatim}
 User_Operators     = o\.u\.[_a-zA-Z0-9]+
 \end{verbatim}
+The \texttt{o.u.} prefix is distinct from dot-access chains (\texttt{obj.property}): \texttt{o.u.} is always followed by an operator name and used in infix position, while dot-access is always \texttt{identifier.identifier} and denotes property access.
 
 \section{Delimiters}
 EDADSL uses the following Delimiters:
 \begin{verbatim}
-() [] {} . , : |
+() [] {} . , : ; @ ~ | %N
 \end{verbatim}
+
+The \texttt{\%N} token is a statement separator, not a comment. It allows multiple statements on a single line. The \texttt{::} token denotes a code block opener. The semicolon \texttt{;} appears in modifier syntax (\texttt{;M=}, \texttt{;P=}, \texttt{;T=}) and property separators.
 
 \section{Tokenization Rules}
 The Tokenization follows the following Rules: \\
@@ -98,4 +104,7 @@ Statements within a code block are separated by implicit newlines. The \texttt{\
 }
 \end{verbatim}
 The \texttt{\%N} token is primarily useful inside inline code blocks where writing multiple lines is impractical.
+
+\section{End of File}
+Source files must end with a newline character. A line comment at the end of the file without a trailing newline is permitted but discouraged.
 

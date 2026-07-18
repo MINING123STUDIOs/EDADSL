@@ -1,5 +1,14 @@
 \chapter{Evaluation Model} %Abstract
-Expressions in EDADSL are evaluated according to standard mathematical precedence rules. The evaluation model is eager (strict), meaning all sub-expressions are evaluated before the operator is applied.
+Expressions in EDADSL are evaluated according to standard mathematical precedence rules. The evaluation model is eager (strict), meaning all sub-expressions are evaluated before the operator is applied, with the following exceptions:
+
+\begin{itemize}
+\item \texttt{\&\&} and \texttt{||}: Short-circuit evaluation. \texttt{a \&\& b} evaluates \texttt{b} only if \texttt{a} is \texttt{True}. \texttt{a || b} evaluates \texttt{b} only if \texttt{a} is \texttt{False}.
+\item \texttt{?->}: Conditional expressions only evaluate the taken branch.
+\item \texttt{*}: If either operand evaluates to \texttt{0} (int or real), the result is \texttt{0} and the other operand is not evaluated.
+\end{itemize}
+
+\section{Evaluation Order}
+Within an expression, operands are evaluated left-to-right. Function arguments are evaluated left-to-right before the function is called.
 
 \section{Operator Precedence}
 % Reference to Chapter 7 (Expressions)
@@ -14,22 +23,23 @@ Type coercion follows the hierarchy: \texttt{int} $<$ \texttt{real} $<$ \texttt{
 \item \texttt{bool} coerces to \texttt{int}: \texttt{True} becomes \texttt{1}
 \item \texttt{bool} coerces to \texttt{real}: \texttt{True} becomes \texttt{1.0}
 \item \texttt{bool} coerces to \texttt{complex}: \texttt{True} becomes \texttt{1 + 0i}
+\item \texttt{bool} coerces to \texttt{string}: \texttt{True} becomes \texttt{"true"}, \texttt{False} becomes \texttt{"false"}
 \item Mixed numeric operations promote to the wider type: \texttt{int + real} $\rightarrow$ \texttt{real}, \texttt{real + complex} $\rightarrow$ \texttt{complex}
 \item Coercion is never lossy in the upward direction
-\item Downward coercion (\texttt{complex} $\rightarrow$ \texttt{real}, \texttt{real} $\rightarrow$ \texttt{int}) requires explicit casting and may raise errors
+\item Downward coercion (\texttt{complex} $\rightarrow$ \texttt{real}, \texttt{real} $\rightarrow$ \texttt{int}) raises a \texttt{Type Error} unless done explicitly via a casting function (e.g., \texttt{f.int()}, \texttt{f.real()})
 \end{itemize}
 
 
 \chapter{Execution Order}  %Concrete
 
 \section{Sequential Execution}
-Program statements are executed sequentially from the entry point (\texttt{start}).
+Program statements are executed sequentially from the entry point (\texttt{start}). Electrical statements (\texttt{elec.part}, \texttt{elec.connect}, \texttt{elec.net}) execute immediately and register components to the electrical graph. Physical constraints (\texttt{phys.*}) execute immediately but their resolution is deferred until after program execution completes.
+
+\section{Expression Evaluation}
+Within a single expression, operands are evaluated left-to-right. Function arguments are evaluated left-to-right before the function is called. Short-circuit operators (\texttt{\&\&}, \texttt{||}) may skip evaluation of the right operand when the result is determined.
 
 \section{Declaration Order}
-% TODO: Define whether declarations are processed before execution
-% Uncertain about:
-% - Can parts be referenced before they are declared?
-% - How does the order of elec.part and elec.connect statements affect the result?
+Variables must be declared before they are accessed. Reading a variable before its declaration statement has been executed raises a \texttt{Runtime Error}. Declarations are processed in order during execution (there is no separate declaration phase). Variable types may change on redeclaration.
 
 
 \chapter{Constraint Resolution}
@@ -49,11 +59,14 @@ EDADSL uses a dynamic type system with distinct types for electrical and non-ele
 \end{itemize}
 
 \section{Type Safety}
-% TODO: Define formal type safety guarantees
-% Uncertain about:
-% - Whether sets can contain mixed types
-% - How function argument type checking works
-% - Runtime vs compile-time type checking
+EDADSL performs type checking at both compile time and runtime:
+
+\begin{itemize}
+\item \textbf{Compile-time:} Type mismatches in variable declarations (e.g., \texttt{\$x [int]= "hello"}) are detected when the script is parsed.
+\item \textbf{Runtime:} Type mismatches in function arguments and operator usage are detected when the code is executed. A \texttt{Type Error} is raised for incompatible types.
+\item \textbf{Sets:} Sets can contain any data type. Mixed-type sets are allowed.
+\item \textbf{Coercion:} Numeric types coerce upward: \texttt{int} $\to$ \texttt{real} $\to$ \texttt{complex}. Other types do not coerce.
+\end{itemize}
 
 
 

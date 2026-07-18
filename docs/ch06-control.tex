@@ -2,17 +2,21 @@
 EDADSL provides several control flow constructs for conditional execution, iteration, and program flow control.
 
 \section{Conditional Execution}
-Conditional execution uses the \texttt{if} keyword followed by a boolean expression and a code block. An optional \texttt{else} clause provides an alternative code block executed when the condition is \texttt{False}:
+Conditional execution uses the \texttt{if} keyword followed by a boolean expression and a code block. Additional conditions can be tested with \texttt{otherwise}. A final \texttt{else} clause provides a fallback code block executed when no conditions match:
 \begin{verbatim}
 EBNF:
 conditional = "if", boolean_expression, 
               "::", code_block,
+              { "otherwise", boolean_expression, 
+                "::", code_block },
               ["else", "::", code_block]
 
 Example:
 $flag [bool]= True
 if $flag ::{
     f.print("Flag is set")
+} otherwise $other ::{
+    f.print("Other condition")
 } else ::{
     f.print("Flag is not set")
 }
@@ -43,7 +47,144 @@ for $c E $colors ::{
 The loop variable (\texttt{\$c}) takes on each value in the list/set in sequence.
 
 \paragraph{Variable Scoping}
-The loop variable is \textbf{not} block-scoped: it persists after the loop exits, retaining the last value assigned during iteration. Loop variables declared at the top level are global. Loop variables declared inside a function are local to that function (see Section~\ref{sec:function-scope}).
+The loop variable is block-scoped: it is only visible inside the loop body and is destroyed when the loop exits. If the loop iterates over an empty list, the loop body never executes and the variable is never initialized; accessing it after the loop raises a \texttt{Runtime Error}.
+
+\section{While Loops}
+While loops repeat a code block as long as a boolean condition evaluates to \texttt{True}.
+
+\subsection{Basic While Loop}
+\begin{verbatim}
+EBNF:
+while_loop = "while", boolean_expression, 
+             "::", code_block
+
+Example:
+$i [int]= 0
+while $i < 5 ::{
+    f.print($i)
+    $i = $i + 1
+}
+\end{verbatim}
+
+\paragraph{Variable Scoping}
+While loops do not introduce any implicit variables. Any variables declared inside the loop body are block-scoped and destroyed when the loop exits. Variables used in the loop condition must be declared before the loop.
+
+\subsection{While with Else Clause}
+An optional \texttt{else} clause executes when the loop condition becomes \texttt{False}. If the loop exits via \texttt{break}, the \texttt{else} clause is \textbf{not} executed:
+\begin{verbatim}
+EBNF:
+while_loop = "while", boolean_expression, 
+             "::", code_block,
+             ["else", "::", code_block]
+
+Example:
+$i [int]= 0
+while $i < 5 ::{
+    $i = $i + 1
+} else ::{
+    f.print("Loop completed normally")
+}
+
+Example with break:
+$i [int]= 0
+while $i < 10 ::{
+    if $i == 3 ::{
+        break
+    }
+    $i = $i + 1
+} else ::{
+    f.print("This will NOT be printed")
+}
+\end{verbatim}
+
+\subsection{Do-While Loops}
+Do-while loops execute the code block \textbf{at least once} before evaluating the condition:
+\begin{verbatim}
+EBNF:
+do_while = "do", "::", code_block,
+           "while", boolean_expression
+
+Example:
+$val [real]= f.random()
+do ::{
+    $val = f.random()
+} while $val < 0.5
+\end{verbatim}
+The code block executes first, then the condition is checked. If the condition is \texttt{True}, the loop repeats. The same block-scoping rules as while loops apply: variables declared inside the code block are destroyed when the block exits. If the code block raises an error, the loop terminates immediately and the condition is not evaluated. \texttt{break} and \texttt{continue} work as expected inside do-while loops.
+
+\subsection{Break and Continue}
+\texttt{break} exits the innermost loop immediately. \texttt{continue} skips the remainder of the current iteration and proceeds to the next evaluation of the loop condition:
+\begin{verbatim}
+EBNF:
+break_stmt    = "break"
+continue_stmt = "continue"
+
+Example:
+for $x E $values ::{
+    if $x < 0 ::{
+        continue
+    }
+    if $x > 100 ::{
+        break
+    }
+    f.print($x)
+}
+
+Example with while:
+$i [int]= 0
+while $i < 10 ::{
+    $i = $i + 1
+    if $i % 2 == 0 ::{
+        continue
+    }
+    f.print($i)
+}
+\end{verbatim}
+\texttt{break} and \texttt{continue} apply only to the innermost enclosing loop.
+
+\subsection{Nested While Loops}
+While loops may be nested to arbitrary depth:
+\begin{verbatim}
+Example:
+$rows [int]= 3
+$cols [int]= 3
+$i [int]= 0
+while $i < $rows ::{
+    $j [int]= 0
+    while $j < $cols ::{
+        f.print("Cell (" + f.str($i) + "," + f.str($j) + ")")
+        $j = $j + 1
+    }
+    $i = $i + 1
+}
+\end{verbatim}
+
+\subsection{Safety: Maximum Iteration Limit}
+To prevent infinite loops, the interpreter enforces a maximum iteration count per loop. The limit is controlled by \texttt{syst.flag.max\_loop\_iter} (default: 100000). If a loop exceeds this limit, a \texttt{Value Error} is raised:
+\begin{verbatim}
+Example:
+syst.flag.max_loop_iter 500
+$i [int]= 0
+while $i < 1000 ::{
+    $i = $i + 1
+}
+f.print($i)  # never reached — Value Error at 501 iterations
+\end{verbatim}
+The limit applies independently to each loop. Nested loops each have their own counter.
+
+\subsection{Infinite Loops}
+An infinite loop can be written with \texttt{True} as the condition. Use \texttt{break} to exit:
+\begin{verbatim}
+Example:
+$count [int]= 0
+while True ::{
+    $count = $count + 1
+    if $count == 10 ::{
+        break
+    }
+}
+f.print($count)   #c# Prints: 10
+\end{verbatim}
 
 \section{Goto Statements}
 Goto statements provide unconditional jumps to labeled positions:
@@ -58,7 +199,9 @@ f.print("This will not be printed")
 gotomarker skip_section
 f.print("Jumped here")
 \end{verbatim}
-Gotomarkers and gotojumps can cross function and loop boundaries. Nesting is allowed.
+
+\paragraph{Warning -- Deprecated Usage}
+Goto statements are \textbf{strongly discouraged}. They make code difficult to read, debug, and maintain. Prefer structured control flow (\texttt{if}, \texttt{for}, \texttt{while}, \texttt{break}, \texttt{continue}) for all new code. Gotos are retained for backward compatibility only. Gotos may cross loop boundaries (e.g., jump from outside a loop into the loop body) but may not cross function boundaries.
 
 \section{End of Program Statements}
 \begin{verbatim}
@@ -82,7 +225,7 @@ f.print("Hello, EDADSL!")
 writetolog "Board design completed successfully"
 \end{verbatim}
 \begin{itemize}
-\item \texttt{echo} -- Keyword that prints a variable reference to the console
+\item \texttt{echo} -- Keyword that prints a variable reference to the console. Only accepts a variable, not an arbitrary expression. Use \texttt{f.print()} for expression output.
 \item \texttt{writetolog} -- Keyword that appends a message to the log file
 \end{itemize}
 
@@ -215,6 +358,12 @@ There are no Domain-Restrictions for the function inside $\mathbb{R}^n$.
 \subsubsection{Regular Trigonometric Functions}
 Important: Angles are interpreted as Radians by Default.\\
 The Regular Trigonometric Functions (Sine, Cosine and Tangent) ( denoted as \texttt{sin, cos, tan} ) return the Sine, Cosine, or Tangent of the Argument. \\
+
+\paragraph{Edge Cases -- Trigonometric Functions}
+\begin{itemize}
+\item A \texttt{Type Error} is raised if the argument is not \texttt{int}, \texttt{real}, or \texttt{complex}.
+\end{itemize}
+
 Morphology of the Trigonometric Functions:
 \begin{verbatim}
 EBNF:
@@ -293,9 +442,7 @@ This Example would return \texttt{[0, 30, 90]}.\\
 For Arctangent there is no Domain-Restrictions for the functions inside $\mathbb{R}^n$. \\
 For Arcsine and Arccosine the Domain is Restricted to $[-1,1]^n$.\\
 
-\subsubsection{Inverse Tangent Function based on a Vector Argument}
-
-\newpage
+\subsubsection{Inverse Tangent of Complex Argument}
 \subsubsection{Hyperbolic Functions}
 The Hyperbolic Functions (Hyperbolic Sine, Hyperbolic Cosine and Hyperbolic Tangent) ( denoted as \texttt{sinh, cosh, tanh} ) return the Hyperbolic Sine, Hyperbolic Cosine, or Hyperbolic Tangent of the Argument. \\
 Morphology of the Hyperbolic Functions:
@@ -442,18 +589,31 @@ f.sqrt(3 + 4i)    #c# Returns approximately 2 + 1i
 f.sqrt(0)          #c# Returns 0.0
 \end{verbatim}
 
-\paragraph{Power Function}
-The \texttt{pow} function returns the first argument raised to the power of the second argument. \\
+\subsubsection{Power and Modular Exponentiation Function}
+The \texttt{pow} function computes exponentiation and optional modular exponentiation. \\
 Morphology:
 \begin{verbatim}
 EBNF:
-"f.pow", "(", argument, ",", argument, ")"
+"f.pow", "(", argument, ",", argument, 
+  [ ",", argument ], ")"
 \end{verbatim}
-Example:
+With two arguments, \texttt{pow(a, b)} returns $a^b$. With three arguments, \texttt{pow(a, b, c)} returns $a^b \bmod c$ (modular exponentiation). Modular exponentiation is efficient for large exponents and is used in cryptographic and hardware applications. \\
+
+Return type: returns \texttt{int} when both arguments are \texttt{int} and the result is exact; returns \texttt{real} otherwise (e.g., negative exponents, fractional exponents).
+Examples:
 \begin{verbatim}
-f.pow(2, 3)   #c# Returns 8.0
-f.pow(9, 0.5) #c# Returns 3.0
+f.pow(2, 3)         #c# Returns 8 (int, both args int, result exact)
+f.pow(9, 0.5)       #c# Returns 3.0
+f.pow(2, 10)        #c# Returns 1024
+f.pow(3, 4, 7)      #c# Returns 4  (81 mod 7)
+f.pow(2, 32, 100)   #c# Returns 96  (4294967296 mod 100)
+f.pow(3, -1, 7)     #c# Returns 5  (modular inverse: 3*5=15==1 mod 7)
+f.pow(3, -2, 7)     #c# Returns 4  (5^2=25==4 mod 7, i.e. 3^(-2) mod 7)
+f.pow(3, -3, 7)     #c# Returns 6  (5^3=125==6 mod 7, i.e. 3^(-3) mod 7)
+f.pow(5, -1, 13)    #c# Returns 8  (5*8=40==1 mod 13)
 \end{verbatim}
+Domain restrictions: When \texttt{c} is provided, \texttt{a} and \texttt{c} must be \texttt{int} and \texttt{c} must be positive. Without \texttt{c}, \texttt{b} must be non-negative (negative exponents on \texttt{int} would produce fractions). With \texttt{c}, negative \texttt{b} computes $a^b \bmod c$ via the modular multiplicative inverse: first find $a^{-1} \bmod c$ (which exists when $\gcd(a, c) = 1$), then raise to $|b|$.
+
 \paragraph{Complex Overload}
 The function also accepts Complex Arguments. For complex $z_1$ and $z_2$, the result is computed via:
 \[
@@ -603,6 +763,12 @@ f.rect(1, 1.5708)      #c# Returns approximately 0 + 1i
 
 \paragraph{Radians to Degrees}
 The \texttt{rad2deg} function converts an angle from radians to degrees.
+
+\paragraph{Edge Cases -- Angle Conversion}
+\begin{itemize}
+\item A \texttt{Type Error} is raised if the argument is not \texttt{int} or \texttt{real}.
+\end{itemize}
+
 \begin{verbatim}
 EBNF:
 "f.rad2deg", "(", real, ")"
@@ -626,6 +792,12 @@ f.deg2rad(0)     #c# Returns 0.0
 \end{verbatim}
 
 \subsubsection{Rounding Functions}
+
+\paragraph{Edge Cases -- Rounding Functions}
+\begin{itemize}
+\item A \texttt{Type Error} is raised if the argument to \texttt{f.floor}, \texttt{f.ceil}, or \texttt{f.round} is not \texttt{int} or \texttt{real}.
+\end{itemize}
+
 \paragraph{Floor Function}
 The \texttt{floor} function rounds the argument down to the nearest integer. \\
 Morphology:
@@ -653,40 +825,107 @@ f.ceil(-2.7)   #c# Returns -2
 \end{verbatim}
 
 \paragraph{Round Function}
-The \texttt{round} function rounds the argument to the nearest integer. \\
+The \texttt{round} function rounds the argument to the nearest value. Without \texttt{digits}, rounds to the nearest integer. With \texttt{digits}, rounds to the specified number of decimal places. \\
 Morphology:
 \begin{verbatim}
 EBNF:
-"f.round", "(", argument, ")"
+"f.round", "(", argument, [ ",", "digits", "=", int ], ")"
 \end{verbatim}
-Example:
-\begin{verbatim}
-f.round(2.5)   #c# Returns 3
-f.round(2.4)   #c# Returns 2
-\end{verbatim}
-
-\subsubsection{Power and Modular Exponentiation Function}
-The \texttt{pow} function computes exponentiation and optional modular exponentiation. \\
-Morphology:
-\begin{verbatim}
-EBNF:
-"f.pow", "(", argument, ",", argument, 
-  [ ",", argument ], ")"
-\end{verbatim}
-With two arguments, \texttt{pow(a, b)} returns $a^b$. With three arguments, \texttt{pow(a, b, c)} returns $a^b \bmod c$ (modular exponentiation). Modular exponentiation is efficient for large exponents and is used in cryptographic and hardware applications. \\
 Examples:
 \begin{verbatim}
-f.pow(2, 10)        #c# Returns 1024
-f.pow(3, 4, 7)      #c# Returns 4  (81 mod 7)
-f.pow(2, 32, 100)   #c# Returns 96  (4294967296 mod 100)
-f.pow(3, -1, 7)     #c# Returns 5  (modular inverse: 3*5=15==1 mod 7)
-f.pow(3, -2, 7)     #c# Returns 4  (5^2=25==4 mod 7, i.e. 3^(-2) mod 7)
-f.pow(3, -3, 7)     #c# Returns 6  (5^3=125==6 mod 7, i.e. 3^(-3) mod 7)
-f.pow(5, -1, 13)    #c# Returns 8  (5*8=40==1 mod 13)
+f.round(2.5)                #c# Returns 3
+f.round(2.4)                #c# Returns 2
+f.round(3.14159, digits=2)  #c# Returns 3.14
+f.round(3.14159, digits=0)  #c# Returns 3
+f.round(3.14159, digits=-1) #c# Returns 0
+f.round(155, digits=-2)     #c# Returns 200
 \end{verbatim}
-Domain restrictions: When \texttt{c} is provided, \texttt{a} and \texttt{c} must be \texttt{int} and \texttt{c} must be positive. Without \texttt{c}, \texttt{b} must be non-negative (negative exponents on \texttt{int} would produce fractions). With \texttt{c}, negative \texttt{b} computes $a^b \bmod c$ via the modular multiplicative inverse: first find $a^{-1} \bmod c$ (which exists when $\gcd(a, c) = 1$), then raise to $|b|$.
+
+Negative \texttt{digits} rounds to the nearest $10^n$: \texttt{digits=-1} rounds to nearest 10, \texttt{digits=-2} to nearest 100, etc.
+
+\paragraph{E-Series Rounding}
+The \texttt{eseries} function rounds a value to the nearest standard E-series value. The E-series are logarithmically spaced value series used for resistors, capacitors, and inductors. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.eseries", "(", argument, ",", string, [",", "rm", "=", string], ")"
+\end{verbatim}
+The first argument is the value to round (must be \texttt{int} or \texttt{real}). The second argument is the series name: \texttt{"E3"}, \texttt{"E6"}, \texttt{"E12"}, \texttt{"E24"}, \texttt{"E48"}, \texttt{"E96"}, or \texttt{"E192"} (case-insensitive: \texttt{"e24"} is equivalent to \texttt{"E24"}). The optional \texttt{rm} parameter specifies the rounding mode: \texttt{"nearest"} (default), \texttt{"floor"}, or \texttt{"ceil"}. Returns the value in the selected series, scaled to the correct decade. \\
+
+\paragraph{Edge Cases}
+\begin{itemize}
+\item A \texttt{Type Error} is raised if the first argument is not \texttt{int} or \texttt{real}.
+\item Zero returns \texttt{0} directly (0$\Omega$ resistors are valid components).
+\item A \texttt{Value Error} is raised if the value is negative.
+\item A \texttt{Value Error} is raised if the series name is not one of the valid E-series (E3, E6, E12, E24, E48, E96, E192).
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+f.eseries(330, "E24")              #c# Returns 330
+f.eseries(350, "E24")              #c# Returns 330
+f.eseries(350, "E12")              #c# Returns 330
+f.eseries(350, "E6")               #c# Returns 330
+f.eseries(390, "E24")              #c# Returns 390
+f.eseries(4.7e3, "E12")            #c# Returns 4700
+f.eseries(1.5e3, "E3")             #c# Returns 2200
+f.eseries(330, "e24")              #c# Returns 330 (case-insensitive)
+f.eseries(0, "E24")               #c# Returns 0
+f.eseries(330, "E5")              #c# Value Error
+f.eseries(-100, "E24")            #c# Value Error
+f.eseries("abc", "E24")           #c# Type Error
+f.eseries(330, "E24", rm="floor") #c# Returns 330
+f.eseries(350, "E24", rm="ceil")  #c# Returns 390
+\end{verbatim}
+
+\paragraph{E-Series Reference Tables}
+All values below are the base values within one decade (1.0 to 10). Multiply by $10^n$ for other decades. \\
+\textbf{E3:} 1.0, 2.2, 4.7 \\
+\textbf{E6:} 1.0, 1.5, 2.2, 3.3, 4.7, 6.8
+
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+\textbf{E12} & \textbf{E24} & \textbf{E48} & \textbf{E96} & & \\
+\hline
+1.0 & 1.0 & 1.00 & 1.00 & 1.21 & 1.43 \\
+1.2 & 1.1 & 1.10 & 1.10 & 1.33 & 1.58 \\
+1.5 & 1.2 & 1.21 & 1.21 & 1.47 & 1.74 \\
+1.8 & 1.3 & 1.33 & 1.33 & 1.62 & 1.91 \\
+2.2 & 1.5 & 1.47 & 1.47 & 1.78 & 2.10 \\
+2.7 & 1.6 & 1.62 & 1.62 & 1.96 & 2.31 \\
+3.3 & 1.8 & 1.78 & 1.78 & 2.15 & 2.54 \\
+3.9 & 2.0 & 1.96 & 1.96 & 2.37 & 2.80 \\
+4.7 & 2.2 & 2.15 & 2.15 & 2.61 & 3.09 \\
+5.6 & 2.4 & 2.37 & 2.37 & 2.87 & 3.40 \\
+6.8 & 2.7 & 2.61 & 2.61 & 3.16 & 3.74 \\
+8.2 & 3.0 & 2.87 & 2.87 & 3.48 & 4.12 \\
+ & 3.3 & 3.16 & 3.16 & 3.83 & 4.53 \\
+ & 3.6 & 3.48 & 3.48 & 4.22 & 4.99 \\
+ & 3.9 & 3.83 & 3.83 & 4.64 & 5.49 \\
+ & 4.3 & 4.22 & 4.22 & 5.11 & 6.04 \\
+ & 4.7 & 4.64 & 4.64 & 5.62 & 6.65 \\
+ & 5.1 & 5.11 & 5.11 & 6.19 & 7.32 \\
+ & 5.6 & 5.62 & 5.62 & 6.81 & 8.06 \\
+ & 6.2 & 6.19 & 6.19 & 7.50 & 8.87 \\
+ & 6.8 & 6.81 & 6.81 & 8.25 & 9.76 \\
+ & 7.5 & 7.50 & 7.50 &  &  \\
+ & 8.2 & 8.25 & 8.25 &  &  \\
+ & 9.1 & 9.09 & 9.09 &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{E192} contains 192 values per decade (0.1\% tolerance). The base values are: 1.00, 1.02, 1.05, 1.07, 1.10, 1.13, 1.15, 1.18, 1.21, 1.24, 1.27, 1.30, 1.33, 1.37, 1.40, 1.43, 1.47, 1.50, 1.54, 1.58, 1.62, 1.65, 1.69, 1.74, 1.78, 1.82, 1.87, 1.91, 1.96, 2.00, 2.05, 2.10, 2.15, 2.21, 2.26, 2.32, 2.37, 2.43, 2.49, 2.55, 2.61, 2.67, 2.74, 2.80, 2.87, 2.94, 3.01, 3.09, 3.16, 3.24, 3.32, 3.40, 3.48, 3.57, 3.65, 3.74, 3.83, 3.92, 4.02, 4.12, 4.22, 4.32, 4.42, 4.53, 4.64, 4.75, 4.87, 4.99, 5.11, 5.23, 5.36, 5.49, 5.62, 5.76, 5.90, 6.04, 6.19, 6.34, 6.49, 6.65, 6.81, 6.98, 7.15, 7.32, 7.50, 7.68, 7.87, 8.06, 8.25, 8.45, 8.66, 8.87, 9.09, 9.31, 9.53, 9.76.
 
 \subsubsection{Extrema Functions}
+
+\paragraph{Edge Cases -- Extrema Functions}
+\begin{itemize}
+\item A \texttt{Value Error} is raised if the list is empty.
+\item A \texttt{Type Error} is raised if the argument is not a list.
+\end{itemize}
+
 \paragraph{Minimum Function}
 The \texttt{min} function returns the minimum value in a list. For ndarrays, an optional \texttt{axis} parameter reduces along that axis. \\
 Morphology:
@@ -807,16 +1046,42 @@ Example:
 f.str("Hello")           #c# Returns "Hello"
 f.str(42)                #c# Returns "42"
 f.str("Value: ", 3.14)   #c# Returns "Value: 3.14"
+f.str()                  #c# Returns "" (empty string)
 \end{verbatim}
 
+With zero arguments, \texttt{f.str()} returns an empty string.
+
 \subsubsection{String Formatting}
-The \texttt{format} function formats a non-string datatype. \\
+The \texttt{format} function formats a value using printf-style format specifiers. \\
 Morphology:
 \begin{verbatim}
 EBNF:
-"f.format", "(", argument, [ ",", options ], ")"
+"f.format", "(", argument, ",", string_type, ")"
 \end{verbatim}
-% TODO: Document specific format options
+
+Format specifiers:
+\begin{itemize}
+\item \texttt{\%d} -- Integer decimal
+\item \texttt{\%f} -- Fixed-point real (default 6 decimal places)
+\item \texttt{\%e} -- Scientific notation
+\item \texttt{\%g} -- Shortest of \texttt{\%f} or \texttt{\%e}
+\item \texttt{\%s} -- String
+\item \texttt{\%x} -- Hexadecimal (integers)
+\item \texttt{\%o} -- Octal (integers)
+\item \texttt{\%b} -- Binary (integers)
+\end{itemize}
+
+Width and precision: \texttt{\%<width>f}, \texttt{\%<width>.<precision>f}
+
+Examples:
+\begin{verbatim}
+f.format(3.14159, "%.2f")     #c# Returns "3.14"
+f.format(42, "%d")            #c# Returns "42"
+f.format(42, "%5d")           #c# Returns "   42"
+f.format(0xff, "%x")          #c# Returns "ff"
+f.format(3.14159, "%4.1f")    #c# Returns " 3.1"
+f.format(1234567, "%e")       #c# Returns "1.234567e+06"
+\end{verbatim}
 
 \subsubsection{String Case Functions}
 \paragraph{Uppercase}
@@ -861,8 +1126,8 @@ f.concat("a", "b", "c")         #c# Returns ["a", "b", "c"]
 
 \subsubsection{Type Conversion}
 \paragraph{List to Set}
-The \texttt{set} function converts a list to a set. Only objects allowed in sets (parts, connections, pins, nets) are preserved; forbidden objects are silently dropped with a warning. \\
-Morphology:
+The \texttt{set} function converts a list to a set. All unique elements are preserved; duplicate elements are removed and order is lost. \\
+Morphism:
 \begin{verbatim}
 EBNF:
 "f.set", "(", list, ")"
@@ -873,7 +1138,7 @@ f.set([Q1, Q2, R5])   #c# Returns {Q1, Q2, R5}
 \end{verbatim}
 
 \paragraph{Set to List}
-The \texttt{list} function converts a set to a list. The order is determined by the order elements appear in \texttt{*e}. \\
+The \texttt{list} function converts a set to a list. The order is determined by the lexicographic order of the canonical string representations of the elements. \\
 Morphology:
 \begin{verbatim}
 EBNF:
@@ -887,6 +1152,14 @@ f.list({Q1, Q2})   #c# Returns [Q1, Q2] (order from *e)
 
 \subsection{Ndarray Functions}
 Functions for operating on ndarrays (and lists). These functions extend the built-in math and list functions with array-aware behavior.
+
+\paragraph{Edge Cases -- Reduction Functions}
+\begin{itemize}
+\item \texttt{f.sum([])} returns \texttt{0} (additive identity).
+\item \texttt{f.prod([])} returns \texttt{1} (multiplicative identity).
+\item \texttt{f.mean([])}, \texttt{f.std([])}, \texttt{f.var([])}, \texttt{f.median([])} raise a \texttt{Value Error} on empty lists.
+\item A \texttt{Type Error} is raised if the argument is not a list.
+\end{itemize}
 
 \subsubsection{Reduction Functions}
 Reduction functions collapse an ndarray along an axis. When \texttt{axis} is omitted, the operation is applied to the flattened array (all elements). When \texttt{axis = 0}, the operation is applied row-wise (collapses rows). When \texttt{axis = 1}, the operation is applied column-wise (collapses columns).
@@ -936,6 +1209,7 @@ f.std([1, 1, 1, 1])            #c# Returns 0.0
 \end{verbatim}
 
 \paragraph{Variance}
+Computes the population variance (divides by $N$, not $N-1$).
 \begin{verbatim}
 EBNF:
 "f.var", "(", argument, [ ",", "axis", "=", int ], ")"
@@ -961,6 +1235,12 @@ EBNF:
 "f.percentile", "(", argument, ",", real, ")"
 \end{verbatim}
 The second argument is a percentage (0--100).
+
+\paragraph{Edge Cases -- Percentile}
+\begin{itemize}
+\item A \texttt{Value Error} is raised if the list is empty.
+\item A \texttt{Value Error} is raised if the percentage is outside 0--100.
+\end{itemize}
 \begin{verbatim}
 f.percentile([10, 20, 30, 40, 50], 50)  #c# Returns 30
 f.percentile([10, 20, 30, 40, 50], 0)   #c# Returns 10
@@ -993,12 +1273,24 @@ Modes:
 \end{itemize}
 \begin{verbatim}
 f.peak([1, -3, 2, -5, 4])                  #c# Returns 9 (p2p: 4 - (-5))
-f.peak([1, -3, 2, -5, 4], mode="f.abs")      #c# Returns 5
+f.peak([1, -3, 2, -5, 4], mode="abs")      #c# Returns 5
 f.peak([1, -3, 2, -5, 4], mode="pos")      #c# Returns 4
 f.peak([1, -3, 2, -5, 4], mode="neg")      #c# Returns -5
 \end{verbatim}
 
+\paragraph{Edge Cases -- Peak}
+\begin{itemize}
+\item A \texttt{Value Error} is raised if the list is empty.
+\item A \texttt{Value Error} is raised if an invalid mode is specified.
+\end{itemize}
+
 \subsubsection{Search Functions}
+
+\paragraph{Edge Cases -- Search Functions}
+\begin{itemize}
+\item A \texttt{Value Error} is raised if the list is empty.
+\end{itemize}
+
 \paragraph{Index of Minimum}
 \begin{verbatim}
 EBNF:
@@ -1062,6 +1354,15 @@ f.unique([1, 2, 2, 3, 3, 3])   #c# Returns [1, 2, 3]
 \end{verbatim}
 
 \subsubsection{Linear Algebra Functions}
+
+\paragraph{Edge Cases -- Linear Algebra Functions}
+\begin{itemize}
+\item A \texttt{Type Error} is raised if the argument is not an \texttt{ndarray} (matrix).
+\item A \texttt{Value Error} is raised for \texttt{f.det}, \texttt{f.inv}, \texttt{f.eig}, \texttt{f.eigvec}, \texttt{f.lu}, \texttt{f.qr}, \texttt{f.trace}, \texttt{f.cond} if the matrix is not square.
+\item A \texttt{Value Error} is raised for \texttt{f.cond} if the matrix is singular.
+\item A \texttt{Value Error} is raised for \texttt{f.normalize} if the vector has zero magnitude.
+\end{itemize}
+
 \paragraph{Determinant}
 \begin{verbatim}
 EBNF:
@@ -1139,9 +1440,20 @@ f.qr([[1,1],[1,-1]])   #c# Returns Q and R such that Q .* R = original
 EBNF:
 "f.chol", "(", argument, ")"
 \end{verbatim}
-Returns the lower triangular matrix \texttt{L} such that \texttt{L .* L.T = original}. A Value Error is raised if the matrix is not positive definite.
+Returns the lower triangular matrix \texttt{L} such that \texttt{L .* L.T = original}. \\
+
+\paragraph{Edge Cases}
+\begin{itemize}
+\item A \texttt{Type Error} is raised if the argument is not a list of lists (ndarray).
+\item A \texttt{Value Error} is raised if the matrix is not square.
+\item A \texttt{Value Error} is raised if the matrix is not symmetric.
+\item A \texttt{Value Error} is raised if the matrix is not positive definite.
+\end{itemize}
+
 \begin{verbatim}
 f.chol([[4,2],[2,3]])   #c# Returns [[2,0],[1,1.7321]]
+f.chol([[1,2],[3,4]])   #c# Value Error (not symmetric)
+f.chol([[1,2,3]])       #c# Value Error (not square)
 \end{verbatim}
 
 \paragraph{Trace}
@@ -1192,6 +1504,13 @@ EBNF:
 "f.histogram", "(", argument, ",", int, ")"
 \end{verbatim}
 Returns a list of 2 lists: \texttt{[edges, counts]} where \texttt{edges} has \texttt{n + 1} values and \texttt{counts} has \texttt{n} values.
+
+\paragraph{Edge Cases -- Histogram}
+\begin{itemize}
+\item A \texttt{Type Error} is raised if the first argument is not a list.
+\item A \texttt{Value Error} is raised if \texttt{n <= 0}.
+\end{itemize}
+
 \begin{verbatim}
 f.histogram([1, 2, 3, 4, 5], 3)
 #c# Returns [[1.0, 2.333, 3.667, 5.0], [2, 1, 2]]
@@ -1200,6 +1519,13 @@ f.histogram([1, 2, 3, 4, 5], 3)
 
 \subsection{Higher-Order Functions}
 Higher-order functions take lambda expressions as arguments. They operate on lists and ndarrays. See Section~\ref{sec:lambda} for lambda syntax.
+
+\paragraph{Edge Cases -- Higher-Order Functions}
+\begin{itemize}
+\item A \texttt{Type Error} is raised if the second argument is not a lambda.
+\item A \texttt{Type Error} is raised if the first argument is not a list.
+\item \texttt{f.reduce} raises a \texttt{Value Error} if the list is empty and no initial value is provided (third argument).
+\end{itemize}
 
 \subsubsection{Map}
 The \texttt{map} function applies a lambda to each element of a list and returns a new list with the results. The input list is not modified.
@@ -1457,13 +1783,7 @@ f.find([], L::($x [int])->{ $x > 0 })
 \end{itemize}
 
 \subsubsection{Sort with Comparator}
-The \texttt{sort} function returns a new sorted list. Without a comparator, default sort order is ascending. An optional lambda comparator can be provided for custom ordering.
-
-\paragraph{Morphology}
-\begin{verbatim}
-EBNF:
-"f.sort", "(", list, [ ",", lambda ], ")"
-\end{verbatim}
+The \texttt{sort} function returns a new sorted list. Without a comparator, default sort order is ascending. An optional lambda comparator can be provided for custom ordering (see Sort paragraph above for EBNF).
 
 \paragraph{Comparator Lambda}
 The comparator lambda receives two elements (\texttt{\$a} and \texttt{\$b}) and must return a numeric value:
@@ -1604,6 +1924,15 @@ Morphology:
 EBNF:
 "f.len", "(", ( list | string | set ), ")"
 \end{verbatim}
+
+\paragraph{Edge Cases -- Collection Utilities}
+\begin{itemize}
+\item A \texttt{Type Error} is raised if the argument to \texttt{f.len} is not a list, string, or set.
+\item A \texttt{Type Error} is raised if the arguments to \texttt{f.concat} are not all lists or all strings.
+\item A \texttt{Type Error} is raised if the argument to \texttt{f.set} is not a list.
+\item A \texttt{Type Error} is raised if the argument to \texttt{f.list} is not a set.
+\end{itemize}
+
 Examples:
 \begin{verbatim}
 f.len([1, 2, 3])     #c# Returns 3
@@ -1720,7 +2049,7 @@ function f.u.add( $a, $b )::{
 }
 \end{verbatim}
 
-Function parameters are local variables scoped to the function body. To return a value, set the \texttt{\$retval} variable.
+Function parameters are local variables scoped to the function body. Parameters may optionally include type annotations using the \texttt{[type]} syntax, consistent with lambda parameters. To return a value, set the \texttt{\$retval} variable.
 
 \subsection{Function Calls}
 User-defined functions are called using the \texttt{f.u.} prefix:
@@ -1734,7 +2063,7 @@ $result [int]= f.u.add( 3, 5 )   #c# $result = 8
 \end{verbatim}
 
 \subsection{Return Values}
-Functions return values by setting the \texttt{\$retval} variable. If \texttt{\$retval} is not set, the function returns nothing:
+Functions return values by setting the \texttt{\$retval} variable. A bare \texttt{return} without a value, or a function that never sets \texttt{\$retval}, returns \texttt{None}.
 \begin{verbatim}
 function f.u.square( $x )::{
     $retval [int]= $x ^ 2
@@ -1766,9 +2095,9 @@ Functions have local scoping. Variables declared inside a function are only acce
 Functions can return values using two equivalent mechanisms:
 \begin{itemize}
 \item Assign to \texttt{\$retval} and let execution fall through the closing \texttt{\}}
-\item Use the \texttt{return} keyword, which is syntactic sugar that assigns its argument to \texttt{\$retval} and immediately exits the function
+\item Use the \texttt{return} keyword (see Chapter 3, \texttt{f\_statement} rule), which is syntactic sugar that assigns its argument to \texttt{\$retval} and immediately exits the function
 \end{itemize}
-Both \texttt{return \$value} and \texttt{\$retval [type]= \$value} followed by natural function exit are valid and equivalent.
+Both \texttt{return \$value} and \texttt{\$retval [type]= \$value} followed by natural function exit are valid and equivalent. If both are used, \texttt{return} takes precedence.
 
 \paragraph{Examples}
 \begin{verbatim}
