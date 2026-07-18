@@ -753,3 +753,460 @@ slice("hello", 1, 4)
 
 "λx"[1]
 #c# = "x"
+
+
+
+
+# ============================================================
+# INPUT / OUTPUT (I/O) FUNCTIONS
+# ============================================================
+
+# ============================================================
+# CONSOLE INPUT
+# ============================================================
+
+input()
+# Read one line from standard input.
+# Returns string.
+
+input(prompt)
+# Display prompt and read one line.
+
+inputInt(prompt)
+# Read and parse integer input.
+
+inputReal(prompt)
+# Read and parse real input.
+
+inputBool(prompt)
+# Read boolean input.
+
+inputChoice(prompt, choices)
+# Read a value selected from a list of choices.
+
+
+# ============================================================
+# CONSOLE OUTPUT
+# ============================================================
+
+print(value)
+# Print value with newline.
+
+println(value)
+# Alias for print.
+
+write(value)
+# Print value without newline.
+
+printf(format, args...)
+# Formatted output.
+
+format(value, options)
+# Convert value to formatted string.
+
+
+# ============================================================
+# STANDARD STREAMS
+# ============================================================
+
+stdin
+# Standard input stream.
+
+stdout
+# Standard output stream.
+
+stderr
+# Standard error stream.
+
+
+readLine(stream)
+# Read line from stream.
+
+writeLine(stream, value)
+# Write line to stream.
+
+flush(stream)
+# Flush output buffer.
+
+
+# ============================================================
+# COMMAND LINE ARGUMENTS
+# ============================================================
+
+args()
+# Return command-line arguments.
+
+argc()
+# Number of arguments.
+
+arg(index)
+# Get argument by index.
+
+arg(name)
+# Get named argument.
+
+
+Examples:
+
+# tool script.edl board.pcb
+args()[0]
+# "board.pcb"
+
+
+# ============================================================
+# FILE I/O
+# ============================================================
+
+readFile(path)
+# Read entire file as string.
+
+writeFile(path, data)
+# Write string to file.
+
+appendFile(path, data)
+# Append data to file.
+
+exists(path)
+# Check if file exists.
+
+deleteFile(path)
+# Delete file.
+
+copyFile(source, destination)
+
+moveFile(source, destination)
+
+
+# ============================================================
+# FILE HANDLES
+# ============================================================
+
+open(path, mode)
+
+close(file)
+
+read(file, size)
+
+readLine(file)
+
+write(file, data)
+
+seek(file, position)
+
+tell(file)
+# Current position.
+
+eof(file)
+# End-of-file check.
+
+
+# File modes:
+
+"r"
+# Read
+
+"w"
+# Write / truncate
+
+"a"
+# Append
+
+"r+"
+# Read/write
+
+
+# ============================================================
+# DIRECTORY FUNCTIONS
+# ============================================================
+
+createDirectory(path)
+
+removeDirectory(path)
+
+listDirectory(path)
+
+existsDirectory(path)
+
+currentDirectory()
+
+changeDirectory(path)
+
+
+# ============================================================
+# PATH FUNCTIONS
+# ============================================================
+
+joinPath(parts...)
+
+basename(path)
+
+dirname(path)
+
+extension(path)
+
+normalizePath(path)
+
+absolutePath(path)
+
+relativePath(path, base)
+
+
+# ============================================================
+# TEXT FILE FUNCTIONS
+# ============================================================
+
+readLines(path)
+# Returns list of strings.
+
+writeLines(path, lines)
+
+appendLines(path, lines)
+
+
+# ============================================================
+# CSV FUNCTIONS
+# ============================================================
+
+readCSV(path)
+
+writeCSV(path, data)
+
+parseCSV(text)
+
+formatCSV(data)
+
+
+# ============================================================
+# JSON FUNCTIONS
+# ============================================================
+
+parseJSON(text)
+
+formatJSON(object)
+
+readJSON(path)
+
+writeJSON(path, object)
+
+
+# ============================================================
+# YAML / CONFIG FUNCTIONS
+# ============================================================
+
+readConfig(path)
+
+writeConfig(path, object)
+
+parseYAML(text)
+
+formatYAML(object)
+
+
+# ============================================================
+# BINARY DATA
+# ============================================================
+
+readBytes(path)
+
+writeBytes(path, bytes)
+
+byteLength(data)
+
+toBytes(value)
+
+fromBytes(bytes)
+
+
+# ============================================================
+# ENCODING
+# ============================================================
+
+base64Encode(data)
+
+base64Decode(text)
+
+hexEncode(data)
+
+hexDecode(text)
+
+utf8Encode(text)
+
+utf8Decode(bytes)
+
+
+# ============================================================
+# SERIALIZATION
+# ============================================================
+
+serialize(object)
+
+deserialize(data)
+
+saveObject(path, object)
+
+loadObject(path)
+
+
+# ============================================================
+# STREAMING
+# ============================================================
+
+createStream()
+
+pipe(source, destination)
+
+copyStream(source, destination)
+
+streamAvailable(stream)
+
+
+# ============================================================
+# PROCESS I/O
+# ============================================================
+
+execute(command)
+
+spawn(command)
+
+wait(process)
+
+kill(process)
+
+processOutput(process)
+
+processError(process)
+
+
+# ============================================================
+# LOGGING
+# ============================================================
+
+log(message)
+
+logInfo(message)
+
+logWarning(message)
+
+logError(message)
+
+logDebug(message)
+
+
+setLogLevel(level)
+
+"debug"
+"info"
+"warning"
+"error"
+
+
+# ============================================================
+# EDA-SPECIFIC FILE I/O
+# ============================================================
+
+loadProject(path)
+
+saveProject(path)
+
+loadPCB(path)
+
+savePCB(path)
+
+loadSchematic(path)
+
+saveSchematic(path)
+
+loadNetlist(path)
+
+saveNetlist(path)
+
+loadBOM(path)
+
+saveBOM(path)
+
+
+# ============================================================
+# EDA IMPORT / EXPORT
+# ============================================================
+
+importGerber(path)
+
+exportGerber(path)
+
+importDXF(path)
+
+exportDXF(path)
+
+importSPICE(path)
+
+exportSPICE(path)
+
+
+# ============================================================
+# DATABASE I/O
+# ============================================================
+
+openDatabase(path)
+
+closeDatabase(db)
+
+query(db, sql)
+
+insert(db, table, data)
+
+update(db, table, data)
+
+delete(db, table, condition)
+
+
+# ============================================================
+# NETWORK I/O
+# ============================================================
+
+httpGet(url)
+
+httpPost(url, data)
+
+download(url, path)
+
+upload(path, url)
+
+tcpConnect(host, port)
+
+tcpSend(socket, data)
+
+tcpReceive(socket)
+
+
+# ============================================================
+# SERIAL / HARDWARE I/O
+# ============================================================
+
+serialOpen(port, baud)
+
+serialClose(port)
+
+serialWrite(port, data)
+
+serialRead(port)
+
+gpioRead(pin)
+
+gpioWrite(pin, value)
+
+
+# ============================================================
+# TIMING / BUFFERING
+# ============================================================
+
+sleep(ms)
+
+delay(ms)
+
+flush()
+
+bufferCreate()
+
+bufferClear()
+
+bufferSize()
