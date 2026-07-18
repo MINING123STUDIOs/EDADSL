@@ -2262,3 +2262,382 @@ integrateSymbolic(expression, variable)
 
 solveEquation(expression, variable)
 # Solves symbolic equations.
+
+
+# ============================================================
+# NULL / OPTIONAL OPERATORS
+# ============================================================
+
+??          # Null coalescing
+            # a ?? b returns a if not null, otherwise b
+
+?.          # Safe member access
+            # obj?.member returns null if obj is null
+
+?[]         # Safe indexing
+            # array?[index]
+
+
+# ============================================================
+# PIPELINE / FUNCTIONAL OPERATORS
+# ============================================================
+
+|>          # Pipeline operator
+            # value |> function
+            #
+            # Example:
+            # data |> filter(valid) |> sort()
+
+
+>>          # Function composition
+            # f >> g creates g(f(x))
+
+
+<<          # Reverse composition
+            # f << g creates f(g(x))
+
+
+# ============================================================
+# RANGE OPERATORS
+# ============================================================
+
+..          # Inclusive/exclusive range
+
+1..10       # 1 through 10
+
+..          # Range creation
+
+1..<10      # Explicit exclusive end
+
+..<          # Exclusive range operator
+
+
+# ============================================================
+# IMMUTABILITY / BINDING
+# ============================================================
+
+:=          # Immutable binding
+
+::=         # Constant declaration
+
+?=          # Assign only if null
+
+
+# ============================================================
+# COLLECTION OPERATORS
+# ============================================================
+
+in          # Membership
+
+not in      # Negated membership
+
+
+|           # Union / merge
+
+&           # Intersection
+
+\           # Difference
+
+
+# Example:
+
+A | B       # combine collections
+
+A & B       # common elements
+
+A \ B       # remove elements
+
+
+# ============================================================
+# ARRAY / MATRIX OPERATORS
+# ============================================================
+
+@           # Matrix multiplication
+
+            # A @ B
+
+
+.*          # Element-wise multiplication
+
+./          # Element-wise division
+
+.^          # Element-wise power
+
+
+T           # Transpose shorthand
+
+            # A.T
+
+H           # Hermitian transpose
+
+            # A.H
+
+
+# ============================================================
+# COMPLEX NUMBER OPERATORS
+# ============================================================
+
+<|          # Create complex number
+
+3 <| 4
+
+            # equivalent:
+            # complex(3,4)
+
+
+∠           # Phase angle
+
+z ∠         # phase of complex number
+
+
+# ============================================================
+# ENGINEERING UNIT OPERATORS
+# ============================================================
+
+~           # Approximate equality
+
+            # 5V ~ 5.01V
+
+
+±           # Tolerance operator
+
+10kΩ ±5%
+
+
+×           # Engineering multiplication
+
+10 × 3
+
+
+# ============================================================
+# SIGNAL PROCESSING OPERATORS
+# ============================================================
+
+*           # Convolution context
+
+a * b       # signal convolution if signal objects
+
+
+⊗           # Tensor product
+
+
+⊕           # Signal addition / XOR depending on type
+
+
+# ============================================================
+# LOGIC OPERATORS
+# ============================================================
+
+&&          # Logical AND
+
+||          # Logical OR
+
+!           # Logical NOT
+
+
+^^          # Logical XOR
+
+
+# ============================================================
+# BITWISE OPERATORS
+# ============================================================
+
+&           # Bitwise AND
+
+|           # Bitwise OR
+
+^           # Bitwise XOR
+
+~           # Bitwise NOT
+
+<<          # Shift left
+
+>>          # Shift right
+
+
+# ============================================================
+# POINTER / REFERENCE OPERATORS
+# ============================================================
+
+&x          # Reference/address of x
+
+*x          # Dereference x
+
+
+# ============================================================
+# PATTERN MATCHING
+# ============================================================
+
+match       # Pattern matching operator
+
+
+value match
+{
+    0       => "zero"
+    1..10   => "small"
+    _       => "other"
+}
+
+
+?=          # Pattern assignment
+
+
+# ============================================================
+# EDA-SPECIFIC OPERATORS
+# ============================================================
+
+->          # Connection operator
+
+R1.pin1 -> net.VCC
+
+
+<->         # Bidirectional connection
+
+A <-> B
+
+
+~>          # Signal flow
+
+sensor ~> filter ~> output
+
+
+@           # Object query selector
+
+board@R1
+
+board@net("GND")
+
+
+# ============================================================
+# GEOMETRY OPERATORS
+# ============================================================
+
+||          # Parallel geometry
+
+⊥           # Perpendicular
+
+
+∩           # Intersection
+
+∪           # Union
+
+
+# ============================================================
+# SIMULATION OPERATORS
+# ============================================================
+
+~           # Approximate simulation result
+
+
+=>          # Transformation / mapping
+
+
+?           # Parameter sweep marker
+
+
+# Example:
+
+R = 1kΩ?
+# variable parameter
+
+
+# ============================================================
+# TYPE OPERATORS
+# ============================================================
+
+is          # Type checking
+
+as          # Type conversion
+
+
+x is Matrix
+
+x as Float
+
+
+# ============================================================
+# OPTIONAL CHAINING
+# ============================================================
+
+?.          # Safe call
+
+obj?.method()
+
+
+?()         # Safe function call
+
+fn?()
+
+
+# ============================================================
+# EVALUATION CONTROL
+# ============================================================
+
+??=         # Null assignment
+
+x ??= value
+
+
+:=          # Lazy binding
+
+name := expensiveCalculation()
+
+
+# ============================================================
+# POWERFUL ADDITION: UNITS AS OPERATORS
+# ============================================================
+
+5V          # Voltage literal
+
+10kΩ        # Resistance literal
+
+2.4GHz      # Frequency literal
+
+100nF       # Capacitance literal
+
+
+# ============================================================
+# PROPOSED FINAL CORE OPERATOR SET
+# ============================================================
+
+Arithmetic:
++ - * / % **
+
+Comparison:
+== != < <= > >= ~
+
+Logical:
+&& || !
+
+Bitwise:
+& | ^ ~ << >>
+
+Assignment:
+= := ::= ??=
+
+Navigation:
+. ?. ?[]
+
+Range:
+.. ..<
+
+Pipeline:
+|>
+
+Composition:
+>> <<
+
+Collections:
+in | & \
+
+Matrix:
+@ .* ./ .^ .T .H
+
+Pattern:
+match =>
+
+EDA:
+-> <-> ~>
+
+Units:
+±
