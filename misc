@@ -1303,3 +1303,12 @@ sha3_512(data)              # SHA-3 512-bit digest
 blake2b(data)               # BLAKE2b digest
 blake2s(data)               # BLAKE2s digest
 blake3(data)                # BLAKE3 digest
+
+
+# ============================================================
+# HASH OUTPUT FORMATS
+# ============================================================
+
+hash(data, "hex")           # hexadecimal string
+hash(data, "bytes")         # byte array
+hash(data, "int")           # integer value
