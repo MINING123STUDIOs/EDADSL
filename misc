@@ -108,26 +108,12 @@ c.NaN          Not-a-Number
 # MATH FUNCTIONS
 # ============================================================
 
-abs(x)                   Absolute value
-sign(x)                  Sign of number (-1, 0, +1)
-
-min(a, b, ...)
-max(a, b, ...)
-
 clamp(x, min, max)       Limit value to range
 
-floor(x)
-ceil(x)
-round(x)
 trunc(x)
 
-sqrt(x)
 cbrt(x)
 
-pow(x, y)
-
-exp(x)
-ln(x)
 log(x)
 log10(x)
 log2(x)
@@ -140,35 +126,10 @@ lgamma(x)
 
 
 # ============================================================
-# TRIGONOMETRY
-# ============================================================
-
-sin(x)
-cos(x)
-tan(x)
-
-asin(x)
-acos(x)
-atan(x)
-atan2(y, x)
-
-sinh(x)
-cosh(x)
-tanh(x)
-
-asinh(x)
-acosh(x)
-atanh(x)
-
-
-# ============================================================
 # COMPLEX FUNCTIONS
 # ============================================================
 
-real(z)                  Real component
-imag(z)                  Imaginary component
 
-conj(z)                  Complex conjugate
 phase(z)                 Phase angle
 
 polar(r, theta)          Create complex value
@@ -202,8 +163,6 @@ normalize(list)
 # ============================================================
 # LIST / ARRAY FUNCTIONS
 # ============================================================
-
-length(x)
 
 push(list, item)
 pop(list)
