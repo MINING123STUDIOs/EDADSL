@@ -1432,3 +1432,833 @@ conv.convolve2D(image, kernel)
 
 conv.convolveND(array, kernel)
     # N-dimensional convolution
+
+
+# ============================================================
+# TYPE / VALUE INTROSPECTION
+# ============================================================
+
+typeOf(x)
+# Returns the runtime type name of a value.
+
+isType(x, type)
+# Checks whether a value matches a specified type.
+
+isNull(x)
+# Returns true if the value is null.
+
+isDefined(x)
+# Checks whether a variable or value exists.
+
+isCallable(x)
+# Checks whether a value can be called as a function.
+
+sizeof(x)
+# Returns the memory size of an object.
+
+sizeofType(type)
+# Returns the memory size required for a type.
+
+clone(x)
+# Creates a deep copy of an object.
+
+copy(x)
+# Creates a shallow copy of an object.
+
+
+# ============================================================
+# NUMERICAL ANALYSIS
+# ============================================================
+
+derivative(f, x)
+# Calculates the derivative of function f at point x.
+
+gradient(f, point)
+# Calculates the gradient vector of a multivariable function.
+
+jacobian(f, point)
+# Calculates the Jacobian matrix of a vector function.
+
+integrate(f, a, b)
+# Computes the definite integral of f from a to b.
+
+integrateSimpson(f, a, b)
+# Performs numerical integration using Simpson's rule.
+
+integrateMonteCarlo(f, bounds)
+# Estimates an integral using Monte Carlo sampling.
+
+root(f, guess)
+# Finds a root of a function near an initial guess.
+
+roots(polynomial)
+# Finds all roots of a polynomial.
+
+minimize(f, start)
+# Finds the minimum value of a function.
+
+maximize(f, start)
+# Finds the maximum value of a function.
+
+interpolate(x, y, value)
+# Estimates a value between known data points.
+
+spline(x, y)
+# Creates a spline interpolation function.
+
+
+# ============================================================
+# OPTIMIZATION
+# ============================================================
+
+linearProgram(A, b, c)
+# Solves a linear programming optimization problem.
+
+quadraticProgram(Q, c)
+# Solves a quadratic optimization problem.
+
+leastSquares(A, b)
+# Computes the least-squares solution of a system.
+
+gradientDescent(f, initial)
+# Minimizes a function using gradient descent.
+
+newtonMethod(f, initial)
+# Finds solutions using Newton's iterative method.
+
+geneticOptimize(f, bounds)
+# Optimizes a function using a genetic algorithm.
+
+
+# ============================================================
+# STATISTICS
+# ============================================================
+
+covariance(a, b)
+# Measures how two datasets vary together.
+
+correlation(a, b)
+# Calculates normalized linear correlation.
+
+skewness(list)
+# Measures distribution asymmetry.
+
+kurtosis(list)
+# Measures distribution tail behavior.
+
+quantile(list, q)
+# Returns the value at quantile q.
+
+histogram(list, bins)
+# Creates a frequency distribution.
+
+confidenceInterval(data, confidence)
+# Calculates a statistical confidence interval.
+
+zscore(x, mean, stddev)
+# Converts a value into standard score form.
+
+normalPDF(x, mean, stddev)
+# Calculates the normal probability density function.
+
+normalCDF(x, mean, stddev)
+# Calculates the normal cumulative distribution function.
+
+poisson(lambda, k)
+# Calculates Poisson probability.
+
+binomial(n, p, k)
+# Calculates binomial probability.
+
+
+# ============================================================
+# UNITS / DIMENSIONS
+# ============================================================
+
+unitAdd(a, b)
+# Adds two compatible physical quantities.
+
+unitMultiply(a, b)
+# Multiplies quantities while combining dimensions.
+
+unitDivide(a, b)
+# Divides quantities while combining dimensions.
+
+parseUnit(string)
+# Converts a unit string into a unit object.
+
+quantity(value, unit)
+# Creates a physical quantity with units.
+
+convertTemperature(x, from, to)
+# Converts between temperature scales.
+
+isDimensionless(x)
+# Checks whether a quantity has no units.
+
+
+# ============================================================
+# PHYSICAL QUANTITY EXAMPLES
+# ============================================================
+
+v = 5V
+# Creates a voltage quantity.
+
+R = 10kΩ
+# Creates a resistance quantity.
+
+I = v / R
+# Automatically calculates current using dimensional arithmetic.
+
+
+# ============================================================
+# ELECTRICAL ENGINEERING
+# ============================================================
+
+ohmsLaw(v, r, i)
+# Calculates voltage, resistance, or current using Ohm's law.
+
+power(v, i)
+# Calculates electrical power.
+
+jouleEnergy(power, time)
+# Calculates energy from power over time.
+
+capacitorEnergy(c, voltage)
+# Calculates stored capacitor energy.
+
+inductorEnergy(l, current)
+# Calculates stored inductor energy.
+
+thermalResistance(power, temperature)
+# Calculates thermal resistance.
+
+voltageGain(input, output)
+# Calculates voltage gain ratio.
+
+currentGain(input, output)
+# Calculates current gain ratio.
+
+attenuation(db)
+# Converts attenuation values.
+
+
+# ============================================================
+# CIRCUIT ANALYSIS
+# ============================================================
+
+nodalAnalysis(circuit)
+# Performs node voltage analysis.
+
+meshAnalysis(circuit)
+# Performs mesh current analysis.
+
+acSweep(circuit, start, stop)
+# Performs AC frequency sweep simulation.
+
+dcSweep(circuit, variable)
+# Performs DC parameter sweep.
+
+transient(circuit, time)
+# Performs time-domain circuit simulation.
+
+frequencyResponse(circuit)
+# Calculates frequency response.
+
+bodePlot(circuit)
+# Generates Bode magnitude and phase data.
+
+poleZero(circuit)
+# Calculates system poles and zeros.
+
+# ============================================================
+# PCB GEOMETRY
+# ============================================================
+
+distance(a, b)
+# Calculates the geometric distance between two points or objects.
+
+angle(a, b, c)
+# Calculates the angle formed by three points.
+
+area(shape)
+# Calculates the area of a geometric shape.
+
+perimeter(shape)
+# Calculates the boundary length of a shape.
+
+intersects(a, b)
+# Checks whether two geometric objects overlap or intersect.
+
+contains(shape, point)
+# Checks whether a shape contains a point.
+
+boundingBox(object)
+# Returns the smallest rectangle containing an object.
+
+center(object)
+# Returns the center point of an object.
+
+rotate(object, angle)
+# Rotates an object around its origin.
+
+translate(object, dx, dy)
+# Moves an object by a specified offset.
+
+mirror(object, axis)
+# Mirrors an object across an axis.
+
+
+# ============================================================
+# PCB DESIGN RULE CHECKING (DRC)
+# ============================================================
+
+checkDRC(board)
+# Runs all configured design rule checks on a PCB.
+
+checkClearance(net1, net2)
+# Checks spacing between two electrical nets.
+
+checkTraceWidth(net)
+# Verifies trace widths meet design requirements.
+
+checkViaSize(via)
+# Checks whether a via matches allowed dimensions.
+
+checkUnconnectedPins(board)
+# Finds pins that are not connected.
+
+checkFloatingNets(board)
+# Detects nets without valid electrical connections.
+
+checkShorts(board)
+# Detects accidental electrical shorts.
+
+checkAntenna(board)
+# Detects antenna-rule violations on PCB traces.
+
+
+# ============================================================
+# PCB ROUTING
+# ============================================================
+
+route(net)
+# Creates a route for a specified electrical net.
+
+autoroute(board)
+# Automatically routes PCB connections.
+
+ripup(route)
+# Removes an existing route.
+
+optimizeTrace(trace)
+# Optimizes trace geometry for performance or manufacturability.
+
+lengthMatch(group)
+# Adjusts trace lengths for timing matching.
+
+calculateDelay(trace)
+# Calculates propagation delay of a PCB trace.
+
+calculateImpedance(trace)
+# Calculates controlled impedance of a trace.
+
+
+# ============================================================
+# SIGNAL PROCESSING
+# ============================================================
+
+dft(signal)
+# Calculates the discrete Fourier transform.
+
+stft(signal)
+# Calculates short-time Fourier transform.
+
+hilbert(signal)
+# Computes the Hilbert transform.
+
+envelope(signal)
+# Extracts signal amplitude envelope.
+
+unwrapPhase(signal)
+# Removes phase discontinuities.
+
+resample(signal, rate)
+# Changes the sampling rate of a signal.
+
+interpolateSignal(signal)
+# Estimates missing signal samples.
+
+quantize(signal, bits)
+# Converts a continuous signal into digital levels.
+
+snr(signal, noise)
+# Calculates signal-to-noise ratio.
+
+thd(signal)
+# Calculates total harmonic distortion.
+
+
+# ============================================================
+# CONTROL SYSTEMS
+# ============================================================
+
+transferFunction(num, den)
+# Creates a transfer function from numerator and denominator coefficients.
+
+pid(kp, ki, kd)
+# Creates a PID controller model.
+
+stepResponse(system)
+# Calculates response to a step input.
+
+impulseResponse(system)
+# Calculates response to an impulse input.
+
+rootLocus(system)
+# Calculates root locus of a control system.
+
+stateSpace(A, B, C, D)
+# Creates a state-space system representation.
+
+kalmanFilter(state)
+# Creates or applies a Kalman filter for estimation.
+
+
+# ============================================================
+# IMAGE / CAD PROCESSING
+# ============================================================
+
+imageLoad(path)
+# Loads an image file.
+
+imageSave(image, path)
+# Saves an image to a file.
+
+edgeDetect(image)
+# Detects edges in an image.
+
+threshold(image, value)
+# Converts an image into thresholded regions.
+
+blur(image)
+# Applies image blur filtering.
+
+rotateImage(image, angle)
+# Rotates an image.
+
+crop(image, rect)
+# Extracts a rectangular region from an image.
+
+ocr(image)
+# Performs optical character recognition.
+
+
+# ============================================================
+# MACHINE LEARNING
+# ============================================================
+
+normalizeFeatures(data)
+# Normalizes numerical input features.
+
+trainLinearModel(x, y)
+# Trains a linear regression model.
+
+predict(model, x)
+# Generates predictions from a trained model.
+
+kmeans(data, k)
+# Performs k-means clustering.
+
+pca(data)
+# Performs principal component analysis.
+
+confusionMatrix(actual, predicted)
+# Creates a classification performance matrix.
+
+
+# ============================================================
+# DATE / TIME
+# ============================================================
+
+date()
+# Returns the current calendar date.
+
+time()
+# Returns the current time.
+
+year()
+# Returns the current year.
+
+month()
+# Returns the current month.
+
+day()
+# Returns the current day.
+
+weekday()
+# Returns the day of the week.
+
+timestamp()
+# Returns the current Unix-style timestamp.
+
+fromTimestamp(t)
+# Converts a timestamp into a date/time object.
+
+formatDate(date, pattern)
+# Formats a date using a specified pattern.
+
+parseDate(string)
+# Converts a formatted string into a date object.
+
+
+# ============================================================
+# CONCURRENCY
+# ============================================================
+
+thread(fn)
+# Runs a function in a separate thread.
+
+parallel(fn)
+# Executes a function using parallel processing.
+
+async(fn)
+# Starts an asynchronous operation.
+
+await(task)
+# Waits for an asynchronous task to complete.
+
+mutex()
+# Creates a mutual exclusion lock.
+
+lock()
+# Acquires a lock.
+
+unlock()
+# Releases a lock.
+
+channel()
+# Creates a communication channel.
+
+send(channel, value)
+# Sends data through a channel.
+
+receive(channel)
+# Receives data from a channel.
+
+# ============================================================
+# EDA DATABASE / QUERY HELPERS
+# ============================================================
+
+select(collection, query)
+# Selects objects from a collection matching a query.
+
+where(collection, condition)
+# Filters a collection using a logical condition.
+
+groupBy(collection, key)
+# Groups objects by a specified property.
+
+sortByField(collection, field)
+# Sorts objects according to a field value.
+
+aggregate(collection, fn)
+# Combines collection values using an aggregation function.
+
+bomCost(board)
+# Calculates the estimated bill-of-materials cost.
+
+componentCount(board)
+# Returns the number of components on a board.
+
+netClass(net)
+# Returns the electrical class of a net.
+
+
+# ============================================================
+# ENGINEERING QUANTITY TYPES
+# ============================================================
+
+Voltage(value)
+# Creates a voltage quantity with unit support.
+
+Current(value)
+# Creates a current quantity with unit support.
+
+Resistance(value)
+# Creates a resistance quantity with unit support.
+
+Capacitance(value)
+# Creates a capacitance quantity with unit support.
+
+Inductance(value)
+# Creates an inductance quantity with unit support.
+
+Frequency(value)
+# Creates a frequency quantity with unit support.
+
+Power(value)
+# Creates a power quantity with unit support.
+
+Temperature(value)
+# Creates a temperature quantity with unit support.
+
+Length(value)
+# Creates a length quantity with unit support.
+
+Mass(value)
+# Creates a mass quantity with unit support.
+
+Time(value)
+# Creates a time quantity with unit support.
+
+
+# ============================================================
+# ENGINEERING CALCULATIONS
+# ============================================================
+
+calculatePower(voltage, current)
+# Calculates electrical power from voltage and current.
+
+calculateEnergy(power, time)
+# Calculates energy consumed over a time interval.
+
+calculateReactance(frequency, component)
+# Calculates capacitive or inductive reactance.
+
+calculateAdmittance(impedance)
+# Calculates the inverse of impedance.
+
+calculateQFactor(component)
+# Calculates quality factor of a resonant component.
+
+calculateBandwidth(center, q)
+# Calculates bandwidth from center frequency and quality factor.
+
+thermalAnalysis(device)
+# Performs thermal behavior calculations.
+
+stressAnalysis(material, load)
+# Performs mechanical stress calculations.
+
+
+# ============================================================
+# SIMULATION FRAMEWORK
+# ============================================================
+
+simulate(model, parameters)
+# Runs a simulation using a model and parameters.
+
+monteCarloSimulation(model, iterations)
+# Runs repeated simulations with randomized parameters.
+
+sensitivityAnalysis(model, parameter)
+# Determines how output changes with parameters.
+
+parameterSweep(model, parameter, range)
+# Runs simulations across a range of values.
+
+optimizeDesign(model, constraints)
+# Finds an optimized design satisfying constraints.
+
+
+# ============================================================
+# DATA / SCIENCE HELPERS
+# ============================================================
+
+loadDataset(path)
+# Loads a dataset from storage.
+
+saveDataset(path, data)
+# Saves a dataset to storage.
+
+csvToMatrix(path)
+# Converts CSV data into a numerical matrix.
+
+matrixToCSV(matrix, path)
+# Writes a matrix into CSV format.
+
+plot(data)
+# Creates a basic data visualization.
+
+plotXY(x, y)
+# Creates an X-Y plot.
+
+plotHistogram(data)
+# Creates a histogram visualization.
+
+plotSpectrum(signal)
+# Displays frequency spectrum information.
+
+
+# ============================================================
+# ADVANCED PCB / EDA AUTOMATION
+# ============================================================
+
+generateBOM(board)
+# Generates a bill of materials from a PCB design.
+
+compareBoards(board1, board2)
+# Compares two PCB designs for differences.
+
+findUnusedParts(board)
+# Finds components not used in the design.
+
+findUnusedPins(board)
+# Finds unused component pins.
+
+detectDuplicateReferences(board)
+# Detects duplicate component reference designators.
+
+annotateSchematic(schematic)
+# Assigns component reference identifiers.
+
+backAnnotate(board, schematic)
+# Synchronizes PCB references back into schematic.
+
+updateFootprints(board)
+# Updates PCB footprints from component definitions.
+
+updateSymbols(schematic)
+# Updates schematic symbols from libraries.
+
+
+# ============================================================
+# HARDWARE INTERFACE HELPERS
+# ============================================================
+
+measureVoltage(pin)
+# Reads voltage from a hardware measurement point.
+
+measureCurrent(pin)
+# Reads current from a hardware measurement point.
+
+measureFrequency(pin)
+# Measures signal frequency.
+
+measureTemperature(sensor)
+# Reads temperature from a sensor.
+
+logicAnalyze(channel)
+# Captures and analyzes digital signals.
+
+oscilloscope(channel)
+# Captures waveform data.
+
+powerOn(device)
+# Enables power to a device.
+
+powerOff(device)
+# Disables power to a device.
+
+
+# ============================================================
+# PCB MANUFACTURING
+# ============================================================
+
+generateGerber(board)
+# Creates Gerber fabrication files.
+
+generateDrillFile(board)
+# Creates drill manufacturing data.
+
+generatePickAndPlace(board)
+# Creates assembly placement data.
+
+generateStencil(board)
+# Creates solder paste stencil data.
+
+panelize(board, layout)
+# Creates a manufacturing panel.
+
+exportManufacturingPackage(board)
+# Exports all fabrication files.
+
+
+# ============================================================
+# VISUALIZATION
+# ============================================================
+
+show(object)
+# Displays an object visually.
+
+render(object)
+# Generates a rendered representation.
+
+preview(board)
+# Opens a PCB preview.
+
+highlight(object)
+# Highlights an object in a viewer.
+
+hide(object)
+# Hides an object.
+
+zoom(area)
+# Changes visualization zoom level.
+
+pan(dx, dy)
+# Moves the view position.
+
+
+# ============================================================
+# CONFIGURATION / ENVIRONMENT
+# ============================================================
+
+getConfig(name)
+# Reads a configuration value.
+
+setConfig(name, value)
+# Sets a configuration value.
+
+environment(name)
+# Reads an environment variable.
+
+setEnvironment(name, value)
+# Sets an environment variable.
+
+version()
+# Returns language/runtime version.
+
+features()
+# Returns supported runtime features.
+
+
+# ============================================================
+# LOGGING / DEBUGGING
+# ============================================================
+
+assert(condition, message)
+# Stops execution if a condition is false.
+
+debug(value)
+# Outputs debugging information.
+
+trace(message)
+# Records execution tracing information.
+
+profile(function)
+# Measures execution performance.
+
+memoryUsage()
+# Reports current memory usage.
+
+
+# ============================================================
+# ADVANCED MATH EXTENSIONS
+# ============================================================
+
+symbolic(expression)
+# Creates a symbolic mathematical expression.
+
+simplify(expression)
+# Simplifies a symbolic expression.
+
+differentiate(expression, variable)
+# Performs symbolic differentiation.
+
+integrateSymbolic(expression, variable)
+# Performs symbolic integration.
+
+solveEquation(expression, variable)
+# Solves symbolic equations.
