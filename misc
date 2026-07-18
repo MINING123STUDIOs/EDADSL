@@ -584,3 +584,172 @@ isAlphanumeric(str)
 
 sanitizeIdentifier(str)
 # Converts arbitrary text into valid identifier
+
+
+
+
+
+# ============================================================
+# STRING SLICING
+# ============================================================
+
+# Strings support indexing and slicing using [] syntax.
+# Slicing returns a new string and does not modify the original.
+
+# ------------------------------------------------------------
+# Single Character Indexing
+# ------------------------------------------------------------
+
+str[index]
+
+Examples:
+
+"hello"[0]       #c# = "h"
+"hello"[1]       #c# = "e"
+"hello"[4]       #c# = "o"
+
+# Negative indices count from the end:
+
+"hello"[-1]      #c# = "o"
+"hello"[-2]      #c# = "l"
+
+
+# ------------------------------------------------------------
+# Slice Syntax
+# ------------------------------------------------------------
+
+str[start:end]
+
+# Returns characters from start (inclusive)
+# to end (exclusive).
+
+Examples:
+
+"hello"[0:2]     #c# = "he"
+
+"hello"[1:4]     #c# = "ell"
+
+"hello"[:3]      #c# = "hel"
+
+"hello"[2:]      #c# = "llo"
+
+"hello"[:]       #c# = "hello"
+
+
+# ------------------------------------------------------------
+# Negative Slice Indices
+# ------------------------------------------------------------
+
+# Negative values count from the end.
+
+"hello"[-3:]     #c# = "llo"
+
+"hello"[:-1]     #c# = "hell"
+
+"hello"[-4:-1]   #c# = "ell"
+
+
+# ------------------------------------------------------------
+# Slice Step
+# ------------------------------------------------------------
+
+str[start:end:step]
+
+# step controls the direction and spacing.
+
+Examples:
+
+"abcdef"[0:6:2]     #c# = "ace"
+
+"abcdef"[1:6:2]     #c# = "bdf"
+
+"abcdef"[::-1]      #c# = "fedcba"
+
+"abcdef"[5:0:-1]    #c# = "fedcb"
+
+
+# ------------------------------------------------------------
+# Rules
+# ------------------------------------------------------------
+
+# start defaults to 0.
+# end defaults to string length.
+# step defaults to 1.
+
+# Step cannot be zero.
+
+"hello"[::0]
+#c# raises Value Error:
+#c# Slice step cannot be zero
+
+
+# ------------------------------------------------------------
+# Bounds Handling
+# ------------------------------------------------------------
+
+# Slice bounds are automatically clamped.
+
+"hello"[0:100]
+#c# = "hello"
+
+"hello"[-100:3]
+#c# = "hel"
+
+
+# ------------------------------------------------------------
+# Type Rules
+# ------------------------------------------------------------
+
+# Indexing requires an integer.
+
+"hello"[1.5]
+#c# raises Type Error
+
+
+# Slice indices require integers.
+
+"hello"[1.0:3]
+#c# raises Type Error
+
+
+# ------------------------------------------------------------
+# Assignment
+# ------------------------------------------------------------
+
+# Strings are immutable.
+# Slice assignment is not supported.
+
+$str [string]= "hello"
+
+$str[0] = "H"
+#c# raises Type Error:
+#c# Strings are immutable
+
+
+# ------------------------------------------------------------
+# Interaction With Existing Functions
+# ------------------------------------------------------------
+
+# Equivalent operations:
+
+substring("hello", 1, 4)
+#c# same as:
+"hello"[1:4]
+
+
+slice("hello", 1, 4)
+#c# same as:
+"hello"[1:4]
+
+
+# ------------------------------------------------------------
+# Unicode Handling
+# ------------------------------------------------------------
+
+# Indices operate on Unicode code points, not bytes.
+
+"λx"[0]
+#c# = "λ"
+
+"λx"[1]
+#c# = "x"
