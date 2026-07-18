@@ -101,3 +101,527 @@ c.NaN          Not-a-Number
 *fp             All footprints
 *pkg            All packages
 *layer          All board layers
+
+
+
+# ============================================================
+# MATH FUNCTIONS
+# ============================================================
+
+abs(x)                   Absolute value
+sign(x)                  Sign of number (-1, 0, +1)
+
+min(a, b, ...)
+max(a, b, ...)
+
+clamp(x, min, max)       Limit value to range
+
+floor(x)
+ceil(x)
+round(x)
+trunc(x)
+
+sqrt(x)
+cbrt(x)
+
+pow(x, y)
+
+exp(x)
+ln(x)
+log(x)
+log10(x)
+log2(x)
+
+hypot(a, b)              sqrt(a²+b²)
+
+factorial(n)
+gamma(x)
+lgamma(x)
+
+
+# ============================================================
+# TRIGONOMETRY
+# ============================================================
+
+sin(x)
+cos(x)
+tan(x)
+
+asin(x)
+acos(x)
+atan(x)
+atan2(y, x)
+
+sinh(x)
+cosh(x)
+tanh(x)
+
+asinh(x)
+acosh(x)
+atanh(x)
+
+
+# ============================================================
+# COMPLEX FUNCTIONS
+# ============================================================
+
+real(z)                  Real component
+imag(z)                  Imaginary component
+
+conj(z)                  Complex conjugate
+phase(z)                 Phase angle
+
+polar(r, theta)          Create complex value
+rect(x, y)               Create complex value
+
+abscomplex(z)            Magnitude
+arg(z)                   Argument
+
+
+# ============================================================
+# RANDOM / STATISTICS
+# ============================================================
+
+random()
+
+randInt(min, max)
+randReal(min, max)
+
+mean(list)
+median(list)
+mode(list)
+
+variance(list)
+stddev(list)
+
+percentile(list, p)
+
+normalize(list)
+
+
+# ============================================================
+# LIST / ARRAY FUNCTIONS
+# ============================================================
+
+length(x)
+
+push(list, item)
+pop(list)
+
+first(list)
+last(list)
+
+head(list, n)
+tail(list, n)
+
+reverse(list)
+
+sort(list)
+sortBy(list, fn)
+
+unique(list)
+
+flatten(list)
+
+transpose(list)
+
+reshape(array, shape)
+
+zeros(shape)
+ones(shape)
+identity(n)
+
+
+# ============================================================
+# MATRIX / LINEAR ALGEBRA
+# ============================================================
+
+det(A)                   Determinant
+
+inverse(A)
+
+trace(A)
+
+rank(A)
+
+eigen(A)
+
+svd(A)
+
+solve(A, b)
+
+norm(A)
+
+condition(A)
+
+
+# ============================================================
+# ENGINEERING FUNCTIONS
+# ============================================================
+
+db(x)                    Convert magnitude to dB
+db10(x)                  10log10(x)
+db20(x)                  20log10(x)
+
+fromDb(x)
+
+rms(list)
+
+peak(list)
+
+average(list)
+
+period(freq)
+
+frequency(period)
+
+
+# ============================================================
+# ELECTRONICS FUNCTIONS
+# ============================================================
+
+parallel(a, b, ...)
+series(a, b, ...)
+
+voltageDivider(r1, r2, vin)
+
+currentDivider(r1, r2, i)
+
+rcTime(r, c)
+
+rlTime(r, l)
+
+lcFrequency(l, c)
+
+resonanceFrequency(l, c)
+
+impedance(r, x)
+
+reactance(freq, component)
+
+
+# ============================================================
+# COMPONENT VALUE FUNCTIONS
+# ============================================================
+
+eseries(value, series)
+
+nearestE(value, series)
+
+e6(value)
+e12(value)
+e24(value)
+e48(value)
+e96(value)
+e192(value)
+
+
+# ============================================================
+# PCB / EDA FUNCTIONS
+# ============================================================
+
+is_part(x)
+is_pin(x)
+is_net(x)
+is_connection(x)
+
+connected(a, b)
+
+neighbors(x)
+
+nets(part)
+
+parts(net)
+
+pins(part)
+
+findPart(name)
+
+findNet(name)
+
+findPin(name)
+
+
+# ============================================================
+# FILTER / QUERY FUNCTIONS
+# ============================================================
+
+map(collection, function)
+
+filter(collection, function)
+
+reduce(collection, function, initial)
+
+foreach(collection, function)
+
+count(collection, condition)
+
+exists(collection, condition)
+
+all(collection, condition)
+
+
+# ============================================================
+# STRING FUNCTIONS
+# ============================================================
+
+length(str)
+
+contains(str, sub)
+
+startsWith(str, prefix)
+endsWith(str, suffix)
+
+split(str, delimiter)
+join(list, delimiter)
+
+replace(str, old, new)
+
+regexMatch(str, pattern)
+
+
+# ============================================================
+# UNIT FUNCTIONS
+# ============================================================
+
+convert(value, unit)
+
+unit(value)
+
+dimension(value)
+
+isCompatible(unit1, unit2)
+
+
+# ============================================================
+# TIME FUNCTIONS
+# ============================================================
+
+now()
+
+sleep(ms)
+
+timerStart()
+
+timerStop()
+
+
+# ============================================================
+# FILE / DATA FUNCTIONS
+# ============================================================
+
+readFile(path)
+
+writeFile(path, data)
+
+readCSV(path)
+
+writeCSV(path, data)
+
+parseJSON(str)
+
+formatJSON(obj)
+
+
+
+# ============================================================
+# STRING FUNCTIONS
+# ============================================================
+
+# ------------------------------------------------------------
+# Length / Access
+# ------------------------------------------------------------
+
+length(str)                 Get character count
+
+charAt(str, index)          Get character at index
+
+codeAt(str, index)          Get Unicode code point
+
+substring(str, start, end)  Extract substring
+
+slice(str, start, end)      Extract substring (supports negatives)
+
+
+# ------------------------------------------------------------
+# Searching
+# ------------------------------------------------------------
+
+contains(str, sub)          Check if substring exists
+
+indexOf(str, sub)           First occurrence index
+
+lastIndexOf(str, sub)       Last occurrence index
+
+find(str, sub)              Alias for indexOf
+
+count(str, sub)             Count occurrences
+
+startsWith(str, prefix)
+
+endsWith(str, suffix)
+
+
+# ------------------------------------------------------------
+# Modification
+# ------------------------------------------------------------
+
+replace(str, old, new)
+
+replaceAll(str, old, new)
+
+insert(str, index, value)
+
+remove(str, start, end)
+
+repeat(str, n)
+
+reverse(str)
+
+
+# ------------------------------------------------------------
+# Case Conversion
+# ------------------------------------------------------------
+
+toUpperCase(str)
+
+toLowerCase(str)
+
+capitalize(str)
+
+titleCase(str)
+
+swapCase(str)
+
+
+# ------------------------------------------------------------
+# Whitespace
+# ------------------------------------------------------------
+
+trim(str)
+
+trimStart(str)
+
+trimEnd(str)
+
+padLeft(str, length, char)
+
+padRight(str, length, char)
+
+
+# ------------------------------------------------------------
+# Splitting / Joining
+# ------------------------------------------------------------
+
+split(str, delimiter)
+
+splitLines(str)
+
+join(list, delimiter)
+
+partition(str, separator)
+
+
+# ------------------------------------------------------------
+# Formatting
+# ------------------------------------------------------------
+
+format(str, args...)
+
+printf(format, args...)
+
+formatNumber(value, digits)
+
+formatHex(value, width)
+
+formatBinary(value, width)
+
+
+# ------------------------------------------------------------
+# Validation
+# ------------------------------------------------------------
+
+isEmpty(str)
+
+isBlank(str)
+
+isNumeric(str)
+
+isInteger(str)
+
+isReal(str)
+
+isIdentifier(str)
+
+isValidUTF8(str)
+
+
+# ------------------------------------------------------------
+# Regex
+# ------------------------------------------------------------
+
+regexMatch(str, pattern)
+
+regexFind(str, pattern)
+
+regexFindAll(str, pattern)
+
+regexReplace(str, pattern, replacement)
+
+
+# ------------------------------------------------------------
+# Encoding
+# ------------------------------------------------------------
+
+toBytes(str)
+
+fromBytes(bytes)
+
+base64Encode(data)
+
+base64Decode(str)
+
+hexEncode(data)
+
+hexDecode(str)
+
+
+# ------------------------------------------------------------
+# EDA-Oriented String Functions
+# ------------------------------------------------------------
+
+parseReference(str)
+# "R123" -> type="R", number=123
+
+referenceType(str)
+# "C47" -> "C"
+
+referenceNumber(str)
+# "R15" -> 15
+
+normalizeName(str)
+# "  r101 " -> "R101"
+
+naturalSortKey(str)
+# Makes R2 sort before R10
+
+wildcardMatch(str, pattern)
+# "R*" matches "R1", "R2", ...
+
+
+# ------------------------------------------------------------
+# Identifier / Symbol Functions
+# ------------------------------------------------------------
+
+isUpper(str)
+
+isLower(str)
+
+isAlpha(str)
+
+isDigit(str)
+
+isAlphanumeric(str)
+
+sanitizeIdentifier(str)
+# Converts arbitrary text into valid identifier
