@@ -1403,3 +1403,32 @@ associatedLegendre(l, m, x)
 hermite(n, x)
 laguerre(n, x)
 chebyshev(n, x)
+
+
+# ============================================================
+# CONVOLUTION / CORRELATION
+# ============================================================
+
+conv.*
+
+conv.convolve(a, b)
+    # discrete convolution
+    # y[n] = Σ a[k]b[n-k]
+
+conv.deconvolve(a, b)
+    # inverse convolution / estimate original signal
+
+conv.correlate(a, b)
+    # cross-correlation
+
+conv.autocorrelate(a)
+    # signal correlated with itself
+
+conv.xcorr(a, b)
+    # normalized cross-correlation
+
+conv.convolve2D(image, kernel)
+    # 2D convolution
+
+conv.convolveND(array, kernel)
+    # N-dimensional convolution
