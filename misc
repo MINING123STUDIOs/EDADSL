@@ -1265,3 +1265,41 @@ shuffle(list)
 
 normal(mean, stddev)
 uniform(min, max)
+
+
+
+# ============================================================
+# HASH FUNCTIONS
+# ============================================================
+
+hash(x)                     # general-purpose hash value
+hashBytes(bytes)            # hash raw byte data
+
+# ============================================================
+# NON-CRYPTOGRAPHIC HASHES
+# ============================================================
+
+fnv1a(data)                 # FNV-1a hash
+murmurHash(data)            # MurmurHash
+xxHash(data)                # fast non-cryptographic hash
+crc32(data)                 # CRC-32 checksum
+adler32(data)               # Adler-32 checksum
+
+# ============================================================
+# CRYPTOGRAPHIC HASHES
+# ============================================================
+
+md5(data)                   # MD5 digest (legacy)
+sha1(data)                  # SHA-1 digest (legacy)
+
+sha224(data)                # SHA-224 digest
+sha256(data)                # SHA-256 digest
+sha384(data)                # SHA-384 digest
+sha512(data)                # SHA-512 digest
+
+sha3_256(data)              # SHA-3 256-bit digest
+sha3_512(data)              # SHA-3 512-bit digest
+
+blake2b(data)               # BLAKE2b digest
+blake2s(data)               # BLAKE2s digest
+blake3(data)                # BLAKE3 digest
