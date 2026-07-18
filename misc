@@ -1248,3 +1248,20 @@ window(type, size)
 lowPass(signal, cutoff)
 highPass(signal, cutoff)
 bandPass(signal, low, high)
+
+
+# ============================================================
+# RANDOM / SIMULATION
+# ============================================================
+
+random()
+randomInt(min, max)
+randomReal(min, max)
+
+seed(value)
+
+choice(list)
+shuffle(list)
+
+normal(mean, stddev)
+uniform(min, max)
