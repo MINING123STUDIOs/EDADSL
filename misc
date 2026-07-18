@@ -45,35 +45,6 @@ fp:  “Package_TO_SOT_THT/TO-247-4_Vertical“
 # ============================================================
 
 # ------------------------------------------------------------
-# BITWISE
-# ------------------------------------------------------------
-a & b          Bitwise AND
-a | b          Bitwise OR
-a xor b        Bitwise XOR
-~a             Bitwise NOT
-
-# Compound assignment
-$var &= expr
-$var |= expr
-$var xor= expr
-
-# Reverse compound assignment
-$var &r= expr
-$var |r= expr
-$var xorr= expr
-
-
-# ------------------------------------------------------------
-# RANGE
-# ------------------------------------------------------------
-a..b           Inclusive integer range
-
-Examples:
-1..5           # [1,2,3,4,5]
--2..2          # [-2,-1,0,1,2]
-
-
-# ------------------------------------------------------------
 # NULL (if nullable values exist)
 # ------------------------------------------------------------
 a ?? b         Null coalescing
