@@ -35,3 +35,98 @@ dts: “https://assets.wolfspeed.com/uploads/2024/06/Wolfspeed_C3M0016120K1_data
 
 fp:  “Package_TO_SOT_THT/TO-247-4_Vertical“
 }
+
+
+
+
+
+# ============================================================
+# PROPOSED BUILT-IN OPERATORS
+# ============================================================
+
+# ------------------------------------------------------------
+# BITWISE
+# ------------------------------------------------------------
+a & b          Bitwise AND
+a | b          Bitwise OR
+a xor b        Bitwise XOR
+~a             Bitwise NOT
+
+# Compound assignment
+$var &= expr
+$var |= expr
+$var xor= expr
+
+# Reverse compound assignment
+$var &r= expr
+$var |r= expr
+$var xorr= expr
+
+
+# ------------------------------------------------------------
+# RANGE
+# ------------------------------------------------------------
+a..b           Inclusive integer range
+
+Examples:
+1..5           # [1,2,3,4,5]
+-2..2          # [-2,-1,0,1,2]
+
+
+# ------------------------------------------------------------
+# NULL (if nullable values exist)
+# ------------------------------------------------------------
+a ?? b         Null coalescing
+a?.member      Safe member access
+
+
+# ------------------------------------------------------------
+# MATRIX
+# ------------------------------------------------------------
+A.H            Hermitian (conjugate) transpose
+
+
+# ============================================================
+# PROPOSED BUILT-IN CONSTANTS
+# ============================================================
+
+# ------------------------------------------------------------
+# Mathematical
+# ------------------------------------------------------------
+c.tau          2π
+c.sqrtpi       √π
+c.ln10         ln(10)
+c.log2e        log₂(e)
+c.log10e       log₁₀(e)
+
+# ------------------------------------------------------------
+# Physical
+# ------------------------------------------------------------
+c.Na           Avogadro constant
+c.R            Ideal gas constant
+c.F            Faraday constant
+c.muB          Bohr magneton
+c.muN          Nuclear magneton
+c.a0           Bohr radius
+
+# ------------------------------------------------------------
+# Electrical / Quantum Electronics
+# ------------------------------------------------------------
+c.Z0           Vacuum impedance (~376.730313668 Ω)
+c.RK           von Klitzing constant
+c.KJ           Josephson constant
+
+# ------------------------------------------------------------
+# Floating-point
+# ------------------------------------------------------------
+c.NaN          Not-a-Number
+
+
+# ============================================================
+# PROPOSED PSEUDO-CONSTANTS
+# ============================================================
+
+*v              All nets
+*fp             All footprints
+*pkg            All packages
+*layer          All board layers
