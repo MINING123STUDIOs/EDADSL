@@ -1312,3 +1312,22 @@ blake3(data)                # BLAKE3 digest
 hash(data, "hex")           # hexadecimal string
 hash(data, "bytes")         # byte array
 hash(data, "int")           # integer value
+
+
+# ============================================================
+# POSSIBLE OPERATORS
+# ============================================================
+
+??              # null/coalesce operator
+
+|>              # pipeline operator
+
+..              # range creation
+
+in              # membership alternative
+
+?.              # safe access
+
+:=              # immutable binding
+
+=>              # pattern/lambda shorthand
