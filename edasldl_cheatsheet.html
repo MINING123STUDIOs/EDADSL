@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDADSL Cheatsheet</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #181b22;
+    --border: #2a2e38;
+    --text: #e0e0e0;
+    --muted: #888;
+    --accent: #6ea8fe;
+    --accent2: #a78bfa;
+    --green: #73daca;
+    --orange: #ff9e64;
+    --red: #f7768e;
+    --yellow: #e0af68;
+    --pink: #bb9af7;
+    --cyan: #7dcfff;
+    --keyword: #bb9af7;
+    --type: #6ea8fe;
+    --func: #73daca;
+    --string: #9ece6a;
+    --number: #ff9e64;
+    --comment: #565f89;
+    --operator: #89ddff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    font-size: 13px;
+    padding: 24px;
+  }
+
+  h1 {
+    font-size: 22px;
+    color: var(--accent);
+    margin-bottom: 4px;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+
+  .columns {
+    column-count: 3;
+    column-gap: 24px;
+  }
+
+  @media (max-width: 1200px) { .columns { column-count: 2; } }
+  @media (max-width: 700px)  { .columns { column-count: 1; } }
+
+  .section {
+    break-inside: avoid;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 16px;
+  }
+
+  .section h2 {
+    font-size: 13px;
+    color: var(--accent2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 4px;
+  }
+
+  .section h3 {
+    font-size: 12px;
+    color: var(--green);
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+
+  pre {
+    background: #111318;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 8px 10px;
+    margin: 4px 0 8px 0;
+    overflow-x: auto;
+    font-size: 12px;
+    line-height: 1.45;
+    white-space: pre;
+  }
+
+  code {
+    font-family: inherit;
+    font-size: 12px;
+  }
+
+  .kw  { color: var(--keyword); }
+  .ty  { color: var(--type); }
+  .fn  { color: var(--func); }
+  .st  { color: var(--string); }
+  .nu  { color: var(--number); }
+  .op  { color: var(--operator); }
+  .cm  { color: var(--comment); font-style: italic; }
+  .ct  { color: var(--orange); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    margin: 4px 0;
+  }
+  th { text-align: left; color: var(--accent); font-weight: 600; padding: 2px 6px; }
+  td { padding: 2px 6px; border-top: 1px solid var(--border); }
+  td:first-child { color: var(--green); white-space: nowrap; }
+
+  .row { display: flex; gap: 12px; margin: 2px 0; }
+  .row code { white-space: nowrap; }
+
+  ul { padding-left: 16px; margin: 4px 0; }
+  li { margin: 2px 0; }
+</style>
+</head>
+<body>
+
+<h1>EDADSL Cheatsheet</h1>
+<p class="subtitle">EDA Domain-Specific Language for Electronic Design Automation</p>
+
+<div class="columns">
+
+<!-- PROGRAM STRUCTURE -->
+<div class="section">
+  <h2>Program Structure</h2>
+<pre><code><span class="kw">start</span>
+    <span class="cm">#c# statements go here</span>
+<span class="kw">%</span></code></pre>
+  <p>Programs begin with <code><span class="kw">start</span></code>, end with a newline. Statements separated by newlines or <code>%N</code>.</p>
+</div>
+
+<!-- COMMENTS -->
+<div class="section">
+  <h2>Comments</h2>
+<pre><code><span class="cm">#c# line comment</span>
+<span class="cm">#c#{</span>
+<span class="cm">  multiline comment</span>
+<span class="cm">}#c#</span></code></pre>
+</div>
+
+<!-- IDENTIFIERS & KEYWORDS -->
+<div class="section">
+  <h2>Identifiers &amp; Keywords</h2>
+<pre><code><span class="cm"># Variables: $ prefix</span>
+<span class="op">$</span><span class="ty">var</span>  <span class="op">$</span><span class="ty">name123</span>  <span class="op">$</span><span class="ty">_private</span>
+
+<span class="cm"># Identifiers: [_a-zA-Z][_a-zA-Z0-9]*</span>
+<span class="cm"># Keywords are case-sensitive</span></code></pre>
+  <p><strong>Keywords:</strong> <code><span class="kw">start</span> <span class="kw">halt</span> <span class="kw">skip</span> <span class="kw">if</span> <span class="kw">otherwise</span> <span class="kw">else</span> <span class="kw">for</span> <span class="kw">while</span> <span class="kw">do</span> <span class="kw">break</span> <span class="kw">continue</span> <span class="kw">return</span> <span class="kw">function</span> <span class="kw">let</span> <span class="kw">letop</span> <span class="kw">null</span> <span class="kw">echo</span> <span class="kw">writetolog</span> <span class="kw">gotomarker</span> <span class="kw">gotojump</span> <span class="kw">True</span> <span class="kw">False</span></code></p>
+</div>
+
+<!-- TYPES -->
+<div class="section">
+  <h2>Types</h2>
+<pre><code><span class="cm"># Type-annotated assignment</span>
+<span class="op">$</span>x <span class="op">[</span><span class="ty">int</span><span class="op">]=</span> <span class="nu">42</span>
+<span class="op">$</span>y <span class="op">[</span><span class="ty">real</span><span class="op">]=</span> <span class="nu">3.14</span>
+<span class="op">$</span>z <span class="op">[</span><span class="ty">bool</span><span class="op">]=</span> <span class="kw">True</span>
+<span class="op">$</span>s <span class="op">[</span><span class="ty">string</span><span class="op">]=</span> <span class="st">"hello"</span>
+<span class="op">$</span>l <span class="op">[</span><span class="ty">list</span><span class="op">]=</span> <span class="op">[</span><span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span><span class="op">]</span>
+<span class="op">$</span>t <span class="op">[</span><span class="ty">set</span><span class="op">]=</span> <span class="op">{</span><span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span><span class="op">}</span>
+<span class="op">$</span>c <span class="op">[</span><span class="ty">complex</span><span class="op">]=</span> <span class="nu">3+4i</span>
+
+<span class="cm"># Type inference</span>
+<span class="op">$</span>a <span class="kw">t=</span> <span class="nu">5</span>          <span class="cm">#c# infers int</span>
+
+<span class="cm"># Mutability modifier</span>
+<span class="op">$</span>c <span class="op">[</span><span class="ty">int</span><span class="op">]=</span> <span class="nu">42</span><span class="op">;</span> <span class="kw">M</span> <span class="op">=</span> <span class="kw">False</span>  <span class="cm">#c# immutable</span></code></pre>
+</div>
+
+<!-- LITERALS -->
+<div class="section">
+  <h2>Literals</h2>
+<pre><code><span class="cm"># Integer</span>
+<span class="nu">42</span>  <span class="nu">0xFF</span>  <span class="nu">0b1010</span>  <span class="nu">0o17</span>
+
+<span class="cm"># SI prefixes (≥k → int, &lt;k → real)</span>
+<span class="nu">6.2k</span>   <span class="cm">#c# 6200 (int)</span>
+<span class="nu">1M</span>     <span class="cm">#c# 1000000 (int)</span>
+<span class="nu">100n</span>   <span class="cm">#c# 0.0000001 (real)</span>
+<span class="nu">4.7u</span>   <span class="cm">#c# 0.0000047 (real)</span>
+
+<span class="cm"># Binary (IEC) prefixes</span>
+<span class="nu">1ki</span>    <span class="cm">#c# 1024</span>
+<span class="nu">4Mi</span>    <span class="cm">#c# 4194304</span>
+
+<span class="cm"># Binary exponent (w/W)</span>
+<span class="nu">4w10</span>   <span class="cm">#c# 4096 (4 × 2^10)</span>
+<span class="nu">1.5w-2</span> <span class="cm">#c# 0.375</span>
+
+<span class="cm"># Real</span>
+<span class="nu">3.14</span>  <span class="nu">.5e2</span>  <span class="nu">2e-6</span>
+
+<span class="cm"># Complex (single token)</span>
+<span class="nu">3+4i</span>  <span class="nu">-2-7i</span>  <span class="nu">5i</span>
+
+<span class="cm"># Polar form</span>
+<span class="nu">2 &lt;| 1.5708</span>   <span class="cm">#c# magnitude=2, angle=π/2</span>
+
+<span class="cm"># Boolean</span>
+<span class="kw">True</span>  <span class="kw">False</span>
+
+<span class="cm"># Null</span>
+<span class="kw">null</span>
+
+<span class="cm"># Strings</span>
+<span class="st">"hello"</span>  <span class="st">'hello'</span>
+<span class="st">"""multi-line"""</span></code></pre>
+</div>
+
+<!-- OPERATORS -->
+<div class="section">
+  <h2>Operators</h2>
+  <h3>Arithmetic</h3>
+<table>
+  <tr><td>+ - * /</td><td>add, sub, mul, div (returns real)</td></tr>
+  <tr><td>//</td><td>floor division (int)</td></tr>
+  <tr><td>%</td><td>modulo</td></tr>
+  <tr><td>^</td><td>exponentiation (right-assoc)</td></tr>
+  <tr><td><< >></td><td>shift (int only)</td></tr>
+  <tr><td>&lt;&lt;&lt;[w] &gt;&gt;&gt;[w]</td><td>rotate (w-bit word)</td></tr>
+</table>
+
+  <h3>Comparison</h3>
+<table>
+  <tr><td>< > <= >=</td><td>ordered (int, real, string)</td></tr>
+  <tr><td>== !=</td><td>strict equality (any type)</td></tr>
+  <tr><td>=n=</td><td>numeric equality (cross-type)</td></tr>
+  <tr><td>><</td><td>three-way compare → -1, 0, 1</td></tr>
+  <tr><td>~  ~*</td><td>approx equal (abs/relative eps)</td></tr>
+  <tr><td>~+(c)~ ~*(c)~</td><td>approx with custom tolerance</td></tr>
+</table>
+
+  <h3>Boolean</h3>
+<table>
+  <tr><td>&& || ^^</td><td>AND, OR, XOR</td></tr>
+  <tr><td>!&amp; !| !^</td><td>NAND, NOR, XNOR</td></tr>
+  <tr><td>-> !-></td><td>IMPLY, NIMPLY</td></tr>
+  <tr><td>!x</td><td>NOT</td></tr>
+</table>
+
+  <h3>Bitwise</h3>
+<table>
+  <tr><td>b&& b|| b^^</td><td>AND, OR, XOR</td></tr>
+  <tr><td>b!&amp; b!| b!^</td><td>NAND, NOR, XNOR</td></tr>
+  <tr><td>b-> b!-></td><td>IMPLY, NIMPLY</td></tr>
+  <tr><td>b!x</td><td>bitwise NOT</td></tr>
+</table>
+
+  <h3>Collection</h3>
+<table>
+  <tr><td>u n /</td><td>set union, intersect, diff</td></tr>
+  <tr><td>||x</td><td>length / cardinality</td></tr>
+  <tr><td>a E b !E b c b</td><td>element, not element, subset</td></tr>
+</table>
+
+  <h3>List / Tensor</h3>
+<table>
+  <tr><td>. x</td><td>dot product, cross product</td></tr>
+  <tr><td>.* .^</td><td>matrix multiply, power</td></tr>
+  <tr><td>.T .H</td><td>transpose, Hermitian transpose</td></tr>
+</table>
+
+  <h3>Other</h3>
+<table>
+  <tr><td>?-> (a) ! (b)</td><td>ternary: cond ?-> true ! false</td></tr>
+  <tr><td>??</td><td>null coalescing</td></tr>
+  <tr><td>?. x?[i]</td><td>safe member / safe index</td></tr>
+  <tr><td>$var++ $var--</td><td>postfix increment / decrement</td></tr>
+  <tr><td>L::(params)->{...}</td><td>lambda expression</td></tr>
+</table>
+</div>
+
+<!-- COMPOUND ASSIGNMENT -->
+<div class="section">
+  <h2>Compound Assignment</h2>
+<pre><code><span class="cm"># Arithmetic (forward & reverse)</span>
+$x += 3    $x -= 3    $x *= 3    $x /= 3
+$x %= 3    $x ^= 3
+$x +r= 3   <span class="cm">#c# = 3 + $x</span>
+
+<span class="cm"># Bitwise / shift</span>
+$x <<= 2   $x >>= 2
+$x &lt;&lt;&lt;[32]= 1  $x &gt;&gt;&gt;[32]= 1
+
+<span class="cm"># Boolean / bitwise logic</span>
+$b &&= expr   $b ||= expr   $b ^^= expr
+$b b&&= expr  $b b||= expr  $b b^^= expr
+
+<span class="cm"># Tensor in-place</span>
+$m ~.T       <span class="cm">#c# transpose in place</span>
+$m ~.H       <span class="cm">#c# Hermitian transpose</span>
+$m .*= B     <span class="cm">#c# matrix multiply</span></code></pre>
+</div>
+
+<!-- CONTROL FLOW -->
+<div class="section">
+  <h2>Control Flow</h2>
+<pre><code><span class="cm"># if / otherwise / else</span>
+<span class="kw">if</span> $x > <span class="nu">0</span> <span class="op">::</span> {
+    <span class="fn">f.util.print</span>(<span class="st">"positive"</span>)
+} <span class="kw">otherwise</span> $x <span class="op">=n=</span> <span class="nu">0</span> <span class="op">::</span> {
+    <span class="fn">f.util.print</span>(<span class="st">"zero"</span>)
+} <span class="kw">else</span> <span class="op">::</span> {
+    <span class="fn">f.util.print</span>(<span class="st">"negative"</span>)
+}
+
+<span class="cm"># for loop</span>
+<span class="kw">for</span> $i <span class="kw">E</span> <span class="op">[</span><span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">3</span><span class="op">]</span> <span class="op">::</span> {
+    <span class="fn">f.util.print</span>($i)
+}
+
+<span class="cm"># while</span>
+<span class="kw">while</span> $running <span class="op">::</span> {
+    <span class="cm"># ...</span>
+}
+
+<span class="cm"># do-while</span>
+<span class="kw">do</span> <span class="op">::</span> {
+    $i <span class="op">+=</span> <span class="nu">1</span>
+} <span class="kw">while</span> $i < <span class="nu">10</span>
+
+<span class="cm"># break, continue, halt, skip</span>
+<span class="kw">break</span>     <span class="kw">continue</span>     <span class="kw">halt</span>     <span class="kw">skip</span></code></pre>
+</div>
+
+<!-- FUNCTIONS -->
+<div class="section">
+  <h2>Functions</h2>
+<pre><code><span class="cm"># User-defined</span>
+<span class="kw">function</span> <span class="fn">f.u.</span>add($a <span class="op">[</span><span class="ty">int</span><span class="op">]</span>, $b <span class="op">[</span><span class="ty">int</span><span class="op">]</span>) <span class="op">::</span> {
+    <span class="kw">return</span> $a <span class="op">+</span> $b
+}
+
+<span class="fn">f.u.add</span>(<span class="nu">3</span>, <span class="nu">4</span>)   <span class="cm">#c# → 7</span>
+
+<span class="cm"># Built-in (two-level namespace)</span>
+<span class="fn">f.math.sqrt</span>(<span class="nu">16</span>)    <span class="cm">#c# → 4.0</span>
+<span class="fn">f.trig.sin</span>(<span class="nu">0</span>)      <span class="cm">#c# → 0.0</span>
+<span class="fn">f.str.upperc</span>(<span class="st">"hi"</span>) <span class="cm">#c# → "HI"</span>
+<span class="fn">f.list.push</span>(<span class="op">$</span>l, <span class="nu">4</span>)
+<span class="fn">f.arr.zeros</span>(<span class="nu">3</span>)
+<span class="fn">f.stat.mean</span>(<span class="op">$</span>l)
+<span class="fn">f.linalg.det</span>(<span class="op">$</span>m)
+<span class="fn">f.ee.resistor</span>(<span class="nu">100</span>)
+<span class="fn">f.special.erf</span>(<span class="nu">0.5</span>)
+<span class="fn">f.int.popcount</span>(<span class="nu">0xFF</span>)
+<span class="fn">f.util.print</span>(<span class="st">"hi"</span>)</code></pre>
+</div>
+
+<!-- NAMESPACES -->
+<div class="section">
+  <h2>Function Namespaces</h2>
+<table>
+  <tr><td>f.math.*</td><td>Basic math (sqrt, abs, floor, ...)</td></tr>
+  <tr><td>f.trig.*</td><td>Trigonometry (sin, cos, atan2, ...)</td></tr>
+  <tr><td>f.hyp.*</td><td>Hyperbolic (sinh, cosh, ...)</td></tr>
+  <tr><td>f.cplx.*</td><td>Complex (real, imag, ...)</td></tr>
+  <tr><td>f.log.*</td><td>Logarithmic (log, log2, exp, ...)</td></tr>
+  <tr><td>f.special.*</td><td>Special (erf, gamma, airy, ...)</td></tr>
+  <tr><td>f.str.*</td><td>String operations</td></tr>
+  <tr><td>f.list.*</td><td>List operations</td></tr>
+  <tr><td>f.arr.*</td><td>Array / ndarray operations</td></tr>
+  <tr><td>f.stat.*</td><td>Statistics</td></tr>
+  <tr><td>f.linalg.*</td><td>Linear algebra</td></tr>
+  <tr><td>f.ee.*</td><td>Electrical engineering</td></tr>
+  <tr><td>f.int.*</td><td>Integer bit manipulation</td></tr>
+  <tr><td>f.util.*</td><td>Utilities (print, sort, ...)</td></tr>
+</table>
+</div>
+
+<!-- CONSTANTS -->
+<div class="section">
+  <h2>Constants</h2>
+<pre><code><span class="cm"># Mathematical</span>
+<span class="ct">c.math.pi</span>  <span class="ct">c.math.tau</span>  <span class="ct">c.math.e</span>  <span class="ct">c.math.i</span>
+<span class="ct">c.math.sqrt2</span>  <span class="ct">c.math.ln2</span>  <span class="ct">c.math.NaN</span>
+<span class="ct">c.math.inf</span>  <span class="ct">c.math.rinf</span>
+
+<span class="cm"># Physical (selected)</span>
+<span class="ct">c.phys.c</span>       <span class="cm">#c# speed of light (exact)</span>
+<span class="ct">c.phys.q</span>       <span class="cm">#c# elementary charge (exact)</span>
+<span class="ct">c.phys.kb</span>      <span class="cm">#c# Boltzmann constant</span>
+<span class="ct">c.phys.h</span>       <span class="cm">#c# Planck constant (exact)</span>
+<span class="ct">c.phys.mu0</span>     <span class="ct">c.phys.eps0</span>  <span class="ct">c.phys.eta0</span>
+<span class="ct">c.phys.eV</span>      <span class="cm">#c# 1 eV in joules (exact)</span>
+<span class="ct">c.phys.NA</span>      <span class="cm">#c# Avogadro constant</span>
+<span class="ct">c.phys.g</span>       <span class="cm">#c# standard gravity (exact)</span>
+<span class="ct">c.phys.atm</span>     <span class="cm">#c# 1 atm in Pa (exact)</span></code></pre>
+</div>
+
+<!-- SETS -->
+<div class="section">
+  <h2>Sets</h2>
+<pre><code><span class="op">$</span>s <span class="op">[</span><span class="ty">set</span><span class="op">]=</span> <span class="op">{</span><span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span><span class="op">}</span>
+<span class="op">$</span>s <span class="op">[</span><span class="ty">set</span><span class="op">]=</span> <span class="op">{</span><span class="nu">0</span>:<span class="nu">2</span>:<span class="nu">10</span><span class="op">}</span>        <span class="cm">#c# {0,2,4,6,8,10}</span>
+<span class="op">$</span>s <span class="op">[</span><span class="ty">set</span><span class="op">]=</span> <span class="op">{</span><span class="nu">0</span>|<span class="nu">1</span>|<span class="nu">5</span><span class="op">}</span>        <span class="cm">#c# {0,.25,.5,.75,1}</span>
+
+<span class="cm"># Set algebra</span>
+<span class="op">$</span>a <span class="kw">u</span> <span class="op">$</span>b   <span class="cm">#c# union</span>
+<span class="op">$</span>a <span class="kw">n</span> <span class="op">$</span>b   <span class="cm">#c# intersection</span>
+<span class="op">$</span>a <span class="op">/</span> <span class="op">$</span>b   <span class="cm">#c# difference</span>
+<span class="op">$</span>a <span class="kw">c</span> <span class="op">$</span>b   <span class="cm">#c# subset</span>
+<span class="nu">1</span> <span class="kw">E</span> <span class="op">$</span>s   <span class="cm">#c# element of</span></code></pre>
+</div>
+
+<!-- LISTS -->
+<div class="section">
+  <h2>Lists &amp; Ranges</h2>
+<pre><code><span class="op">$</span>l <span class="op">[</span><span class="ty">list</span><span class="op">]=</span> <span class="op">[</span><span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span><span class="op">]</span>
+<span class="op">$</span>l <span class="op">[</span><span class="ty">list</span><span class="op">]=</span> <span class="op">[</span><span class="nu">0</span>:<span class="nu">2</span>:<span class="nu">10</span><span class="op">]</span>       <span class="cm">#c# [0,2,4,6,8,10]</span>
+<span class="op">$</span>l <span class="op">[</span><span class="ty">list</span><span class="op">]=</span> <span class="op">[</span><span class="nu">0</span>:<span class="nu">5</span><span class="op">]</span>           <span class="cm">#c# [0,1,2,3,4,5]</span>
+<span class="op">$</span>l <span class="op">[</span><span class="ty">list</span><span class="op">]=</span> <span class="op">[</span><span class="nu">0</span>|<span class="nu">1</span>|<span class="nu">5</span><span class="op">]</span>       <span class="cm">#c# [0,.25,.5,.75,1]</span>
+
+<span class="cm"># Indexing & slicing</span>
+<span class="op">$</span>l[<span class="nu">0</span>]     <span class="cm">#c# first element</span>
+<span class="op">$</span>l[<span class="nu">-1</span>]    <span class="cm">#c# last element</span>
+<span class="op">$</span>l[<span class="nu">1</span>:<span class="nu">4</span>]   <span class="cm">#c# slice [1,2,3]</span>
+<span class="op">$</span>l[::<span class="nu">2</span>]   <span class="cm">#c# every 2nd</span>
+<span class="op">$</span>l[::-<span class="nu">1</span>]  <span class="cm">#c# reversed</span>
+
+<span class="cm"># Concatenation & repetition</span>
+[<span class="nu">1</span>,<span class="nu">2</span>] <span class="op">+</span> [<span class="nu">3</span>,<span class="nu">4</span>]    <span class="cm">#c# [1,2,3,4]</span>
+[<span class="nu">0</span>] <span class="op">*</span> <span class="nu">5</span>             <span class="cm">#c# [0,0,0,0,0]</span>
+
+<span class="cm"># Ndarray: auto-detected if rectangular + numeric</span>
+[[<span class="nu">1</span>,<span class="nu">2</span>],[<span class="nu">3</span>,<span class="nu">4</span>]]   <span class="cm">#c# 2D ndarray (2×2)</span>
+[[<span class="nu">1</span>,<span class="nu">2</span>],[<span class="nu">3</span>,<span class="nu">4</span>]] <span class="op">.*</span> [<span class="nu">5</span>,<span class="nu">6</span>]  <span class="cm">#c# mat-vec multiply</span></code></pre>
+</div>
+
+<!-- NDARRAY OPERATORS -->
+<div class="section">
+  <h2>Ndarray Extras</h2>
+<pre><code><span class="op">$</span>m.reshape(<span class="nu">3</span>, <span class="nu">2</span>)  <span class="cm">#c# reshape</span>
+<span class="op">$</span>m.reshape(<span class="nu">6</span>)      <span class="cm">#c# flatten</span>
+<span class="op">$</span>m.T               <span class="cm">#c# transpose</span>
+<span class="op">$</span>m.H               <span class="cm">#c# Hermitian (conj. transpose)</span>
+
+<span class="cm"># Element-wise broadcasting</span>
+[<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">3</span>] <span class="op">+</span> <span class="nu">5</span>      <span class="cm">#c# [6,7,8]</span>
+[<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">3</span>] <span class="op">*</span> <span class="nu">2</span>      <span class="cm">#c# [2,4,6]</span></code></pre>
+</div>
+
+<!-- STRING FUNCTIONS -->
+<div class="section">
+  <h2>String Functions (f.str.*)</h2>
+<table>
+  <tr><td>f.str.len</td><td>length</td></tr>
+  <tr><td>f.str.upperc / lowerc</td><td>case conversion</td></tr>
+  <tr><td>f.str.trim / ltrim / rtrim</td><td>strip whitespace</td></tr>
+  <tr><td>f.str.substr(s,i,n)</td><td>substring</td></tr>
+  <tr><td>f.str.indexOf</td><td>find position</td></tr>
+  <tr><td>f.str.replace</td><td>replace all</td></tr>
+  <tr><td>f.str.split / join</td><td>split/join</td></tr>
+  <tr><td>f.str.str()</td><td>concat args → string</td></tr>
+  <tr><td>f.str.str()</td><td>0 args → "" (empty)</td></tr>
+  <tr><td>f.str.isUpper/isLower</td><td>case test ("": True)</td></tr>
+  <tr><td>f.str.isAlpha/numeric</td><td>char class test</td></tr>
+  <tr><td>f.str.formatHex/bin</td><td>number formatting</td></tr>
+  <tr><td>f.str.regex</td><td>regex match</td></tr>
+  <tr><td>f.str.base64Encode/Decode</td><td>base64</td></tr>
+  <tr><td>f.str.hexEncode/Decode</td><td>hex encoding</td></tr>
+  <tr><td>f.str.toBytes / fromBytes</td><td>UTF-8 conversion</td></tr>
+</table>
+</div>
+
+<!-- LIST FUNCTIONS -->
+<div class="section">
+  <h2>List Functions (f.list.*)</h2>
+<table>
+  <tr><td>f.list.head / tail</td><td>first / rest</td></tr>
+  <tr><td>f.list.push / pop</td><td>add/remove end</td></tr>
+  <tr><td>f.list.insert / remove</td><td>by index (clamped)</td></tr>
+  <tr><td>f.list.copy / clone</td><td>deep copy (any type)</td></tr>
+  <tr><td>f.list.fromSet</td><td>set → list</td></tr>
+  <tr><td>f.list.set</td><td>deduplicate list</td></tr>
+  <tr><td>f.list.len</td><td>length</td></tr>
+</table>
+</div>
+
+<!-- ARR FUNCTIONS -->
+<div class="section">
+  <h2>Array Functions (f.arr.*)</h2>
+<table>
+  <tr><td>f.arr.zeros(n)</td><td>zero vector</td></tr>
+  <tr><td>f.arr.ones(n)</td><td>ones vector</td></tr>
+  <tr><td>f.arr.identity(n)</td><td>identity matrix</td></tr>
+  <tr><td>f.arr.flatten</td><td>1 level deep</td></tr>
+  <tr><td>f.arr.norm(v,p)</td><td>p-norm (p≥0 or p=-1)</td></tr>
+</table>
+</div>
+
+<!-- MATH FUNCTIONS -->
+<div class="section">
+  <h2>Math Functions (f.math.* &amp; f.trig.*)</h2>
+<table>
+  <tr><td>f.math.sqrt / cbrt</td><td>square / cube root</td></tr>
+  <tr><td>f.math.abs</td><td>absolute value (also complex)</td></tr>
+  <tr><td>f.math.sign</td><td>signum (complex supported)</td></tr>
+  <tr><td>f.math.floor / ceil / round</td><td>rounding (neg digits → 10^n)</td></tr>
+  <tr><td>f.math.min / max</td><td>variadic</td></tr>
+  <tr><td>f.math.clamp(lo,hi,x)</td><td>clamp (lo≤hi required)</td></tr>
+  <tr><td>f.math.pow / hypot / log / log2</td><td>standard</td></tr>
+  <tr><td>f.math.sinc / tanc</td><td>normalized sinc, tan(x)/x</td></tr>
+  <tr><td>f.math.convert(v,d,from,to)</td><td>unit conversion</td></tr>
+  <tr><td>f.trig.sin / cos / tan</td><td>radians</td></tr>
+  <tr><td>f.trig.asin / acos / atan</td><td>inverse</td></tr>
+  <tr><td>f.trig.atan2(y,x)</td><td>atan2(0,0)=0.0</td></tr>
+  <tr><td>f.hyp.sinh / cosh / tanh</td><td>hyperbolic</td></tr>
+  <tr><td>f.cplx.real / imag</td><td>complex parts</td></tr>
+  <tr><td>f.log.exp / ln / log10</td><td>logarithms</td></tr>
+</table>
+</div>
+
+<!-- SPECIAL FUNCTIONS -->
+<div class="section">
+  <h2>Special Functions (f.special.*)</h2>
+<table>
+  <tr><td>f.special.erf / erfc</td><td>error function</td></tr>
+  <tr><td>f.special.gamma / lgamma</td><td>gamma function</td></tr>
+  <tr><td>f.special.besselJ / besselY</td><td>Bessel (Y(n,0)→VE)</td></tr>
+  <tr><td>f.special.besselI / besselK</td><td>modified Bessel</td></tr>
+  <tr><td>f.special.si</td><td>sine integral Si(x)</td></tr>
+  <tr><td>f.special.airy</td><td>[Ai, Ai', Bi, Bi']</td></tr>
+  <tr><td>f.special.airyC</td><td>complex airy</td></tr>
+  <tr><td>f.special.airyScaled</td><td>exponentially scaled</td></tr>
+  <tr><td>f.special.airyZerosAi / Bi</td><td>zeros of Ai/Bi</td></tr>
+  <tr><td>f.special.airyIntegral</td><td>∫Ai, ∫Bi</td></tr>
+  <tr><td>f.special.Li2 / Li3</td><td>polylogarithm</td></tr>
+  <tr><td>f.special.legendreP / Q</td><td>Legendre (Q: |x|&lt;1)</td></tr>
+  <tr><td>f.special.digamma / trigamma</td><td>(no non-positive int)</td></tr>
+  <tr><td>f.special.beta</td><td>Beta function</td></tr>
+  <tr><td>f.special.lambertW</td><td>(x≥-1/e)</td></tr>
+  <tr><td>f.special.zeta</td><td>Riemann zeta</td></tr>
+</table>
+</div>
+
+<!-- STAT FUNCTIONS -->
+<div class="section">
+  <h2>Statistics (f.stat.*)</h2>
+<table>
+  <tr><td>f.stat.mean / median / mode</td><td>central tendency</td></tr>
+  <tr><td>f.stat.var / std</td><td>population variance (÷N)</td></tr>
+  <tr><td>f.stat.rms</td><td>RMS ([] → VE)</td></tr>
+  <tr><td>f.stat.percentile / quartile</td><td>percentiles</td></tr>
+  <tr><td>f.stat.histogram</td><td>([] → VE)</td></tr>
+</table>
+</div>
+
+<!-- LINEAR ALGEBRA -->
+<div class="section">
+  <h2>Linear Algebra (f.linalg.*)</h2>
+<table>
+  <tr><td>f.linalg.det</td><td>determinant</td></tr>
+  <tr><td>f.linalg.inv</td><td>inverse</td></tr>
+  <tr><td>f.linalg.solve</td><td>linear solve Ax=b</td></tr>
+  <tr><td>f.linalg.svd</td><td>SVD (non-square ok)</td></tr>
+  <tr><td>f.linalg.lu / qr</td><td>LU / QR (non-square ok)</td></tr>
+  <tr><td>f.linalg.eig</td><td>eigenvalues</td></tr>
+  <tr><td>f.linalg.pinv</td><td>pseudoinverse</td></tr>
+  <tr><td>f.linalg.cross</td><td>cross product</td></tr>
+</table>
+</div>
+
+<!-- EE FUNCTIONS -->
+<div class="section">
+  <h2>EE Functions (f.ee.*)</h2>
+<table>
+  <tr><td>f.ee.resistor / capacitor / inductor</td><td>passive components</td></tr>
+  <tr><td>f.ee.impedance</td><td>R + jωL + 1/jωC</td></tr>
+  <tr><td>f.ee.reactance</td><td>(f=0 or C=0 → DBZ)</td></tr>
+  <tr><td>f.ee.voltageDivider / currentDivider</td><td>divider (r1+r2=0 → DBZ)</td></tr>
+  <tr><td>f.ee.db / db10 / db20</td><td>dB (x≤0 → VE)</td></tr>
+  <tr><td>f.ee.vrms2vdc / vdc2vrms</td><td>RMS conversion</td></tr>
+  <tr><td>f.ee.fft</td><td>any length</td></tr>
+  <tr><td>f.ee.lambda2nu / nu2lambda</td><td>freq ↔ wavelength</td></tr>
+  <tr><td>f.ee.resonant</td><td>f₀ = 1/(2π√LC)</td></tr>
+</table>
+</div>
+
+<!-- BIT FUNCTIONS -->
+<div class="section">
+  <h2>Integer Functions (f.int.*)</h2>
+<table>
+  <tr><td>f.int.popcount</td><td>set bits (neg: two's comp)</td></tr>
+  <tr><td>f.int.parity</td><td>odd parity</td></tr>
+  <tr><td>f.int.bitLength</td><td>neg: infinite-width</td></tr>
+  <tr><td>f.int.toBase(n,base)</td><td>base 2-36</td></tr>
+  <tr><td>f.int.alignUp / Down</td><td>(align≤0 → VE)</td></tr>
+</table>
+</div>
+
+<!-- UTIL FUNCTIONS -->
+<div class="section">
+  <h2>Utility (f.util.*)</h2>
+<table>
+  <tr><td>f.util.print(x)</td><td>single arg only</td></tr>
+  <tr><td>f.util.sort / reverse / unique</td><td>([] → [])</td></tr>
+  <tr><td>f.util.min / max</td><td>variadic</td></tr>
+  <tr><td>f.util.type / typeof</td><td>type query</td></tr>
+</table>
+</div>
+
+<!-- ELECTRICAL SYSTEM -->
+<div class="section">
+  <h2>Electrical System</h2>
+<pre><code><span class="cm"># Make board/schematic</span>
+<span class="kw">make.pcb</span>
+<span class="kw">make.schematic</span>
+
+<span class="cm"># Parts</span>
+<span class="kw">elec.part</span> <span class="st">"R1"</span>: <span class="fn">r</span>(R=<span class="nu">100</span>, P=<span class="nu">0.25</span>)
+    ; des = <span class="st">"100Ω"</span>
+    ; fp = <span class="st">"Resistor_SMD:R_0805"</span>
+
+<span class="cm"># Connections (pipe syntax)</span>
+( R1[<span class="nu">1</span>] <span class="op">|</span> J1[<span class="nu">3</span>] )
+
+<span class="cm"># Alternative</span>
+<span class="kw">elec.connect</span> R1[<span class="nu">1</span>] J1[<span class="nu">3</span>]
+
+<span class="cm"># Nets</span>
+<span class="kw">elec.net</span> <span class="st">"Gnd"</span>
+<span class="kw">elec.net</span> <span class="st">"Vcc"</span> <span class="st">"power"</span> <span class="st">"filtered"</span>
+
+<span class="cm"># Modules</span>
+<span class="kw">elec.makemodule</span> <span class="fn">LPF</span>($cutoff) {
+    <span class="cm"># ... module body ...</span>
+}
+<span class="kw">elec.part</span> <span class="st">"U1"</span>: <span class="fn">LPF</span>(cutoff=<span class="nu">1k</span>)</code></pre>
+</div>
+
+<!-- PHYSICAL CONSTRAINTS -->
+<div class="section">
+  <h2>Physical Constraints</h2>
+<pre><code><span class="cm"># Board definition</span>
+<span class="kw">phys.board</span>
+    N=<span class="nu">2</span>
+    T=<span class="op">[</span><span class="nu">0.15</span>, <span class="nu">1.6</span>, <span class="nu">0.15</span><span class="op">]</span>   <span class="cm">#c# thickness [m]</span>
+    W=<span class="op">[</span><span class="nu">0.1</span>, <span class="nu">0.1</span><span class="op">]</span>        <span class="cm">#c# width [m]</span>
+    M=<span class="op">[</span><span class="nu">1</span>, <span class="nu">0</span><span class="op">]</span>             <span class="cm">#c# layers (optional)</span>
+
+<span class="cm"># Proximity</span>
+<span class="kw">phys.prox</span> {R1, C1}
+    min=<span class="nu">1m</span> max=<span class="nu">50m</span> -d
+
+<span class="cm"># Creepage</span>
+<span class="kw">phys.creep</span> {R1} {R2}
+    d=<span class="nu">5m</span> -imp
+
+<span class="cm"># Layer assignment</span>
+<span class="kw">phys.layer</span> {R1, R2} <span class="ty">B</span> -vimp
+
+<span class="cm"># Alignment</span>
+<span class="kw">phys.align</span> {R1, R2, R3}
+    axis=<span class="st">"x"</span> d=<span class="nu">5m</span> -eo</code></pre>
+</div>
+
+<!-- SYSTEM FLAGS -->
+<div class="section">
+  <h2>System Flags</h2>
+<pre><code><span class="kw">syst.flag.approx_eps</span> <span class="nu">0.01</span>
+<span class="kw">syst.flag.exec_mode</span> <span class="st">"strict"</span>
+<span class="kw">syst.cm.calc</span> <span class="st">"hybrid"</span></code></pre>
+</div>
+
+<!-- USER CONSTANTS -->
+<div class="section">
+  <h2>User Constants</h2>
+<pre><code><span class="kw">let</span> <span class="fn">c.u.</span><span class="op">$</span>max_i <span class="op">[</span><span class="ty">int</span><span class="op">]=</span> <span class="nu">30</span>
+<span class="kw">let</span> <span class="fn">c.u.</span><span class="op">$</span>name <span class="op">[</span><span class="ty">string</span><span class="op">]=</span> <span class="st">"PSU"</span></code></pre>
+</div>
+
+<!-- USER OPERATORS -->
+<div class="section">
+  <h2>User Operators</h2>
+<pre><code><span class="kw">letop</span> <span class="fn">o.u.</span>par <span class="op">[</span><span class="ty">int</span><span class="op">]=</span>
+    (a * b) / (a + b)
+
+<span class="nu">100</span> <span class="fn">o.u.par</span> <span class="nu">100</span>   <span class="cm">#c# → 50</span></code></pre>
+</div>
+
+<!-- ERROR TYPES -->
+<div class="section">
+  <h2>Error Types</h2>
+<table>
+  <tr><td>Type Error</td><td>wrong types (e.g. string + int)</td></tr>
+  <tr><td>Value Error</td><td>invalid value (e.g. div by 0 in pow)</td></tr>
+  <tr><td>Division by Zero Error</td><td>division operations</td></tr>
+  <tr><td>Runtime Error</td><td>e.g. phys.board invoked twice</td></tr>
+</table>
+</div>
+
+<!-- PRECEDENCE -->
+<div class="section">
+  <h2>Operator Precedence</h2>
+  <p style="color:var(--muted);font-size:11px;">High → Low</p>
+<table>
+  <tr><td>^</td><td>exponentiation (right-assoc)</td></tr>
+  <tr><td>! b!</td><td>boolean / bitwise NOT</td></tr>
+  <tr><td>++ -- .T .H ?. ?[]</td><td>postfix ops</td></tr>
+  <tr><td>||x</td><td>cardinality (prefix only)</td></tr>
+  <tr><td>* / // % . x .* .^</td><td>multiplicative</td></tr>
+  <tr><td><< >></td><td>shift</td></tr>
+  <tr><td>+ -</td><td>additive</td></tr>
+  <tr><td>< <= == != ...</td><td>comparison</td></tr>
+  <tr><td>c E !E</td><td>set comparison</td></tr>
+  <tr><td>&& !&</td><td>logical AND / NAND</td></tr>
+  <tr><td>|| !|</td><td>logical OR / NOR</td></tr>
+  <tr><td>^^ !^</td><td>logical XOR / XNOR</td></tr>
+  <tr><td>-> !-></td><td>IMPLY / NIMPLY</td></tr>
+  <tr><td>?-> !</td><td>ternary</td></tr>
+  <tr><td>??</td><td>null coalescing</td></tr>
+  <tr><td>L::</td><td>lambda</td></tr>
+  <tr><td>o.u.*</td><td>user-defined (lowest)</td></tr>
+</table>
+</div>
+
+<!-- SCOPE -->
+<div class="section">
+  <h2>Scope Rules</h2>
+<ul>
+  <li><strong>Block scoping</strong> everywhere</li>
+  <li>Top-level variables: global scope</li>
+  <li>Block-local variables destroyed on exit</li>
+  <li>Variables must be declared before use</li>
+  <li>Redeclaration allowed (new type overwrites)</li>
+  <li>Lambdas: read-only closure, local vars OK</li>
+  <li>Functions: local scope</li>
+</ul>
+</div>
+
+</div><!-- /columns -->
+</body>
+</html>
