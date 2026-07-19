@@ -72,8 +72,6 @@ trunc(x)
 
 cbrt(x)
 
-log(x)
-log10(x)
 log2(x)
 
 hypot(a, b)              sqrt(a²+b²)
@@ -90,10 +88,6 @@ lgamma(x)
 
 phase(z)                 Phase angle
 
-polar(r, theta)          Create complex value
-rect(x, y)               Create complex value
-
-abscomplex(z)            Magnitude
 arg(z)                   Argument
 
 
@@ -106,14 +100,8 @@ random()
 randInt(min, max)
 randReal(min, max)
 
-mean(list)
 median(list)
 mode(list)
-
-variance(list)
-stddev(list)
-
-percentile(list, p)
 
 normalize(list)
 
@@ -125,16 +113,8 @@ normalize(list)
 push(list, item)
 pop(list)
 
-first(list)
-last(list)
-
 head(list, n)
 tail(list, n)
-
-reverse(list)
-
-sort(list)
-sortBy(list, fn)
 
 unique(list)
 
@@ -182,12 +162,6 @@ db20(x)                  20log10(x)
 
 fromDb(x)
 
-rms(list)
-
-peak(list)
-
-average(list)
-
 period(freq)
 
 frequency(period)
@@ -197,7 +171,6 @@ frequency(period)
 # ELECTRONICS FUNCTIONS
 # ============================================================
 
-parallel(a, b, ...)
 series(a, b, ...)
 
 voltageDivider(r1, r2, vin)
@@ -216,21 +189,6 @@ impedance(r, x)
 
 reactance(freq, component)
 
-
-# ============================================================
-# COMPONENT VALUE FUNCTIONS
-# ============================================================
-
-eseries(value, series)
-
-nearestE(value, series)
-
-e6(value)
-e12(value)
-e24(value)
-e48(value)
-e96(value)
-e192(value)
 
 
 # ============================================================
@@ -263,12 +221,6 @@ findPin(name)
 # FILTER / QUERY FUNCTIONS
 # ============================================================
 
-map(collection, function)
-
-filter(collection, function)
-
-reduce(collection, function, initial)
-
 foreach(collection, function)
 
 count(collection, condition)
@@ -281,8 +233,6 @@ all(collection, condition)
 # ============================================================
 # STRING FUNCTIONS
 # ============================================================
-
-length(str)
 
 contains(str, sub)
 
