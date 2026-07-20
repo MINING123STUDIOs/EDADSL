@@ -1,0 +1,74 @@
+\chapter{Introduction}
+\section{Abstract}
+EDADSL (Electronic Design Automation Domain Specific Language) is a Domain-specific Language (DSL) specialized for programmatic Electronic Design Automation (EDA) and Hardware-Synthesis. 
+It is based on an Electrical System and a constraint-driven optimisation engine.
+This Document is a full outline and as of now the authoritative Specification of the EDADSL Language as well as the systems underlying it.
+
+\section{Reading this Document}
+This document is organized into the following parts:
+
+\begin{itemize}
+\item \textbf{Part I: Core Language} -- Defines the programming language constructs including lexical structure, types, variables, expressions, constants, control flow, and functions.
+\item \textbf{Part II: Formal Semantics} -- Describes the evaluation model, execution order, constraint resolution, and type system rules.
+\item \textbf{Part III: Core Formal Model} -- Defines the structure of programs, the electrical system, and the solver.
+\item \textbf{Part IV: Hardware Model} -- Describes the circuit model, electrical objects, and querying system.
+\item \textbf{Part V: Physical System} -- Defines physical constraints, the solver model, and system flags.
+\item \textbf{Part VI: Toolchain} -- Describes the compiler pipeline, code generation, standard library, and debugging.
+\item \textbf{Part VII: Reference} -- Contains exceptions, error model, future improvements, and references.
+\item \textbf{Appendices} -- Contains standard libraries, examples, and diagrams.
+\end{itemize}
+
+Readers new to EDADSL should start with Parts I and IV, which define the language and electrical system. Those interested in physical layout should read Part V. Implementers should consult Parts II and III for formal specifications.
+
+
+\part{Core Language}
+\chapter{Design Principles}
+\section{Design Goals}
+EDADSL was designed with the following primary goals:
+
+\begin{enumerate}
+\item \textbf{Programmatic PCB Design} -- Enable engineers to describe circuits and layouts programmatically, enabling version control, automation, and reproducibility.
+
+\item \textbf{Constraint-Driven Layout} -- Allow physical constraints (clearance, creepage, alignment) to be specified declaratively, with the solver handling the complex optimization.
+
+\item \textbf{Electrical Awareness} -- Maintain a rich electrical model (parts, pins, connections, nets) that understands circuit topology, not just geometry.
+
+\item \textbf{KiCad Integration} -- Generate industry-standard KiCad files (schematics and PCBs) for further editing and manufacturing.
+
+\item \textbf{Readability} -- Use clear, prefixed syntax (elec.*, phys.*, syst.*) to make code self-documenting and easy to understand.
+
+\item \textbf{Simplicity} -- Provide a minimal set of powerful constructs rather than a large number of specialized features.
+
+\item \textbf{Accessibility} -- Serve both professional engineers and hobbyists with appropriate defaults while supporting advanced features for complex designs.
+\end{enumerate}
+
+\section{Applications and Application-Areas with special Priority during Design}
+EDADSL is particularly well-suited for:
+
+\begin{itemize}
+\item \textbf{Power Electronics} -- Where creepage distances, high-current traces, and thermal management are critical. The constraint system supports isolation requirements between high-voltage and low-voltage sections.
+
+\item \textbf{High-Speed Digital Design} -- Where trace length matching, impedance control, and signal integrity are important. The \texttt{phys.connmatch} constraint supports length and impedance matching.
+
+\item \textbf{Mixed-Signal Designs} -- Where analog and digital sections must be carefully isolated. The constraint system supports separation of noisy and sensitive circuits.
+
+\item \textbf{Prototyping} -- Where rapid iteration and parametric design enable quick exploration of design alternatives.
+
+\item \textbf{Automated Manufacturing} -- Where programmatic generation enables batch production and design automation pipelines.
+\end{itemize}
+
+\section{Design Philosophy}
+EDADSL follows a declarative-imperative hybrid philosophy:
+
+\begin{itemize}
+\item \textbf{Imperative Circuit Definition} -- Components and connections are defined sequentially, allowing natural expression of circuit topology.
+
+\item \textbf{Declarative Physical Constraints} -- Physical requirements are declared as constraints, letting the solver determine optimal placement and routing.
+
+\item \textbf{Separation of Concerns} -- The electrical description (what the circuit does) is separated from the physical description (how it is laid out).
+
+\item \textbf{Constraint Hierarchy} -- A priority system allows designers to express preferences while ensuring critical requirements are met.
+
+\item \textbf{Block Scoping} -- Variables declared inside code blocks (\texttt{if}, \texttt{for}, \texttt{while}, \texttt{do-while}) are local to that block. Functions create their own local scope.
+\end{itemize}
+

@@ -1,0 +1,471 @@
+\chapter{Structure of the Program}
+
+\section{Program Entry Point}
+Every EDADSL program must begin with the \texttt{start} keyword. The program executes sequentially from the entry point.
+
+\section{Global Scope}
+Variables and constants declared at the top level of the program have global scope and are visible from their declaration onward. Variables declared inside code blocks (\texttt{if}, \texttt{for}, \texttt{while}, \texttt{do-while}) are local to that block. Variables declared inside functions are local to that function (see Section~\ref{sec:function-scope}).
+
+\section{Execution Model}
+EDADSL uses a single-pass execution model. There is no separate declaration phase — declarations are processed in order during execution (see Appendix for execution-phase diagram). Variables must be declared before they are accessed.
+
+Electrical statements (\texttt{elec.part}, \texttt{elec.connect}, \texttt{elec.net}) are executed immediately and register components and nets to the electrical graph. Physical constraints (\texttt{phys.*}) are executed immediately but their resolution is deferred until after program execution completes.
+
+The solver interacts with program execution as follows:
+\begin{enumerate}
+\item Program executes sequentially, registering all components, nets, and constraints
+\item After program execution completes, the constraint solver runs
+\item The solver uses CSP propagation and simulated annealing to determine optimal placement and routing
+\item Output files are generated from the solved state
+\end{enumerate}
+
+
+\chapter{Structure of the Electrical System}
+
+\section{Electrical Graph}
+The electrical system is modeled as an undirected graph where:
+\begin{itemize}
+\item Vertices represent Nets
+\item Edges represent Connections
+\item Parts attach to the graph via their Pins
+\end{itemize}
+
+\section{Object Lifecycle}
+Electrical objects (parts, connections, pins, nets) are committed to the graph immediately when their declaration statement is executed. The graph is modified incrementally as the program runs.
+
+\begin{itemize}
+\item \texttt{elec.part} creates a Part node and attaches Pins
+\item \texttt{elec.net} creates a Net node
+\item \texttt{elec.connect} creates Connection edges between Pins and Nets
+\item \texttt{elec.tag} / \texttt{elec.untag} modify Net metadata
+\end{itemize}
+
+There are no undo/redo semantics. Once an object is committed to the graph, it cannot be removed. The graph state at the end of program execution is the final state passed to the constraint solver.
+
+
+\chapter{Structure of the Solver}
+
+\section{Constraint Representation}
+Physical constraints are represented as optimization objectives with priorities.
+
+\section{Resolution Algorithm}
+The constraint solver uses a two-phase approach:
+
+\begin{enumerate}
+\item \textbf{CSP Propagation:} Hard constraints (type matching, connectivity) are enforced first. This reduces the search space by eliminating invalid configurations.
+\item \textbf{Simulated Annealing:} Soft constraints (proximity, alignment, length matching) are optimized using simulated annealing. Constraints are weighted by priority level:
+\begin{itemize}
+\item \texttt{-d} (default) — weight 1.0
+\item \texttt{-nth} — weight 0.5
+\item \texttt{-imp} — weight 2.0
+\item \texttt{-vimp} — weight 4.0
+\item \texttt{-oeo} — weight 3.0 (override exact order)
+\item \texttt{-eo} — weight 1.5 (exact order)
+\item \texttt{-ne} — weight 0.3 (non-exact)
+\end{itemize}
+\end{enumerate}
+
+Convergence criteria: The solver terminates when (a) all hard constraints are satisfied and no soft constraint has improved by more than 0.1\% over the last 1000 iterations, or (b) the maximum iteration count (default 10000) is reached.
+
+
+
+
+\part{Hardware Model}
+\chapter{Circuit Model}
+The circuit model represents the electrical system as a graph of interconnected objects.
+
+\section{Graph Structure}
+The circuit is represented as a graph where:
+\begin{itemize}
+\item Nodes are Nets (electrical connection points)
+\item Edges are Connections (physical wires/traces between pins)
+\item Parts are components that connect to the graph via Pins
+\end{itemize}
+
+\section{Hierarchy}
+The model supports hierarchical grouping:
+\begin{itemize}
+\item Parts contain Pins
+\item Pins connect to Nets via Connections
+\item Nets can be grouped by Tags
+\end{itemize}
+
+
+\chapter{Electrical Objects}
+The electrical system consists of five primary object types.
+
+\section{Nets}
+A Net is a named electrical node that connects multiple Pins and Connections. Nets are the fundamental grouping mechanism for shared electrical connections.
+
+\subsection{Creation}
+Nets are created using the \texttt{elec.net} statement:
+\begin{verbatim}
+elec.net <name> [<tag1> ... <tag n>]
+
+Example:
+elec.net "Gnd"
+elec.net "hvbus" "hv" "high_i" "noisy"
+\end{verbatim}
+If two \texttt{elec.net} statements use the same name, they are merged into a single net. Tags from both declarations are combined, and a warning is issued.
+
+\subsection{Properties}
+\begin{itemize}
+\item Name (unique identifier)
+\item Connected objects (Pins and Connections)
+\item Tags (user-defined labels)
+\end{itemize}
+
+\section{Parts}
+A Part represents a physical electronic component in the circuit.
+
+\subsection{Creation}
+\label{sec:part-creation}
+Parts are created using the \texttt{elec.part} statement:
+\begin{verbatim}
+elec.part <reference>: <model>(<args>); 
+    des="<description>"; fp="<footprint>"
+
+Example:
+elec.part "R3": R(R=220, P=0.25, type="carbon"); 
+    des="220 ohm resistor"; 
+    fp="Resistor_THT:R_Axial_DIN0309"
+\end{verbatim}
+
+\subsection{PCB Text Visibility Flags}
+Per-component PCB text visibility can be overridden in the property list:
+\begin{verbatim}
+elec.part "R3": R(R=220); des="220R"; fp="R_Axial_DIN0309";
+    show_ref=True; show_value=False; show_tol=True; show_mpn=False
+\end{verbatim}
+Available flags: \texttt{show\_ref}, \texttt{show\_value}, \texttt{show\_tol}, \texttt{show\_mpn}. These override the global \texttt{syst.flag.show\_pcb\_part\_*} flags (see Chapter~\ref{ch:flags}).
+
+\subsection{Properties}
+\begin{itemize}
+\item Reference designator (e.g., R3, Q1, U1)
+\item Model and parameters
+\item Description
+\item Footprint
+\item Pins (derived from model/footprint)
+\end{itemize}
+
+\section{Pins}
+A Pin is a connection point on a Part. Pins are accessed using the bracket notation.
+
+\subsection{Creation}
+Pins are created implicitly when Parts are instantiated.
+
+\subsection{Reference Syntax}
+\begin{verbatim}
+<part_ref>[<pin_ref>]
+
+Examples:
+R1[1]    #c# Pin 1 of resistor R1
+Q1[d]    #c# Drain pin of MOSFET Q1
+U1[v+]   #c# Non-inverting input of op-amp U1
+\end{verbatim}
+
+\section{Connections}
+A Connection is a binary electrical connection between exactly two Pins.
+
+\subsection{Creation}
+Connections can be created using the pipe syntax or \texttt{elec.connect}:
+\begin{verbatim}
+#c# Pipe syntax (creates a Connection object):
+( R2[1] | J4[7] )
+
+#c# Connect statement (joins pins to a Net):
+elec.connect <net> <pin1> <pin2> ... <pin n>
+
+Example:
+elec.connect Gnd Q2[s] C6[-] R3[2]
+\end{verbatim}
+
+\section{Models}
+Models define the electrical characteristics and available pins of a Part type.
+
+\subsection{Model Declaration Syntax}
+Custom models are defined using \texttt{elec.makemodel}:
+\begin{verbatim}
+EBNF:
+model_declaration = "elec.makemodel", model_name, ":",
+                    "{", pin_entries, [metadata], "}"
+
+model_name        = id, ["/", id]
+
+pin_entry         = pin_name, "->", pin_id, ";",
+                    "T", "=", pin_type
+
+pin_name          = id
+pin_id            = integer
+pin_type          = "input" | "power" | "output"
+
+metadata          = des_entry | dts_entry | fp_entry
+
+des_entry         = "des", "=", string_type
+dts_entry         = "dts", "=", string_type
+fp_entry          = "fp", "=", string_type
+\end{verbatim}
+
+The \texttt{model\_name} consists of a category and variant separated by \texttt{/} (e.g., \texttt{mosfet/C3M0016120K1}).
+
+Pin types classify the electrical role:
+\begin{itemize}
+\item \texttt{input} -- Signal input (gate, base, control)
+\item \texttt{power} -- Power connection (source, drain, emitter, collector)
+\item \texttt{output} -- Signal output (drain for sense, kelvin connections)
+\end{itemize}
+
+\subsection{Built-in Models}
+\begin{itemize}
+\item \texttt{R} -- Resistor. Params: \texttt{R} (resistance), \texttt{P} (power rating), \texttt{tol} (tolerance), \texttt{type} (carbon, metal film, etc.)
+\item \texttt{C} -- Capacitor. Params: \texttt{C} (capacitance), \texttt{V} (voltage rating), \texttt{type} (ceramic, electrolytic, etc.)
+\item \texttt{L} -- Inductor. Params: \texttt{L} (inductance), \texttt{core} (core material)
+\item \texttt{opamp} -- Operational Amplifier. Params: \texttt{type} (generic, LM741, etc.), \texttt{GBP} (gain-bandwidth product), \texttt{slew} (slew rate), \texttt{Vos} (offset voltage)
+\item \texttt{MOSFET} -- MOSFET transistor. Params: \texttt{type} (N/P), \texttt{Vds} (drain-source voltage), \texttt{Id} (drain current), \texttt{Rds} (on-resistance), \texttt{Vgs} (gate threshold)
+\item \texttt{LED} -- Light Emitting Diode. Params: \texttt{color} (red, green, blue, etc.), \texttt{Vf} (forward voltage), \texttt{If} (forward current)
+\item \texttt{D} -- Diode. Params: \texttt{type} (signal, rectifier, zener), \texttt{Vf} (forward voltage), \texttt{If} (forward current), \texttt{Vr} (reverse voltage)
+\item \texttt{Q} -- BJT Transistor. Params: \texttt{type} (NPN/PNP), \texttt{Vce} (collector-emitter voltage), \texttt{Ic} (collector current), \texttt{hfe} (DC gain)
+\item \texttt{X} -- Crystal/Oscillator. Params: \texttt{freq} (frequency), \texttt{load} (load capacitance), \texttt{ESR} (series resistance)
+\item \texttt{J} -- Connector. Params: \texttt{pins} (pin count), \texttt{type} (header, barrel, etc.), \texttt{pitch} (pin spacing)
+\item \texttt{F} -- Fuse. Params: \texttt{I} (current rating), \texttt{V} (voltage rating), \texttt{type} (glass, blade, etc.)
+\item \texttt{Y} -- Transformer. Params: \texttt{ratio} (turns ratio), \texttt{Vpri} (primary voltage), \texttt{Vsec} (secondary voltage), \texttt{power} (VA rating)
+\end{itemize}
+
+\subsection{Custom Model Examples}
+
+\paragraph{MOSFET Model}
+\begin{verbatim}
+elec.makemodel MOSFET/IRLZ44N:{
+    g -> 1; T = input
+    S -> 2; T = power
+    d -> 3; T = power
+}
+\end{verbatim}
+
+\paragraph{Non-Polarized Capacitor}
+\begin{verbatim}
+elec.makemodel nonpol_C:{
+    1 -> 1; T = power
+    2 -> 2; T = power
+}
+\end{verbatim}
+
+\paragraph{SiC MOSFET with Metadata}
+\begin{verbatim}
+elec.makemodel mosfet/C3M0016120K1:{
+pins:
+    g        -> 4; T = input
+    s        -> 2; T = power
+    d        -> 1; T = power
+    kelvin_s -> 3; T = output
+
+des = "1200 V, 125A, 16 mOhm, TO-247-4"
+
+dts = "https://assets.wolfspeed.com/..."
+
+fp  = "Package_TO_SOT_THT/TO-247-4_Vert"
+}
+\end{verbatim}
+
+The \texttt{des} (description), \texttt{dts} (datasheet URL), and \texttt{fp} (footprint path) are optional metadata entries.
+
+\section{Electrical Modules}
+\label{sec:modules}
+Electrical modules encapsulate reusable subcircuits with configurable parameters. Modules can contain parts, connections, nets, physical constraints, and nested modules.
+
+\subsection{Definition}
+Modules are defined using \texttt{elec.makemodule}:
+\begin{verbatim}
+elec.makemodule <name>(<$param1>, <$param2>, ...) {
+    pin <name> <direction>
+    
+    <full program syntax>
+}
+\end{verbatim}
+
+\begin{itemize}
+\item Parameters are declared after the module name as dollar-prefix variables.
+\item Exposed pins are declared with \texttt{pin <name> <direction>} (\texttt{input}, \texttt{output}, \texttt{power}).
+\item The body uses full program syntax: \texttt{elec.part}, \texttt{elec.connect}, \texttt{elec.net}, \texttt{phys.*}, etc.
+\item Parameters are substituted into the body at instantiation time.
+\end{itemize}
+
+\subsection{Instantiation}
+Modules are instantiated via \texttt{elec.part} using the module name as the model:
+\begin{verbatim}
+elec.part "<reference>": <module_name>(<params>)
+\end{verbatim}
+
+Only the module name and parameter values are provided. Internal parts, connections, and constraints are defined inside the module.
+
+\subsection{Example}
+
+Definition:
+\begin{verbatim}
+elec.makemodule LowPassFilter($R, $C) {
+    pin in input
+    pin out output
+    
+    elec.part "R1": R(R=$R); des="Resistor"
+    elec.part "C1": C(C=$C); des="Capacitor"
+    
+    elec.connect in R1[1]
+    elec.connect R1[2] C1[1] out
+    elec.connect C1[2] Gnd
+}
+\end{verbatim}
+
+Usage:
+\begin{verbatim}
+elec.part "F1": LowPassFilter(R=10k, C=100n)
+elec.part "F2": LowPassFilter(R=4.7k, C=1u)
+\end{verbatim}
+
+\section{Relationship between the Objects}
+\begin{itemize}
+\item Parts contain Pins
+\item Pins are connected to Nets via Connections
+\item Nets can have Tags for grouping
+\item The global set \texttt{*e} contains all objects in creation order
+\end{itemize}
+
+
+\chapter{Querying}
+EDADSL provides a powerful querying system for selecting electrical objects based on their relationships.
+
+\section{Output and Input Quantifiers}
+The quantifier syntax selects objects connected to a net:
+\begin{verbatim}
+<quantifier>@<net_name>
+\end{verbatim}
+
+\section{Net based Querying}
+Quantifiers filter by object type:
+\begin{verbatim}
+P@<net>    #c# Parts connected to net
+C@<net>    #c# Connections on net
+T@<net>    #c# Pins connected to net
+I@<net>    #c# Connections and Pins on net
+H@<net>    #c# Holes on net
+E@<net>    #c# Everything on net (or just @<net>)
+\end{verbatim}
+
+Example:
+\begin{verbatim}
+$input [set]= I@Vin
+\end{verbatim}
+
+\section{Tagged Net based Querying}
+Query by tag instead of net name:
+\begin{verbatim}
+<quantifier>@^<tag>
+\end{verbatim}
+This expands to the union of the quantifier across all nets with the given tag.
+
+Example:
+\begin{verbatim}
+elec.tag Vin "sensitive"
+elec.tag Vfb "sensitive"
+I@^sensitive  #c# All connections/pins on 
+              #c# nets tagged "sensitive"
+\end{verbatim}
+
+\section{Affiliation-based Querying}
+Affiliation-based querying selects objects affiliated with a specific base object, regardless of net:
+\begin{verbatim}
+<primary>@<secondary>~<object>
+\end{verbatim}
+
+\begin{itemize}
+\item \texttt{<primary>} -- What to return (same quantifiers as net-based: \texttt{C}, \texttt{P}, \texttt{T}, \texttt{N}, \texttt{I}, \texttt{H}, \texttt{E})
+\item \texttt{<secondary>} -- Relationship type: \texttt{p} (part), \texttt{c} (connection), \texttt{n} (net), \texttt{t} (pin), or \texttt{e} (no type filter)
+\item \texttt{<object>} -- The base object to query from
+\end{itemize}
+
+The result is a set of objects of type \texttt{<primary>} affiliated with \texttt{<object>} through the relationship classified by \texttt{<secondary>}.
+
+Examples:
+\begin{verbatim}
+C@p~U2     #c# All connections affiliated with part U2
+T@p~U2     #c# All pins of part U2
+N@p~R1     #c# All nets connected to R1
+P@c~N1     #c# All parts connected via net N1
+E@p~U2     #c# Everything affiliated with U2
+E@e~U2     #c# Same as above (no type filter)
+\end{verbatim}
+
+\section{General Querying}
+\label{sec:general-querying}
+General querying provides two powerful forms for filtering and transforming sets: set builder notation and set query notation. Both support nesting.
+
+\subsection{Set Builder Notation}
+Set builder notation iterates over a set or list, filtering and optionally transforming elements.
+\begin{verbatim}
+EBNF:
+set_builder = "{", variable, "E", ( set | list ), 
+              ":", filter_expr, [ "~", transform_expr ], "}"
+
+filter_expr   = expression    #c# any expression evaluating to bool
+transform_expr = function_call  #c# applied to filtered elements
+\end{verbatim}
+
+The filter function receives each element and returns \texttt{True} to keep it. The transform function is applied \textbf{per-element} to each item that passes the filter; the result set contains the transformed values. If transform is omitted, elements are returned as-is.
+
+Examples:
+\begin{verbatim}
+#c# Filter: only active parts
+{ $x E *p : f.u.is_active($x) ~ noop($x) }
+
+#c# Filter and transform: get names of large caps
+{ $x E *p : f.u.is_capacitor($x) && 
+             f.u.value($x) > 100u ~ 
+             f.u.name($x) }
+
+#c# Nested: find all nets connected to parts 
+#c# in a set
+{ $x E *p : f.u.is_mosfet($x) ~ 
+    { $y E *n : f.u.connected($y, $x) ~ 
+        noop($y) } }
+\end{verbatim}
+
+\subsection{Set Query Notation}
+Set query notation applies a filter and optional transform to an existing set, with optional output assignment.
+\begin{verbatim}
+EBNF:
+set_query = "{", set_expr, "@~", "[", 
+            filter_expr, "]", 
+            [ "~[", transform_expr, "]" ],
+            "~>", [ variable ], "}"
+\end{verbatim}
+
+The \texttt{@\~} operator queries the set. The trailing \texttt{\~{}>} optionally writes the result to a variable; if omitted, the result is returned directly.
+
+Examples:
+\begin{verbatim}
+#c# Query with filter only
+{ *p @~[f.u.is_active] ~> }
+
+#c# Query with filter and transform
+{ *p @~[f.u.is_mosfet] 
+      ~[f.u.name] ~> }
+
+#c# Store result in variable
+{ *p @~[f.u.is_capacitor] 
+      ~[f.u.value] ~> $cap_values }
+
+#c# Query connections on a net
+{ C@Vin @~[f.u.is_high_current] ~> }
+\end{verbatim}
+
+\subsection{Nesting}
+Both forms can be nested to any depth. Each nested query creates a new scope for its loop variable.
+
+Example:
+\begin{verbatim}
+#c# For each MOSFET, find all connected nets,
+#c# then filter to high-voltage nets
+{ $q E *p : f.u.is_mosfet($q) ~ 
+    { C@^power @~[f.u.connected_to($q)] 
+               ~[f.u.voltage_rating] ~> 
+      $ratings } }
+\end{verbatim}

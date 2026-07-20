@@ -1,0 +1,233 @@
+\chapter{Flags}
+\label{ch:flags}
+System flags control PCB manufacturing capabilities using the \texttt{syst.flag.} prefix:
+\begin{verbatim}
+syst.flag.<flag_name> <value>
+\end{verbatim}
+
+\section{Available Flags}
+\begin{itemize}
+\item \texttt{exec\_mode} -- Execution mode: \texttt{lenient} (default) or \texttt{strict}. In strict mode, all warnings become errors and halt execution.
+\item \texttt{phy\_mode} -- Physical constraint enforcement mode (default: \texttt{phylenient}):
+\begin{itemize}
+\item \texttt{phystrict} -- All physical constraints must be met exactly. Violations halt execution immediately.
+\item \texttt{phylenient} -- Physical constraints are enforced best-effort. Violations produce warnings but execution continues.
+\item \texttt{phyrelaxed} -- The solver may relax or ignore physical constraints to find any valid layout.
+\end{itemize}
+\item \texttt{vias} -- Controls whether vias are allowed
+\item \texttt{slots} -- Controls whether slots / PCB cuts are allowed
+\item \texttt{jumpers} -- Controls whether jumper wires are allowed
+\item \texttt{solder\_reinforced\_tracks} -- Controls whether solder-reinforced tracks are allowed
+\item \texttt{buried\_vias} -- Controls whether buried vias are allowed
+\item \texttt{approx\_eps} -- Additive tolerance for approximate equality operator \texttt{\textasciitilde} (default: 1)
+\item \texttt{approx\_eps\_mult} -- Multiplicative tolerance for approximate equality operator \texttt{\textasciitilde*} (default: 1)
+\item \texttt{max\_loop\_iter} -- Maximum iterations per while/do-while loop before raising a \texttt{Value Error} (default: 100000)
+\item \texttt{show\_pcb\_part\_ref} -- Show reference designator on PCB (default: \texttt{true})
+\item \texttt{show\_pcb\_part\_value} -- Show component value on PCB (default: \texttt{true})
+\item \texttt{show\_pcb\_part\_tol} -- Show tolerance/rating on PCB (default: \texttt{true})
+\item \texttt{show\_pcb\_part\_mpn} -- Show MPN/manufacturer on PCB (default: \texttt{true})
+\item \texttt{debug\_mode} -- Enable debug functions (\texttt{debg.*}). When \texttt{false}, all debug functions are no-ops (default: \texttt{false})
+\item \texttt{debug\_output} -- Default output destination for \texttt{debg.print}: \texttt{"console"}, \texttt{"log"}, or \texttt{"both"} (default: \texttt{"console"})
+\item \texttt{default\_hash} -- Default hash algorithm for \texttt{f.hash.hash}: \texttt{"md5"}, \texttt{"sha1"}, \texttt{"sha224"}, \texttt{"sha256"}, \texttt{"sha384"}, \texttt{"sha512"} (default), \texttt{"sha3\_256"}, \texttt{"sha3\_512"}, \texttt{"blake2b"}, \texttt{"blake2s"}, \texttt{"blake3"}
+\end{itemize}
+
+\section{PCB Part Text Visibility}
+Global flags control which part text fields are visible on the PCB. Each field can be toggled independently:
+\begin{verbatim}
+syst.flag.show_pcb_part_ref False
+syst.flag.show_pcb_part_value True
+\end{verbatim}
+
+Per-component overrides can be set in the \texttt{elec.part} property list (see Section~\ref{sec:part-creation}). If a per-component flag is set, it overrides the global flag for that component:
+\begin{verbatim}
+elec.part "R3": R(R=220); des="220R"; fp="R_Axial_DIN0309";
+    show_ref=True; show_value=False
+\end{verbatim}
+Available per-component flags: \texttt{show\_ref}, \texttt{show\_value}, \texttt{show\_tol}, \texttt{show\_mpn}.
+
+
+\part{Toolchain}
+\chapter{Compiler and Execution Pipeline}
+The EDADSL toolchain compiles source code into PCB and schematic files.
+
+\section{Compilation Phases}
+\begin{enumerate}
+\item Lexical Analysis -- Tokenization of source code
+\item Parsing -- Syntax analysis and AST construction
+\item Semantic Analysis -- Type checking and validation
+\item Execution -- Program execution with electrical system construction
+\item Constraint Solving -- Physical layout optimization
+\item Code Generation -- Output file generation
+\end{enumerate}
+
+\section{Entry Point}
+Every program must begin with the \texttt{start} keyword. The program halts when \texttt{halt} is reached or an unrecoverable error occurs.
+
+
+\chapter{Code Generation}
+
+\section{PCB Generation}
+The \texttt{make.pcb} command generates a PCB file based on the circuit and physical constraints:
+\begin{verbatim}
+make.pcb
+\end{verbatim}
+This command must be placed after all circuit definitions and physical constraints.
+
+\section{Schematic Generation}
+The \texttt{make.schematic} command generates a schematic file:
+\begin{verbatim}
+make.schematic
+\end{verbatim}
+
+\section{Export}
+The \texttt{halt} command terminates execution and exports all created files:
+\begin{verbatim}
+halt
+\end{verbatim}
+
+
+\chapter{Standard Library}
+The standard library provides built-in component models, footprint libraries, and material definitions.
+
+\section{Component Models}
+Built-in models include: \texttt{R} (Resistor), \texttt{C} (Capacitor), \texttt{L} (Inductor), \texttt{opamp} (Operational Amplifier), \texttt{MOSFET} (MOSFET transistor), \texttt{LED} (Light Emitting Diode), \texttt{D} (Diode), \texttt{Q} (BJT Transistor), \texttt{X} (Crystal/Oscillator), \texttt{J} (Connector), \texttt{F} (Fuse), \texttt{Y} (Transformer).
+
+\section{Footprint Libraries}
+Footprints are organized by package type: \texttt{Package\_SMD}, \texttt{Package\_TH}, \texttt{Package\_BGA}, \texttt{Package\_Power}, \texttt{Package\_Connector}. Each library contains standard footprints following IPC naming conventions.
+
+\section{Material Library}
+Materials define physical properties for PCB stackup: \texttt{FR4} (fiberglass-epoxy), \texttt{copper} (conductor), \texttt{ENIG} (surface finish), \texttt{soldermask} (insulator).
+
+
+\chapter{External Library}
+External libraries extend EDADSL with additional component models and footprints.
+
+\section{Importing Libraries}
+TODO: Document how external libraries are integrated with EDADSL.
+
+\section{Supported Formats}
+EDADSL supports integration with:
+\begin{itemize}
+\item KiCad symbol libraries (\texttt{.kicad\_sym})
+\item KiCad footprint libraries (\texttt{.kicad\_mod})
+\item SPICE models (\texttt{.lib}, \texttt{.sub})
+\item IPC-2581 component databases
+\end{itemize}
+
+
+\chapter{Debugging and Logging}
+
+\section{Debug Mode}
+Debug functions (\texttt{debg.*}) are enabled by the \texttt{debug\_mode} flag. When disabled (default), all debug functions are no-ops:
+\begin{verbatim}
+syst.flag.debug_mode True
+\end{verbatim}
+
+The \texttt{debug\_output} flag controls the default destination for \texttt{debg.print}:
+\begin{verbatim}
+syst.flag.debug_output "console"   #c# default
+syst.flag.debug_output "log"
+syst.flag.debug_output "both"
+\end{verbatim}
+
+\section{Quick Reference}
+The following output and debugging tools are available:
+
+\begin{center}
+\begin{tabular}{ll}
+Tool & Purpose \\ \hline
+\texttt{echo \$var} & Console output (simple) \\
+\texttt{f.util.print(...)} & Console output (expressions) \\
+\texttt{writetolog ``msg''} & Append to log file \\
+\texttt{debg.print(\$var, mode)} & Debug output with type info \\
+\texttt{debg.breakpoint(cond)} & Pause execution \\
+\texttt{debg.graph()} & Dump electrical graph \\
+\texttt{debg.resources()} & Memory, CPU, object counts \\
+\texttt{debg.trace(msg)} & Execution trace log \\
+\texttt{debg.profile(fn, mode)} & Function timing \\
+\texttt{debg.memory()} & Detailed memory report \\
+\texttt{debg.cpu()} & Instantaneous CPU usage \\
+\texttt{debg.watch(\$var)} & Variable change log \\
+\texttt{debg.stack()} & Call stack dump \\
+\texttt{debg.inspect(\$var)} & Detailed variable info \\
+\end{tabular}
+\end{center}
+
+For complete documentation (EBNF, type overloading, examples, error conditions) of all \texttt{debg.*} functions, see Section~\ref{sec:debug-functions} in the Built-in Functions chapter.
+
+\section{Workflow}
+A typical debugging session:
+\begin{enumerate}
+\item Enable debug mode: \texttt{syst.flag.debug\_mode True}
+\item Set output destination: \texttt{syst.flag.debug\_output ``both''}
+\item Add \texttt{debg.watch()} for variables of interest
+\item Add \texttt{debg.breakpoint()} at critical points
+\item Add \texttt{debg.trace()} calls for execution flow
+\item Review the debug log file after execution
+\end{enumerate}
+
+
+
+
+\part{Reference}
+\chapter{Exceptions}
+
+\section{Type Errors}
+Raised when an operation is applied to a value of the wrong type.
+
+\section{Value Errors}
+Raised when a function receives an argument outside its domain (e.g., division by zero, invalid list index). Out-of-bounds list or set indexing (e.g., accessing index 10 on a 3-element list) raises a Value Error and halts execution.
+
+\section{Reference Errors}
+Raised when referencing an undefined variable, part, or function.
+
+\section{Constraint Errors}
+Raised when physical constraints cannot be resolved (see Section~\ref{sec:solver-model}).
+
+
+\chapter{Error and Warning Model}
+
+\section{Errors}
+Errors halt program execution. The error message includes the error type and location.
+
+\section{Warnings}
+Warnings are printed for constraint conflicts between different priorities. The program continues execution after warnings.
+
+
+\chapter{Future Improvements}
+Planned features for future versions:
+\begin{itemize}
+\item Differential pair routing constraints
+\item Impedance-controlled routing
+\item 3D component placement visualization
+\item Signal integrity analysis integration
+\item Power integrity analysis
+\item Automated thermal relief generation
+\end{itemize}
+
+
+\chapter{Implementations}
+
+\section{Reference Implementation}
+A reference implementation is planned and will be developed in Rust for performance and safety. It will cover the full language specification described in this document, including lexical analysis, parsing, type checking, evaluation, constraint solving, and layout generation.
+
+\section{Build and Installation}
+Build and installation instructions will be provided once the reference implementation is publicly available.
+
+
+\chapter{References}
+
+\section{Language Specification}
+This document serves as the authoritative specification for the EDADSL language.
+
+\section{Related Standards}
+\begin{itemize}
+\item IPC-2581 — Generic Standard for Printed Board Assembly Products
+\item IPC-7351 — Land Pattern Naming Conventions for Surface Mount Designs
+\item KiCad File Formats — Schematic and PCB file format specifications
+\item SPICE — Simulation Program with Integrated Circuit Emphasis
+\end{itemize}
+
+
+
+
