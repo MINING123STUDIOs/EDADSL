@@ -77,8 +77,12 @@ f_statement = statement | "return", [data]
 function_call_ud              = "f.u.", id, "(",
                                 [{ data, "," }, data] ,")"
 
-function_call_built_in        = "f.", id, "(",
+function_call_built_in        = "f", ".", namespace, ".", id, "(",
                                 [{ data, "," }, data] ,")"
+
+namespace                     = "math" | "trig" | "hyp" | "cplx" | "log"
+                              | "special" | "str" | "list" | "arr"
+                              | "stat" | "linalg" | "ee" | "int" | "util"
 
 variable_assignment           = variable,
                                 (typed_assign | inferred_assign),
@@ -98,6 +102,10 @@ assigner                      = "[bool]=",   boolean_type
 constant_assignment = "let", "c.u.", id, assigner, 
                       [";", "P", "=", boolean_data_type]
 
+constant_ref        = "c", ".", const_namespace, ".", id
+
+const_namespace     = "math" | "phys"
+
 
 halt                          = "halt"
 noop                          = "skip"
@@ -113,6 +121,7 @@ boolean_data_type             = expression  (any expression evaluating to bool)
 data                          = variable
                               | literal
                               | constant
+                              | constant_ref
                               | function_call_built_in
                               | function_call_ud
                               | expression  (see Chapter 4 for expression grammar)

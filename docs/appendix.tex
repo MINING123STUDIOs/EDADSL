@@ -106,19 +106,19 @@ $c [complex]= 2 + 3i
 
 $sum t= $a + $b           #c# 13.14 (int + real -> real)
 $prod t= $a * $c          #c# 20 + 30i (int * complex -> complex)
-$hyp t= f.sqrt($a^2 + $b^2) #c# ~10.49 (real)
-$ang t= f.angle($c)          #c# ~0.9828 rad (real)
+$hyp t= f.log.sqrt($a^2 + $b^2) #c# ~10.49 (real)
+$ang t= f.cplx.angle($c)          #c# ~0.9828 rad (real)
 
-f.print(f.str("a + b = ", $sum))
-f.print(f.str("a * c = ", $prod))
-f.print(f.str("hypotenuse = ", $hyp))
-f.print(f.str("angle = ", $ang))
+f.util.print(f.str.str("a + b = ", $sum))
+f.util.print(f.str.str("a * c = ", $prod))
+f.util.print(f.str.str("hypotenuse = ", $hyp))
+f.util.print(f.str.str("angle = ", $ang))
 
 halt
 \end{verbatim}
 
 \subsection{Explanation}
-Variables are declared with explicit types. Arithmetic operations implicitly promote to the wider type: int + real yields real, int + complex yields complex. The \texttt{f.angle} function returns the argument (phase) of a complex number in radians.
+Variables are declared with explicit types. Arithmetic operations implicitly promote to the wider type: int + real yields real, int + complex yields complex. The \texttt{f.cplx.angle} function returns the argument (phase) of a complex number in radians.
 
 \section{Conditionals and Classification}
 \subsection{Intent}
@@ -152,7 +152,7 @@ if $value == 1.0e3 ::{
     }
 }
 
-f.print(f.str($value, " ohms: ", $series, ", ", $tolerance))
+f.util.print(f.str.str($value, " ohms: ", $series, ", ", $tolerance))
 
 halt
 \end{verbatim}
@@ -162,7 +162,7 @@ The \texttt{if}/\texttt{otherwise}/\texttt{else} chain classifies the resistor i
 
 \section{Lambdas and Higher-Order Functions}
 \subsection{Intent}
-Use lambda expressions with \texttt{f.map}, \texttt{f.filter}, and \texttt{f.reduce} to process a list of resistor values.
+Use lambda expressions with \texttt{f.util.map}, \texttt{f.util.filter}, and \texttt{f.util.reduce} to process a list of resistor values.
 
 \subsection{EDADSL Code}
 \begin{verbatim}
@@ -172,31 +172,31 @@ $resistors [list]= [100, 220, 330,
     470, 1e3, 2.2e3, 4.7e3, 10e3]
 
 # Compute power dissipation at 5V
-$powers [list]= f.map($resistors,
+$powers [list]= f.util.map($resistors,
     L::($r [real]) -> { (5.0^2) / $r })
-f.print(f.str("Powers: ", $powers))
+f.util.print(f.str.str("Powers: ", $powers))
 
 # Filter to only resistors under 1k
-$small [list]= f.filter($resistors,
+$small [list]= f.util.filter($resistors,
     L::($r [real]) -> { $r < 1000 })
-f.print(f.str("Under 1k: ", $small))
+f.util.print(f.str.str("Under 1k: ", $small))
 
 # Sum all power dissipation
-$total_power [real]= f.reduce($powers,
+$total_power [real]= f.util.reduce($powers,
     L::($acc [real], $p [real]) -> { $acc + $p },
     0.0)
-f.print(f.str("Total power: ", $total_power, " W"))
+f.util.print(f.str.str("Total power: ", $total_power, " W"))
 
 # Sort resistors ascending
-$sorted [list]= f.sort($resistors,
+$sorted [list]= f.util.sort($resistors,
     L::($a [real], $b [real]) -> { $a - $b })
-f.print(f.str("Sorted: ", $sorted))
+f.util.print(f.str.str("Sorted: ", $sorted))
 
 halt
 \end{verbatim}
 
 \subsection{Explanation}
-Lambdas are declared with \texttt{L::} prefix, typed parameters, and \texttt->\{\} body. \texttt{f.map} applies a function to each element, \texttt{f.filter} selects elements satisfying a predicate, and \texttt{f.reduce} folds the list with an accumulator. The sort comparator returns negative if the first argument should come first.
+Lambdas are declared with \texttt{L::} prefix, typed parameters, and \texttt->\{\} body. \texttt{f.util.map} applies a function to each element, \texttt{f.util.filter} selects elements satisfying a predicate, and \texttt{f.util.reduce} folds the list with an accumulator. The sort comparator returns negative if the first argument should come first.
 
 \section{Complex Arithmetic and FFT}
 \subsection{Intent}
@@ -212,41 +212,41 @@ $z2 [complex]= 1 - 2i
 
 $sum     t= $z1 + $z2         # 4 + 2i
 $product t= $z1 * $z2         # 11 - 2i
-$mag     t= f.abs($z1)         # 5.0
-$conj_z  t= f.conj($z2)        # 1 + 2i
+$mag     t= f.math.abs($z1)         # 5.0
+$conj_z  t= f.cplx.conj($z2)        # 1 + 2i
 
-f.print(f.str("|z1| = ", $mag))
-f.print(f.str("z1 * z2 = ", $product))
-f.print(f.str("conj(z2) = ", $conj_z))
+f.util.print(f.str.str("|z1| = ", $mag))
+f.util.print(f.str.str("z1 * z2 = ", $product))
+f.util.print(f.str.str("conj(z2) = ", $conj_z))
 
 # Generate a 256-point signal: 50Hz + 120Hz
 $N [int]= 256
 $fs [real]= 1000.0
 $t [list]= [0:1:$N - 1]
-$signal [list]= f.map($t,
-    L::($n [int]) -> { f.sin(2 * c.pi * 50
+$signal [list]= f.util.map($t,
+    L::($n [int]) -> { f.trig.sin(2 * c.math.pi * 50
         * $n / $fs)
-        + 0.5 * f.sin(2 * c.pi * 120
+        + 0.5 * f.trig.sin(2 * c.math.pi * 120
         * $n / $fs) })
 
 # Compute FFT and extract magnitudes
-$spectrum [list]= f.fft($signal)
-$mags [list]= f.map($spectrum,
-    L::($z [complex]) -> { f.abs($z) })
+$spectrum [list]= f.ee.fft($signal)
+$mags [list]= f.util.map($spectrum,
+    L::($z [complex]) -> { f.math.abs($z) })
 
 # Find the dominant frequency
-$max_mag [real]= f.max($mags)
-$peak_index [int]= f.argmax($mags)
+$max_mag [real]= f.math.max($mags)
+$peak_index [int]= f.stat.argmax($mags)
 $freq [real]= ($peak_index * $fs) / $N
 
-f.print(f.str("Dominant frequency: ", $freq, " Hz"))
-f.print(f.str("Magnitude: ", $max_mag))
+f.util.print(f.str.str("Dominant frequency: ", $freq, " Hz"))
+f.util.print(f.str.str("Magnitude: ", $max_mag))
 
 halt
 \end{verbatim}
 
 \subsection{Explanation}
-Complex numbers support all arithmetic operators. The \texttt{f.fft} function returns a list of complex values; \texttt{f.map} with \texttt{f.abs} extracts magnitudes. The dominant frequency is recovered by finding the index of the peak magnitude and scaling by $f_s / N$. The expected dominant frequency is 50 Hz.
+Complex numbers support all arithmetic operators. The \texttt{f.ee.fft} function returns a list of complex values; \texttt{f.util.map} with \texttt{f.math.abs} extracts magnitudes. The dominant frequency is recovered by finding the index of the peak magnitude and scaling by $f_s / N$. The expected dominant frequency is 50 Hz.
 
 \section{Ndarray Matrix Operations}
 \subsection{Intent}
@@ -263,24 +263,24 @@ $A [list]= [[2, 1], [5, 7]]
 $b [list]= [11, 13]
 
 # Compute inverse and solve
-$A_inv [list]= f.inv($A)
+$A_inv [list]= f.linalg.inv($A)
 $x [list]= $A_inv .* $b
 
-f.print(f.str("Solution x = ", $x))
+f.util.print(f.str.str("Solution x = ", $x))
 
 # Verify: A .* x should equal b
 $check [list]= $A .* $x
-f.print(f.str("Verification A .* x = ", $check))
+f.util.print(f.str.str("Verification A .* x = ", $check))
 
 # Matrix properties
-f.print(f.str("det(A) = ", f.det($A)))
-f.print(f.str("rank(A) = ", f.rank($A)))
+f.util.print(f.str.str("det(A) = ", f.linalg.det($A)))
+f.util.print(f.str.str("rank(A) = ", f.linalg.rank($A)))
 
 halt
 \end{verbatim}
 
 \subsection{Explanation}
-Ndarrays are detected automatically from rectangular all-numeric lists; no type annotation is needed. The \texttt{.*} operator performs matrix multiplication, and \texttt{f.inv} computes the matrix inverse. Functions \texttt{f.det} and \texttt{f.rank} return the determinant and rank respectively. The expected solution is $x = [6.2, -1.4]$.
+Ndarrays are detected automatically from rectangular all-numeric lists; no type annotation is needed. The \texttt{.*} operator performs matrix multiplication, and \texttt{f.linalg.inv} computes the matrix inverse. Functions \texttt{f.linalg.det} and \texttt{f.linalg.rank} return the determinant and rank respectively. The expected solution is $x = [6.2, -1.4]$.
 
 \section{Closures and Lambdas}
 \subsection{Intent}
@@ -294,27 +294,27 @@ $resistors [list]= [100, 330, 1e3, 2.2e3, 4.7e3, 10e3]
 
 # Filter: keep resistors above 1k (captures $threshold)
 $threshold [real]= 1000
-$high [list]= f.filter($resistors,
+$high [list]= f.util.filter($resistors,
     L::($v [real]) -> { $v > $threshold })
-f.print(f.str("Above 1k: ", $high))
+f.util.print(f.str.str("Above 1k: ", $high))
 
 # Filter: keep resistors above 4.7k
 $threshold = 4700
-$vhigh [list]= f.filter($resistors,
+$vhigh [list]= f.util.filter($resistors,
     L::($v [real]) -> { $v > $threshold })
-f.print(f.str("Above 4.7k: ", $vhigh))
+f.util.print(f.str.str("Above 4.7k: ", $vhigh))
 
 # Element-wise add scalar to each list element
 $offset [int]= 10
-$shifted [list]= f.map([10, 20, 30],
+$shifted [list]= f.util.map([10, 20, 30],
     L::($i [int]) -> { $i + $offset })
-f.print(f.str("Shifted: ", $shifted))
+f.util.print(f.str.str("Shifted: ", $shifted))
 
 halt
 \end{verbatim}
 
 \subsection{Explanation}
-Lambdas capture variables from the enclosing scope. Here \texttt{\$threshold} is captured by reference: reassigning it before calling \texttt{f.filter} changes which values pass the filter. The \texttt{f.map} lambda captures \texttt{\$offset} to add a constant to each element.
+Lambdas capture variables from the enclosing scope. Here \texttt{\$threshold} is captured by reference: reassigning it before calling \texttt{f.util.filter} changes which values pass the filter. The \texttt{f.util.map} lambda captures \texttt{\$offset} to add a constant to each element.
 
 \section{Design-Rule-Driven Component Placement}
 \subsection{Intent}
@@ -376,31 +376,31 @@ start
 $N [int]= 512
 $fs [real]= 1000.0
 $t [list]= [0:1:$N - 1]
-$clean [list]= f.map($t,
-    L::($n [int]) -> { f.sin(2 * c.pi
+$clean [list]= f.util.map($t,
+    L::($n [int]) -> { f.trig.sin(2 * c.math.pi
         * 100 * $n / $fs) })
 
 # Step 2: Add noise (simple LCG pseudo-random)
-$noise [list]= f.map($t,
-    L::($n [int]) -> { 0.3 * f.sin(2 * c.pi
+$noise [list]= f.util.map($t,
+    L::($n [int]) -> { 0.3 * f.trig.sin(2 * c.math.pi
         * 7 * $n) })
-$noisy [list]= f.map($t,
+$noisy [list]= f.util.map($t,
     L::($i [int]) -> { $clean[$i] + $noise[$i] })
 
 # Step 3: Compute FFT of noisy signal
-$spectrum [list]= f.fft($noisy)
-$mags [list]= f.map($spectrum,
-    L::($z [complex]) -> { f.abs($z) })
+$spectrum [list]= f.ee.fft($noisy)
+$mags [list]= f.util.map($spectrum,
+    L::($z [complex]) -> { f.math.abs($z) })
 
 # Step 4: Find peak frequency
-$peak_idx [int]= f.argmax($mags)
+$peak_idx [int]= f.stat.argmax($mags)
 $peak_freq [real]= ($peak_idx * $fs) / $N
-f.print(f.str("Detected frequency: ", $peak_freq, " Hz"))
+f.util.print(f.str.str("Detected frequency: ", $peak_freq, " Hz"))
 
 # Step 5: Compute signal statistics
-$sig_rms [real]= f.rms($noisy)
-$sig_peak [real]= f.peak($noisy)
-f.print(f.str("RMS: ", $sig_rms, ", Peak: ", $sig_peak))
+$sig_rms [real]= f.stat.rms($noisy)
+$sig_peak [real]= f.stat.peak($noisy)
+f.util.print(f.str.str("RMS: ", $sig_rms, ", Peak: ", $sig_peak))
 
 # Step 6: Build magnitude spectrum pairs
 $bin_width [real]= $fs / $N
@@ -412,14 +412,14 @@ for $i E [0:1:$N / 2 - 1] ::{
         + [[$freq_val, $mag_val]]
 }
 
-f.print(f.str("Spectrum bins (first 5): ",
+f.util.print(f.str.str("Spectrum bins (first 5): ",
     $spec_pairs[0:5]))
 
 halt
 \end{verbatim}
 
 \subsection{Explanation}
-This example chains together multiple language features: \texttt{f.map} for list comprehensions, complex FFT, higher-order functions for magnitude extraction, signal statistics (\texttt{f.rms}, \texttt{f.peak}), and list slicing. The pipeline demonstrates a realistic signal analysis workflow from raw data through frequency-domain representation.
+This example chains together multiple language features: \texttt{f.util.map} for list comprehensions, complex FFT, higher-order functions for magnitude extraction, signal statistics (\texttt{f.stat.rms}, \texttt{f.stat.peak}), and list slicing. The pipeline demonstrates a realistic signal analysis workflow from raw data through frequency-domain representation.
 
 \chapter{Diagrams}
 
@@ -501,7 +501,7 @@ The following diagram shows the EDADSL type hierarchy, including numeric promoti
 \begin{itemize}
 \item Numeric types promote automatically: \texttt{bool} $\rightarrow$ \texttt{int} $\rightarrow$ \texttt{real} $\rightarrow$ \texttt{complex}
 \item An \texttt{ndarray} is a \texttt{list} that is rectangular and all-numeric; detected automatically
-\item \texttt{list} element types are polymorphic; \texttt{ndarray} elements are restricted to \texttt{int} or \texttt{real}
+\item \texttt{list} element types are polymorphic; \texttt{ndarray} elements are restricted to \texttt{int}, \texttt{real}, or \texttt{complex}
 \item \texttt{set} is unordered and unique; \texttt{list} is ordered and allows duplicates
 \end{itemize}
 
@@ -637,15 +637,15 @@ The following diagram shows the signal processing pipeline for FFT analysis.
 
 \textbf{EDADSL Code:}
 \begin{verbatim}
-$signal [list]= f.map([0:1:$N - 1],
-    L::($n [int]) -> { f.sin(2 * c.pi
+$signal [list]= f.util.map([0:1:$N - 1],
+    L::($n [int]) -> { f.trig.sin(2 * c.math.pi
         * 100 * $n / $fs) })
-$spectrum [list]= f.fft($signal)
+$spectrum [list]= f.ee.fft($signal)
     # list[complex]
-$mags     [list]= f.map($spectrum,
-    L::($z [complex]) -> { f.abs($z) })
+$mags     [list]= f.util.map($spectrum,
+    L::($z [complex]) -> { f.math.abs($z) })
     # list[real]
-$peak_idx [int]= f.argmax($mags)
+$peak_idx [int]= f.stat.argmax($mags)
 $freq     [real]= ($peak_idx * $fs) / $N   # = 100 Hz
 \end{verbatim}
 

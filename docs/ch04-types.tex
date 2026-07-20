@@ -21,6 +21,52 @@ Boolean values can be coerced from other types:
 \item \texttt{None} coerces to \texttt{False}
 \end{itemize}
 Explicit conversion is not supported; boolean evaluation is implicit in conditional contexts.
+\subsection{Null}
+\subsubsection{Null Data Type Definition}
+The Null data type represents the absence of a value. Null is a special singleton value that indicates ``no value''. Variables can be explicitly assigned null. Functions may return null to indicate failure or missing data.
+
+\subsubsection{Null Data Type Literals}
+\begin{verbatim}
+null_literal = "null"
+\end{verbatim}
+
+\begin{itemize}
+\item \texttt{null} is case-sensitive: only lowercase \texttt{null} is valid.
+\item \texttt{null} is distinct from \texttt{None}. \texttt{None} is the implicit return value of functions that do not explicitly return; \texttt{null} explicitly represents the absence of a value.
+\item Accessing a member or index of \texttt{null} raises a \texttt{Runtime Error} unless the safe access operator (\texttt{?.}) or safe indexing operator (\texttt{?[]}) is used.
+\end{itemize}
+
+\subsubsection{Null Coercion}
+\begin{itemize}
+\item \texttt{null} coerces to \texttt{False} in boolean contexts.
+\item \texttt{null} coerces to \texttt{0} in numeric contexts (raises \texttt{Type Error} for explicit casting).
+\end{itemize}
+
+\subsubsection{Null Coalescing}
+The null coalescing operator \texttt{??} returns the left operand if it is not \texttt{null}, otherwise the right operand:
+\begin{verbatim}
+a ?? b   Returns a if a is not null, else b
+\end{verbatim}
+
+\subsubsection{Safe Access}
+The safe member access operator \texttt{?.} returns \texttt{null} if the left operand is \texttt{null}, instead of raising a \texttt{Runtime Error}:
+\begin{verbatim}
+obj?.member   Returns obj.member if obj is not null, else null
+\end{verbatim}
+
+The safe indexing operator \texttt{?[]} returns \texttt{null} if the left operand is \texttt{null}:
+\begin{verbatim}
+array?[index]   Returns array[index] if array is not null, else null
+\end{verbatim}
+
+\subsubsection{Null Examples}
+\begin{verbatim}
+$x [int]= null         #c# $x is null
+$y = $x ?? 5           #c# $y = 5 (null coalescing)
+$obj?.property         #c# returns null if $obj is null
+$arr?[0]               #c# returns null if $arr is null
+\end{verbatim}
+
 \subsection{Integer}
 \subsubsection{Integer Data Type Definition}
 The Integer data type represents whole numbers (elements of $\mathbb{Z}$). Integers support standard arithmetic operations and can express values from very large negative to very large positive using SI decimal prefixes (kilo and above).
@@ -29,13 +75,21 @@ Integer literals can be expressed in multiple formats:
 \begin{verbatim}
 EBNF:
 int_literal = decimal_int | binary_literal 
-            | octal_literal | hex_literal
+            | octal_literal | hex_literal | bin_exp_int
 
-decimal_int = ["+" | "-"], digit, {digit}
+decimal_int = ["+" | "-"], digit, {digit}, [si_prefix | bin_prefix]
 
-binary_literal   = "0b", bindigit, {bindigit}
-octal_literal    = "0o", octdigit, {octdigit}
-hex_literal      = "0x", hexdigit, {hexdigit}
+binary_literal   = "0b", bindigit, {bindigit}, [si_prefix | bin_prefix]
+octal_literal    = "0o", octdigit, {octdigit}, [si_prefix | bin_prefix]
+hex_literal      = "0x", hexdigit, {hexdigit}, [si_prefix | bin_prefix]
+
+bin_exp_int = ["+" | "-"], digit, {digit}, ("w" | "W"), "+", digit, {digit}
+
+si_prefix = "q" | "r" | "y" | "z" | "a" | "f" | "p" | "n" | "u" | "m"
+          | "c" | "d" | "h" | "D"
+          | "k" | "M" | "G" | "T" | "P" | "E" | "Z" | "Y" | "R" | "Q"
+
+bin_prefix = "ki" | "Mi" | "Gi" | "Ti" | "Pi" | "Ei" | "Zi" | "Yi" | "Ri" | "Qi"
 
 RegEx:
 digit     = [0-9]
@@ -44,13 +98,22 @@ octdigit  = [0-7]
 hexdigit  = [0-9a-fA-F]
 \end{verbatim}
 
-SI prefixes >= k and scientific notation produce integers when the result is numerically equal to an integer:
+SI prefixes $\geq$ k and scientific notation produce integers when the result is numerically equal to an integer:
 \begin{verbatim}
 6.2k    #c# = 6200 (int)
 1M      #c# = 1000000 (int)
 -5e9    #c# = -5000000000 (int, exact)
 5e-1    #c# = 0.5 (real, not exact)
 4Q      #c# = 4e30 (int)
+\end{verbatim}
+
+Binary (IEC 60027-2) prefixes produce integers by multiplying with powers of 2:
+\begin{verbatim}
+1ki     #c# = 1024 (2^10)
+4Mi     #c# = 4194304 (2^20)
+2Gi     #c# = 2147483648 (2^30)
+1Ti     #c# = 1099511627776 (2^40)
+0x10ki  #c# = 16384 (0x10 * 1024)
 \end{verbatim}
 
 Binary, octal, and hex literals always produce integers:
@@ -60,12 +123,19 @@ Binary, octal, and hex literals always produce integers:
 0o17    #c# = 15
 \end{verbatim}
 
+Binary exponent notation uses \texttt{w}/\texttt{W} (mnemonic: \textbf{w}ide) to multiply a mantissa by $2^{\text{exponent}}$. When the mantissa has no decimal point and the exponent is $\geq$ 0, the result is an integer:
+\begin{verbatim}
+4w10    #c# = 4096 (4 * 2^10)
+5W1     #c# = 10 (5 * 2^1)
+1w0     #c# = 1 (1 * 2^0)
+\end{verbatim}
+
 \subsubsection{Integer Data Type Casting and Coercion}
 Integers can be coerced from other types:
 \begin{itemize}
 \item Booleans coerce to \texttt{0} (False) or \texttt{1} (True)
 \item Numeric strings with no decimal point are parsed as integers (e.g., \texttt{"42"} becomes \texttt{42})
-\item \texttt{real} values are truncated (e.g., \texttt{f.int(3.7)} becomes \texttt{3})
+\item \texttt{real} values are truncated (e.g., \texttt{3.7} cast to \texttt{int} becomes \texttt{3})
 \end{itemize}
 
 \subsection{Real}
@@ -75,14 +145,22 @@ The Real data type represents floating-point numbers (elements of $\mathbb{R}$).
 Real literals can be expressed in multiple formats:
 \begin{verbatim}
 EBNF:
-real_literal = decimal_real | scientific_real
+real_literal = decimal_real | scientific_real | bin_exp_literal
 
-decimal_real   = ["+" | "-"], digit, {digit}, ".", {digit}
-               | ["+" | "-"], ".", digit, {digit}
+decimal_real   = ["+" | "-"], digit, {digit}, ".", {digit}, [si_prefix]
+               | ["+" | "-"], ".", digit, {digit}, [si_prefix]
 
 scientific_real = ["+" | "-"], digit, {digit}, 
                   ["." , {digit}], ("e" | "E"), 
                   ["+" | "-"], digit, {digit}
+               | ["+" | "-"], ".", digit, {digit}, 
+                  ("e" | "E"), 
+                  ["+" | "-"], digit, {digit}
+
+bin_exp_literal = ["+" | "-"], digit, {digit}, ["." , {digit}],
+                  ("w" | "W"), ["+" | "-"], digit, {digit}
+               | ["+" | "-"], ".", digit, {digit},
+                  ("w" | "W"), ["+" | "-"], digit, {digit}
 \end{verbatim}
 
 A literal with a decimal point or scientific notation produces a real, even if the fractional part is zero:
@@ -91,7 +169,15 @@ A literal with a decimal point or scientific notation produces a real, even if t
 42.0    #c# = 42.0 (real)
 42e0    #c# = 42.0 (real)
 .4      #c# = 0.4 (real)
+.5e2    #c# = 50.0 (real, leading-dot scientific)
 2e-6    #c# = 0.000002 (real)
+\end{verbatim}
+
+Binary exponent notation produces a real when the mantissa has a decimal point or the exponent is negative:
+\begin{verbatim}
+1w-3    #c# = 0.125 (1 * 2^-3)
+3.5w2   #c# = 14.0 (3.5 * 2^2, real because decimal mantissa)
+.5w-1   #c# = 0.25 (0.5 * 2^-1)
 \end{verbatim}
 
 SI prefixes below k produce reals:
@@ -102,23 +188,51 @@ SI prefixes below k produce reals:
 \end{verbatim}
 
 The full SI prefix table:
-\begin{verbatim}
-SI_Prefixes:
-q  1e-30  quecto     Q  1e+30  quetta
-r  1e-27  ronto      R  1e+27  ronna
-y  1e-24  yocto      Y  1e+24  yotta
-z  1e-21  zepto      Z  1e+21  zetta
-a  1e-18  atto       E  1e+18  exa
-f  1e-15  femto      P  1e+15  peta
-p  1e-12  pico       T  1e+12  tera
-n  1e-9   nano       G  1e+9   giga
-u  1e-6   micro      M  1e+6   mega
-m  1e-3   milli      k  1e+3   kilo
-c  1e-2   centi
-d  1e-1   deci
-\end{verbatim}
+\begin{center}
+\begin{tabular}{lll@{\hspace{3em}}lll}
+\hline
+Prefix & Value & Name & Prefix & Value & Name \\
+\hline
+\multicolumn{3}{l}{\textit{Sub-unit ($< 1$)}} & \multicolumn{3}{l}{\textit{Multiple ($\geq 1$)}} \\
+q  & $10^{-30}$ & quecto  & k  & $10^{3}$  & kilo  \\
+r  & $10^{-27}$ & ronto   & M  & $10^{6}$  & mega  \\
+y  & $10^{-24}$ & yocto   & G  & $10^{9}$  & giga  \\
+z  & $10^{-21}$ & zepto   & T  & $10^{12}$ & tera  \\
+a  & $10^{-18}$ & atto    & P  & $10^{15}$ & peta  \\
+f  & $10^{-15}$ & femto   & E  & $10^{18}$ & exa   \\
+p  & $10^{-12}$ & pico    & Z  & $10^{21}$ & zetta \\
+n  & $10^{-9}$  & nano    & Y  & $10^{24}$ & yotta \\
+u  & $10^{-6}$  & micro   & R  & $10^{27}$ & ronna \\
+m  & $10^{-3}$  & milli   & Q  & $10^{30}$ & quetta \\
+c  & $10^{-2}$  & centi   & h  & $10^{2}$  & hecto  \\
+d  & $10^{-1}$  & deci    & D  & $10^{1}$  & deca   \\
+\hline
+\end{tabular}
+\end{center}
 
-Prefixes >= k produce integers. Prefixes < k produce reals.
+Prefixes $\geq$ k produce integers. Prefixes $<$ k produce reals.
+
+The full binary (IEC 60027-2) prefix table:
+\begin{center}
+\begin{tabular}{llll}
+\hline
+Prefix & Value & Decimal & Name \\
+\hline
+ki & $2^{10}$  & $1\,024$                    & kibi  \\
+Mi & $2^{20}$  & $1\,048\,576$               & mebi  \\
+Gi & $2^{30}$  & $1\,073\,741\,824$          & gibi  \\
+Ti & $2^{40}$  & $1\,099\,511\,627\,776$     & tebi  \\
+Pi & $2^{50}$  & $1.1259 \times 10^{15}$     & pebi  \\
+Ei & $2^{60}$  & $1.1529 \times 10^{18}$     & exbi  \\
+Zi & $2^{70}$  & $1.1806 \times 10^{21}$     & zebi  \\
+Yi & $2^{80}$  & $1.2089 \times 10^{24}$     & yobi  \\
+Ri & $2^{90}$  & $1.2379 \times 10^{27}$     & robi  \\
+Qi & $2^{100}$ & $1.2677 \times 10^{30}$     & quebi \\
+\hline
+\end{tabular}
+\end{center}
+
+Binary prefixes always produce integers.
 
 \subsubsection{Real Data Type Casting and Coercion}
 Reals can be coerced from other types:
@@ -310,12 +424,12 @@ $r2 [list]= [0:5]         #c# [0, 1, 2, 3, 4, 5]
 $r3 [list]= [0|1|5]       #c# [0, 0.25, 0.5, 0.75, 1]
 \end{verbatim}
 \subsubsection{Ndarray (N-dimensional Array)}
-An ndarray is a list that is \textbf{rectangular} (all sublists have the same length) and contains only \textbf{numeric} values (\texttt{int} or \texttt{real}). Ndarray status is determined automatically -- no type annotation is needed. A list that is rectangular and all-numeric gains ndarray operations; all other lists remain standard lists.
+An ndarray is a list that is \textbf{rectangular} (all sublists have the same length) and contains only \textbf{numeric} values (\texttt{int}, \texttt{real}, or \texttt{complex}). Ndarray status is determined automatically -- no type annotation is needed. A list that is rectangular and all-numeric gains ndarray operations; all other lists remain standard lists.
 
 \paragraph{Detection Rules}
 A list is an ndarray if and only if it satisfies all of the following:
 \begin{enumerate}
-\item All elements are \texttt{int} or \texttt{real} (no strings, bools, or other types).
+\item All elements are \texttt{int}, \texttt{real}, or \texttt{complex} (no strings, bools, or other types).
 \item All sublists (if any) have identical length (rectangular).
 \item Nesting is consistent: if element $i$ is a list, all elements $j \neq i$ must also be lists of the same length.
 \end{enumerate}
@@ -324,7 +438,7 @@ A list is an ndarray if and only if it satisfies all of the following:
 \begin{verbatim}
 is_ndarray(list):
     if list is empty: return True  (1D ndarray)
-    if all elements are int or real: return True  (1D ndarray)
+    if all elements are int, real, or complex: return True  (1D ndarray)
     if any element is not a list: return False
     lengths = [len(x) for x in list if x is list]
     if not all equal(lengths): return False
@@ -334,7 +448,9 @@ is_ndarray(list):
 \paragraph{Examples}
 \begin{itemize}
 \item \texttt{[1, 2, 3]} — ndarray (1D, shape (3))
+\item \texttt{[1+2i, 3+4i]} — ndarray (1D, shape (2), complex)
 \item \texttt{[[1,2], [3,4], [5,6]]} — ndarray (2D, shape (3,2))
+\item \texttt{[[1+2i, 3], [4, 5+6i]]} — ndarray (2D, shape (2,2), complex)
 \item \texttt{[[1,2], [3,4,5]]} — NOT ndarray (different lengths)
 \item \texttt{[1, "hello", True]} — NOT ndarray (non-numeric)
 \item \texttt{[]} — ndarray (1D, shape (0))
@@ -591,7 +707,7 @@ arithmetic_expression = expression,
      | ".*" | ".^"),
     expression
   | "-" expression
-  | expression, ".T"
+  | expression, (".T" | ".H")
 
 boolean_expression = expression,
     ("&&" | "||" | "^^"), expression
@@ -607,6 +723,10 @@ set_expression = expression, ("u" | "n" | "/"), expression
   | "||", expression
   | expression, ("c" | "E" | "!E"), expression
 
+null_expression = expression, "??", expression
+  | expression, "?.", id
+  | expression, "?[", expression, "]"
+
 postfix_expression = variable, ("++" | "--")
 
 compound_assignment = variable,
@@ -620,6 +740,8 @@ compound_assignment = variable,
     #c# tensor
   | variable, (".*=" | ".^=" | ".*r=" | ".^r=")
   | variable, "~.T"
+  | variable, "~.H"
+  | variable, "~.E"
     #c# bitwise / shift
   | variable, ("<<=" | ">>=" | "<<r=" | ">>r=")
   | variable, ("<<<[" int_literal "]=" 
@@ -630,24 +752,27 @@ compound_assignment = variable,
   | variable, ("&&=" | "||=" | "^^=" | "!&=" | "!|=" | "!^=")
     #c# imply / nimply
   | variable, ("->=" | "!->=" | "->r=" | "!->r="), expression
+    #c# bitwise logic
+  | variable, ("b&&=" | "b||=" | "b^^=" | "b!&=" | "b!|=" | "b!^=" | "b->=" | "b!->=" | "b->r=" | "b!->r=")
+  | variable, "~b!"
 \end{verbatim}
 
 \section{Operator Precedence}
 Operators are evaluated in the following order of precedence (highest to lowest):
 \begin{enumerate}
 \item Exponentiation (\texttt{\^{}}) -- right-associative
-\item Boolean negation (\texttt{!})
-\item Postfix increment/decrement (\texttt{\$var++}, \texttt{\$var--}), transpose (\texttt{.T})
+\item Boolean negation (\texttt{!}), Bitwise NOT (\texttt{b!})
+\item Postfix increment/decrement (\texttt{\$var++}, \texttt{\$var--}), transpose (\texttt{.T}), Hermitian transpose (\texttt{.H}), erase (\texttt{~.E})
 \item Set cardinality (\texttt{||a})
 \item Multiplication (\texttt{*}), Division (\texttt{/}), Floor Division (\texttt{//}), Modulo (\texttt{\%}), Dot Product (\texttt{.}), Cross Product (\texttt{x}), Matrix Multiply (\texttt{.*}), Matrix Power (\texttt{.\^{}})
 \item Left Shift (\texttt{<<}), Right Shift (\texttt{>>}), Left Rotate (\texttt{<<<[w]}), Right Rotate (\texttt{>>>[w]})
 \item Addition (\texttt{+}), Subtraction (\texttt{-})
 \item Comparison operators (\texttt{<}, \texttt{<=}, \texttt{==}, \texttt{!=}, \texttt{=n=}, \texttt{><}, \texttt{>=}, \texttt{>}, \texttt{\textasciitilde}, \texttt{\textasciitilde*}, \texttt{\textasciitilde+()\textasciitilde}, \texttt{\textasciitilde*()\textasciitilde})
 \item Set comparison (\texttt{c}, \texttt{E}, \texttt{!E})
-\item Logical AND (\texttt{\&\&}), NAND (\texttt{!\&})
-\item Logical OR (\texttt{||}), NOR (\texttt{!|})
-\item Logical XOR (\texttt{\^{}}\texttt{\^{}}), XNOR (\texttt{!}\texttt{\^{}})
-\item IMPLY (\texttt{->}), NIMPLY (\texttt{!->})
+\item Logical AND (\texttt{\&\&}), NAND (\texttt{!\&}), Bitwise AND (\texttt{b\&\&}), Bitwise NAND (\texttt{b!\&})
+\item Logical OR (\texttt{||}), NOR (\texttt{!|}), Bitwise OR (\texttt{b||}), Bitwise NOR (\texttt{b!|})
+\item Logical XOR (\texttt{\^{}}\texttt{\^{}}), XNOR (\texttt{!}\texttt{\^{}}), Bitwise XOR (\texttt{b\^{}}\texttt{\^{}}), Bitwise XNOR (\texttt{b!}\texttt{\^{}})
+\item IMPLY (\texttt{->}), NIMPLY (\texttt{!->}), Bitwise IMPLY (\texttt{b->}), Bitwise NIMPLY (\texttt{b!->})
 \item Conditional expression (\texttt{?->...!...})
 \item Lambda expression (\texttt{L::(...) -> \{...\}})
 \item User-defined operators (\texttt{o.u.*})

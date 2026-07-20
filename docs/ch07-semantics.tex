@@ -36,7 +36,7 @@ Type coercion follows the hierarchy: \texttt{int} $<$ \texttt{real} $<$ \texttt{
 Program statements are executed sequentially from the entry point (\texttt{start}). Electrical statements (\texttt{elec.part}, \texttt{elec.connect}, \texttt{elec.net}) execute immediately and register components to the electrical graph. Physical constraints (\texttt{phys.*}) execute immediately but their resolution is deferred until after program execution completes.
 
 \section{Expression Evaluation}
-Within a single expression, operands are evaluated left-to-right. Function arguments are evaluated left-to-right before the function is called. Short-circuit operators (\texttt{\&\&}, \texttt{||}) may skip evaluation of the right operand when the result is determined.
+Within a single expression, operands are evaluated left-to-right. Function arguments are evaluated left-to-right before the function is called. Short-circuit operators (\texttt{\&\&}, \texttt{||}) may skip evaluation of the right operand when the result is determined, unless the unevaluated operand contains a function call that modifies global scope, in which case both operands are always evaluated.
 
 \section{Declaration Order}
 Variables must be declared before they are accessed. Reading a variable before its declaration statement has been executed raises a \texttt{Runtime Error}. Declarations are processed in order during execution (there is no separate declaration phase). Variable types may change on redeclaration.

@@ -123,10 +123,10 @@ syst.flag.debug_mode True
 \end{verbatim}
 
 \section{Console Output}
-The \texttt{echo} and \texttt{f.print()} functions output to the console:
+The \texttt{echo} and \texttt{f.util.print()} functions output to the console:
 \begin{verbatim}
 echo $variable
-f.print("Message: " + $variable)
+f.util.print("Message: " + $variable)
 \end{verbatim}
 
 \section{Log File}
@@ -225,13 +225,10 @@ Planned features for future versions:
 \chapter{Implementations}
 
 \section{Reference Implementation}
-The reference implementation is written in Rust for performance and safety. Current version: 0.1.0 (pre-release). Supported platforms: Linux (x86\_64), macOS (x86\_64, aarch64), Windows (x86\_64).
+A reference implementation is planned and will be developed in Rust for performance and safety. It will cover the full language specification described in this document, including lexical analysis, parsing, type checking, evaluation, constraint solving, and layout generation.
 
 \section{Build and Installation}
-The reference implementation can be built from source using Cargo:
-\begin{verbatim}
-cargo build --release
-\end{verbatim}
+Build and installation instructions will be provided once the reference implementation is publicly available.
 
 
 \chapter{References}
