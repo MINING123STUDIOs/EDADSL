@@ -28,6 +28,7 @@ syst.flag.<flag_name> <value>
 \item \texttt{show\_pcb\_part\_mpn} -- Show MPN/manufacturer on PCB (default: \texttt{true})
 \item \texttt{debug\_mode} -- Enable debug functions (\texttt{debg.*}). When \texttt{false}, all debug functions are no-ops (default: \texttt{false})
 \item \texttt{debug\_output} -- Default output destination for \texttt{debg.print}: \texttt{"console"}, \texttt{"log"}, or \texttt{"both"} (default: \texttt{"console"})
+\item \texttt{default\_hash} -- Default hash algorithm for \texttt{f.hash.hash}: \texttt{"md5"}, \texttt{"sha1"}, \texttt{"sha224"}, \texttt{"sha256"}, \texttt{"sha384"}, \texttt{"sha512"} (default), \texttt{"sha3\_256"}, \texttt{"sha3\_512"}, \texttt{"blake2b"}, \texttt{"blake2s"}, \texttt{"blake3"}
 \end{itemize}
 
 \section{PCB Part Text Visibility}
@@ -122,65 +123,48 @@ Debug functions (\texttt{debg.*}) are enabled by the \texttt{debug\_mode} flag. 
 syst.flag.debug_mode True
 \end{verbatim}
 
-\section{Console Output}
-The \texttt{echo} and \texttt{f.util.print()} functions output to the console:
+The \texttt{debug\_output} flag controls the default destination for \texttt{debg.print}:
 \begin{verbatim}
-echo $variable
-f.util.print("Message: " + $variable)
+syst.flag.debug_output "console"   #c# default
+syst.flag.debug_output "log"
+syst.flag.debug_output "both"
 \end{verbatim}
 
-\section{Log File}
-The \texttt{writetolog} keyword appends a message to the log file:
-\begin{verbatim}
-writetolog "Checkpoint reached"
-\end{verbatim}
-The log file is exported when \texttt{halt} is executed.
+\section{Quick Reference}
+The following output and debugging tools are available:
 
-\section{Debug Print}
-The \texttt{debg.print} function outputs variable value and type. The destination is controlled by the \texttt{mode} parameter or the global \texttt{debug\_output} flag:
-\begin{verbatim}
-debg.print($variable)
-debg.print($variable, mode="log")
-debg.print($variable, mode="both")
-\end{verbatim}
+\begin{center}
+\begin{tabular}{ll}
+Tool & Purpose \\ \hline
+\texttt{echo \$var} & Console output (simple) \\
+\texttt{f.util.print(...)} & Console output (expressions) \\
+\texttt{writetolog ``msg''} & Append to log file \\
+\texttt{debg.print(\$var, mode)} & Debug output with type info \\
+\texttt{debg.breakpoint(cond)} & Pause execution \\
+\texttt{debg.graph()} & Dump electrical graph \\
+\texttt{debg.resources()} & Memory, CPU, object counts \\
+\texttt{debg.trace(msg)} & Execution trace log \\
+\texttt{debg.profile(fn, mode)} & Function timing \\
+\texttt{debg.memory()} & Detailed memory report \\
+\texttt{debg.cpu()} & Instantaneous CPU usage \\
+\texttt{debg.watch(\$var)} & Variable change log \\
+\texttt{debg.stack()} & Call stack dump \\
+\texttt{debg.inspect(\$var)} & Detailed variable info \\
+\end{tabular}
+\end{center}
 
-Modes:
-\begin{itemize}
-\item \texttt{"console"} (default) -- Output to console
-\item \texttt{"log"} -- Output to debug log file
-\item \texttt{"both"} -- Output to console and debug log file
-\end{itemize}
+For complete documentation (EBNF, type overloading, examples, error conditions) of all \texttt{debg.*} functions, see Section~\ref{sec:debug-functions} in the Built-in Functions chapter.
 
-\section{Breakpoints}
-The \texttt{debg.breakpoint} function pauses execution and prints the current state (variables, stack). An optional condition can be provided:
-\begin{verbatim}
-debg.breakpoint()
-debg.breakpoint($voltage > 5.0)
-debg.breakpoint($count == 10)
-\end{verbatim}
-
-If a condition is provided, execution only pauses when the condition is \texttt{True}. When \texttt{debug\_mode} is \texttt{false}, breakpoints are no-ops and execution continues uninterrupted.
-
-\section{Graph Inspection}
-The \texttt{debg.graph} function dumps the full electrical graph state (parts, nets, connections, pins):
-\begin{verbatim}
-debg.graph()
-\end{verbatim}
-
-Output includes all parts with their models and parameters, all nets with their tags, all connections, and all pin assignments.
-
-\section{Resource Monitoring}
-The \texttt{debg.resources} function prints current resource usage:
-\begin{verbatim}
-debg.resources()
-\end{verbatim}
-
-Output includes:
-\begin{itemize}
-\item Memory usage
-\item CPU time elapsed
-\item Object counts (parts, nets, connections, pins)
-\end{itemize}
+\section{Workflow}
+A typical debugging session:
+\begin{enumerate}
+\item Enable debug mode: \texttt{syst.flag.debug\_mode True}
+\item Set output destination: \texttt{syst.flag.debug\_output ``both''}
+\item Add \texttt{debg.watch()} for variables of interest
+\item Add \texttt{debg.breakpoint()} at critical points
+\item Add \texttt{debg.trace()} calls for execution flow
+\item Review the debug log file after execution
+\end{enumerate}
 
 
 

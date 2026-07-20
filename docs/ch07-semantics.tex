@@ -36,7 +36,51 @@ Type coercion follows the hierarchy: \texttt{int} $<$ \texttt{real} $<$ \texttt{
 Program statements are executed sequentially from the entry point (\texttt{start}). Electrical statements (\texttt{elec.part}, \texttt{elec.connect}, \texttt{elec.net}) execute immediately and register components to the electrical graph. Physical constraints (\texttt{phys.*}) execute immediately but their resolution is deferred until after program execution completes.
 
 \section{Expression Evaluation}
-Within a single expression, operands are evaluated left-to-right. Function arguments are evaluated left-to-right before the function is called. Short-circuit operators (\texttt{\&\&}, \texttt{||}) may skip evaluation of the right operand when the result is determined, unless the unevaluated operand contains a function call that modifies global scope, in which case both operands are always evaluated.
+Within a single expression, operands are evaluated left-to-right. The pipeline operator \texttt{|=>} evaluates the left operand first, then passes the result to the function reference on the right. Function arguments are evaluated left-to-right before the function is called. Short-circuit operators (\texttt{\&\&}, \texttt{||}) may skip evaluation of the right operand when the result is determined, unless the unevaluated operand contains a function call that modifies global scope, in which case both operands are always evaluated.
+
+\section{Assertions}
+The \texttt{assert} statement evaluates its boolean condition at runtime. If the condition is \texttt{True}, execution continues. If \texttt{False}, the specified error is raised immediately with the provided message. The function form \texttt{f.util.assert()} behaves identically. Assertions are not optimized away at compile time.
+
+\section{Error Handling}
+The \texttt{try/except} construct provides structured error handling. When an error occurs inside a \texttt{try} block, the runtime searches the \texttt{otherwise} clauses in order for a matching error type. If found, the error is caught and the corresponding block executes. If not found, the error propagates after the \texttt{except} block (if present). The \texttt{except} block always executes, whether the \texttt{try} succeeded, an error was caught, or an unhandled error propagated.
+
+\section{Function Value Calling}
+A function value stored in a variable is called using the syntax \texttt{\$var(args)}. The evaluation proceeds as follows:
+\begin{enumerate}
+\item The variable is evaluated to obtain the function value
+\item If the variable holds \texttt{null}, a \texttt{Runtime Error} is raised
+\item If the variable does not hold a \texttt{func} value, a \texttt{Type Error} is raised
+\item All arguments are evaluated left-to-right
+\item The function is called with the evaluated arguments
+\item If the function does not accept the provided argument count or types, a \texttt{Type Error} is raised
+\end{enumerate}
+
+\section{Safe Function Calling}
+The \texttt{?()} and \texttt{??()} operators provide null-safe function invocation. Both evaluate all arguments \textbf{before} checking the function reference. Errors in argument evaluation are never suppressed.
+
+\subsection{Safe Call (\texttt{?()})}
+\begin{enumerate}
+\item All arguments are evaluated left-to-right
+\item The variable is evaluated to obtain the function value
+\item If the variable holds \texttt{null}: returns \texttt{null} (no error)
+\item If the variable does not hold a \texttt{func} value: raises a \texttt{Type Error}
+\item The function is called with the evaluated arguments
+\item Errors raised within the function \textbf{propagate} normally
+\end{enumerate}
+
+\subsection{Null-Safe Call (\texttt{??()})}
+\begin{enumerate}
+\item All arguments are evaluated left-to-right
+\item The variable is evaluated to obtain the function value
+\item If the variable holds \texttt{null}: returns \texttt{null} (no error)
+\item If the variable does not hold a \texttt{func} value: returns \texttt{null} (no error)
+\item The function is called with the evaluated arguments
+\item If the function call raises \textbf{any} error (\texttt{Type}, \texttt{Value}, \texttt{Division by Zero}, \texttt{Runtime}, \texttt{Assertion}): returns \texttt{null} (error suppressed)
+\end{enumerate}
+The \texttt{??()} operator is equivalent to wrapping the call in \texttt{try \{ fn(args) \} otherwise \{ null \}}, but without introducing a new code block.
+
+\section{Function Composition}
+The composition operator \texttt{<o} creates a new function value at evaluation time. The right operand is evaluated first, then the left operand. Both must evaluate to \texttt{func} values. The result is a new anonymous function that, when called, evaluates \texttt{\$g(x)} first, then passes the result to \texttt{\$f}. The composed function captures both function values by reference at composition time.
 
 \section{Declaration Order}
 Variables must be declared before they are accessed. Reading a variable before its declaration statement has been executed raises a \texttt{Runtime Error}. Declarations are processed in order during execution (there is no separate declaration phase). Variable types may change on redeclaration.
@@ -54,7 +98,7 @@ EDADSL uses a dynamic type system with distinct types for electrical and non-ele
 
 \section{Type Categories}
 \begin{itemize}
-\item Generic types: Boolean, Integer, Real, Complex, String, List, Set
+\item Generic types: Boolean, Integer, Real, Complex, String, List, Set, Function
 \item Electrical types: Part, Pin, Connection, Net
 \end{itemize}
 
@@ -65,10 +109,21 @@ EDADSL performs type checking at both compile time and runtime:
 \item \textbf{Compile-time:} Type mismatches in variable declarations (e.g., \texttt{\$x [int]= "hello"}) are detected when the script is parsed.
 \item \textbf{Runtime:} Type mismatches in function arguments and operator usage are detected when the code is executed. A \texttt{Type Error} is raised for incompatible types.
 \item \textbf{Sets:} Sets can contain any data type. Mixed-type sets are allowed.
-\item \textbf{Coercion:} Numeric types coerce upward: \texttt{int} $\to$ \texttt{real} $\to$ \texttt{complex}. Other types do not coerce.
+\item \textbf{Coercion:} Numeric types coerce upward: \texttt{int} $\to$ \texttt{real} $\to$ \texttt{complex}. Other types do not coerce. Function values do not coerce to or from any other type.
 \end{itemize}
 
+\section{Error Types}
+EDADSL defines six error types. Each error type has a full name and a short alias for use in \texttt{assert} statements and \texttt{f.util.assert} calls.
 
+\begin{center}
+\begin{tabular}{lll}
+Full Name & Alias & Typical Cause \\ \hline
+\texttt{Type Error} & \texttt{terr} & Incompatible types \\
+\texttt{Value Error} & \texttt{verr} & Invalid value (e.g., out of domain) \\
+\texttt{Division by Zero Error} & \texttt{0div} & Division by zero \\
+\texttt{Runtime Error} & \texttt{rerr} & Invalid runtime state \\
+\texttt{Assertion Error} & \texttt{aerr} & Failed assertion \\
+\end{tabular}
+\end{center}
 
-
-\part{Core Formal Model}
+All errors halt program execution immediately. There is no try/catch mechanism.\part{Core Formal Model}

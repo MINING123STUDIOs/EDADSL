@@ -209,6 +209,12 @@ $var b!->r= expr $var = expr b!-> $var
 $var ~b!         $var = b! $var
 \end{verbatim}
 
+\subsubsection{Function Composition}
+\begin{verbatim}
+$var <o= expr   $var = $var <o expr   (compose-assign)
+$var o>= expr   $var = expr <o $var   (reverse compose-assign)
+\end{verbatim}
+
 Examples:
 \begin{verbatim}
 $x [int]= 5
@@ -334,7 +340,15 @@ a ~*( c )~ b Approximately Equal with multiplicative tolerance c
 \item \texttt{\textasciitilde}, \texttt{\textasciitilde*}, \texttt{\textasciitilde+()\textasciitilde}, \texttt{\textasciitilde*()\textasciitilde}: \texttt{int} or \texttt{real} $\rightarrow$ \texttt{bool} (approximate equality)
 \end{itemize}
 
-Ordered comparisons (\texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}) only work on ints, reals, and strings. Using them on complex numbers raises a \texttt{Type Error}. Equality (\texttt{==}, \texttt{!=}) works on any type including lists, sets, parts, and connections. \texttt{=n=} works only on numeric types.
+Ordered comparisons (\texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}) only work on ints, reals, and strings. Using them on complex numbers raises a \texttt{Type Error}. Equality (\texttt{==}, \texttt{!=}) works on any type including lists, sets, parts, connections, and functions. \texttt{=n=} works only on numeric types.
+
+\paragraph{Function Equality}
+Equality (\texttt{==}, \texttt{!=}) works on function values using reference identity. Ordered comparisons (\texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}) raise a \texttt{Type Error} when applied to function values.
+\begin{itemize}
+\item \texttt{f.math.sin == f.math.sin} $\rightarrow$ \texttt{True} (same reference)
+\item \texttt{f.math.sin == f.math.cos} $\rightarrow$ \texttt{False} (different references)
+\item \texttt{L::(\$x [int])-\texttt{>}\{\$x\} == L::(\$x [int])-\texttt{>}\{\$x\}} $\rightarrow$ \texttt{False} (lambdas are always unique)
+\end{itemize}
 
 \paragraph{Numeric Equality}
 \texttt{=n=} compares values numerically across types. Unlike \texttt{==} which is type-strict, \texttt{=n=} returns \texttt{True} if the numeric values are equal regardless of whether the operands are \texttt{int} or \texttt{real}.
@@ -796,9 +810,51 @@ $arr = null
 $item [int]= $arr?[0]           #c# $item = null (no Runtime Error)
 \end{verbatim}
 
+\subsubsection{Safe Function Call (\texttt{?()})}
+Calls a function value if it is not \texttt{null}, otherwise returns \texttt{null} without raising a \texttt{Runtime Error}. Errors raised \textbf{within} the called function still propagate.
+\begin{verbatim}
+fn?(args)   Returns fn(args) if fn is not null, else null
+\end{verbatim}
+\begin{itemize}
+\item Operands: a variable holding a \texttt{func} value or \texttt{null}, followed by optional arguments
+\item Result: return type of the function if the variable is not \texttt{null}, else \texttt{null}
+\item If the variable is \texttt{null}: returns \texttt{null} (no error)
+\item If the variable is not \texttt{func}: raises a \texttt{Type Error}
+\item Arguments are evaluated before the null check
+\end{itemize}
+\begin{verbatim}
+$f [func]= L::($x [int]) -> { $x + 1 }
+$val [int]= $f?(10)           #c# $val = 11
+
+$g = null
+$val2 [int]= $g?(10)          #c# $val2 = null (no Runtime Error)
+\end{verbatim}
+
+\subsubsection{Null-Safe Function Call (\texttt{??()})}
+Like \texttt{?()}, but also suppresses any error raised \textbf{within} the called function, returning \texttt{null} instead. This is the safest calling convention---the expression can never raise an error.
+\begin{verbatim}
+fn??(args)   Returns fn(args) if fn is not null; returns null on any error
+\end{verbatim}
+\begin{itemize}
+\item Operands: a variable holding a \texttt{func} value or \texttt{null}, followed by optional arguments
+\item Result: return type of the function, or \texttt{null}
+\item If the variable is \texttt{null}: returns \texttt{null} (no error)
+\item If the variable is not \texttt{func}: returns \texttt{null} (no error)
+\item If the function call raises any error (\texttt{Type}, \texttt{Value}, \texttt{Division by Zero}, \texttt{Runtime}, \texttt{Assertion}): returns \texttt{null} (error suppressed)
+\item Arguments are evaluated before the null check (errors in argument evaluation are \textbf{not} suppressed)
+\end{itemize}
+\begin{verbatim}
+$f [func]= L::($x [int]) -> { 100 / $x }
+$val [int]= $f??(5)           #c# $val = 20
+$val2 [int]= $f??(0)          #c# $val2 = null (Division by Zero Error suppressed)
+
+$g = null
+$val3 [int]= $g??(5)          #c# $val3 = null (no Runtime Error)
+\end{verbatim}
+
 \label{sec:lambda}
 \subsection{Lambda Expressions}
-Lambda expressions create anonymous functions that can be passed as arguments to higher-order functions. They are defined with the \texttt{L::} prefix (consistent with the \texttt{f.u.} prefix for user-defined functions).
+Lambda expressions create anonymous function values (of type \texttt{func}) that can be passed as arguments to higher-order functions, stored in variables, or called directly. They are defined with the \texttt{L::} prefix (consistent with the \texttt{f.u.} prefix for user-defined functions).
 
 \subsubsection{Syntax}
 \begin{verbatim}
@@ -871,12 +927,125 @@ filter([True, False, True], L::($x [bool])->{ !$x })
 \item Runtime Error: type mismatch between parameter type and actual element type
 \end{itemize}
 
+\subsection{Pipeline}
+The pipeline operator \texttt{|=>} passes the left operand as the argument to the function on the right. This enables readable left-to-right data flow without nesting.
+\begin{verbatim}
+value |=> function_ref
+value |=> lambda
+\end{verbatim}
+
+\paragraph{Semantics}
+\begin{itemize}
+\item \texttt{a |=> f} evaluates to \texttt{f(a)}
+\item Left-associative: \texttt{a |=> f |=> g} evaluates to \texttt{g(f(a))}
+\item The left operand is fully evaluated before the function is called
+\end{itemize}
+
+\paragraph{Function Reference}
+A function reference names a function without calling it. Built-in references omit parentheses; user-defined references use the \texttt{f.u.} prefix:
+\begin{itemize}
+\item Built-in: \texttt{f.math.sin} (not \texttt{f.math.sin()})
+\item User-defined: \texttt{f.u.myfunc} (not \texttt{f.u.myfunc()})
+\item Lambda: \texttt{L::(x) -> \{ x + 1 \}}
+\end{itemize}
+
+\paragraph{Examples}
+\begin{verbatim}
+5 |=> f.math.sin                   #c# = sin(5)
+-3 |=> f.math.abs                  #c# = 3
+"hello" |=> f.str.upperc           #c# = "HELLO"
+
+# Chained pipeline:
+5 |=> f.math.sin |=> f.math.abs    #c# = |sin(5)|
+
+# Lambda in pipeline:
+5 |=> L::(x) -> { x * x + 1 }    #c# = 26
+
+# Pipeline with variables:
+$f [list]= [1, 2, 3, 4, 5]
+$f |=> f.list.sum |=> f.math.sqrt  #c# = sqrt(15)
+\end{verbatim}
+
+\paragraph{Constraints}
+\begin{itemize}
+\item The right-hand side must be a function reference or lambda -- a function call (\texttt{f.math.sin()}) is not valid as a pipeline target
+\item The function must accept exactly one argument -- a \texttt{Type Error} is raised otherwise
+\item For multi-argument functions, wrap in a lambda: \texttt{5 |=> L::(x) -> \{ f.math.pow(x, 2) \}}
+\end{itemize}
+
+\subsection{Function Composition}
+The composition operator \texttt{<o} creates a new function that applies the right operand first, then the left operand. This is mathematical function composition: \texttt{\$f <o \$g} produces a function equivalent to \texttt{L::(\$x) -> \{ \$f(\$g(\$x)) \}}.
+
+\paragraph{Syntax}
+\begin{verbatim}
+$f <o $g          #c# compose: returns new function ($x) -> $f($g($x))
+$f <o= $g         #c# compose-assign: $f = $f <o $g
+$f o>= $g         #c# reverse compose-assign: $f = $g <o $f
+\end{verbatim}
+
+\paragraph{Semantics}
+\begin{itemize}
+\item \texttt{\$f <o \$g} returns a new \texttt{func} value; neither \texttt{\$f} nor \texttt{\$g} is modified
+\item Right-associative: \texttt{\$f <o \$g <o \$h} = \texttt{\$f <o (\$g <o \$h)} $\rightarrow$ applies \texttt{\$h}, then \texttt{\$g}, then \texttt{\$f}
+\item The composed function has the arity of the rightmost function (\texttt{\$g})
+\end{itemize}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item Both operands must be \texttt{func} -- a \texttt{Type Error} is raised otherwise
+\item The return type of \texttt{\$g} must be assignable to the parameter type of \texttt{\$f} -- a \texttt{Type Error} is raised otherwise
+\item Result is always \texttt{func}
+\end{itemize}
+
+\paragraph{Examples}
+\begin{verbatim}
+$double t= L::($x [int])->{ $x * 2 }
+$inc    t= L::($x [int])->{ $x + 1 }
+
+# $f <o $g means ($x) -> $f($g($x))
+$double_then_inc t= $double <o $inc
+$double_then_inc(3)        #c# Returns 8  (inc first: 3+1=4, then double: 4*2=8)
+
+# Right-associative chaining
+$add1 t= L::($x [int])->{ $x + 1 }
+$mul2 t= L::($x [int])->{ $x * 2 }
+$sqr  t= L::($x [int])->{ $x ^ 2 }
+
+$pipeline t= $sqr <o $mul2 <o $add1
+# $sqr <o ($mul2 <o $add1) = ($x) -> $sqr($mul2($add1($x)))
+$pipeline(3)               #c# Returns 64  ((3+1)*2)^2 = 8^2 = 64
+
+# Compose built-in functions
+$to_upper_then_len t= f.util.len <o f.str.upperc
+$to_upper_then_len("hello")  #c# Returns 5
+
+# Compose-assign: $f = $f <o $g
+$f t= L::($x [int])->{ $x * 2 }
+$f <o= L::($x [int])->{ $x + 10 }
+$f(3)                       #c# Returns 26  ($f is now ($x)->($x+10)*2, so (3+10)*2=26)
+
+# Reverse compose-assign: $g = $g <o $f  ($f goes on the LEFT of <o)
+$double t= L::($x [int])->{ $x * 2 }
+$add10  t= L::($x [int])->{ $x + 10 }
+$double o>= $add10
+# $double is now $add10 <o $double = ($x) -> $add10($double($x))
+$double(3)                    #c# Returns 16  (3*2=6, then 6+10=16)
+\end{verbatim}
+
+\paragraph{Error Conditions}
+\begin{itemize}
+\item \texttt{Type Error}: either operand is not a \texttt{func}
+\item \texttt{Type Error}: return type of \texttt{\$g} is not assignable to parameter type of \texttt{\$f}
+\item \texttt{Runtime Error}: either operand is \texttt{null}
+\end{itemize}
+
 \section{Operator Precedence}
 Operators are evaluated in the following order (highest to lowest):
 \begin{enumerate}
 \item \texttt{\^{}} -- Exponentiation (right-associative)
 \item \texttt{!} -- Boolean negation, Bitwise NOT (\texttt{b!})
-\item \texttt{\$var++}, \texttt{\$var--}, \texttt{.T}, \texttt{.H}, \texttt{\textasciitilde.E}, \texttt{?.}, \texttt{?[]} -- Postfix increment / decrement, transpose, Hermitian transpose, erase, safe member access, safe indexing
+\item \texttt{\$var++}, \texttt{\$var--}, \texttt{.T}, \texttt{.H}, \texttt{\textasciitilde.E}, \texttt{?.}, \texttt{?[]}, \texttt{?()}, \texttt{??()}, \texttt{\$var(args)} -- Postfix increment / decrement, transpose, Hermitian transpose, erase, safe member access, safe indexing, safe function call, null-safe function call, function call
+\item \texttt{<o} -- Function composition (right-associative)
 \item \texttt{||a} -- Cardinality / length
 \item \texttt{*}, \texttt{/}, \texttt{//}, \texttt{\%}, \texttt{.}, \texttt{x}, \texttt{.*}, \texttt{.\^{}} -- Multiplication, division, floor division, modulo, dot product, cross product, matrix multiply, matrix power
 \item \texttt{<<}, \texttt{>>}, \texttt{<<<}, \texttt{>>>} -- Left shift, right shift, left rotate, right rotate
@@ -889,6 +1058,7 @@ Operators are evaluated in the following order (highest to lowest):
 \item \texttt{->}, \texttt{!->}, \texttt{b->}, \texttt{b!->} -- IMPLY, NIMPLY, Bitwise IMPLY, Bitwise NIMPLY
 \item \texttt{?->...!...} -- Conditional expression
 \item \texttt{??} -- Null coalescing (right-associative)
+\item \texttt{|=>} -- Pipeline (left-associative)
 \item \texttt{L::(...)->\{...\}} -- Lambda expression
 \item User-defined operators (\texttt{o.u.*})
 \end{enumerate}

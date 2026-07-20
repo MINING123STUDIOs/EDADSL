@@ -22,12 +22,15 @@ statement                     = assignment
                               | echo_statement
                               | writetolog
                               | letop
+                              | assertion
+                              | try_except
 
 assignment                    = variable_assignment          
                               | constant_assignment
 
 function                      = function_call_built_in
                               | function_call_ud
+                              | function_call_var
                               | function_definition
 
 flow_control                  = conditional
@@ -80,9 +83,19 @@ function_call_ud              = "f.u.", id, "(",
 function_call_built_in        = "f", ".", namespace, ".", id, "(",
                                 [{ data, "," }, data] ,")"
 
+function_call_var             = variable, "(",
+                                [{ data, "," }, data] ,")"
+
+safe_function_call            = variable, "?", "(",
+                                [{ data, "," }, data] ,")"
+
+null_safe_function_call       = variable, "??", "(",
+                                [{ data, "," }, data] ,")"
+
 namespace                     = "math" | "trig" | "hyp" | "cplx" | "log"
                               | "special" | "str" | "list" | "arr"
-                              | "stat" | "linalg" | "ee" | "int" | "util"
+                               | "stat" | "linalg" | "ee" | "int" | "util"
+                               | "debg" | "sys" | "time" | "rng" | "hash"
 
 variable_assignment           = variable,
                                 (typed_assign | inferred_assign),
@@ -97,6 +110,7 @@ assigner                      = "[bool]=",   boolean_type
                               | "[list]=",    list_type
                               | "[string]=",  string_type
                               | "[set]=",     set_type
+                              | "[func]=",    func_type
                               | electrical_system_assigner
 
 constant_assignment = "let", "c.u.", id, assigner, 
@@ -124,7 +138,31 @@ data                          = variable
                               | constant_ref
                               | function_call_built_in
                               | function_call_ud
+                              | function_call_var
                               | expression  (see Chapter 4 for expression grammar)
+
+pipeline_expression           = expression, "|=>", function_ref
+                              | expression, "|=>", lambda
+
+composition_expression        = expression, "<o", expression
+
+function_ref                  = "f", ".", namespace, ".", id
+                              | "f.u.", id
+
+func_type                     = function_ref | lambda | "null"
+
+assertion                     = "assert", boolean_expression, "::"
+                              , string_type, [";", error_type]
+
+error_type                    = "Assertion Error" | "aerr"
+                              | "Type Error"       | "terr"
+                              | "Value Error"      | "verr"
+                              | "Division by Zero Error" | "0div"
+                              | "Runtime Error"    | "rerr"
+
+try_except                    = "try", "::", code_block
+                              , { "otherwise", [error_type], "::", code_block }
+                              , ["except", "::", code_block]
 \end{verbatim}
 
 \newpage

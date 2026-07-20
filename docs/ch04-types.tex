@@ -341,15 +341,22 @@ $parts [set]= { Q1, Q2, R3 }
 
 Sets also support range generation using the same syntax as lists:
 \begin{verbatim}
-{start:increment:end}    #c# explicit increment
-{start:end}              #c# increment defaults to 1
-{start|end|count}        #c# evenly spaced, count elements
+{start:increment:end}       #c# explicit increment
+{start:end}                 #c# increment defaults to 1
+{start|end|count}           #c# evenly spaced, count elements
+{start >: increment :< end} #c# exclusive start and end (colon)
+{start >|< end | count}     #c# exclusive start and end (pipe)
 \end{verbatim}
 Examples:
 \begin{verbatim}
-$evens [set]= {0:2:10}      #c# {0, 2, 4, 6, 8, 10}
-$range [set]= {0:5}         #c# {0, 1, 2, 3, 4, 5}
-$lin   [set]= {0|1|5}       #c# {0, 0.25, 0.5, 0.75, 1}
+$evens [set]= {0:2:10}         #c# {0, 2, 4, 6, 8, 10}
+$range [set]= {0:5}            #c# {0, 1, 2, 3, 4, 5}
+$lin   [set]= {0|1|5}          #c# {0, 0.25, 0.5, 0.75, 1}
+$excl1 [set]= {0>:4}           #c# {1, 2, 3, 4}
+$excl2 [set]= {0:<5}           #c# {0, 1, 2, 3, 4}
+$excl3 [set]= {0>:<5}          #c# {1, 2, 3, 4}
+$excl4 [set]= {0>:2:<10}       #c# {2, 4, 6, 8}
+$excl5 [set]= {0>|<1|5}        #c# {0.1667, 0.3333, 0.5, 0.6667, 0.8333}
 \end{verbatim}
 
 Note: since sets are unordered and unique, duplicates within a range are silently ignored. For example, \texttt{\{0:0.3:1\}} produces \texttt{\{0, 0.3, 0.6, 0.9\}} with no duplicate \texttt{0} entries.
@@ -401,27 +408,53 @@ list_literal = "[", [{ data, "," }, data], "]"
 set_literal = "{", [ { data, ","}, data ], "}"
             | "{", range_spec, "}"
 
-range_spec  = expression, ":", expression, [":", expression]
-            | expression, ":", expression
-            | expression, "|", expression, "|", expression
+range_spec  = expression, [">"], ":", expression, [":", ["<"], expression]
+            | expression, [">"], "|", ["<"], expression, "|", expression
 
 slice       = [expression], ":", [expression], [":", expression]
 
 reshape     = ".", "reshape", "(", int, {",", int}, ")"
 \end{verbatim}
+
+\paragraph{Exclusive Ranges}
+The colon and pipe range syntax supports optional exclusive boundary modifiers. The \texttt{>} modifier (placed before \texttt{:} or \texttt{|}) excludes the start value. The \texttt{<} modifier (placed after \texttt{:} or \texttt{|}) excludes the end value. Both modifiers can be combined.
+
+For colon ranges, exclusive boundaries shift the first or last element by one step:
+\begin{itemize}
+\item \texttt{[start >: end]} --- exclusive start: elements begin at \texttt{start + increment} (default increment is 1)
+\item \texttt{[start :< end]} --- exclusive end: elements stop at \texttt{end - increment}
+\item \texttt{[start >:< end]} --- exclusive both
+\item \texttt{[start >: increment :< end]} --- exclusive both with explicit increment
+\end{itemize}
+
+For pipe ranges, exclusive boundaries change the step calculation:
+\begin{itemize}
+\item \texttt{[start | end | count]} --- inclusive: step $= \frac{\text{end} - \text{start}}{\text{count} - 1}$, requires \texttt{count} $\geq 2$
+\item \texttt{[start >| end | count]} --- exclusive start: step $= \frac{\text{end} - \text{start}}{\text{count}}$, first element is \texttt{start + step}
+\item \texttt{[start |< end | count]} --- exclusive end: step $= \frac{\text{end} - \text{start}}{\text{count}}$, last element is \texttt{end - step}
+\item \texttt{[start >|< end | count]} --- exclusive both: step $= \frac{\text{end} - \text{start}}{\text{count} + 1}$, first element is \texttt{start + step}
+\end{itemize}
+
 \subsubsection{List Data Type Casting and Coercion}
 Lists can be created from Sets using the \texttt{f.list()} function. The order is determined by the element order in \texttt{*e}.\\
 Lists support range generation using the syntax:
 \begin{verbatim}
-[start:increment:end]    #c# explicit increment
-[start:end]              #c# increment defaults to 1
-[start|end|count]        #c# evenly spaced, count elements
+[start:increment:end]       #c# explicit increment
+[start:end]                 #c# increment defaults to 1
+[start|end|count]           #c# evenly spaced, count elements
+[start >: increment :< end] #c# exclusive start and end (colon)
+[start >|< end | count]     #c# exclusive start and end (pipe)
 \end{verbatim}
 Examples:
 \begin{verbatim}
-$r1 [list]= [0:2:10]      #c# [0, 2, 4, 6, 8, 10]
-$r2 [list]= [0:5]         #c# [0, 1, 2, 3, 4, 5]
-$r3 [list]= [0|1|5]       #c# [0, 0.25, 0.5, 0.75, 1]
+$r1 [list]= [0:2:10]         #c# [0, 2, 4, 6, 8, 10]
+$r2 [list]= [0:5]            #c# [0, 1, 2, 3, 4, 5]
+$r3 [list]= [0|1|5]          #c# [0, 0.25, 0.5, 0.75, 1]
+$r4 [list]= [0>:4]           #c# [1, 2, 3, 4]
+$r5 [list]= [0:<5]           #c# [0, 1, 2, 3, 4]
+$r6 [list]= [0>:<5]          #c# [1, 2, 3, 4]
+$r7 [list]= [0>:2:<10]       #c# [2, 4, 6, 8]
+$r8 [list]= [0>|<1|5]        #c# [0.1667, 0.3333, 0.5, 0.6667, 0.8333]
 \end{verbatim}
 \subsubsection{Ndarray (N-dimensional Array)}
 An ndarray is a list that is \textbf{rectangular} (all sublists have the same length) and contains only \textbf{numeric} values (\texttt{int}, \texttt{real}, or \texttt{complex}). Ndarray status is determined automatically -- no type annotation is needed. A list that is rectangular and all-numeric gains ndarray operations; all other lists remain standard lists.
@@ -508,6 +541,81 @@ $b [list]= [[1,2,3],[4,5,6]]
 $b.reshape(3, 2)   #c# = [[1,2],[3,4],[5,6]]
 $b.reshape(6)      #c# = [1, 2, 3, 4, 5, 6]  (flatten)
 $b.reshape(1, 6)   #c# = [[1,2,3,4,5,6]]     (row vector)
+\end{verbatim}
+
+\section{Function}
+\subsection{Function Data Type Definition}
+The Function data type represents a callable value. A function value encapsulates either a built-in function (referenced by name, e.g., \texttt{f.math.sin}), a user-defined function (referenced by name, e.g., \texttt{f.u.myfunc}), or a lambda expression. Function values can be stored in variables, passed as arguments, returned from functions, and stored in collections.
+
+\subsection{Function Data Type Creation}
+Function values are created in two ways:
+
+\subsubsection{Function Reference}
+A function reference names a function without calling it. The reference is created by writing the function name without parentheses:
+\begin{verbatim}
+$f t= f.math.sin       #c# $f holds a reference to sin
+$g t= f.u.myfunc       #c# $g holds a reference to user-defined function
+\end{verbatim}
+\begin{itemize}
+\item Built-in references use the \texttt{f.namespace.name} form (no parentheses)
+\item User-defined references use the \texttt{f.u.name} form (no parentheses)
+\item A \texttt{Type Error} is raised if the name does not resolve to a function
+\end{itemize}
+
+\subsubsection{Lambda Expression}
+A lambda expression creates an anonymous function value:
+\begin{verbatim}
+$fn t= L::($x [int])->{ $x * 2 }
+\end{verbatim}
+See Section~\ref{sec:lambda} for lambda syntax details.
+
+\subsection{Function Data Type Calling}
+Function values are called using the variable-call syntax \texttt{\$var(args)}:
+\begin{verbatim}
+$f t= f.math.sin
+$g t= L::($x [int])->{ $x ^ 2 }
+
+$f(0)                    #c# Returns 0.0  (calls f.math.sin)
+$g(5)                    #c# Returns 25   (calls the lambda)
+\end{verbatim}
+\begin{itemize}
+\item The variable must hold a \texttt{func} value; a \texttt{Type Error} is raised otherwise
+\item A \texttt{Runtime Error} is raised if the variable holds \texttt{null}
+\item Arguments are evaluated left-to-right before the function is called
+\item The function must accept the number and types of arguments provided; a \texttt{Type Error} is raised otherwise
+\end{itemize}
+
+\subsection{Function Data Type Annotations}
+Variables can be annotated with the \texttt{func} type:
+\begin{verbatim}
+$fn [func]= f.math.cos
+$fn [func]= L::($x [int])->{ $x + 1 }
+$fn [func|= null]= null
+\end{verbatim}
+
+\subsection{Function Data Type Equality}
+Function equality is determined by reference identity:
+\begin{itemize}
+\item Two function references to the same function are equal: \texttt{f.math.sin == f.math.sin} $\rightarrow$ \texttt{True}
+\item Two distinct built-in references are not equal: \texttt{f.math.sin == f.math.cos} $\rightarrow$ \texttt{False}
+\item A lambda is always unique: two separate lambda expressions are never equal, even with identical bodies
+\item A lambda is not equal to a built-in reference to the same logical function
+\item \texttt{==} and \texttt{!=} work on function values
+\item Ordered comparisons (\texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}) raise a \texttt{Type Error}
+\end{itemize}
+
+\subsection{Function Data Type Collections}
+\begin{itemize}
+\item Lists can contain function values: \texttt{[f.math.sin, f.math.cos]} is a valid list
+\item Sets can contain function values but this is impractical (lambda equality is always unique), so set membership checks on function values are unreliable
+\item Ndarrays cannot contain function values (ndarray elements must be numeric)
+\end{itemize}
+
+\subsection{Function Data Type Printing}
+Function values print as their reference form:
+\begin{verbatim}
+f.util.print(f.math.sin)       #c# Prints: f.math.sin
+f.util.print(L::($x [int])->{ $x })  #c# Prints: <lambda>
 \end{verbatim}
 
 \section{Electrical Types}
@@ -627,6 +735,7 @@ inferred_assign     = "t", "=", data
 
 type                = "bool" | "int" | "real" | "complex" 
                     | "list" | "string" | "set" 
+                    | "func"
                     | "part" | "connection" | "pin" 
                     | "net"
 \end{verbatim}
@@ -657,6 +766,7 @@ The type determines the variable's data type:
 \item \texttt{list} -- List
 \item \texttt{string} -- String
 \item \texttt{set} -- Set
+\item \texttt{func} -- Function
 \item \texttt{part} -- Part
 \item \texttt{connection} -- Connection
 \item \texttt{pin} -- Pin
@@ -698,9 +808,22 @@ expression          = arithmetic_expression
                     | comparison_expression
                     | set_expression
                     | postfix_expression
+                    | pipeline_expression
+                    | composition_expression
                     | function_call
+                    | function_call_var
                     | lambda
                     | "(" expression ")"
+
+pipeline_expression = expression, "|=>", function_ref
+                    | expression, "|=>", lambda
+
+composition_expression = expression, "<o", expression
+
+function_ref        = "f", ".", namespace, ".", id
+                    | "f.u.", id
+
+function_call_var   = variable, "(", [{ data, "," }], data, ")"
 
 arithmetic_expression = expression,
     ("+" | "-" | "*" | "/" | "%" | "^" | "." | "x"
@@ -737,11 +860,9 @@ compound_assignment = variable,
   | variable, ("u=" | "n=")
     #c# vector
   | variable, (".=" | "x=" | "xr=")
-    #c# tensor
+    #c# tensor & secure erasure
   | variable, (".*=" | ".^=" | ".*r=" | ".^r=")
-  | variable, "~.T"
-  | variable, "~.H"
-  | variable, "~.E"
+  | variable, ("~.T" | "~.H" | "~.E")
     #c# bitwise / shift
   | variable, ("<<=" | ">>=" | "<<r=" | ">>r=")
   | variable, ("<<<[" int_literal "]=" 
@@ -754,6 +875,8 @@ compound_assignment = variable,
   | variable, ("->=" | "!->=" | "->r=" | "!->r="), expression
     #c# bitwise logic
   | variable, ("b&&=" | "b||=" | "b^^=" | "b!&=" | "b!|=" | "b!^=" | "b->=" | "b!->=" | "b->r=" | "b!->r=")
+    #c# function composition
+  | variable, ("<o=" | "o>=")
   | variable, "~b!"
 \end{verbatim}
 
@@ -774,6 +897,7 @@ Operators are evaluated in the following order of precedence (highest to lowest)
 \item Logical XOR (\texttt{\^{}}\texttt{\^{}}), XNOR (\texttt{!}\texttt{\^{}}), Bitwise XOR (\texttt{b\^{}}\texttt{\^{}}), Bitwise XNOR (\texttt{b!}\texttt{\^{}})
 \item IMPLY (\texttt{->}), NIMPLY (\texttt{!->}), Bitwise IMPLY (\texttt{b->}), Bitwise NIMPLY (\texttt{b!->})
 \item Conditional expression (\texttt{?->...!...})
+\item Pipeline (\texttt{|=>}) -- left-associative, applies RHS function to LHS value
 \item Lambda expression (\texttt{L::(...) -> \{...\}})
 \item User-defined operators (\texttt{o.u.*})
 \end{enumerate}

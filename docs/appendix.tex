@@ -493,6 +493,7 @@ The following diagram shows the EDADSL type hierarchy, including numeric promoti
   \node (list) [right of=real, xshift=4cm] {list\\[-2pt]\texttt{[1, 2, 3]}};
   \node (set) [right of=complex, xshift=4cm] {set\\[-2pt]\texttt{set\{1,2,3\}}};
   \node (ndarray) [below of=list] {ndarray\\[-2pt]\texttt{1;2;3;4}};
+  \node (func) [below of=set] {func\\[-2pt]\texttt{f.math.sin}};
 \end{tikzpicture}
 \end{center}
 
@@ -503,6 +504,7 @@ The following diagram shows the EDADSL type hierarchy, including numeric promoti
 \item An \texttt{ndarray} is a \texttt{list} that is rectangular and all-numeric; detected automatically
 \item \texttt{list} element types are polymorphic; \texttt{ndarray} elements are restricted to \texttt{int}, \texttt{real}, or \texttt{complex}
 \item \texttt{set} is unordered and unique; \texttt{list} is ordered and allows duplicates
+\item \texttt{func} values are callable; they can be built-in references, user-defined references, or lambdas
 \end{itemize}
 
 \section{Operator Precedence Diagram}
