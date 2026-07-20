@@ -7588,6 +7588,76 @@ f.special.airyIntegral(-1)    #c# Returns approximately [0.2310, -0.1199]
 \item Useful in diffraction theory and quantum scattering calculations.
 \end{itemize}
 
+\subsubsection{Scorer's Function Hi}
+Computes the Scorer's function $\text{Hi}(z)$, a particular solution to the inhomogeneous Airy equation $y'' - xy = \frac{1}{\pi}$. Scorer's functions arise in diffraction theory, wave scattering, and electromagnetic propagation near caustics. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.special.scorerHi", "(", ( int | real ), ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: \texttt{x} (\texttt{int} or \texttt{real}).
+\item Result: \texttt{real} --- value of $\text{Hi}(x)$.
+\item For complex arguments, see \texttt{f.special.scorerHiC}.
+\end{itemize}
+\begin{verbatim}
+f.special.scorerHi(0)       #c# Returns approximately 0.5
+f.special.scorerHi(1)       #c# Returns approximately 0.3016
+f.special.scorerHi(-1)      #c# Returns approximately 0.4643
+\end{verbatim}
+
+\subsubsection{Scorer's Function Gi}
+Computes the Scorer's function $\text{Gi}(z)$, the complementary particular solution to the inhomogeneous Airy equation. Related to $\text{Hi}$ by $\text{Gi}(z) = \text{Bi}(z) \int_0^z \text{Ai}(t)\,dt - \text{Ai}(z) \int_0^z \text{Bi}(t)\,dt$. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.special.scorerGi", "(", ( int | real ), ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: \texttt{x} (\texttt{int} or \texttt{real}).
+\item Result: \texttt{real} --- value of $\text{Gi}(x)$.
+\item For complex arguments, see \texttt{f.special.scorerGiC}.
+\end{itemize}
+\begin{verbatim}
+f.special.scorerGi(0)       #c# Returns approximately 0.5
+f.special.scorerGi(1)       #c# Returns approximately 0.1606
+f.special.scorerGi(-1)      #c# Returns approximately 0.4643
+\end{verbatim}
+
+\subsubsection{Scorer's Function Hi (Complex)}
+Computes the Scorer's function $\text{Hi}(z)$ for complex arguments. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.special.scorerHiC", "(", complex, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: \texttt{z} (\texttt{complex}).
+\item Result: \texttt{complex} --- value of $\text{Hi}(z)$.
+\item For real arguments, prefer \texttt{f.special.scorerHi} which returns \texttt{real} values.
+\end{itemize}
+\begin{verbatim}
+f.special.scorerHiC(0)          #c# Returns approximately 0.5+0i
+f.special.scorerHiC(1+1i)       #c# Returns complex Scorer Hi value
+\end{verbatim}
+
+\subsubsection{Scorer's Function Gi (Complex)}
+Computes the Scorer's function $\text{Gi}(z)$ for complex arguments. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.special.scorerGiC", "(", complex, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: \texttt{z} (\texttt{complex}).
+\item Result: \texttt{complex} --- value of $\text{Gi}(z)$.
+\item For real arguments, prefer \texttt{f.special.scorerGi} which returns \texttt{real} values.
+\end{itemize}
+\begin{verbatim}
+f.special.scorerGiC(0)          #c# Returns approximately 0.5+0i
+f.special.scorerGiC(1+1i)       #c# Returns complex Scorer Gi value
+\end{verbatim}
+
 \subsubsection{Align Up Function}
 Rounds $x$ up to the next multiple of \texttt{alignment}. \\
 Morphology:

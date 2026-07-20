@@ -104,6 +104,30 @@ variable_assignment           = variable,
 typed_assign                  = assigner
 inferred_assign               = "t", "=", data
 
+safe_typed_assign             = variable, "?[", type, "]?=", data
+
+safe_inferred_assign          = variable, "?t?=", data
+
+lazy_binding                  = variable, ":Lt=", data
+
+compound_assignment           = variable, compound_op, data
+                            | variable, compound_unary_op
+compound_op                   = "+=" | "-=" | "*=" | "/=" | "%=" | "^="
+                              | "<<=" | ">>=" | "&&=" | "||=" | "^^="
+                              | "u=" | "n=" | ".=" | "x=" | ".*=" | ".^="
+                              | "+r=" | "-r=" | "/r=" | "%r=" | "^r="
+                              | "xr=" | ".*r=" | ".^r="
+                              | "<<r=" | ">>r="
+                              | "<<<" , "[", int, "]", "="
+                              | ">>>", "[", int, "]", "="
+                              | "<<<" , "[", int, "]", "r="
+                              | ">>>", "[", int, "]", "r="
+                              | "->=" | "!->=" | "->r=" | "!->r="
+                              | "b&&=" | "b||=" | "b^^=" | "b!&=" | "b!|=" | "b!^="
+                              | "b->=" | "b!->=" | "b->r=" | "b!->r="
+                              | "<o=" | "o>="
+compound_unary_op             = "~.T" | "~.H" | "~.E" | "~b!"
+
 assigner                      = "[bool]=",   boolean_type
                               | "[int]=",     int_type
                               | "[real]=",    real_type

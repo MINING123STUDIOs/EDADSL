@@ -88,7 +88,7 @@ Mixed-type operations promote to \texttt{real}. If any operand is \texttt{comple
 \item Division by zero (\texttt{/}, \texttt{//}, \texttt{\%}) raises a \texttt{Division by Zero Error}.
 \item Negative exponent on \texttt{int} base auto-promotes to \texttt{real}: \texttt{2 \^{} -1} returns \texttt{0.5}.
 \item Shift operators (\texttt{<<}, \texttt{>>}) require \texttt{int} operands; a \texttt{Type Error} is raised otherwise. The right operand must be non-negative; a \texttt{Value Error} is raised for negative shift amounts.
-\item Rotation operators (\texttt{<<<[w]}, \texttt{>>>[w]}) require \texttt{int} operands; a \texttt{Type Error} is raised otherwise. The word width \texttt{w} must be a positive integer literal. The rotation amount must be non-negative; a \texttt{Value Error} is raised otherwise.
+\item Rotation operators (\texttt{<<<[w]}, \texttt{>>>[w]}) require \texttt{int} operands; a \texttt{Type Error} is raised otherwise. The word width \texttt{w} must be a positive \texttt{int}; a \texttt{Value Error} is raised for non-positive widths. The rotation amount must be non-negative; a \texttt{Value Error} is raised otherwise.
 \item A \texttt{Type Error} is raised when operands are incompatible (e.g., \texttt{string + int}).
 \end{itemize}
 
@@ -286,6 +286,73 @@ $p .*r= [[5,7],[6,8]]
       #c# $p = [[5,7],[6,8]] .* [[1,2],[3,4]]  (reverse)
 $p .^r= 2
       #c# $p = 2 .^ $p            (reverse matrix power)
+\end{verbatim}
+
+\subsubsection{Safe Null Assignment}
+Safe null assignment operators conditionally assign a value only when the variable is currently \texttt{null}. If the variable already holds a value, the assignment is skipped.
+
+\paragraph{Safe Typed Assignment (\texttt{?[type]?=})}
+\begin{verbatim}
+$var ?[type]?= expr   If $var is null, $var = (type) expr; else no-op
+\end{verbatim}
+\begin{itemize}
+\item The variable must already be declared
+\item If the variable is \texttt{null}: assigns the right-hand side with the specified type
+\item If the variable is not \texttt{null}: no assignment occurs, value is unchanged
+\item The right-hand side is only evaluated if the variable is \texttt{null} (short-circuit)
+\end{itemize}
+
+\paragraph{Safe Inferred Assignment (\texttt{?t?=})}
+\begin{verbatim}
+$var ?t?= expr   If $var is null, $var = expr (inferred type); else no-op
+\end{verbatim}
+\begin{itemize}
+\item The variable must already be declared
+\item If the variable is \texttt{null}: assigns the right-hand side with inferred type
+\item If the variable is not \texttt{null}: no assignment occurs, value is unchanged
+\item The right-hand side is only evaluated if the variable is \texttt{null} (short-circuit)
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$counter [int]= null
+$counter ?[int]?= 10     #c# $counter = 10 (was null)
+$counter ?[int]?= 20     #c# $counter = 10 (unchanged, not null)
+
+$name [string]= null
+$name ?t?= "Alice"       #c# $name = "Alice" (inferred string)
+
+$config [string]= null
+$config ?[string]?= f.str.toLower("DEFAULT")   #c# only evaluated because null
+\end{verbatim}
+
+\subsubsection{Lazy Binding (\texttt{:Lt=})}
+Binds a variable to an expression that is \textbf{not evaluated} at declaration time. The expression is evaluated only on the first access of the variable. After evaluation, the result is cached and subsequent accesses return the cached value.
+\begin{verbatim}
+$var :Lt= expr   Lazy binding: expr evaluated on first access
+\end{verbatim}
+\begin{itemize}
+\item The variable must already be declared
+\item The right-hand side expression is \textbf{not evaluated} at binding time
+\item On first access: expression is evaluated, result is cached and returned
+\item On subsequent accesses: cached value is returned (no re-evaluation)
+\item The binding is immutable after first evaluation
+\item If the expression raises an error, it raises on first access (not at binding)
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$expensive [int]= null
+$expensive :Lt= f.math.factorial(100)   #c# not evaluated yet
+
+#c# ... other code ...
+
+$result [int]= $expensive   #c# NOW evaluates factorial(100), caches result
+$result2 [int]= $expensive  #c# returns cached value (no re-evaluation)
+
+$late [string]= null
+$late :Lt= f.str.toLower("HELLO")   #c# not evaluated yet
+echo($late)                          #c# NOW evaluates, prints "hello"
 \end{verbatim}
 
 Examples:
