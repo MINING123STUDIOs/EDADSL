@@ -250,7 +250,7 @@ Complex numbers support all arithmetic operators. The \texttt{f.ee.fft} function
 
 \section{Ndarray Matrix Operations}
 \subsection{Intent}
-Use ndarray syntax and matrix operators to solve a system of linear equations.
+Use tensor syntax and matrix operators to solve a system of linear equations.
 
 \subsection{EDADSL Code}
 \begin{verbatim}
@@ -259,17 +259,17 @@ start
 # Solve A * x = b where:
 #   A = [[2, 1], [5, 7]]
 #   b = [11, 13]
-$A [list]= [[2, 1], [5, 7]]
-$b [list]= [11, 13]
+$A [tensor]= |[[2, 1], [5, 7]]
+$b [tensor]= |[11, 13]
 
 # Compute inverse and solve
-$A_inv [list]= f.linalg.inv($A)
-$x [list]= $A_inv .* $b
+$A_inv [tensor]= f.linalg.inv($A)
+$x [tensor]= $A_inv .* $b
 
 f.util.print(f.str.str("Solution x = ", $x))
 
 # Verify: A .* x should equal b
-$check [list]= $A .* $x
+$check [tensor]= $A .* $x
 f.util.print(f.str.str("Verification A .* x = ", $check))
 
 # Matrix properties
@@ -280,7 +280,7 @@ halt
 \end{verbatim}
 
 \subsection{Explanation}
-Ndarrays are detected automatically from rectangular all-numeric lists; no type annotation is needed. The \texttt{.*} operator performs matrix multiplication, and \texttt{f.linalg.inv} computes the matrix inverse. Functions \texttt{f.linalg.det} and \texttt{f.linalg.rank} return the determinant and rank respectively. The expected solution is $x = [6.2, -1.4]$.
+Tensors are explicitly typed with \texttt{[tensor]} or pipe literal syntax. The \texttt{.*} operator performs matrix multiplication, and \texttt{f.linalg.inv} computes the matrix inverse. Functions \texttt{f.linalg.det} and \texttt{f.linalg.rank} return the determinant and rank respectively. The expected solution is $x = [6.2, -1.4]$.
 
 \section{Closures and Lambdas}
 \subsection{Intent}
@@ -492,7 +492,7 @@ The following diagram shows the EDADSL type hierarchy, including numeric promoti
   \node (string) [right of=int, xshift=8cm] {string\\[-2pt]\texttt{"text"}};
   \node (list) [right of=real, xshift=4cm] {list\\[-2pt]\texttt{[1, 2, 3]}};
   \node (set) [right of=complex, xshift=4cm] {set\\[-2pt]\texttt{set\{1,2,3\}}};
-  \node (ndarray) [below of=list] {ndarray\\[-2pt]\texttt{1;2;3;4}};
+  \node (tensor) [below of=list] {tensor\\[-2pt]\texttt{|[[1,2],[3,4]]}};
   \node (func) [below of=set] {func\\[-2pt]\texttt{f.math.sin}};
 \end{tikzpicture}
 \end{center}
@@ -501,8 +501,8 @@ The following diagram shows the EDADSL type hierarchy, including numeric promoti
 \textbf{Key Relationships:}
 \begin{itemize}
 \item Numeric types promote automatically: \texttt{bool} $\rightarrow$ \texttt{int} $\rightarrow$ \texttt{real} $\rightarrow$ \texttt{complex}
-\item An \texttt{ndarray} is a \texttt{list} that is rectangular and all-numeric; detected automatically
-\item \texttt{list} element types are polymorphic; \texttt{ndarray} elements are restricted to \texttt{int}, \texttt{real}, or \texttt{complex}
+\item A \texttt{tensor} is a \texttt{list} that is rectangular and all-numeric; explicitly typed with \texttt{[tensor]} or pipe literal \texttt{|[...]}
+\item \texttt{list} element types are polymorphic; \texttt{tensor} elements are restricted to \texttt{bool}, \texttt{int}, \texttt{real}, or \texttt{complex}
 \item \texttt{set} is unordered and unique; \texttt{list} is ordered and allows duplicates
 \item \texttt{func} values are callable; they can be built-in references, user-defined references, or lambdas
 \end{itemize}
@@ -652,7 +652,7 @@ $freq     [real]= ($peak_idx * $fs) / $N   # = 100 Hz
 \end{verbatim}
 
 \section{Ndarray Operations}
-The following diagram visualizes key ndarray operations: element-wise operations, matrix multiplication, and broadcasting.
+The following diagram visualizes key tensor operations: element-wise operations, matrix multiplication, and broadcasting.
 
 \begin{center}
 \begin{tikzpicture}[
@@ -689,10 +689,13 @@ The following diagram visualizes key ndarray operations: element-wise operations
 
 \textbf{EDADSL Code:}
 \begin{verbatim}
-[1, 2, 3] + [4, 5, 6]   #c# = [5, 7, 9]
-[[1,2],[3,4]] .* [[5,6],
-    [7,8]]              #c# = [[19,22],[43,50]]
-[1, 2, 3] + 10          #c# = [11, 12, 13]
+|$a [tensor]= |[1, 2, 3]
+|$b [tensor]= |[4, 5, 6]
+$a + $b         #c# = |[5, 7, 9]
+|$m1 [tensor]= |[[1,2],[3,4]]
+|$m2 [tensor]= |[[5,6],[7,8]]
+$m1 .* $m2      #c# = |[[19,22],[43,50]]
+$a + 10         #c# = |[11, 12, 13]
 \end{verbatim}
 
 \vspace{5mm}
@@ -700,7 +703,7 @@ The following diagram visualizes key ndarray operations: element-wise operations
 \begin{itemize}
 \item \textbf{Element-wise} -- Standard operators (\texttt{+ - * / \^{} }) applied element-by-element
 \item \textbf{Matrix Multiply} -- \texttt{.*} computes matrix product (rows $\times$ columns)
-\item \textbf{Broadcasting} -- Scalars are broadcast to match the ndarray shape
+\item \textbf{Broadcasting} -- Scalars are broadcast to match the tensor shape
 \item \textbf{Transpose} -- \texttt{.T} flips rows and columns; \texttt{~.T} in-place
 \end{itemize}
 

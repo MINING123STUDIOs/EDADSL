@@ -108,7 +108,9 @@ safe_typed_assign             = variable, "?[", type, "]?=", data
 
 safe_inferred_assign          = variable, "?t?=", data
 
-lazy_binding                  = variable, ":Lt=", data
+lazy_binding                  = variable, ( typed_lazy_binding | inferred_lazy_binding )
+typed_lazy_binding            = ":L", "[", type, "]=", data
+inferred_lazy_binding         = ":Lt=", data
 
 compound_assignment           = variable, compound_op, data
                             | variable, compound_unary_op

@@ -326,15 +326,23 @@ $config [string]= null
 $config ?[string]?= f.str.toLower("DEFAULT")   #c# only evaluated because null
 \end{verbatim}
 
-\subsubsection{Lazy Binding (\texttt{:Lt=})}
+\subsubsection{Lazy Binding (\texttt{:Lt=} / \texttt{:L[type]=})}
 Binds a variable to an expression that is \textbf{not evaluated} at declaration time. The expression is evaluated only on the first access of the variable. After evaluation, the result is cached and subsequent accesses return the cached value.
+
+\paragraph{Inferred Type (\texttt{:Lt=})}
 \begin{verbatim}
-$var :Lt= expr   Lazy binding: expr evaluated on first access
+$var :Lt= expr   Lazy binding: expr evaluated on first access, type inferred
+\end{verbatim}
+
+\paragraph{Explicit Type (\texttt{:L[type]=})}
+\begin{verbatim}
+$var :L[type]= expr   Lazy binding: expr evaluated on first access, type checked
 \end{verbatim}
 \begin{itemize}
 \item The variable must already be declared
 \item The right-hand side expression is \textbf{not evaluated} at binding time
 \item On first access: expression is evaluated, result is cached and returned
+\item With \texttt{:L[type]=}: if the evaluated result does not match the declared type, a \texttt{Type Error} is raised on first access
 \item On subsequent accesses: cached value is returned (no re-evaluation)
 \item The binding is immutable after first evaluation
 \item If the expression raises an error, it raises on first access (not at binding)
@@ -353,6 +361,10 @@ $result2 [int]= $expensive  #c# returns cached value (no re-evaluation)
 $late [string]= null
 $late :Lt= f.str.toLower("HELLO")   #c# not evaluated yet
 echo($late)                          #c# NOW evaluates, prints "hello"
+
+$config [int]= null
+$config :L[int]= f.math.factorial(5)  #c# type checked on first access
+echo($config)                          #c# 120
 \end{verbatim}
 
 Examples:
@@ -632,7 +644,7 @@ a x b  Cross product (list result)
 \paragraph{Type Overloading}
 \begin{itemize}
 \item \texttt{.}: \texttt{list . list} $\rightarrow$ \texttt{real} (dot product, n-dimensional)
-\item \texttt{x}: \texttt{list x list} $\rightarrow$ \texttt{ndarray} (cross product, 3D only)
+\item \texttt{x}: \texttt{list x list} $\rightarrow$ \texttt{tensor} (cross product, 3D only)
 \end{itemize}
 
 The dot product computes $\sum_{i} a_i \cdot b_i$ for n-dimensional vectors (any length). The cross product computes the vector cross product (both lists must have length 3).
@@ -658,8 +670,8 @@ Examples:
 [1, 2, 3] x [4, 5, 6]     #c# = [-3, 6, -3]
 \end{verbatim}
 
-\subsection{Tensor (Ndarray) Operators}
-The \texttt{.} prefix on operators enables matrix/tensor operations on ndarrays. Without the prefix, operations are element-wise (see Section above).
+\subsection{Tensor Operators}
+The \texttt{.} prefix on operators enables matrix/tensor operations on tensors. Without the prefix, operations are element-wise (see Section above).
 
 \subsubsection{Matrix Multiply}
 \begin{verbatim}
@@ -667,8 +679,8 @@ a .* b  Matrix multiply (dot-product for 1D, matrix multiply for 2D)
 \end{verbatim}
 
 \begin{itemize}
-\item Operands: \texttt{ndarray}, \texttt{ndarray}
-\item Result: \texttt{ndarray} or \texttt{real}
+\item Operands: \texttt{tensor}, \texttt{tensor}
+\item Result: \texttt{tensor} or \texttt{real}
 \item Shape rules:
   \item 1D \texttt{.*} 1D $\rightarrow$ scalar (dot product, same as \texttt{.})
   \item 2D(m$\times$k) \texttt{.*} 2D(k$\times$n) $\rightarrow$ 2D(m$\times$n)
@@ -703,8 +715,8 @@ a ~.H  Hermitian transpose in place (no expression needed)
 \end{verbatim}
 
 \begin{itemize}
-\item Operands: \texttt{ndarray}
-\item Result: \texttt{ndarray}
+\item Operands: \texttt{tensor}
+\item Result: \texttt{tensor}
 \item \texttt{.T} swaps rows and columns: shape (m$\times$n) $\rightarrow$ (n$\times$m)
 \item \texttt{.H} returns the conjugate transpose: $(A.H)_{ij} = \overline{A_{ji}}$. For real matrices, \texttt{.H} is identical to \texttt{.T}.
 \item 1D arrays are treated as row vectors and transposed to column vectors.
@@ -756,8 +768,8 @@ a .^ n  Matrix power (repeated matrix multiply, n must be int >= 0)
 \end{verbatim}
 
 \begin{itemize}
-\item Operands: \texttt{ndarray}, \texttt{int}
-\item Result: \texttt{ndarray}
+\item Operands: \texttt{tensor}, \texttt{int}
+\item Result: \texttt{tensor}
 \item \texttt{A .\^{} 0} returns the identity matrix (square matrices only)
 \item \texttt{A .\^{} n} = \texttt{A .* A .* ... .* A} (n times)
 \end{itemize}
@@ -978,7 +990,7 @@ map([1, 2, 3], L::($x [int])->{ $x * $factor })
 map([1.5, 2.5, 3.5], L::($x [real])->{ $x * $x })
 #c# Returns [2.25, 6.25, 12.25]
 
-#c# Lambda with nested list (2D ndarray)
+#c# Lambda with nested list (2D tensor)
 map([[1,2],[3,4]], L::($row [list])->{ $row })
 #c# Returns [[1,2],[3,4]] (identity, demonstrates list parameter)
 

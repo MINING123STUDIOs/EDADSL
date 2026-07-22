@@ -416,6 +416,14 @@ slice       = [expression], ":", [expression], [":", expression]
 reshape     = ".", "reshape", "(", int, {",", int}, ")"
 \end{verbatim}
 
+\subsubsection{Tensor Data Type Literals}
+\begin{verbatim}
+EBNF:
+tensor_literal = "|", "[", [{ data, "," }, data], "]"
+               | "|", "[", range_spec, "]"
+\end{verbatim}
+The pipe prefix \texttt{|} distinguishes tensor literals from list literals. Tensors are explicitly typed and support the same range syntax as lists.
+
 \paragraph{Exclusive Ranges}
 The colon and pipe range syntax supports optional exclusive boundary modifiers. The \texttt{>} modifier (placed before \texttt{:} or \texttt{|}) excludes the start value. The \texttt{<} modifier (placed after \texttt{:} or \texttt{|}) excludes the end value. Both modifiers can be combined.
 
@@ -456,65 +464,78 @@ $r6 [list]= [0>:<5]          #c# [1, 2, 3, 4]
 $r7 [list]= [0>:2:<10]       #c# [2, 4, 6, 8]
 $r8 [list]= [0>|<1|5]        #c# [0.1667, 0.3333, 0.5, 0.6667, 0.8333]
 \end{verbatim}
-\subsubsection{Ndarray (N-dimensional Array)}
-An ndarray is a list that is \textbf{rectangular} (all sublists have the same length) and contains only \textbf{numeric} values (\texttt{int}, \texttt{real}, or \texttt{complex}). Ndarray status is determined automatically -- no type annotation is needed. A list that is rectangular and all-numeric gains ndarray operations; all other lists remain standard lists.
+\subsubsection{Tensor}
+\paragraph{Definition}
+A Tensor is a subtype of List that is \textbf{rectangular} (all sublists have the same length) and contains only \textbf{numeric} values (\texttt{bool}, \texttt{int}, \texttt{real}, or \texttt{complex}). Tensors are explicitly typed using the \texttt{[tensor]} annotation or the pipe-prefixed literal syntax.
 
-\paragraph{Detection Rules}
-A list is an ndarray if and only if it satisfies all of the following:
-\begin{enumerate}
-\item All elements are \texttt{int}, \texttt{real}, or \texttt{complex} (no strings, bools, or other types).
-\item All sublists (if any) have identical length (rectangular).
-\item Nesting is consistent: if element $i$ is a list, all elements $j \neq i$ must also be lists of the same length.
-\end{enumerate}
+\paragraph{Historical Note}
+Tensors were previously called ``ndarrays'' (N-dimensional arrays) in earlier versions of this specification. The name has been changed to ``tensor'' to better reflect the mathematical concept and to distinguish the explicit type from the old auto-detected behavior.
 
-\paragraph{Detection Algorithm}
-\begin{verbatim}
-is_ndarray(list):
-    if list is empty: return True  (1D ndarray)
-    if all elements are int, real, or complex: return True  (1D ndarray)
-    if any element is not a list: return False
-    lengths = [len(x) for x in list if x is list]
-    if not all equal(lengths): return False
-    return all(is_ndarray(x) for x in list if x is list)
-\end{verbatim}
-
-\paragraph{Examples}
+\paragraph{Type Hierarchy}
+Tensor is a subtype of List:
 \begin{itemize}
-\item \texttt{[1, 2, 3]} — ndarray (1D, shape (3))
-\item \texttt{[1+2i, 3+4i]} — ndarray (1D, shape (2), complex)
-\item \texttt{[[1,2], [3,4], [5,6]]} — ndarray (2D, shape (3,2))
-\item \texttt{[[1+2i, 3], [4, 5+6i]]} — ndarray (2D, shape (2,2), complex)
-\item \texttt{[[1,2], [3,4,5]]} — NOT ndarray (different lengths)
-\item \texttt{[1, "hello", True]} — NOT ndarray (non-numeric)
-\item \texttt{[]} — ndarray (1D, shape (0))
+\item A Tensor IS-A List: all list operations work on tensors
+\item A List IS NOT necessarily a Tensor: lists may have mixed types or non-rectangular shapes
+\item Tensor elements must be numeric (\texttt{bool}, \texttt{int}, \texttt{real}, or \texttt{complex})
+\item Tensor shape is fixed at creation time
+\end{itemize}
+
+\paragraph{Creation}
+Tensors are created using:
+\begin{itemize}
+\item Explicit type annotation: \texttt{\$var [tensor]= value}
+\item Pipe-prefixed literal: \texttt{|[1, 2, 3]} or \texttt{|[[1,2],[3,4]]}
+\item Function return values (e.g., \texttt{f.linalg.inv}, \texttt{f.arr.zeros})
 \end{itemize}
 
 \paragraph{Shape}
-The shape of an ndarray is described by its dimensions:
+The shape of a Tensor is described by its dimensions:
 \begin{itemize}
-\item 1D: \texttt{[1, 2, 3]} has shape \texttt{(3)}
-\item 2D: \texttt{[[1,2], [3,4], [5,6]]} has shape \texttt{(3, 2)} (3 rows, 2 columns)
+\item 1D: \texttt{|[1, 2, 3]} has shape \texttt{(3)}
+\item 2D: \texttt{|[[1,2], [3,4], [5,6]]} has shape \texttt{(3, 2)} (3 rows, 2 columns)
+\item Shape is immutable after creation
+\end{itemize}
+
+\paragraph{Validation Rules}
+A list literal is a valid Tensor if and only if:
+\begin{enumerate}
+\item All elements are \texttt{bool}, \texttt{int}, \texttt{real}, or \texttt{complex} (no strings, functions, or other types)
+\item All sublists (if any) have identical length (rectangular)
+\item Nesting is consistent: if element $i$ is a list, all elements $j \neq i$ must also be lists of the same length
+\end{enumerate}
+
+\paragraph{Examples}
+\begin{itemize}
+\item \texttt{|[1, 2, 3]} — valid tensor (1D, shape (3))
+\item \texttt{|[1+2i, 3+4i]} — valid tensor (1D, shape (2), complex)
+\item \texttt{|[[1,2], [3,4], [5,6]]} — valid tensor (2D, shape (3,2))
+\item \texttt{|[[1+2i, 3], [4, 5+6i]]} — valid tensor (2D, shape (2,2), complex)
+\item \texttt{|[[1,2], [3,4,5]]} — INVALID (different lengths)
+\item \texttt{|[1, "hello", True]} — INVALID (non-numeric)
+\item \texttt{|[]} — valid tensor (1D, shape (0))
 \end{itemize}
 
 \paragraph{Broadcasting}
-When an ndarray is combined with a scalar, the scalar is broadcast to match the ndarray's shape:
+When a Tensor is combined with a scalar, the scalar is broadcast to match the Tensor's shape:
 \begin{verbatim}
-[1, 2, 3] + 5          #c# = [6, 7, 8]
-[1, 2, 3] * 2          #c# = [2, 4, 6]
-[[1,2],[3,4]] + 10      #c# = [[11,12],[13,14]]
+$t [tensor]= |[1, 2, 3]
+$t + 5          #c# = |[6, 7, 8]
+$t * 2          #c# = |[2, 4, 6]
+$m [tensor]= |[[1,2],[3,4]]
+$m + 10         #c# = |[[11,12],[13,14]]
 \end{verbatim}
 
 \paragraph{Element-wise Operations}
-When two ndarrays of the same shape are combined with a standard operator (\texttt{+}, \texttt{-}, \texttt{*}, \texttt{/}, \texttt{\%}, \texttt{\^{}}), the operation is applied element-wise:
+When two Tensors of the same shape are combined with a standard operator (\texttt{+}, \texttt{-}, \texttt{*}, \texttt{/}, \texttt{\%}, \texttt{\^{}}), the operation is applied element-wise:
 \begin{verbatim}
-[1, 2, 3] + [4, 5, 6]     #c# = [5, 7, 9]
-[1, 2, 3] * [4, 5, 6]     #c# = [4, 10, 18]
-[10, 20, 30] - [1, 2, 3]  #c# = [9, 18, 27]
-[10, 20, 30] / [2, 4, 5]  #c# = [5.0, 5.0, 6.0]
+$a [tensor]= |[1, 2, 3]
+$b [tensor]= |[4, 5, 6]
+$a + $b     #c# = |[5, 7, 9]
+$a * $b     #c# = |[4, 10, 18]
 \end{verbatim}
 
 \paragraph{Slicing}
-Ndarrays (and all lists) support Python-style slicing with the syntax \texttt{list[start:stop:step]}:
+Tensors (and all lists) support Python-style slicing with the syntax \texttt{list[start:stop:step]}:
 \begin{itemize}
 \item \texttt{list[start:stop]} -- elements from \texttt{start} up to (not including) \texttt{stop}
 \item \texttt{list[start:]} -- from \texttt{start} to end
@@ -525,23 +546,49 @@ Ndarrays (and all lists) support Python-style slicing with the syntax \texttt{li
 \item Negative zero is equivalent to zero: \texttt{list[-0]} is the same as \texttt{list[0]}
 \end{itemize}
 \begin{verbatim}
-$a [list]= [0, 1, 2, 3, 4, 5]
-$a[1:4]       #c# = [1, 2, 3]
-$a[2:]        #c# = [2, 3, 4, 5]
-$a[:3]        #c# = [0, 1, 2]
-$a[::2]       #c# = [0, 2, 4]  (every 2nd element)
-$a[-2:]       #c# = [4, 5]     (last 2 elements)
-$a[::-1]      #c# = [5, 4, 3, 2, 1, 0]  (reversed)
+$a [tensor]= |[0, 1, 2, 3, 4, 5]
+$a[1:4]       #c# = |[1, 2, 3]
+$a[2:]        #c# = |[2, 3, 4, 5]
+$a[:3]        #c# = |[0, 1, 2]
+$a[::2]       #c# = |[0, 2, 4]  (every 2nd element)
+$a[-2:]       #c# = |[4, 5]     (last 2 elements)
+$a[::-1]      #c# = |[5, 4, 3, 2, 1, 0]  (reversed)
 \end{verbatim}
 
 \paragraph{Reshape}
-Ndarrays support reshaping via the \texttt{.reshape()} method. The total number of elements must remain constant.
+Tensors support reshaping via the \texttt{.reshape()} method. The total number of elements must remain constant.
 \begin{verbatim}
-$b [list]= [[1,2,3],[4,5,6]]
-$b.reshape(3, 2)   #c# = [[1,2],[3,4],[5,6]]
-$b.reshape(6)      #c# = [1, 2, 3, 4, 5, 6]  (flatten)
-$b.reshape(1, 6)   #c# = [[1,2,3,4,5,6]]     (row vector)
+$b [tensor]= |[[1,2,3],[4,5,6]]
+$b.reshape(3, 2)   #c# = |[[1,2],[3,4],[5,6]]
+$b.reshape(6)      #c# = |[1, 2, 3, 4, 5, 6]  (flatten)
+$b.reshape(1, 6)   #c# = |[[1,2,3,4,5,6]]     (row vector)
 \end{verbatim}
+
+\paragraph{Tensor Operators}
+Tensors support special operators prefixed with \texttt{.}:
+\begin{itemize}
+\item \texttt{.*} — matrix multiply
+\item \texttt{.T} — transpose
+\item \texttt{.H} — conjugate transpose
+\item \texttt{.^T} — tensor power (transpose)
+\item \texttt{.^H} — tensor power (conjugate transpose)
+\item \texttt{.det} — determinant
+\item \texttt{.inv} — inverse
+\item \texttt{.norm} — norm
+\item \texttt{.rank} — rank
+\item \texttt{.trace} — trace
+\end{itemize}
+See Section~\ref{sec:operators} for detailed operator descriptions.
+
+\paragraph{Tensor Functions}
+Tensors have dedicated functions in the \texttt{f.arr}, \texttt{f.stat}, and \texttt{f.linalg} namespaces:
+\begin{itemize}
+\item Creation: \texttt{f.arr.zeros}, \texttt{f.arr.ones}, \texttt{f.arr.identity}, \texttt{f.arr.full}, \texttt{f.arr.linspace}, \texttt{f.arr.arange}
+\item Inspection: \texttt{f.stat.shape}, \texttt{f.stat.rank}, \texttt{f.stat.size}, \texttt{f.stat.flatten}, \texttt{f.stat.clone}, \texttt{f.stat.typeof}
+\item Statistics: \texttt{f.stat.mean}, \texttt{f.stat.std}, \texttt{f.stat.var}, \texttt{f.stat.sum}, \texttt{f.stat.product}, \texttt{f.stat.min}, \texttt{f.stat.max}, \texttt{f.stat.argmin}, \texttt{f.stat.argmax}
+\item Linear algebra: \texttt{f.linalg.inv}, \texttt{f.linalg.det}, \texttt{f.linalg.rank}, \texttt{f.linalg.trace}, \texttt{f.linalg.solve}
+\end{itemize}
+See Section~\ref{ch:control} for detailed function descriptions.
 
 \section{Function}
 \subsection{Function Data Type Definition}
@@ -608,7 +655,7 @@ Function equality is determined by reference identity:
 \begin{itemize}
 \item Lists can contain function values: \texttt{[f.math.sin, f.math.cos]} is a valid list
 \item Sets can contain function values but this is impractical (lambda equality is always unique), so set membership checks on function values are unreliable
-\item Ndarrays cannot contain function values (ndarray elements must be numeric)
+\item Tensors cannot contain function values (tensor elements must be numeric)
 \end{itemize}
 
 \subsection{Function Data Type Printing}
@@ -734,7 +781,7 @@ typed_assign        = "[", type, "]", "=", data
 inferred_assign     = "t", "=", data
 
 type                = "bool" | "int" | "real" | "complex" 
-                    | "list" | "string" | "set" 
+                    | "list" | "tensor" | "string" | "set" 
                     | "func"
                     | "part" | "connection" | "pin" 
                     | "net"

@@ -1329,18 +1329,18 @@ All values are base values within one decade (1.0 to 10). Multiply by $10^n$ for
 
 
 \subsubsection{Minimum Function}
-Returns the minimum value in a list. For ndarrays, an optional \texttt{axis} parameter reduces along that axis. \\
+Returns the minimum value in a list. For tensors, an optional \texttt{axis} parameter reduces along that axis. \\
 Morphology:
 \begin{verbatim}
 EBNF:
 "f.math.min", "(", list, [ ",", "axis", "=", int ], ")"
 \end{verbatim}
 \begin{itemize}
-\item Operands: \texttt{list} of comparable elements, or \texttt{ndarray}. Optional \texttt{axis}: \texttt{int} (ndarray only).
+\item Operands: \texttt{list} of comparable elements, or \texttt{tensor}. Optional \texttt{axis}: \texttt{int} (tensor only).
 \item Result: the smallest element in the list/array.
-\item For ndarrays with \texttt{axis}, reduces along the specified axis, returning an ndarray.
+\item For tensors with \texttt{axis}, reduces along the specified axis, returning an tensor.
 \item A \texttt{Value Error} is raised if the list is empty.
-\item A \texttt{Type Error} is raised if the argument is not a list or ndarray.
+\item A \texttt{Type Error} is raised if the argument is not a list or tensor.
 \item A \texttt{Type Error} is raised if elements are not comparable (e.g., mixing \texttt{int} and \texttt{string}).
 \end{itemize}
 Examples:
@@ -1351,18 +1351,18 @@ f.math.min([[3,1],[4,2]], axis=1)        #c# Returns [1, 2]
 \end{verbatim}
 
 \subsubsection{Maximum Function}
-Returns the maximum value in a list. For ndarrays, an optional \texttt{axis} parameter reduces along that axis. \\
+Returns the maximum value in a list. For tensors, an optional \texttt{axis} parameter reduces along that axis. \\
 Morphology:
 \begin{verbatim}
 EBNF:
 "f.math.max", "(", list, [ ",", "axis", "=", int ], ")"
 \end{verbatim}
 \begin{itemize}
-\item Operands: \texttt{list} of comparable elements, or \texttt{ndarray}. Optional \texttt{axis}: \texttt{int} (ndarray only).
+\item Operands: \texttt{list} of comparable elements, or \texttt{tensor}. Optional \texttt{axis}: \texttt{int} (tensor only).
 \item Result: the largest element in the list/array.
-\item For ndarrays with \texttt{axis}, reduces along the specified axis, returning an ndarray.
+\item For tensors with \texttt{axis}, reduces along the specified axis, returning an tensor.
 \item A \texttt{Value Error} is raised if the list is empty.
-\item A \texttt{Type Error} is raised if the argument is not a list or ndarray.
+\item A \texttt{Type Error} is raised if the argument is not a list or tensor.
 \item A \texttt{Type Error} is raised if elements are not comparable.
 \end{itemize}
 Examples:
@@ -3176,7 +3176,7 @@ $b[0][0] = 99         #c# $a is still [[1, 2], [3, 4]]
 \end{verbatim}
 
 \subsection{Ndarray Functions}
-Functions for operating on ndarrays (and lists). These functions extend the built-in math and list functions with array-aware behavior.
+Functions for operating on tensors (and lists). These functions extend the built-in math and list functions with array-aware behavior.
 
 \subsubsection{Array Creation}
 
@@ -3189,7 +3189,7 @@ EBNF:
 \end{verbatim}
 \begin{itemize}
 \item Operands: int (length for 1D), or list of ints (dimensions for nD)
-\item Result: ndarray filled with 0
+\item Result: tensor filled with 0
 \item A \texttt{Value Error} is raised for negative dimensions.
 \end{itemize}
 Examples:
@@ -3207,7 +3207,7 @@ EBNF:
 \end{verbatim}
 \begin{itemize}
 \item Operands: int (length for 1D), or list of ints (dimensions for nD)
-\item Result: ndarray filled with 1
+\item Result: tensor filled with 1
 \item A \texttt{Value Error} is raised for negative dimensions.
 \end{itemize}
 Examples:
@@ -3225,7 +3225,7 @@ EBNF:
 \end{verbatim}
 \begin{itemize}
 \item Operands: int (n $\geq$ 0)
-\item Result: ndarray (n$\times$n) with 1s on the diagonal and 0s elsewhere
+\item Result: tensor (n$\times$n) with 1s on the diagonal and 0s elsewhere
 \item \texttt{f.arr.identity(0)} returns a 0$\times$0 matrix \texttt{[[]]}.
 \end{itemize}
 Examples:
@@ -3244,7 +3244,7 @@ f.arr.identity(3)        #c# Returns [[1,0,0],[0,1,0],[0,0,1]]
 \end{itemize}
 
 \subsubsection{Reduction Functions}
-Reduction functions collapse an ndarray along an axis. When \texttt{axis} is omitted, the operation is applied to the flattened array (all elements). When \texttt{axis = 0}, the operation is applied row-wise (collapses rows). When \texttt{axis = 1}, the operation is applied column-wise (collapses columns).
+Reduction functions collapse an tensor along an axis. When \texttt{axis} is omitted, the operation is applied to the flattened array (all elements). When \texttt{axis = 0}, the operation is applied row-wise (collapses rows). When \texttt{axis = 1}, the operation is applied column-wise (collapses columns).
 
 \paragraph{Sum}
 \begin{verbatim}
@@ -3484,7 +3484,7 @@ f.util.unique([1, 2, 2, 3, 3, 3])   #c# Returns [1, 2, 3]
 
 \paragraph{Edge Cases -- Linear Algebra Functions}
 \begin{itemize}
-\item A \texttt{Type Error} is raised if the argument is not an \texttt{ndarray} (matrix).
+\item A \texttt{Type Error} is raised if the argument is not an \texttt{tensor} (matrix).
 \item A \texttt{Value Error} is raised for \texttt{f.linalg.det}, \texttt{f.linalg.inv}, \texttt{f.linalg.eig}, \texttt{f.linalg.eigvec}, \texttt{f.linalg.lu}, \texttt{f.linalg.qr}, \texttt{f.linalg.trace}, \texttt{f.linalg.cond} if the matrix is not square.
 \item A \texttt{Value Error} is raised for \texttt{f.linalg.cond} if the matrix is singular.
 \item A \texttt{Value Error} is raised for \texttt{f.arr.normalize} if the vector has zero magnitude.
@@ -3571,7 +3571,7 @@ Returns the lower triangular matrix \texttt{L} such that \texttt{L .* L.T = orig
 
 \paragraph{Edge Cases}
 \begin{itemize}
-\item A \texttt{Type Error} is raised if the argument is not a list of lists (ndarray).
+\item A \texttt{Type Error} is raised if the argument is not a list of lists (tensor).
 \item A \texttt{Value Error} is raised if the matrix is not square.
 \item A \texttt{Value Error} is raised if the matrix is not symmetric.
 \item A \texttt{Value Error} is raised if the matrix is not positive definite.
@@ -3649,11 +3649,11 @@ The \texttt{solve} function solves the linear system $A\mathbf{x} = \mathbf{b}$ 
 Morphology:
 \begin{verbatim}
 EBNF:
-"f.linalg.solve", "(", ndarray, ",", ndarray, ")"
+"f.linalg.solve", "(", tensor, ",", tensor, ")"
 \end{verbatim}
 \begin{itemize}
-\item Operands: A (ndarray, square coefficient matrix), b (ndarray, right-hand side vector or matrix)
-\item Result: ndarray $\mathbf{x}$ such that $A\mathbf{x} = \mathbf{b}$
+\item Operands: A (tensor, square coefficient matrix), b (tensor, right-hand side vector or matrix)
+\item Result: tensor $\mathbf{x}$ such that $A\mathbf{x} = \mathbf{b}$
 \item A must be square and non-singular (determinant $\neq$ 0)
 \item A Division by Zero Error is raised if A is singular
 \item A Value Error is raised if A and b have incompatible dimensions
@@ -3666,7 +3666,7 @@ f.linalg.solve([[1,0],[0,1]], [3,4])       #c# Returns [3, 4]
 
 
 \subsection{Higher-Order Functions}
-Higher-order functions take function values (lambdas or function references) as arguments. They operate on lists and ndarrays. See Section~\ref{sec:lambda} for lambda syntax and Section~\ref{ch:types} for the function data type.
+Higher-order functions take function values (lambdas or function references) as arguments. They operate on lists and tensors. See Section~\ref{sec:lambda} for lambda syntax and Section~\ref{ch:types} for the function data type.
 
 \paragraph{Edge Cases -- Higher-Order Functions}
 \begin{itemize}
@@ -4421,7 +4421,7 @@ debg.inspect($signal)
 
 Output includes:
 \begin{itemize}
-\item Type and dimensions (for lists/ndarrays)
+\item Type and dimensions (for lists/tensors)
 \item Element types and count
 \item Memory footprint in bytes
 \item Value summary (truncated for large structures)
