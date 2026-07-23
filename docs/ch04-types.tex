@@ -413,6 +413,20 @@ range_spec  = expression, [">"], ":", expression, [":", ["<"], expression]
 
 slice       = [expression], ":", [expression], [":", expression]
 
+boolean_indexing = expression, "[", boolean_expression, "]"
+
+tensor_indexing  = expression, "[", indexing_expr, "]"
+
+indexing_expr    = expression                        # single index or boolean
+                 | expression, ",", expression       # multi-dimensional
+                 | slice_spec                        # slice
+                 | list_literal                      # index list
+                 | "...", [",", indexing_expr]        # ellipsis
+
+slice_spec       = [expression], ":", [expression], [":", ["-", ] expression]
+
+safe_tensor_indexing = expression, "?[", indexing_expr, "]"
+
 reshape     = ".", "reshape", "(", int, {",", int}, ")"
 \end{verbatim}
 
@@ -423,6 +437,16 @@ tensor_literal = "|", "[", [{ data, "," }, data], "]"
                | "|", "[", range_spec, "]"
 \end{verbatim}
 The pipe prefix \texttt{|} distinguishes tensor literals from list literals. Tensors are explicitly typed and support the same range syntax as lists.
+
+\paragraph{Warning}
+\textbf{Incorrect syntax:} \texttt{|[]|} --- this will cause immediate program termination.
+\textbf{Correct syntax:} \texttt{|[]} --- the pipe prefix is only at the opening bracket.
+\begin{itemize}
+\item \texttt{|[]} --- valid empty tensor
+\item \texttt{|[1, 2, 3]} --- valid 1D tensor
+\item \texttt{|[[1,2],[3,4]]} --- valid 2D tensor
+\item \texttt{|[]|} --- \textbf{SYNTAX ERROR --- program terminates}
+\end{itemize}
 
 \paragraph{Exclusive Ranges}
 The colon and pipe range syntax supports optional exclusive boundary modifiers. The \texttt{>} modifier (placed before \texttt{:} or \texttt{|}) excludes the start value. The \texttt{<} modifier (placed after \texttt{:} or \texttt{|}) excludes the end value. Both modifiers can be combined.
@@ -485,14 +509,17 @@ Tensors are created using:
 \begin{itemize}
 \item Explicit type annotation: \texttt{\$var [tensor]= value}
 \item Pipe-prefixed literal: \texttt{|[1, 2, 3]} or \texttt{|[[1,2],[3,4]]}
-\item Function return values (e.g., \texttt{f.linalg.inv}, \texttt{f.arr.zeros})
+\item Function return values (e.g., \texttt{f.linalg.inv}, \texttt{f.tnsr.zeros})
 \end{itemize}
 
 \paragraph{Shape}
-The shape of a Tensor is described by its dimensions:
+The shape of a Tensor is described by its dimensions. Tensors support \textbf{arbitrary dimensionality}:
 \begin{itemize}
 \item 1D: \texttt{|[1, 2, 3]} has shape \texttt{(3)}
 \item 2D: \texttt{|[[1,2], [3,4], [5,6]]} has shape \texttt{(3, 2)} (3 rows, 2 columns)
+\item 3D: \texttt{|[[[1,2],[3,4]],[[5,6],[7,8]]]} has shape \texttt{(2, 2, 2)} (2 layers, 2 rows, 2 columns)
+\item 4D: \texttt{|[[[[1,2],[3,4]],[[5,6],[7,8]]],[[[9,10],[11,12]],[[13,14],[15,16]]]]} has shape \texttt{(2, 2, 2, 2)}
+\item nD: arbitrary nesting depth, all dimensions must be rectangular
 \item Shape is immutable after creation
 \end{itemize}
 
@@ -510,6 +537,7 @@ A list literal is a valid Tensor if and only if:
 \item \texttt{|[1+2i, 3+4i]} — valid tensor (1D, shape (2), complex)
 \item \texttt{|[[1,2], [3,4], [5,6]]} — valid tensor (2D, shape (3,2))
 \item \texttt{|[[1+2i, 3], [4, 5+6i]]} — valid tensor (2D, shape (2,2), complex)
+\item \texttt{|[[[1,2],[3,4]],[[5,6],[7,8]]]} — valid tensor (3D, shape (2,2,2))
 \item \texttt{|[[1,2], [3,4,5]]} — INVALID (different lengths)
 \item \texttt{|[1, "hello", True]} — INVALID (non-numeric)
 \item \texttt{|[]} — valid tensor (1D, shape (0))
@@ -565,28 +593,25 @@ $b.reshape(1, 6)   #c# = |[[1,2,3,4,5,6]]     (row vector)
 \end{verbatim}
 
 \paragraph{Tensor Operators}
-Tensors support special operators prefixed with \texttt{.}:
+Tensors support special operators prefixed with \texttt{.}. Without the prefix, operations are element-wise.
 \begin{itemize}
-\item \texttt{.*} — matrix multiply
-\item \texttt{.T} — transpose
-\item \texttt{.H} — conjugate transpose
-\item \texttt{.^T} — tensor power (transpose)
-\item \texttt{.^H} — tensor power (conjugate transpose)
-\item \texttt{.det} — determinant
-\item \texttt{.inv} — inverse
-\item \texttt{.norm} — norm
-\item \texttt{.rank} — rank
-\item \texttt{.trace} — trace
+\item \texttt{.*} — matrix multiply (dot product for 1D, matrix multiply for 2D)
+\item \texttt{.T} — transpose (postfix operator)
+\item \texttt{~.T} — transpose in place
+\item \texttt{.H} — conjugate transpose (postfix operator)
+\item \texttt{~.H} — conjugate transpose in place
+\item \texttt{~.E} — erase (sets variable to null)
+\item \texttt{.\^{}n} — matrix power (n must be int >= 0)
 \end{itemize}
-See Section~\ref{sec:operators} for detailed operator descriptions.
+See Section~\ref{sec:operators} for detailed operator descriptions and edge cases.
 
 \paragraph{Tensor Functions}
 Tensors have dedicated functions in the \texttt{f.arr}, \texttt{f.stat}, and \texttt{f.linalg} namespaces:
 \begin{itemize}
-\item Creation: \texttt{f.arr.zeros}, \texttt{f.arr.ones}, \texttt{f.arr.identity}, \texttt{f.arr.full}, \texttt{f.arr.linspace}, \texttt{f.arr.arange}
-\item Inspection: \texttt{f.stat.shape}, \texttt{f.stat.rank}, \texttt{f.stat.size}, \texttt{f.stat.flatten}, \texttt{f.stat.clone}, \texttt{f.stat.typeof}
-\item Statistics: \texttt{f.stat.mean}, \texttt{f.stat.std}, \texttt{f.stat.var}, \texttt{f.stat.sum}, \texttt{f.stat.product}, \texttt{f.stat.min}, \texttt{f.stat.max}, \texttt{f.stat.argmin}, \texttt{f.stat.argmax}
-\item Linear algebra: \texttt{f.linalg.inv}, \texttt{f.linalg.det}, \texttt{f.linalg.rank}, \texttt{f.linalg.trace}, \texttt{f.linalg.solve}
+\item Creation: \texttt{f.tnsr.zeros}, \texttt{f.tnsr.ones}, \texttt{f.tnsr.identity}
+\item Inspection: \texttt{f.tnsr.flatten}, \texttt{f.tnsr.norm}, \texttt{f.tnsr.normalize}
+\item Statistics: \texttt{f.stat.sum}, \texttt{f.stat.prod}, \texttt{f.stat.mean}, \texttt{f.stat.median}, \texttt{f.stat.mode}, \texttt{f.stat.std}, \texttt{f.stat.var}, \texttt{f.stat.min}, \texttt{f.stat.max}, \texttt{f.stat.argmin}, \texttt{f.stat.argmax}, \texttt{f.stat.peak}, \texttt{f.stat.rms}, \texttt{f.stat.percentile}, \texttt{f.stat.quantile}, \texttt{f.stat.histogram}, \texttt{f.stat.correlation}, \texttt{f.stat.covariance}, \texttt{f.stat.linearRegression}
+\item Linear algebra: \texttt{f.linalg.det}, \texttt{f.linalg.inv}, \texttt{f.linalg.pinv}, \texttt{f.linalg.rank}, \texttt{f.linalg.trace}, \texttt{f.linalg.solve}, \texttt{f.linalg.eig}, \texttt{f.linalg.eigvec}, \texttt{f.linalg.lu}, \texttt{f.linalg.qr}, \texttt{f.linalg.chol}, \texttt{f.linalg.svd}, \texttt{f.linalg.cond}
 \end{itemize}
 See Section~\ref{ch:control} for detailed function descriptions.
 
@@ -766,6 +791,117 @@ Nets cannot be cast from other types. Nets support:
 \end{itemize}
 
 
+\section{Type Casting with \texttt{as}}
+The \texttt{as} keyword performs explicit type conversion. It is an expression-level operator that converts a value from one type to another.
+
+\subsection{Syntax}
+\begin{verbatim}
+EBNF:
+type_cast = expression, "as", type_name
+
+type_name = "int" | "real" | "bool" | "complex"
+         | "list" | "tensor"
+\end{verbatim}
+
+\subsection{Numeric Conversions}
+
+\paragraph{int as real}
+Promotes an integer to a real value.
+\begin{verbatim}
+5 as real          #c# Returns 5.0
+0 as real          #c# Returns 0.0
+-42 as real        #c# Returns -42.0
+\end{verbatim}
+
+\paragraph{real as int}
+Truncates a real to an integer (towards zero).
+\begin{verbatim}
+3.7 as int         #c# Returns 3
+-2.9 as int        #c# Returns -2
+0.5 as int         #c# Returns 0
+\end{verbatim}
+
+\paragraph{bool as int}
+Converts boolean to integer.
+\begin{verbatim}
+True as int        #c# Returns 1
+False as int       #c# Returns 0
+\end{verbatim}
+
+\paragraph{int as bool}
+Converts integer to boolean.
+\begin{verbatim}
+0 as bool          #c# Returns False
+1 as bool          #c# Returns True
+-5 as bool         #c# Returns True
+\end{verbatim}
+
+\paragraph{real as bool}
+Converts real to boolean.
+\begin{verbatim}
+0.0 as bool        #c# Returns False
+0.5 as bool        #c# Returns True
+\end{verbatim}
+
+\subsection{Complex Conversions}
+
+\paragraph{int as complex}
+Promotes an integer to complex with zero imaginary part.
+\begin{verbatim}
+5 as complex       #c# Returns 5 + 0i
+-3 as complex      #c# Returns -3 + 0i
+\end{verbatim}
+
+\paragraph{real as complex}
+Promotes a real to complex with zero imaginary part.
+\begin{verbatim}
+3.14 as complex    #c# Returns 3.14 + 0i
+\end{verbatim}
+
+\paragraph{complex as real}
+Returns the real part if the imaginary part is zero. A warning is issued if the imaginary part is non-zero (returns the magnitude).
+\begin{verbatim}
+(3 + 0i) as real   #c# Returns 3.0
+(3 + 4i) as real   #c# Warning: imaginary part lost; returns 5.0
+\end{verbatim}
+
+\paragraph{complex as int}
+Truncates the real part to integer if the imaginary part is zero. A warning is issued if the imaginary part is non-zero (truncates the magnitude).
+\begin{verbatim}
+(5 + 0i) as int    #c# Returns 5
+(3.7 + 0i) as int  #c# Returns 3
+(3 + 4i) as int    #c# Warning: imaginary part lost; returns 3
+\end{verbatim}
+
+\subsection{List/Tensor Conversions}
+
+\paragraph{list as tensor}
+Converts a list to a tensor. All elements must be the same type (bool, int, real, or complex). A \texttt{Type Error} is raised if the list contains mixed types.
+\begin{verbatim}
+[1, 2, 3] as tensor            #c# Returns tensor [1, 2, 3]
+[1.0, 2.0, 3.0] as tensor     #c# Returns tensor [1.0, 2.0, 3.0]
+[1, 2.0, 3] as tensor         #c# Type Error (mixed int/real)
+\end{verbatim}
+
+\paragraph{tensor as list}
+Flattens a tensor to a 1D list.
+\begin{verbatim}
+|[1, 2, 3] as list             #c# Returns [1, 2, 3]
+|[[1,2],[3,4]] as list         #c# Returns [1, 2, 3, 4]
+\end{verbatim}
+
+\subsection{Error Handling}
+A \texttt{Type Error} is raised for unsupported conversions (e.g., \texttt{string as int}, \texttt{list as real}).
+
+\subsection{Edge Cases}
+\begin{itemize}
+\item A \texttt{Type Error} is raised if the conversion is not supported between the given types.
+\item A warning is issued for \texttt{complex as real} or \texttt{complex as int} when the imaginary part is non-zero.
+\item \texttt{list as tensor} requires all elements to be the same scalar type; mixed types raise a \texttt{Type Error}.
+\item \texttt{tensor as list} flattens all dimensions to a single list.
+\end{itemize}
+
+
 \chapter{Variables}
 Variables in EDADSL are prefixed with the \texttt{\$} character and are assigned values using type-specific assignment operators.
 
@@ -874,7 +1010,7 @@ function_call_var   = variable, "(", [{ data, "," }], data, ")"
 
 arithmetic_expression = expression,
     ("+" | "-" | "*" | "/" | "%" | "^" | "." | "x"
-     | ".*" | ".^"),
+     | ".*" | ".^" | "**" | "***" | "****"),
     expression
   | "-" expression
   | expression, (".T" | ".H")
@@ -909,7 +1045,8 @@ compound_assignment = variable,
   | variable, (".=" | "x=" | "xr=")
     #c# tensor & secure erasure
   | variable, (".*=" | ".^=" | ".*r=" | ".^r=")
-  | variable, ("~.T" | "~.H" | "~.E")
+  | variable, ("**=" | "***=" | "****=" | "**r=" | "***r=" | "****r=")
+  | variable, ("~.T" | "~.H" | "~.E" | "~.E+")
     #c# bitwise / shift
   | variable, ("<<=" | ">>=" | "<<r=" | ">>r=")
   | variable, ("<<<[" int_literal "]=" 
@@ -930,14 +1067,16 @@ compound_assignment = variable,
 \section{Operator Precedence}
 Operators are evaluated in the following order of precedence (highest to lowest):
 \begin{enumerate}
+\item Hexation (\texttt{****}), Pentation (\texttt{***}), Tetration (\texttt{**}) -- right-associative
 \item Exponentiation (\texttt{\^{}}) -- right-associative
 \item Boolean negation (\texttt{!}), Bitwise NOT (\texttt{b!})
-\item Postfix increment/decrement (\texttt{\$var++}, \texttt{\$var--}), transpose (\texttt{.T}), Hermitian transpose (\texttt{.H}), erase (\texttt{~.E})
+\item Postfix increment/decrement (\texttt{\$var++}, \texttt{\$var--}), transpose (\texttt{.T}), Hermitian transpose (\texttt{.H}), erase (\texttt{~.E}), cryptographic shred (\texttt{~.E+})
 \item Set cardinality (\texttt{||a})
 \item Multiplication (\texttt{*}), Division (\texttt{/}), Floor Division (\texttt{//}), Modulo (\texttt{\%}), Dot Product (\texttt{.}), Cross Product (\texttt{x}), Matrix Multiply (\texttt{.*}), Matrix Power (\texttt{.\^{}})
 \item Left Shift (\texttt{<<}), Right Shift (\texttt{>>}), Left Rotate (\texttt{<<<[w]}), Right Rotate (\texttt{>>>[w]})
 \item Addition (\texttt{+}), Subtraction (\texttt{-})
 \item Comparison operators (\texttt{<}, \texttt{<=}, \texttt{==}, \texttt{!=}, \texttt{=n=}, \texttt{><}, \texttt{>=}, \texttt{>}, \texttt{\textasciitilde}, \texttt{\textasciitilde*}, \texttt{\textasciitilde+()\textasciitilde}, \texttt{\textasciitilde*()\textasciitilde})
+\item Type casting (\texttt{as}) -- e.g., \texttt{\$x as real}
 \item Set comparison (\texttt{c}, \texttt{E}, \texttt{!E})
 \item Logical AND (\texttt{\&\&}), NAND (\texttt{!\&}), Bitwise AND (\texttt{b\&\&}), Bitwise NAND (\texttt{b!\&})
 \item Logical OR (\texttt{||}), NOR (\texttt{!|}), Bitwise OR (\texttt{b||}), Bitwise NOR (\texttt{b!|})

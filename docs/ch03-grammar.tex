@@ -24,6 +24,7 @@ statement                     = assignment
                               | letop
                               | assertion
                               | try_except
+                              | alias_stmt
 
 assignment                    = variable_assignment          
                               | constant_assignment
@@ -34,6 +35,7 @@ function                      = function_call_built_in
                               | function_definition
 
 flow_control                  = conditional
+                              | cases
                               | iterator
                               | while_loop
                               | do_while
@@ -46,6 +48,14 @@ flow_control                  = conditional
 conditional                   = "if", boolean_expression, "::", code_block,
                               { "otherwise", boolean_expression, "::", code_block },
                               ["else", "::", code_block]
+
+cases                         = "cases", "(", variable, typed_assign, data, ")", 
+                              "::", "{", { case_clause }, [ otherwise_clause ], "}"
+
+case_clause                   = "case", "(", boolean_expression, ")", 
+                              "::", code_block
+
+otherwise_clause              = "otherwise", "::", code_block
 
 iterator                      = "for", variable, "E",
                                 (list | set), "::", code_block
@@ -93,9 +103,9 @@ null_safe_function_call       = variable, "??", "(",
                                 [{ data, "," }, data] ,")"
 
 namespace                     = "math" | "trig" | "hyp" | "cplx" | "log"
-                              | "special" | "str" | "list" | "arr"
+                              | "special" | "str" | "list" | "tnsr"
                                | "stat" | "linalg" | "ee" | "int" | "util"
-                               | "debg" | "sys" | "time" | "rng" | "hash"
+                               | "seq" | "debg" | "sys" | "time" | "rng" | "hash"
 
 variable_assignment           = variable,
                                 (typed_assign | inferred_assign),
@@ -119,6 +129,8 @@ compound_op                   = "+=" | "-=" | "*=" | "/=" | "%=" | "^="
                               | "u=" | "n=" | ".=" | "x=" | ".*=" | ".^="
                               | "+r=" | "-r=" | "/r=" | "%r=" | "^r="
                               | "xr=" | ".*r=" | ".^r="
+                              | "**=" | "***=" | "****="
+                              | "**r=" | "***r=" | "****r="
                               | "<<r=" | ">>r="
                               | "<<<" , "[", int, "]", "="
                               | ">>>", "[", int, "]", "="
@@ -128,7 +140,7 @@ compound_op                   = "+=" | "-=" | "*=" | "/=" | "%=" | "^="
                               | "b&&=" | "b||=" | "b^^=" | "b!&=" | "b!|=" | "b!^="
                               | "b->=" | "b!->=" | "b->r=" | "b!->r="
                               | "<o=" | "o>="
-compound_unary_op             = "~.T" | "~.H" | "~.E" | "~b!"
+compound_unary_op             = "~.T" | "~.H" | "~.E" | "~.E+" | "~b!"
 
 assigner                      = "[bool]=",   boolean_type
                               | "[int]=",     int_type
@@ -172,6 +184,11 @@ pipeline_expression           = expression, "|=>", function_ref
 
 composition_expression        = expression, "<o", expression
 
+type_cast                     = expression, "as", type_name
+
+type_name                     = "int" | "real" | "bool" | "complex"
+                              | "list" | "tensor"
+
 function_ref                  = "f", ".", namespace, ".", id
                               | "f.u.", id
 
@@ -185,10 +202,14 @@ error_type                    = "Assertion Error" | "aerr"
                               | "Value Error"      | "verr"
                               | "Division by Zero Error" | "0div"
                               | "Runtime Error"    | "rerr"
+                              | "Permission Error" | "perm"
 
 try_except                    = "try", "::", code_block
                               , { "otherwise", [error_type], "::", code_block }
                               , ["except", "::", code_block]
+
+alias_stmt                    = "alias", function_ref, "as", id
+                              | "alias", namespace, "as", id
 \end{verbatim}
 
 \newpage
@@ -313,6 +334,12 @@ syst_cm   = "syst.cm.calc",
             ("approx" | "calculus" | "hybrid")
 
 syst_alg  = "syst.alg", id
+
+sys_var = "$$", sys_var_name
+
+sys_var_name = "sys_mem_SHA512"
+             | "sys_temp_", id
+             | "sys_temp_available_sensors"
 \end{verbatim}
 
 \subsection{Additional Grammar Rules}

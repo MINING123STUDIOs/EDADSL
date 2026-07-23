@@ -31,6 +31,122 @@ if $flag ::{
 }
 \end{verbatim}
 
+\section{Cases}
+The \texttt{cases} statement provides multi-branch conditional execution with a bound variable. It evaluates a list of boolean expressions in order and executes the first matching branch. This is a cleaner alternative to long \texttt{if/otherwise} chains when multiple conditions need to be tested against a common value.
+
+\begin{verbatim}
+EBNF:
+cases = "cases", "(", variable, typed_assign, data, ")", 
+        "::", "{", { case_clause }, [ otherwise_clause ], "}"
+
+case_clause = "case", "(", boolean_expression, ")", 
+              "::", code_block
+
+otherwise_clause = "otherwise", "::", code_block
+\end{verbatim}
+
+\begin{itemize}
+\item The expression in the \texttt{cases(...)} header is evaluated once and bound to the variable
+\item Each \texttt{case} clause contains a boolean expression that can reference the bound variable
+\item Case clauses are evaluated in order; the first \texttt{True} wins
+\item The optional \texttt{otherwise} clause is a fallback when no case matches
+\item If no case matches and no \texttt{otherwise} is present, execution continues silently
+\item The bound variable is block-scoped to the \texttt{cases} block
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+# Basic usage
+$r [real]= f.tnsr.norm($v)
+cases ($r [real]= f.tnsr.norm($v)) ::{
+    case ($r < 0.1) ::{
+        f.util.print("small")
+    } case ($r < 1.0) ::{
+        f.util.print("medium")
+    } otherwise ::{
+        f.util.print("large")
+    }
+}
+
+# Without otherwise (silently continues if no match)
+cases ($x [int]= f.rng.int(1, 10)) ::{
+    case ($x == 1) ::{
+        f.util.print("got one")
+    } case ($x == 2) ::{
+        f.util.print("got two")
+    }
+}
+
+# Boolean expression doesn't need to reference bound variable
+$mode [string]= "fast"
+cases ($mode [string]= "fast") ::{
+    case ($mode == "slow") ::{
+        f.util.print("slow mode")
+    } case ($mode == "fast") ::{
+        f.util.print("fast mode")
+    } otherwise ::{
+        f.util.print("unknown mode")
+    }
+}
+\end{verbatim}
+
+\paragraph{Equivalent if/otherwise chain}
+The \texttt{cases} statement is equivalent to an \texttt{if/otherwise} chain:
+\begin{verbatim}
+# cases statement:
+cases ($r [real]= f.tnsr.norm($v)) ::{
+    case ($r < 0.1) ::{
+        f.util.print("small")
+    } case ($r < 1.0) ::{
+        f.util.print("medium")
+    } otherwise ::{
+        f.util.print("large")
+    }
+}
+
+# Equivalent if/otherwise:
+$r [real]= f.tnsr.norm($v)
+if $r < 0.1 ::{
+    f.util.print("small")
+} otherwise $r < 1.0 ::{
+    f.util.print("medium")
+} else ::{
+    f.util.print("large")
+}
+\end{verbatim}
+
+\section{Alias Statements}
+Alias statements create short names for built-in functions or namespaces. Aliases are file-scoped and cannot shadow existing variables or aliases.
+
+\subsection{Function Alias}
+\begin{verbatim}
+EBNF:
+alias_stmt = "alias", function_ref, "as", id
+
+Example:
+alias f.trig.sin as sin
+alias f.trig.cos as cos
+$y = sin($x)
+\end{verbatim}
+
+\subsection{Namespace Alias}
+\begin{verbatim}
+EBNF:
+alias_stmt = "alias", namespace, "as", id
+
+Example:
+alias f.trig as trig
+$y = trig.sin($x)
+\end{verbatim}
+
+\subsection{Edge Cases}
+\begin{itemize}
+\item A \texttt{Type Error} is raised if the alias name conflicts with an existing variable, alias, or built-in name.
+\item A \texttt{Type Error} is raised if the alias target does not exist (e.g., \texttt{alias f.trig.nonexistent as x}).
+\item Aliases are file-scoped: they only apply within the current file.
+\item Aliases cannot be reassigned after declaration.
+\end{itemize}
+
 \section{For Loops}
 For loops iterate over a list or set:
 \begin{verbatim}
@@ -238,10 +354,11 @@ writetolog "Board design completed successfully"
 function_call_built_in = "f", ".", namespace, ".", id, "(",
                         [{ data, "," }, data], ")"
 namespace = "math" | "trig" | "hyp" | "cplx" | "log"
-          | "special" | "str" | "list" | "arr"
+          | "special" | "str" | "list" | "tnsr"
           | "stat" | "linalg" | "ee" | "int" | "util"
+          | "seq"
 \end{verbatim}
-Correct usage: \texttt{f.math.abs(-3.2)}, \texttt{f.trig.sin(\$x)}, \texttt{f.arr.zeros([3,3])}\\
+Correct usage: \texttt{f.math.abs(-3.2)}, \texttt{f.trig.sin(\$x)}, \texttt{f.tnsr.zeros([3,3])}\\
 Incorrect: \texttt{f.math.abs(-3.2)}, \texttt{f.trig.sin(\$x)}, \texttt{abs(-3.2)}
 
 \texttt{f.util.print()} takes a \textbf{single} argument. Use \texttt{f.str.str()} for string concatenation:
@@ -957,6 +1074,144 @@ f.log.pow(2, 1 + 1i)    #c# Returns approximately 1.538 + 0.999i
 f.log.pow(1 + 1i, 2)    #c# Returns 0 + 2i
 \end{verbatim}
 
+\subsubsection{Hyperoperation}
+Computes the nth hyperoperation: addition, multiplication, exponentiation, tetration, pentation, or hexation. Optionally applies modular reduction.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.log.hyperop", "(", int, ",", ( int | real | complex ), ",", ( int | real | complex ),
+                    [ ",", int ], ")"
+\end{verbatim}
+\begin{itemize}
+\item \texttt{n} (int): hyperoperation level (0--6).
+\item \texttt{a}: left operand. Any numeric type.
+\item \texttt{b}: right operand. Any numeric type for n $\leq$ 3; must be \texttt{int} for n $\geq$ 4.
+\item \texttt{m} (int, optional): modulus. Must be $> 0$. When present, each intermediate step is reduced mod \texttt{m}.
+\end{itemize}
+
+\noindent Levels:
+\begin{center}
+\begin{tabular}{cll}
+n & Name & Definition \\ \hline
+0 & Successor & $a + 1$ (b ignored) \\
+1 & Addition & $a + b$ \\
+2 & Multiplication & $a \times b$ \\
+3 & Exponentiation & $a^b$ \\
+4 & Tetration & ${}^b a$ (iterated exponentiation) \\
+5 & Pentation & (iterated tetration) \\
+6 & Hexation & (iterated pentation) \\
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+\item \texttt{int} $\times$ \texttt{int} returns \texttt{int} (arbitrary precision). With modulus, result is in $[0, m)$.
+\item Any \texttt{real} operand returns \texttt{real}.
+\item Any \texttt{complex} operand returns \texttt{complex}. Modulus not supported for complex operands.
+\item A \texttt{Type Error} is raised if \texttt{n} is not \texttt{int}, or if n $\geq$ 4 and \texttt{b} is not \texttt{int}.
+\item A \texttt{Type Error} is raised if n $<$ 0 or n $>$ 6.
+\item A \texttt{Type Error} is raised if \texttt{m} is provided and is not \texttt{int}, or if \texttt{a} is \texttt{complex}.
+\item A \texttt{Value Error} is raised if n $\geq$ 3 and $a = 0$ and $b = 0$.
+\item A \texttt{Value Error} is raised if n $\geq$ 4 and $a = 0$ and $b \leq 0$.
+\item A \texttt{Value Error} is raised if n $\geq$ 4 and $b < 0$.
+\item A \texttt{Value Error} is raised if \texttt{m} $\leq 0$.
+\item A \texttt{Value Error} is raised if the result exceeds $2^{20}$ bits (only when no modulus is specified).
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+f.log.hyperop(0, 5, 99)     #c# Returns 6          (successor, b ignored)
+f.log.hyperop(1, 3, 4)      #c# Returns 7          (addition)
+f.log.hyperop(2, 3, 4)      #c# Returns 12         (multiplication)
+f.log.hyperop(3, 2, 10)     #c# Returns 1024       (exponentiation)
+f.log.hyperop(4, 2, 4)      #c# Returns 65536      (tetration: 2^2^2^2)
+f.log.hyperop(4, 3, 3)      #c# Returns 7625597484987  (3^3^3)
+f.log.hyperop(5, 2, 3)      #c# Returns 65536      (pentation)
+f.log.hyperop(6, 2, 3)      #c# Returns 65536      (hexation)
+f.log.hyperop(4, 1+1i, 2)   #c# Returns approximately 0 + 2i
+f.log.hyperop(3, 2.5, 3)    #c# Returns 15.625     (real)
+
+# With modulus
+f.log.hyperop(3, 2, 10, 1000)     #c# Returns 24     (2^10 mod 1000 = 1024 mod 1000)
+f.log.hyperop(4, 2, 8, 10000)     #c# Returns 5536   (2 ↑↑ 8 mod 10000)
+f.log.hyperop(4, 3, 3, 100)       #c# Returns 87     (3^3^3 mod 100 = 7625597484987 mod 100)
+f.log.hyperop(3, 7, 256, 256)     #c# Returns 0      (7^256 mod 256 = 0)
+f.log.hyperop(2, 13, 17, 10)      #c# Returns 1      (13*17 mod 10 = 221 mod 10)
+f.log.hyperop(4, 2, 4, 1)         #c# Returns 0      (anything mod 1 = 0)
+\end{verbatim}
+
+\subsubsection{Hyperroot}
+Computes the hyperroot: the inverse of a hyperoperation. Finds $x$ such that $\text{hyperop}(n, x, b) = y$.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.log.nthhyprt", "(", ( int | real | complex ), ",", int, ",", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item \texttt{y}: the value to find the hyperroot of. Any numeric type.
+\item \texttt{n} (int): hyperoperation level (3--6).
+\item \texttt{b} (int): iteration count. Must be $\geq 1$.
+\end{itemize}
+
+\noindent Relation to \texttt{f.log.hyperop}:
+\begin{itemize}
+\item \texttt{f.log.nthhyprt(y, 3, b)} = $b$th root of $y$ = $y^{1/b}$ (inverse of exponentiation).
+\item \texttt{f.log.nthhyprt(y, 4, b)} = $b$th hyperroot of $y$ (inverse of tetration).
+\item \texttt{f.log.nthhyprt(y, 5, b)} = inverse of pentation.
+\item \texttt{f.log.nthhyprt(y, 6, b)} = inverse of hexation.
+\end{itemize}
+
+\begin{itemize}
+\item Returns \texttt{real} for \texttt{int}/\texttt{real} $y$; \texttt{complex} for \texttt{complex} $y$.
+\item A \texttt{Type Error} is raised if \texttt{n} or \texttt{b} is not \texttt{int}, or if $n < 3$ or $n > 6$.
+\item A \texttt{Value Error} is raised if $b < 1$.
+\item A \texttt{Value Error} is raised if $y \leq 0$ and $n \geq 4$ (tetration base must be positive for real result).
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+f.log.nthhyprt(27, 3, 3)     #c# Returns 3.0       (cube root of 27)
+f.log.nthhyprt(65536, 4, 2)  #c# Returns 4          (2nd hyperroot: x^x = 65536 → x = 4)
+f.log.nthhyprt(7625597484987, 4, 3)  #c# Returns 3  (3rd hyperroot: x^x^x = ...)
+f.log.nthhyprt(16, 3, 4)     #c# Returns 2.0       (4th root of 16)
+f.log.nthhyprt(0 + 64i, 3, 3) #c# Returns approximately 2 + 2i  (complex root)
+\end{verbatim}
+
+\subsubsection{Super-Logarithm}
+Computes the super-logarithm: the inverse of tetration. Finds $x$ such that $b \uparrow\uparrow x = y$. ``How many times must I tetrate $b$ to reach $y$?''\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.log.slog", "(", ( int | real ), ",", ( int | real ), ")"
+\end{verbatim}
+\begin{itemize}
+\item \texttt{b} (int | real): the base of the tetration. Must be $> 0$.
+\item \texttt{y} (int | real): the target value. Must be $\geq 1$ for real result.
+\end{itemize}
+
+\noindent Relation to \texttt{f.log.hyperop}:
+\begin{itemize}
+\item $\text{slog}(b, y) = x$ means $b \uparrow\uparrow x = y$.
+\item Inverse of \texttt{f.log.hyperop(4, b, x)}.
+\end{itemize}
+
+\begin{itemize}
+\item Returns \texttt{real}. Integer results are exact (e.g., $\text{slog}(2, 65536) = 4.0$ exactly).
+\item A \texttt{Type Error} is raised if arguments are not numeric.
+\item A \texttt{Value Error} is raised if $b \leq 0$ or $y < 1$.
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+f.log.slog(2, 1)           #c# Returns 0.0     (2 ↑↑ 0 = 1)
+f.log.slog(2, 2)           #c# Returns 1.0     (2 ↑↑ 1 = 2)
+f.log.slog(2, 4)           #c# Returns 2.0     (2 ↑↑ 2 = 2^2 = 4)
+f.log.slog(2, 16)          #c# Returns 3.0     (2 ↑↑ 3 = 2^2^2 = 16)
+f.log.slog(2, 65536)       #c# Returns 4.0     (2 ↑↑ 4 = 65536)
+f.log.slog(3, 7625597484987) #c# Returns 3.0   (3 ↑↑ 3 = 3^3^3)
+f.log.slog(2, 3)           #c# Returns approximately 1.409  (between 1 and 2)
+f.log.slog(10, 1000)       #c# Returns approximately 2.388  (between 2 and 3)
+\end{verbatim}
+
 \subsubsection{Natural Logarithm}
 Returns the natural logarithm (base $e$) of the argument. \\
 Morphology:
@@ -1034,6 +1289,144 @@ Examples:
 f.math.log1p(0)       #c# Returns 0.0
 f.math.log1p(1)       #c# Returns approximately 0.6931 (ln 2)
 f.math.log1p(0.001)   #c# Returns approximately 0.0009995  (more precise than ln(1.001))
+\end{verbatim}
+
+\subsubsection{Exp2 Function}
+Returns $2^x$. More precise and faster than \texttt{f.math.pow(2, x)}.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.math.exp2", "(", ( int | real ), ")"
+\end{verbatim}
+\begin{itemize}
+\item Operand: \texttt{int} or \texttt{real}.
+\item Result: \texttt{real}.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.math.exp2(0)       #c# Returns 1.0
+f.math.exp2(1)       #c# Returns 2.0
+f.math.exp2(10)      #c# Returns 1024.0
+f.math.exp2(-1)      #c# Returns 0.5
+\end{verbatim}
+
+\subsubsection{Logaddexp Function}
+Returns $\ln(e^x + e^y)$, numerically stable. Prevents overflow when computing log of sum of exponentials.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.math.logaddexp", "(", real, ",", real, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: \texttt{real}, \texttt{real}.
+\item Result: \texttt{real}.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.math.logaddexp(0, 0)      #c# Returns approximately 0.6931 (ln 2)
+f.math.logaddexp(0, 1000)   #c# Returns approximately 1000.0 (no overflow)
+\end{verbatim}
+
+\subsubsection{Logaddexp2 Function}
+Returns $\log_2(2^x + 2^y)$, numerically stable.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.math.logaddexp2", "(", real, ",", real, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: \texttt{real}, \texttt{real}.
+\item Result: \texttt{real}.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.math.logaddexp2(0, 0)     #c# Returns 1.0 (log2(2))
+f.math.logaddexp2(0, 1000)  #c# Returns approximately 1000.0 (no overflow)
+\end{verbatim}
+
+\subsubsection{IsClose Function}
+\label{sec:isclose}
+Compares two scalar values for approximate equality using combined absolute and relative tolerance. This is the function form of the approximate equality operators (\texttt{\textasciitilde}, \texttt{\textasciitilde*}, \texttt{\textasciitilde+()}\textasciitilde, \texttt{\textasciitilde*()}\textasciitilde); unlike the operators, \texttt{f.math.isclose} can be passed as a function argument, used in lambdas, and has explicit tolerance parameters.
+
+The comparison formula is:
+\begin{verbatim}
+|a - b| <= max(atol, rtol * max(|a|, |b|))
+\end{verbatim}
+The absolute tolerance \texttt{atol} dominates near zero (where relative tolerance would be meaningless). The relative tolerance \texttt{rtol} dominates for large values.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.math.isclose", "(", ( int | real ), ",", ( int | real ), [",", "rtol", "=", real], [",", "atol", "=", real], ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: two values to compare (\texttt{int} or \texttt{real}), optional \texttt{rtol} (relative tolerance, default 1e-9), optional \texttt{atol} (absolute tolerance, default 0.0).
+\item Result: \texttt{boolean} (\texttt{True} if within tolerance, \texttt{False} otherwise).
+\item The tolerance values must be non-negative. A \texttt{Value Error} is raised if \texttt{rtol < 0} or \texttt{atol < 0}.
+\end{itemize}
+
+\paragraph{Relationship to Operators}
+\begin{itemize}
+\item \texttt{f.math.isclose(a, b, atol=c)} is equivalent to \texttt{a \textasciitilde+(c)\textasciitilde b}
+\item \texttt{f.math.isclose(a, b, rtol=c)} is equivalent to \texttt{a \textasciitilde*(c)\textasciitilde b}
+\item \texttt{f.math.isclose(a, b)} uses \texttt{rtol=1e-9}, which is much tighter than the default \texttt{syst.flag.approx\_eps = 1}
+\end{itemize}
+
+\paragraph{Examples}
+\begin{verbatim}
+#c# Basic floating-point rounding
+f.math.isclose(0.1 + 0.2, 0.3)           #c# Returns True  (0.1+0.2 = 0.30000000000000004)
+f.math.isclose(1.0, 1.0)                  #c# Returns True
+f.math.isclose(1.0, 2.0)                  #c# Returns False
+
+#c# Tolerance tuning
+f.math.isclose(0.1 + 0.2, 0.3, rtol=0)   #c# Returns False  (strict: no relative tolerance)
+f.math.isclose(1000.0, 1000.001)          #c# Returns False  (rtol=1e-9 too small)
+f.math.isclose(1000.0, 1000.001, rtol=1e-4) #c# Returns True  (1e-4 covers 0.001/1000)
+
+#c# Absolute tolerance near zero
+f.math.isclose(0.0, 1e-10)               #c# Returns False  (atol=0, no absolute tolerance)
+f.math.isclose(0.0, 1e-10, atol=1e-9)    #c# Returns True   (atol dominates near zero)
+
+#c# Composability
+$f [func]= L::($x [real], $y [real]) -> { f.math.isclose($x, $y, rtol=1e-6) }
+$f(0.1 + 0.2, 0.3)                       #c# Returns True  (usable in lambdas)
+\end{verbatim}
+
+\subsubsection{AllClose Function}
+\label{sec:allclose}
+Compares two collections element-wise for approximate equality. Returns \texttt{True} if every corresponding pair of elements satisfies the tolerance check (same formula as \texttt{f.math.isclose}). Nested lists must have matching structure.
+
+There is no operator equivalent for element-wise collection comparison.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.math.allclose", "(", list, ",", list, [",", "rtol", "=", real], [",", "atol", "=", real], ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: two \texttt{list}s of the same length (nested lists must have matching structure), optional \texttt{rtol} (relative tolerance, default 1e-9), optional \texttt{atol} (absolute tolerance, default 0.0).
+\item Result: \texttt{boolean} (\texttt{True} if all element pairs are within tolerance).
+\item A \texttt{Type Error} is raised if the operands are not both lists.
+\item A \texttt{Value Error} is raised if the lists have different lengths.
+\end{itemize}
+
+\paragraph{Examples}
+\begin{verbatim}
+#c# Basic usage
+f.math.allclose(|[0.1, 0.2, 0.3], |[0.1+0.2, 0.2+0.1, 0.3+0.0])  #c# Returns True
+f.math.allclose(|[1.0, 2.0], |[1.0, 2.0])                         #c# Returns True
+f.math.allclose(|[1.0, 2.0], |[1.0, 2.1])                         #c# Returns False
+
+#c# Edge cases
+f.math.allclose(|[], |[])                                          #c# Returns True  (empty lists)
+f.math.allclose(|[0.0, 1e-10], |[0.0, 0.0], atol=1e-9)           #c# Returns True
+
+#c# Nested lists
+f.math.allclose(|[|1.0, 2.0], |3.0, 4.0]|], |[|1.0, 2.0], |3.0, 4.0]|])  #c# Returns True
+
+#c# Typical workflow: compare two filter responses
+$response_a [tensor]= compute_response($coeffs_a, $coeffs_b)
+$response_b [tensor]= compute_response($coeffs_c, $coeffs_d)
+f.math.allclose($response_a, $response_b, rtol=1e-6)              #c# Returns True if responses match
 \end{verbatim}
 
 \label{sec:complex_functions}
@@ -1396,7 +1789,7 @@ Computes the p-norm of a vector or matrix. \\
 Morphology:
 \begin{verbatim}
 EBNF:
-"f.arr.norm", "(", ( list | list[list] ), [",", "p", "=", ( real | "fro" ) ], ")"
+"f.tnsr.norm", "(", ( list | list[list] ), [",", "p", "=", ( real | "fro" ) ], ")"
 \end{verbatim}
 \begin{itemize}
 \item Operands: \texttt{list} of \texttt{int}/\texttt{real} (vector), \texttt{list[list]} of \texttt{int}/\texttt{real} (matrix), optional \texttt{p} (\texttt{int}, \texttt{real}, or \texttt{"fro"}, default 2).
@@ -1429,17 +1822,17 @@ EBNF:
 Examples:
 \begin{verbatim}
 # Vector norms
-f.arr.norm([3, 4])            #c# Returns 5.0 (L2 norm)
-f.arr.norm([3, 4], p=1)       #c# Returns 7 (L1 norm)
-f.arr.norm([3, 4], p=0)       #c# Returns 2 (L0 norm)
-f.arr.norm([-3, 4, -2], p=-1) #c# Returns 4 (L-inf norm)
+f.tnsr.norm([3, 4])            #c# Returns 5.0 (L2 norm)
+f.tnsr.norm([3, 4], p=1)       #c# Returns 7 (L1 norm)
+f.tnsr.norm([3, 4], p=0)       #c# Returns 2 (L0 norm)
+f.tnsr.norm([-3, 4, -2], p=-1) #c# Returns 4 (L-inf norm)
 
 # Matrix norms
-f.arr.norm([[1,2],[3,4]])              #c# Returns approximately 5.4649 (spectral norm)
-f.arr.norm([[1,2],[3,4]], p="fro")     #c# Returns approximately 5.4772 (Frobenius)
-f.arr.norm([[1,2],[3,4]], p=1)         #c# Returns 7 (max column sum: |3|+|1|=4, |4|+|2|=6)
-f.arr.norm([[1,2],[3,4]], p=-1)        #c# Returns 3 (min column sum)
-f.arr.norm([[1,2],[3,4]], p=-2)        #c# Returns approximately 0.1010 (smallest singular value)
+f.tnsr.norm([[1,2],[3,4]])              #c# Returns approximately 5.4649 (spectral norm)
+f.tnsr.norm([[1,2],[3,4]], p="fro")     #c# Returns approximately 5.4772 (Frobenius)
+f.tnsr.norm([[1,2],[3,4]], p=1)         #c# Returns 7 (max column sum: |3|+|1|=4, |4|+|2|=6)
+f.tnsr.norm([[1,2],[3,4]], p=-1)        #c# Returns 3 (min column sum)
+f.tnsr.norm([[1,2],[3,4]], p=-2)        #c# Returns approximately 0.1010 (smallest singular value)
 \end{verbatim}
 
 \subsubsection{Normalize Function}
@@ -1447,20 +1840,20 @@ Returns a unit vector in the direction of the input vector: $\hat{\mathbf{x}} = 
 Morphology:
 \begin{verbatim}
 EBNF:
-"f.arr.normalize", "(", list, [",", "p", "=", real], ")"
+"f.tnsr.normalize", "(", list, [",", "p", "=", real], ")"
 \end{verbatim}
 \begin{itemize}
 \item Operands: \texttt{list} of \texttt{int} or \texttt{real} values, optional \texttt{p} (\texttt{int} or \texttt{real}, default 2).
 \item Result: \texttt{list} of \texttt{real} values.
-\item Uses the same norm as \texttt{f.arr.norm} for the denominator.
+\item Uses the same norm as \texttt{f.tnsr.norm} for the denominator.
 \item A \texttt{Division by Zero Error} is raised if the norm of the vector is zero.
 \item A \texttt{Type Error} is raised if the argument is not a list of numeric values.
 \end{itemize}
 Examples:
 \begin{verbatim}
-f.arr.normalize([3, 4])        #c# Returns [0.6, 0.8] (L2)
-f.arr.normalize([3, 4], p=1)   #c# Returns [0.43, 0.57] (L1)
-f.arr.normalize([6, 8], p=2)   #c# Returns [0.6, 0.8] (L2)
+f.tnsr.normalize([3, 4])        #c# Returns [0.6, 0.8] (L2)
+f.tnsr.normalize([3, 4], p=1)   #c# Returns [0.43, 0.57] (L1)
+f.tnsr.normalize([6, 8], p=2)   #c# Returns [0.6, 0.8] (L2)
 \end{verbatim}
 
 \paragraph{Relationship between abs(vec=True) and norm}
@@ -1471,10 +1864,10 @@ The \texttt{clamp} function limits a value to a specified range.\\
 Morphology:
 \begin{verbatim}
 EBNF:
-"f.math.clamp", "(", ( int | real ), ",", ( int | real ), ",", ( int | real ), ")"
+"f.math.clamp", "(", ( int | real | list | tensor ), ",", ( int | real ), ",", ( int | real ), ")"
 \end{verbatim}
 \texttt{f.math.clamp(x, min, max)} returns \texttt{min} if \texttt{x $<$ min}, \texttt{max} if \texttt{x $>$ max}, otherwise \texttt{x}.
-Operates element-wise on lists.\\
+Operates element-wise on lists and tensors.\\
 \paragraph{Edge Cases}
 \begin{itemize}
 \item A \texttt{Value Error} is raised if \texttt{min $>$ max}.
@@ -1482,10 +1875,12 @@ Operates element-wise on lists.\\
 \end{itemize}
 Examples:
 \begin{verbatim}
-f.math.clamp(5, 0, 10)        #c# Returns 5
-f.math.clamp(-3, 0, 10)       #c# Returns 0
-f.math.clamp(15, 0, 10)       #c# Returns 10
-f.math.clamp([-2, 5, 12], 0, 10)  #c# Returns [0, 5, 10]
+f.math.clamp(5, 0, 10)                #c# Returns 5
+f.math.clamp(-3, 0, 10)               #c# Returns 0
+f.math.clamp(15, 0, 10)               #c# Returns 10
+f.math.clamp([-2, 5, 12], 0, 10)      #c# Returns [0, 5, 10]
+f.math.clamp(|[-2, 5, 12], 0, 10)       #c# Returns |[0, 5, 10]
+f.math.clamp(|[[-3, 7],[15, 2]], 0, 10)  #c# Returns |[[0, 7],[10, 2]]
 \end{verbatim}
 
 \subsubsection{Linear Interpolation}
@@ -1922,8 +2317,8 @@ EBNF:
 \end{itemize}
 Examples:
 \begin{verbatim}
-f.math.modInverse(3, 7)     #c# Returns 5  (3*5 = 15 ≡ 1 mod 7)
-f.math.modInverse(10, 17)   #c# Returns 12  (10*12 = 120 ≡ 1 mod 17)
+f.math.modInverse(3, 7)     #c# Returns 5  (3*5 = 15 = 1 mod 7)
+f.math.modInverse(10, 17)   #c# Returns 12  (10*12 = 120 = 1 mod 17)
 \end{verbatim}
 
 \subsubsection{Divides}
@@ -3021,6 +3416,256 @@ f.str.sanitizeIdentifier("123abc")      #c# Returns "_123abc"
 \end{verbatim}
 
 
+\subsection{Vectorization}
+All scalar math, trigonometric, and complex functions automatically operate on tensors element-wise. When a tensor is passed as an argument, the function returns a tensor of the same shape with the operation applied to each element.
+
+\subsubsection{Supported Functions}
+\begin{itemize}
+\item \textbf{f.math:} abs, sqrt, exp, log, log10, log2, exp2, log1p, expm1, floor, ceil, round, sign, cbrt, square, reciprocal, isnan, isinf, angle, real, imag, conj, fmod
+\item \textbf{f.trig:} sin, cos, tan, cot, sec, csc, asin, acos, atan, atan2, sinh, cosh, tanh, asinh, acosh, atanh
+\item \textbf{f.cplx:} conj, real, imag
+\end{itemize}
+
+\subsubsection{Edge Cases}
+\begin{itemize}
+\item Complex results: \texttt{f.math.sqrt(|[-1, 4, 9])} returns \texttt{|[0+1i, 2.0, 3.0]}
+\item Undefined results: \texttt{f.math.log(|[0, 1, 2])} returns \texttt{|[null, 0.0, 0.693]}
+\item Empty tensor: \texttt{f.math.abs(|[])} returns \texttt{|[]}
+\end{itemize}
+
+\subsubsection{Examples}
+\begin{verbatim}
+f.math.abs(|[-3, 4, -5])              #c# Returns |[3, 4, 5]
+f.math.sqrt(|[1, 4, 9, 16])           #c# Returns |[1.0, 2.0, 3.0, 4.0]
+f.math.sqrt(|[-1, 0, 4])              #c# Returns |[0+1i, 0.0, 2.0]
+f.math.exp(|[0, 1, 2])                #c# Returns |[1.0, 2.718, 7.389]
+f.math.log(|[1, 2.718])               #c# Returns |[0.0, 1.0]
+f.trig.sin(|[0, 3.14159/2])           #c# Returns |[0.0, 1.0]
+f.math.floor(|[1.2, 2.7, 3.0])       #c# Returns |[1, 2, 3]
+f.math.isnan(|[1.0, #nan, 3.0])       #c# Returns |[false, true, false]
+\end{verbatim}
+
+
+\subsection{Tensor Indexing}
+Tensor indexing provides flexible access to elements, sub-tensors, and slices of multi-dimensional tensors. Tensors support arbitrary dimensionality (1D, 2D, 3D, ..., nD).
+
+\subsubsection{Element Access}
+Returns a scalar at the specified position.
+\begin{verbatim}
+EBNF:
+expression, "[", indexing_expr, "]"
+\end{verbatim}
+
+\begin{itemize}
+\item \texttt{\$a[i]} --- element at index i (1D $\rightarrow$ scalar)
+\item \texttt{\$a[i, j]} --- element at [i, j] (2D $\rightarrow$ scalar)
+\item \texttt{\$a[i, j, k]} --- element at [i, j, k] (3D $\rightarrow$ scalar)
+\item \texttt{\$a[i, j, k, ...]} --- element at position (nD $\rightarrow$ scalar)
+\item \texttt{\$a[-i]} --- i-th element from end
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$a [tensor]= |[10, 20, 30, 40, 50]
+$a[0]                        #c# Returns 10
+$a[-1]                       #c# Returns 50
+
+$b [tensor]= |[[1,2,3],[4,5,6],[7,8,9]]
+$b[0, 1]                     #c# Returns 2
+$b[2, 2]                     #c# Returns 9
+\end{verbatim}
+
+\subsubsection{Sub-tensor Access}
+Returns a sub-tensor along the first axis.
+\begin{itemize}
+\item \texttt{\$a[i]} --- sub-tensor at position i (2D $\rightarrow$ row, 3D $\rightarrow$ 2D slice)
+\item \texttt{\$a[-i]} --- i-th sub-tensor from end
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$b [tensor]= |[[1,2,3],[4,5,6],[7,8,9]]
+$b[0]                        #c# Returns |[1, 2, 3]  (row 0)
+$b[1]                        #c# Returns |[4, 5, 6]  (row 1)
+$b[-1]                       #c# Returns |[7, 8, 9]  (last row)
+
+$c [tensor]= |[[[1,2],[3,4]],[[5,6],[7,8]]
+$c[0]                        #c# Returns |[[1,2],[3,4]]  (2D slice)
+$c[1]                        #c# Returns |[[5,6],[7,8]]  (2D slice)
+\end{verbatim}
+
+\subsubsection{Slice Access}
+Returns a sub-tensor (copy, not view).
+\begin{itemize}
+\item \texttt{\$a[start:end]} --- elements from start to end (exclusive)
+\item \texttt{\$a[start:end:step]} --- every step-th element
+\item \texttt{\$a[:]} --- copy of entire tensor
+\item \texttt{\$a[:end]} --- from beginning to end
+\item \texttt{\$a[start:]} --- from start to end
+\item \texttt{\$a[::2]} --- every 2nd element
+\item \texttt{\$a[::-1]} --- reversed tensor
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$a [tensor]= |[10, 20, 30, 40, 50]
+$a[1:4]                      #c# Returns |[20, 30, 40]
+$a[:3]                       #c# Returns |[10, 20, 30]
+$a[2:]                       #c# Returns |[30, 40, 50]
+$a[::2]                      #c# Returns |[10, 30, 50]
+$a[::-1]                     #c# Returns |[50, 40, 30, 20, 10]
+$a[:]                        #c# Returns |[10, 20, 30, 40, 50]  (copy)
+
+$b [tensor]= |[[1,2,3],[4,5,6],[7,8,9]]
+$b[0:2]                      #c# Returns |[[1,2,3],[4,5,6]]  (rows 0-1)
+$b[0:2, 1:3]                 #c# Returns |[[2,3],[5,6]]  (sub-matrix)
+$b[:, 0]                     #c# Returns |[1, 4, 7]  (all rows, col 0)
+\end{verbatim}
+
+\subsubsection{Index List Access}
+Returns sub-tensor at specified indices.
+\begin{itemize}
+\item \texttt{\$a[[0, 2, 4]]} --- elements/rows at indices 0, 2, 4
+\item \texttt{\$a[[-1, -2]]} --- last two elements/rows
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$a [tensor]= |[10, 20, 30, 40, 50]
+$a[[0, 2, 4]]                #c# Returns |[10, 30, 50]
+
+$b [tensor]= |[[1,2,3],[4,5,6],[7,8,9]]
+$b[[0, 2]]                   #c# Returns |[[1,2,3],[7,8,9]]  (rows 0 and 2)
+$b[[-1]]                     #c# Returns |[7, 8, 9]  (last row)
+\end{verbatim}
+
+\subsubsection{Boolean Indexing}
+Returns 1D tensor of elements where condition is True.
+\begin{itemize}
+\item \texttt{\$a[condition]} --- elements where condition is True
+\item \texttt{\$a[condition] = value} --- set matching elements
+\item \texttt{\$a[condition] = other[condition]} --- set from another tensor
+\end{itemize}
+
+Conditions: any expression returning a boolean tensor:
+\begin{itemize}
+\item Comparisons: \texttt{\$a > 3}, \texttt{\$a == 0}, \texttt{\$a != 5}
+\item Approximate equality: \texttt{\$a \$\sim{} 3}
+\item Compound: \texttt{\$a > 0 \&\& \$a < 10}
+\item Vectorized functions: \texttt{f.math.isinf(\$a)}, \texttt{f.math.isnan(\$a)}
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$a [tensor]= |[1, 5, 3, 8, 2]
+$a[$a > 3]                   #c# Returns |[5, 8]  (1D tensor)
+$a[$a > 3] = 0               #c# $a is now |[1, 0, 3, 0, 2]
+$a[$a == 0] = |[10, 20]     #c# $a is now |[1, 10, 3, 20, 2]
+
+$f [tensor]= |[1.0, #inf, 3.0, #nan, 5.0]
+$f[f.math.isinf($f)]         #c# Returns |[inf]
+$f[f.math.isnan($f)]         #c# Returns |[nan]
+\end{verbatim}
+
+\subsubsection{Ellipsis Indexing}
+Shorthand for remaining axes.
+\begin{itemize}
+\item \texttt{\$a[..., 0]} --- first element along last axis for all preceding axes
+\item \texttt{\$a[0, ...]} --- first element along first axis for all remaining axes
+\item \texttt{\$a[..., i, j]} --- indices i, j along last two axes
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$c [tensor]= |[[[1,2],[3,4]],[[5,6],[7,8]]
+$c[..., 0]                   #c# Returns |[[1,3],[5,7]]  (first along last axis)
+$c[..., 0, 1]                #c# Returns |[3, 7]
+$c[0, ...]                   #c# Returns |[[1,2],[3,4]]  (same as $c[0])
+\end{verbatim}
+
+\subsubsection{Safe Indexing (\texttt{?[]})}
+Returns null if the left operand is null, otherwise performs normal indexing.
+\begin{itemize}
+\item \texttt{\$a?[i]} --- safe element access --- null if \texttt{\$a} is null
+\item \texttt{\$a?[i, j]} --- safe multi-dim element --- null if \texttt{\$a} is null
+\item \texttt{\$a?[start:end]} --- safe slice --- null if \texttt{\$a} is null
+\item \texttt{\$a?[start:end:step]} --- safe slice with step --- null if \texttt{\$a} is null
+\item \texttt{\$a?[[0, 2, 4]]} --- safe index list --- null if \texttt{\$a} is null
+\item \texttt{\$a?[condition]} --- safe boolean indexing --- null if \texttt{\$a} is null
+\item \texttt{\$a?[..., 0]} --- safe ellipsis --- null if \texttt{\$a} is null
+\end{itemize}
+
+Behavior:
+\begin{itemize}
+\item If left operand is \texttt{null} $\rightarrow$ returns \texttt{null} (no Runtime Error)
+\item If left operand is not null $\rightarrow$ performs normal indexing
+\item Type Error / Value Error still raised if indexing is invalid (wrong type, out of bounds)
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$mat = null
+$mat?[0, 1]              #c# Returns null (no error)
+$mat?[0:2]               #c# Returns null (no error)
+$mat?[0:2, 0]            #c# Returns null (no error)
+$mat?[$mat > 0]          #c# Returns null (no error)
+
+$mat [tensor]= |[[1,2],[3,4]]
+$mat?[0, 1]              #c# Returns 2 (normal indexing)
+$mat?[0:2, 0]            #c# Returns |[1, 3]
+\end{verbatim}
+
+\subsubsection{Assignment}
+All indexing operations support assignment (in-place modification).
+\begin{itemize}
+\item \texttt{\$a[i] = val} --- set single element
+\item \texttt{\$a[i, j] = val} --- set element at [i, j]
+\item \texttt{\$a[start:end] = vals} --- set range
+\item \texttt{\$a[mask] = vals} --- set matching elements
+\end{itemize}
+
+Safe assignment:
+\begin{itemize}
+\item \texttt{\$a?[i] = val} --- safe assignment --- no-op if \texttt{\$a} is null
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$a [tensor]= |[10, 20, 30, 40, 50]
+$a[0] = 99                   #c# $a is now |[99, 20, 30, 40, 50]
+$a[1:3] = |[99, 99]         #c# $a is now |[99, 99, 99, 40, 50]
+$a[$a > 40] = 0              #c# $a is now |[99, 99, 99, 40, 0]
+
+$b [tensor]= |[[1,2,3],[4,5,6],[7,8,9]]
+$b[0] = |[10, 20, 30]       #c# Replace row 0
+$b[1, 2] = 99                #c# Set element at [1,2]
+
+# Safe assignment
+$c = null
+$c?[0] = 99                  #c# No-op ($c is null)
+\end{verbatim}
+
+\subsubsection{Edge Cases}
+\begin{itemize}
+\item Empty tensor: \texttt{\$a[0]} $\rightarrow$ Value Error
+\item Out of bounds: \texttt{\$a[100]} $\rightarrow$ Value Error
+\item Negative out of bounds: \texttt{\$a[-100]} $\rightarrow$ Value Error
+\item Empty result: \texttt{\$a[0:0]} $\rightarrow$ \texttt{|[]} (empty tensor)
+\item Empty mask: \texttt{\$a[\$a > 100]} $\rightarrow$ \texttt{|[]} (empty tensor)
+\item Wrong mask length: \texttt{\$a[|[true, false]]} on 5-element tensor $\rightarrow$ Value Error
+\item Invalid index type: \texttt{\$a["hello"]} $\rightarrow$ Type Error
+\item Safe indexing only suppresses null left operand errors; type/value errors still raised
+\end{itemize}
+
+\subsubsection{Semantics}
+\begin{itemize}
+\item Slicing returns copies, not views (consistent with EDADSL copy-on-assignment semantics)
+\item Boolean indexing returns 1D tensor (not flattened)
+\item Index list returns sub-tensor (preserves dimensionality)
+\item Ellipsis is syntactic sugar for remaining axes
+\end{itemize}
+
+
 \subsection{List and Set Functions}
 
 \subsubsection{Concatenation}
@@ -3185,7 +3830,7 @@ The \texttt{zeros} function creates an array filled with zeros.\\
 Morphology:
 \begin{verbatim}
 EBNF:
-"f.arr.zeros", "(", shape, ")"
+"f.tnsr.zeros", "(", shape, ")"
 \end{verbatim}
 \begin{itemize}
 \item Operands: int (length for 1D), or list of ints (dimensions for nD)
@@ -3194,8 +3839,8 @@ EBNF:
 \end{itemize}
 Examples:
 \begin{verbatim}
-f.arr.zeros(5)           #c# Returns [0, 0, 0, 0, 0]
-f.arr.zeros([2, 3])      #c# Returns [[0,0,0],[0,0,0]]
+f.tnsr.zeros(5)           #c# Returns [0, 0, 0, 0, 0]
+f.tnsr.zeros([2, 3])      #c# Returns [[0,0,0],[0,0,0]]
 \end{verbatim}
 
 \paragraph{Ones}
@@ -3203,7 +3848,7 @@ The \texttt{ones} function creates an array filled with ones.\\
 Morphology:
 \begin{verbatim}
 EBNF:
-"f.arr.ones", "(", shape, ")"
+"f.tnsr.ones", "(", shape, ")"
 \end{verbatim}
 \begin{itemize}
 \item Operands: int (length for 1D), or list of ints (dimensions for nD)
@@ -3212,8 +3857,8 @@ EBNF:
 \end{itemize}
 Examples:
 \begin{verbatim}
-f.arr.ones(4)            #c# Returns [1, 1, 1, 1]
-f.arr.ones([2, 2])       #c# Returns [[1,1],[1,1]]
+f.tnsr.ones(4)            #c# Returns [1, 1, 1, 1]
+f.tnsr.ones([2, 2])       #c# Returns [[1,1],[1,1]]
 \end{verbatim}
 
 \paragraph{Identity Matrix}
@@ -3221,17 +3866,432 @@ The \texttt{identity} function creates an $n \times n$ identity matrix.\\
 Morphology:
 \begin{verbatim}
 EBNF:
-"f.arr.identity", "(", int, ")"
+"f.tnsr.identity", "(", int, ")"
 \end{verbatim}
 \begin{itemize}
 \item Operands: int (n $\geq$ 0)
 \item Result: tensor (n$\times$n) with 1s on the diagonal and 0s elsewhere
-\item \texttt{f.arr.identity(0)} returns a 0$\times$0 matrix \texttt{[[]]}.
+\item \texttt{f.tnsr.identity(0)} returns a 0$\times$0 matrix \texttt{[[]]}.
 \end{itemize}
 Examples:
 \begin{verbatim}
-f.arr.identity(1)        #c# Returns [[1]]
-f.arr.identity(3)        #c# Returns [[1,0,0],[0,1,0],[0,0,1]]
+f.tnsr.identity(1)        #c# Returns [[1]]
+f.tnsr.identity(3)        #c# Returns [[1,0,0],[0,1,0],[0,0,1]]
+\end{verbatim}
+
+\paragraph{Full}
+The \texttt{full} function creates a tensor filled with a constant value.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.full", "(", list[int], ",", ( int | real | complex ), ")"
+\end{verbatim}
+\begin{itemize}
+\item First argument: shape (list of ints, e.g., \texttt{[3, 4]})
+\item Second argument: fill value
+\item Result: tensor of specified shape filled with value
+\item A \texttt{Value Error} is raised for negative dimensions.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.full([3, 4], 0)           #c# Returns [[0,0,0,0],[0,0,0,0],[0,0,0,0]]
+f.tnsr.full([2, 3], 5.5)         #c# Returns [[5.5,5.5,5.5],[5.5,5.5,5.5]]
+f.tnsr.full([5], #inf)           #c# Returns [inf, inf, inf, inf, inf]
+f.tnsr.full([2, 2], 1+2i)        #c# Returns [[1+2i,1+2i],[1+2i,1+2i]]
+\end{verbatim}
+
+\paragraph{Diagonal}
+The \texttt{diag} function creates a diagonal matrix from a list, or extracts the diagonal from a 2D tensor.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.diag", "(", argument, ")"
+\end{verbatim}
+\begin{itemize}
+\item 1D input: creates square matrix with input on diagonal, zeros elsewhere
+\item 2D input: extracts diagonal as 1D list
+\item Result: tensor (creation) or list (extraction)
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.diag([1, 2, 3])                  #c# Returns [[1,0,0],[0,2,0],[0,0,3]]
+f.tnsr.diag([5])                         #c# Returns [[5]]
+f.tnsr.diag(|[[1,2,3],[4,5,6],[7,8,9]])  #c# Returns [1, 5, 9]
+f.tnsr.diag(|[[1,2,3,4],[5,6,7,8]])      #c# Returns [1, 6]
+\end{verbatim}
+
+\paragraph{Diagonal Flat}
+The \texttt{diagflat} function creates a 2D tensor with the input flattened on the diagonal.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.diagflat", "(", argument, ")"
+\end{verbatim}
+\begin{itemize}
+\item Flattens input and creates square matrix with values on diagonal
+\item Result: 2D tensor
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.diagflat([1, 2, 3])              #c# Returns [[1,0,0],[0,2,0],[0,0,3]]
+f.tnsr.diagflat([[1, 2], [3]])          #c# Returns [[1,0,0,0],[0,2,0,0],[0,0,3,0],[0,0,0,0]]
+\end{verbatim}
+
+\paragraph{Lower Triangle}
+The \texttt{tril} function returns the lower triangle of a tensor.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.tril", "(", tensor, ")"
+\end{verbatim}
+\begin{itemize}
+\item Returns elements on and below the main diagonal
+\item Elements above diagonal become 0
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.tril(|[[1,2,3],[4,5,6],[7,8,9]])  #c# Returns [[1,0,0],[4,5,0],[7,8,9]]
+f.tnsr.tril(|[[1,2],[3,4]])               #c# Returns [[1,0],[3,4]]
+\end{verbatim}
+
+\paragraph{Upper Triangle}
+The \texttt{triu} function returns the upper triangle of a tensor.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.triu", "(", tensor, ")"
+\end{verbatim}
+\begin{itemize}
+\item Returns elements on and above the main diagonal
+\item Elements below diagonal become 0
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.triu(|[[1,2,3],[4,5,6],[7,8,9]])  #c# Returns [[1,2,3],[0,5,6],[0,0,9]]
+f.tnsr.triu(|[[1,2],[3,4]])               #c# Returns [[1,2],[0,4]]
+\end{verbatim}
+
+\paragraph{Eye}
+The \texttt{eye} function creates an identity matrix with optional diagonal offset.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.eye", "(", int, [ ",", "k", "=", int ], ")"
+\end{verbatim}
+\begin{itemize}
+\item First argument: size (n$\times$n matrix)
+\item Optional k: diagonal offset (0=main, positive=above, negative=below)
+\item Result: tensor with 1s on specified diagonal, 0s elsewhere
+\item A \texttt{Value Error} is raised if n $\leq$ 0.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.eye(3)             #c# Returns [[1,0,0],[0,1,0],[0,0,1]]
+f.tnsr.eye(2)             #c# Returns [[1,0],[0,1]]
+f.tnsr.eye(3, k=1)       #c# Returns [[0,1,0],[0,0,1],[0,0,0]]
+f.tnsr.eye(3, k=-1)      #c# Returns [[0,0,0],[1,0,0],[0,1,0]]
+f.tnsr.eye(4, k=2)       #c# Returns [[0,0,1,0],[0,0,0,1],[0,0,0,0],[0,0,0,0]]
+\end{verbatim}
+
+\subsubsection{Dimension Manipulation}
+
+\paragraph{Stack}
+The \texttt{stack} function stacks tensors along a new axis.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.stack", "(", list[tensor], [ ",", "axis", "=", int ], ")"
+\end{verbatim}
+\begin{itemize}
+\item First argument: list of tensors (same shape)
+\item Optional axis: dimension along which to stack (default 0)
+\item Result: tensor with one additional dimension
+\item A \texttt{Value Error} is raised if list is empty, shapes differ, or axis is out of range.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.stack([|[1,2], |[3,4], |[5,6]])           #c# Returns [[1,2],[3,4],[5,6]]
+f.tnsr.stack([|[1,2], |[3,4]], axis=1)           #c# Returns [[1,3],[2,4]]
+\end{verbatim}
+
+\paragraph{Vertical Stack}
+The \texttt{vstack} function stacks tensors vertically (row-wise).\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.vstack", "(", list[tensor], ")"
+\end{verbatim}
+\begin{itemize}
+\item All tensors must have same number of columns
+\item Result: concatenated tensor along first axis
+\item A \texttt{Value Error} is raised if list is empty or columns differ.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.vstack([|[1,2], |[3,4], |[5,6]])   #c# Returns [[1,2],[3,4],[5,6]]
+f.tnsr.vstack([|[1,2,3], |[4,5,6]])       #c# Returns [[1,2,3],[4,5,6]]
+\end{verbatim}
+
+\paragraph{Horizontal Stack}
+The \texttt{hstack} function stacks tensors horizontally (column-wise).\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.hstack", "(", list[tensor], ")"
+\end{verbatim}
+\begin{itemize}
+\item All tensors must have same number of rows
+\item For 1D: concatenates along first axis
+\item A \texttt{Value Error} is raised if list is empty or rows differ.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.hstack([|[1,2], |[3,4]])       #c# Returns [1,2,3,4]
+f.tnsr.hstack([|[1,2], |[3,4]], |[5,6], |[7,8]])  #c# Returns [[1,2,5,7],[3,4,6,8]]
+\end{verbatim}
+
+\paragraph{Swap Axes}
+The \texttt{swapaxes} function swaps two axes of a tensor.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.swapaxes", "(", tensor, ",", int, ",", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Swaps the two specified axes
+\item A \texttt{Value Error} is raised if axes are out of range.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.swapaxes(|[[1,2,3],[4,5,6]], 0, 1)  #c# Returns [[1,4],[2,5],[3,6]]
+f.tnsr.swapaxes(|[[1,2],[3,4]], 0, 1)      #c# Returns [[1,3],[2,4]]
+\end{verbatim}
+
+\paragraph{Expand Dimensions}
+The \texttt{expandDims} function inserts a new dimension of size 1.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.expandDims", "(", tensor, ",", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Second argument: axis where new dimension is inserted
+\item Negative axis counts from end
+\item A \texttt{Value Error} is raised if axis is out of range.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.expandDims(|[1,2,3], 0)          #c# Returns [[1,2,3]]
+f.tnsr.expandDims(|[1,2,3], 1)          #c# Returns [[1],[2],[3]]
+f.tnsr.expandDims(|[[1,2],[3,4]], 2)    #c# Returns [[[1,2]],[[3,4]]]
+\end{verbatim}
+
+\paragraph{Squeeze}
+The \texttt{squeeze} function removes dimensions of size 1.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.squeeze", "(", tensor, ")"
+\end{verbatim}
+\begin{itemize}
+\item Removes all dimensions with size 1
+\item Returns copy if no dimensions to squeeze
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.squeeze(|[[1,2,3]])              #c# Returns [1,2,3]
+f.tnsr.squeeze(|[[1],[2],[3]])          #c# Returns [1,2,3]
+f.tnsr.squeeze(|[[[1,2]]])             #c# Returns [1,2]
+f.tnsr.squeeze(|[[1,2],[3,4]])          #c# Returns [[1,2],[3,4]]
+\end{verbatim}
+
+\paragraph{Flip}
+The \texttt{flip} function flips tensor along specified axis.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.flip", "(", tensor, [ ",", "axis", "=", int ], ")"
+\end{verbatim}
+\begin{itemize}
+\item Optional axis: dimension to flip (default 0)
+\item A \texttt{Value Error} is raised if axis is out of range.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.flip(|[1,2,3,4,5])               #c# Returns [5,4,3,2,1]
+f.tnsr.flip(|[[1,2,3],[4,5,6]], axis=0) #c# Returns [[4,5,6],[1,2,3]]
+f.tnsr.flip(|[[1,2,3],[4,5,6]], axis=1) #c# Returns [[3,2,1],[6,5,4]]
+\end{verbatim}
+
+\paragraph{Flip Vertical}
+The \texttt{flipud} function flips vertically (up-down). Equivalent to \texttt{flip(tensor, axis=0)}.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.flipud", "(", tensor, ")"
+\end{verbatim}
+Examples:
+\begin{verbatim}
+f.tnsr.flipud(|[1,2,3,4,5])             #c# Returns [5,4,3,2,1]
+f.tnsr.flipud(|[[1,2],[3,4]])           #c# Returns [[3,4],[1,2]]
+\end{verbatim}
+
+\paragraph{Flip Horizontal}
+The \texttt{fliplr} function flips horizontally (left-right). Equivalent to \texttt{flip(tensor, axis=1)}.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.fliplr", "(", tensor, ")"
+\end{verbatim}
+Examples:
+\begin{verbatim}
+f.tnsr.fliplr(|[[1,2,3],[4,5,6]])       #c# Returns [[3,2,1],[6,5,4]]
+f.tnsr.fliplr(|[1,2,3,4,5])            #c# Returns [5,4,3,2,1]
+\end{verbatim}
+
+\paragraph{Rotate 90}
+The \texttt{rot90} function rotates tensor 90° counterclockwise k times.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.rot90", "(", tensor, [ ",", "k", "=", int ], ")"
+\end{verbatim}
+\begin{itemize}
+\item Optional k: number of 90° rotations (default 1)
+\item Negative k: clockwise rotation
+\item Must be 2D tensor
+\item A \texttt{Type Error} is raised for non-2D tensors.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.rot90(|[[1,2,3],[4,5,6]])         #c# Returns [[3,6],[2,5],[1,4]]
+f.tnsr.rot90(|[[1,2,3],[4,5,6]], k=2)   #c# Returns [[6,5,4],[3,2,1]]
+f.tnsr.rot90(|[[1,2],[3,4]], k=-1)       #c# Returns [[2,4],[1,3]]
+\end{verbatim}
+
+\paragraph{Repeat}
+The \texttt{repeat} function repeats each element specified number of times.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.repeat", "(", tensor, ",", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Second argument: repeat count per element
+\item Returns flattened result
+\item A \texttt{Value Error} is raised if count $\leq$ 0.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.repeat(|[1,2,3], 3)    #c# Returns [1,1,1,2,2,2,3,3,3]
+f.tnsr.repeat(|[1,2], 2)      #c# Returns [1,1,2,2]
+\end{verbatim}
+
+\paragraph{Tile}
+The \texttt{tile} function tiles tensor by repeating it along each axis.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.tile", "(", tensor, ",", ( int | list[int] ), ")"
+\end{verbatim}
+\begin{itemize}
+\item Single int: repeat that many times along all axes
+\item List: repeat along each axis respectively
+\item A \texttt{Value Error} is raised for negative reps.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.tile(|[1,2,3], 2)               #c# Returns [1,2,3,1,2,3]
+f.tnsr.tile(|[[1,2],[3,4]], [2, 3])    #c# Returns [[1,2,1,2,1,2],[3,4,3,4,3,4],[1,2,1,2,1,2],[3,4,3,4,3,4]]
+\end{verbatim}
+
+\paragraph{Pad}
+The \texttt{pad} function pads tensor with values.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.pad", "(", tensor, ",", ( int | list[int] ), [ ",", "constant", "=", real ], ")"
+\end{verbatim}
+\begin{itemize}
+\item Second argument: padding amount ([before, after] for 1D, [[top,bottom],[left,right]] for 2D)
+\item Optional constant: fill value (default 0)
+\item A \texttt{Value Error} is raised for negative padding.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.pad(|[1,2,3], [2, 1])                  #c# Returns [0,0,1,2,3,0]
+f.tnsr.pad(|[1,2,3], [1, 2], constant=9)      #c# Returns [9,1,2,3,9,9]
+f.tnsr.pad(|[[1,2],[3,4]], [[1,1],[0,0]])      #c# Returns [[0,0],[1,2],[3,4],[0,0]]
+\end{verbatim}
+
+\paragraph{Append}
+The \texttt{append} function appends second tensor to first (flattened).\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.append", "(", tensor, ",", tensor, ")"
+\end{verbatim}
+\begin{itemize}
+\item Returns 1D tensor
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.append(|[1,2], |[3,4,5])       #c# Returns [1,2,3,4,5]
+f.tnsr.append(|[[1,2]], |[[3,4]])      #c# Returns [1,2,3,4]
+\end{verbatim}
+
+\paragraph{Insert}
+The \texttt{insert} function inserts values at specified position.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.insert", "(", tensor, ",", int, ",", tensor, ")"
+\end{verbatim}
+\begin{itemize}
+\item Negative index counts from end
+\item Returns new tensor (original unchanged)
+\item A \texttt{Value Error} is raised if index is out of range.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.insert(|[1,2,5], 2, |[3,4])     #c# Returns [1,2,3,4,5]
+f.tnsr.insert(|[1,2,3], -1, |[10])     #c# Returns [1,2,10,3]
+\end{verbatim}
+
+\paragraph{Delete}
+The \texttt{delete} function removes element at specified position.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.delete", "(", tensor, ",", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Negative index counts from end
+\item Returns new tensor (original unchanged)
+\item A \texttt{Value Error} is raised if index is out of range.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.delete(|[1,2,3,4,5], 2)       #c# Returns [1,2,4,5]
+f.tnsr.delete(|[1,2,3,4,5], -1)      #c# Returns [1,2,3,4]
+\end{verbatim}
+
+\paragraph{Trim Zeros}
+The \texttt{trimZeros} function removes leading and trailing zeros.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.trimZeros", "(", tensor, ")"
+\end{verbatim}
+\begin{itemize}
+\item Keeps internal zeros
+\item Returns empty tensor if all zeros
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.trimZeros(|[0,0,1,2,0,3,0,0])   #c# Returns [1,2,0,3]
+f.tnsr.trimZeros(|[0,0,0])              #c# Returns []
+f.tnsr.trimZeros(|[1,2,3])              #c# Returns [1,2,3]
 \end{verbatim}
 
 \paragraph{Edge Cases -- Reduction Functions}
@@ -3433,26 +4493,487 @@ EBNF:
 f.stat.argmax([5, 3, 1, 4])   #c# Returns 0 (index of 5)
 \end{verbatim}
 
+\paragraph{Binary Search}
+The \texttt{searchsorted} function finds the index where a value should be inserted to maintain sort order.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.util.searchsorted", "(", list, ",", ( int | real ), [ ",", string ], ")"
+\end{verbatim}
+\begin{itemize}
+\item First argument: sorted list
+\item Second argument: value to insert
+\item Optional side: \texttt{"left"} (default) or \texttt{"right"}
+\item Returns index where value should be inserted
+\item List must be sorted; behavior is undefined for unsorted lists.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.util.searchsorted([1, 2, 3, 4, 5], 3)            #c# Returns 2
+f.util.searchsorted([1, 2, 3, 4, 5], 3, "left")    #c# Returns 2
+f.util.searchsorted([1, 2, 3, 4, 5], 3, "right")   #c# Returns 3
+f.util.searchsorted([1, 2, 4, 5], 3)                #c# Returns 2
+f.util.searchsorted([], 5)                           #c# Returns 0
+\end{verbatim}
+
+\paragraph{Partial Sort}
+The \texttt{partition} function rearranges a list so the kth element is in its sorted position.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.util.partition", "(", list, ",", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Returns modified list (original unchanged)
+\item Elements before kth are ≤ it; elements after are ≥ it
+\item A \texttt{Value Error} is raised if k is out of range or list is empty.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.util.partition([3, 1, 4, 1, 5, 9, 2, 6], 3)  #c# Returns [1,1,2,3,4,5,6,9]
+f.util.partition([5, 3, 1, 4, 2], 0)             #c# Returns [1,2,3,4,5]
+f.util.partition([5, 3, 1, 4, 2], 4)             #c# Returns [1,2,3,4,5]
+\end{verbatim}
+
+\paragraph{Set Intersection}
+The \texttt{intersect} function returns sorted list of common elements (with duplicates removed).\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.util.intersect", "(", list, ",", list, ")"
+\end{verbatim}
+Examples:
+\begin{verbatim}
+f.util.intersect([1, 2, 3, 4], [3, 4, 5, 6])   #c# Returns [3, 4]
+f.util.intersect([1, 1, 2], [1, 2, 2])          #c# Returns [1, 2]
+f.util.intersect([1, 2], [3, 4])                 #c# Returns []
+\end{verbatim}
+
+\paragraph{Set Union}
+The \texttt{union} function returns sorted list of unique elements from both lists.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.util.union", "(", list, ",", list, ")"
+\end{verbatim}
+Examples:
+\begin{verbatim}
+f.util.union([1, 2, 3], [3, 4, 5])     #c# Returns [1, 2, 3, 4, 5]
+f.util.union([1, 1, 2], [2, 3, 3])     #c# Returns [1, 2, 3]
+f.util.union([], [1, 2])                #c# Returns [1, 2]
+\end{verbatim}
+
+\paragraph{Set Difference}
+The \texttt{setdiff} function returns elements in first list but not in second.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.util.setdiff", "(", list, ",", list, ")"
+\end{verbatim}
+Examples:
+\begin{verbatim}
+f.util.setdiff([1, 2, 3, 4], [3, 4, 5, 6])   #c# Returns [1, 2]
+f.util.setdiff([1, 2, 3], [1, 2, 3])           #c# Returns []
+f.util.setdiff([1, 2, 3], [])                   #c# Returns [1, 2, 3]
+\end{verbatim}
+
+\paragraph{Is In}
+The \texttt{isin} function returns boolean list indicating membership in second list.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.util.isin", "(", list, ",", list, ")"
+\end{verbatim}
+Examples:
+\begin{verbatim}
+f.util.isin([1, 2, 3, 4], [2, 4, 6])     #c# Returns [false, true, false, true]
+f.util.isin([1, 2, 3], [1, 2, 3])         #c# Returns [true, true, true]
+f.util.isin([1, 2], [])                    #c# Returns [false, false]
+\end{verbatim}
+
+\paragraph{Is In (Flattened)}
+The \texttt{in1d} function tests membership after flattening the first list.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.util.in1d", "(", list, ",", list, ")"
+\end{verbatim}
+Examples:
+\begin{verbatim}
+f.util.in1d([1, 2, 3], [2, 3, 4])       #c# Returns [false, true, true]
+f.util.in1d(|[[1,2],[3,4]], [2,4])       #c# Returns [false, true, false, true]
+\end{verbatim}
+
+\paragraph{Select}
+The \texttt{select} function selects values from choices based on conditions.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.util.select", "(", list[lambda], ",", list, [ ",", "default", "=", data ], ")"
+\end{verbatim}
+\begin{itemize}
+\item First argument: list of conditions (lambdas returning bool)
+\item Second argument: list of choices (same length as conditions)
+\item Optional default: value for elements matching no condition
+\item A \texttt{Value Error} is raised if condition and choice lists differ in length.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.util.select(
+    [L::($x [int])->{ $x > 0 }, L::($x [int])->{ $x < 0 }],
+    [1, -1],
+    default=0
+) on [1, -2, 3]
+#c# Returns [1, -1, 1]
+
+f.util.select([L::($x [int])->{ $x > 5 }], [100]) on [1, 2, 3]
+#c# Returns [100, 100, 100]
+
+f.util.select([L::($x [int])->{ $x > 10 }], [999], default=0) on [1, 2, 3]
+#c# Returns [0, 0, 0]
+\end{verbatim}
+
+\paragraph{Compress}
+The \texttt{compress} function selects elements where boolean mask is True.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.util.compress", "(", list[bool], ",", list, ")"
+\end{verbatim}
+\begin{itemize}
+\item A \texttt{Value Error} is raised if lists differ in length.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.util.compress([true, false, true, false], [10, 20, 30, 40])   #c# Returns [10, 30]
+f.util.compress([true, true, true], [1, 2, 3])                   #c# Returns [1, 2, 3]
+f.util.compress([false, false, false], [1, 2, 3])                #c# Returns []
+\end{verbatim}
+
+\subsubsection{Advanced Indexing}
+
+\paragraph{Place}
+The \texttt{place} function modifies a tensor in-place, placing values where mask is True.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.util.place", "(", tensor, ",", tensor[bool], ",", tensor, ")"
+\end{verbatim}
+\begin{itemize}
+\item Modifies first tensor in-place, returns null
+\item A \texttt{Value Error} is raised if mask and data lengths differ.
+\end{itemize}
+Examples:
+\begin{verbatim}
+$a [tensor]= |[0, 0, 0, 0, 0]
+f.util.place($a, |[true, false, true, false, true], |[10, 20, 30])
+#a# $a is now |[10, 0, 20, 0, 30]
+
+$b [tensor]= |[1, 2, 3, 4, 5]
+f.util.place($b, |[false, false, false, false, false], |[99, 99, 99, 99, 99])
+#b# $b is unchanged |[1, 2, 3, 4, 5]
+\end{verbatim}
+
+\paragraph{Put}
+The \texttt{put} function modifies a tensor in-place, placing values at specified indices.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.util.put", "(", tensor, ",", list[int], ",", tensor, ")"
+\end{verbatim}
+\begin{itemize}
+\item Modifies first tensor in-place, returns null
+\item Indices can repeat; last write wins
+\item A \texttt{Value Error} is raised if any index is out of range.
+\end{itemize}
+Examples:
+\begin{verbatim}
+$a [tensor]= |[0, 0, 0, 0, 0]
+f.util.put($a, [0, 2, 4], |[10, 20, 30])
+#a# $a is now |[10, 0, 20, 0, 30]
+
+$b [tensor]= |[1, 2, 3, 4, 5]
+f.util.put($b, [1, 1, 3], |[100, 200, 300])
+#b# $b is now |[1, 200, 3, 300, 5]
+\end{verbatim}
+
+\paragraph{Take}
+The \texttt{take} function returns a new tensor with elements at specified indices.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.util.take", "(", tensor, ",", list[int], ")"
+\end{verbatim}
+\begin{itemize}
+\item Indices can repeat
+\item A \texttt{Value Error} is raised if any index is out of range.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.util.take(|[10, 20, 30, 40, 50], [0, 2, 4])   #c# Returns |[10, 30, 50]
+f.util.take(|[10, 20, 30, 40, 50], [4, 3, 2, 1]) #c# Returns |[50, 40, 30, 20]
+f.util.take(|[[1,2],[3,4],[5,6]], [0, 2])         #c# Returns |[[1,2],[5,6]]
+\end{verbatim}
+
+\paragraph{Choose}
+The \texttt{choose} function selects elements from choice lists based on indices.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.util.choose", "(", list[int], ",", list[list], ")"
+\end{verbatim}
+\begin{itemize}
+\item Element i is from choice list at index given by first argument
+\item A \texttt{Value Error} is raised if index is out of range or choice lists differ in length.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.util.choose([0, 1, 2, 1], [[10, 11], [20, 21], [30, 31]])
+#c# Returns |[10, 21, 30, 21]
+
+f.util.choose([0, 0, 0], [[1, 2, 3]])
+#c# Returns |[1, 1, 1]
+\end{verbatim}
+
+\paragraph{Index Mesh}
+The \texttt{ix\_} function creates open mesh for cross-indexing.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.util.ix_", "(", list[int], ",", list[int], ")"
+\end{verbatim}
+\begin{itemize}
+\item Returns [rowIndices, colIndices] as 1D tensors
+\item Used for selecting sub-matrices with tensor indexing
+\end{itemize}
+Examples:
+\begin{verbatim}
+$f [tensor]= |[[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+$rowIndices, $colIndices = f.util.ix_([0, 2], [1, 2])
+$f[$rowIndices, $colIndices]           #c# Returns |[[2, 3], [8, 9]]
+
+$rowIndices, $colIndices = f.util.ix_([0, 1], [0])
+$f[$rowIndices, $colIndices]           #c# Returns |[[1], [4]]
+\end{verbatim}
+
+\paragraph{Diagonal Indices}
+The \texttt{diagIndices} function returns indices of main diagonal.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.util.diagIndices", "(", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Returns [rowIndices, colIndices]
+\item A \texttt{Value Error} is raised if n $\leq$ 0.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.util.diagIndices(3)     #c# Returns [[0, 1, 2], [0, 1, 2]]
+
+$a [tensor]= |[[1,2,3],[4,5,6],[7,8,9]]
+$rows, $cols = f.util.diagIndices(3)
+$a[$rows, $cols]          #c# Returns |[1, 5, 9]
+\end{verbatim}
+
+\paragraph{Lower Triangle Indices}
+The \texttt{trilIndices} function returns indices of lower triangle (including diagonal).\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.util.trilIndices", "(", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Returns [rowIndices, colIndices]
+\item A \texttt{Value Error} is raised if n $\leq$ 0.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.util.trilIndices(3)     #c# Returns [[0,1,1,2,2,2], [0,0,1,0,1,2]]
+
+$a [tensor]= |[[1,2,3],[4,5,6],[7,8,9]]
+$rows, $cols = f.util.trilIndices(3)
+$a[$rows, $cols]          #c# Returns |[1, 4, 5, 7, 8, 9]
+\end{verbatim}
+
+\paragraph{Upper Triangle Indices}
+The \texttt{triuIndices} function returns indices of upper triangle (including diagonal).\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.util.triuIndices", "(", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Returns [rowIndices, colIndices]
+\item A \texttt{Value Error} is raised if n $\leq$ 0.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.util.triuIndices(3)     #c# Returns [[0,0,0,1,1,2], [0,1,2,1,2,2]]
+
+$a [tensor]= |[[1,2,3],[4,5,6],[7,8,9]]
+$rows, $cols = f.util.triuIndices(3)
+$a[$rows, $cols]          #c# Returns |[1, 2, 3, 5, 6, 9]
+\end{verbatim}
+
 \subsubsection{Shape Functions}
 \paragraph{Flatten}
 \begin{verbatim}
 EBNF:
-"f.arr.flatten", "(", argument, ")"
+"f.tnsr.flatten", "(", argument, ")"
 \end{verbatim}
 Flattens one level of nesting. Already-flat lists are returned unchanged. Empty lists return \texttt{[]}.
 \begin{verbatim}
-f.arr.flatten([[1,2],[3,4],[5,6]])   #c# Returns [1, 2, 3, 4, 5, 6]
-f.arr.flatten([[1,2,3]])             #c# Returns [1, 2, 3]
-f.arr.flatten([1, 2, 3])            #c# Returns [1, 2, 3]  (already flat)
-f.arr.flatten([])                   #c# Returns []
+f.tnsr.flatten([[1,2],[3,4],[5,6]])   #c# Returns [1, 2, 3, 4, 5, 6]
+f.tnsr.flatten([[1,2,3]])             #c# Returns [1, 2, 3]
+f.tnsr.flatten([1, 2, 3])            #c# Returns [1, 2, 3]  (already flat)
+f.tnsr.flatten([])                   #c# Returns []
+\end{verbatim}
+
+\paragraph{Shape}
+Returns the shape of a tensor as a list of ints. Empty tensors \texttt{|[]} return \texttt{[]} (0D).
+\begin{verbatim}
+EBNF:
+"f.tnsr.shape", "(", argument, ")"
+\end{verbatim}
+\begin{verbatim}
+f.tnsr.shape(|[1, 2, 3])            #c# Returns [3]
+f.tnsr.shape(|[[1,2],[3,4]])        #c# Returns [2, 2]
+f.tnsr.shape(|[[[1]]])              #c# Returns [1, 1, 1]
+f.tnsr.shape(|[[[[1,2],[3,4]],[[5,6],[7,8]]]])  #c# Returns [2, 2, 2, 2]
+f.tnsr.shape(|[])                   #c# Returns []  (0D)
+\end{verbatim}
+
+\paragraph{Dimensions}
+Returns the number of dimensions (axes) of a tensor. Empty tensors \texttt{|[]} return \texttt{0} (0D).
+\begin{verbatim}
+EBNF:
+"f.tnsr.dims", "(", argument, ")"
+\end{verbatim}
+\begin{verbatim}
+f.tnsr.dims(|[1, 2, 3])            #c# Returns 1
+f.tnsr.dims(|[[1,2],[3,4]])        #c# Returns 2
+f.tnsr.dims(|[[[1]]])              #c# Returns 3
+f.tnsr.dims(|[])                   #c# Returns 0  (0D)
+\end{verbatim}
+
+\paragraph{Data Type}
+Returns the element type as a string, or \texttt{null} for empty tensors.
+\begin{verbatim}
+EBNF:
+"f.tnsr.dtype", "(", argument, ")"
+\end{verbatim}
+\begin{verbatim}
+f.tnsr.dtype(|[1, 2, 3])           #c# Returns "int"
+f.tnsr.dtype(|[1.0, 2.5])         #c# Returns "real"
+f.tnsr.dtype(|[true, false])      #c# Returns "bool"
+f.tnsr.dtype(|[1, 2.0])           #c# Returns "mixed"
+f.tnsr.dtype(|[])                  #c# Returns null
+\end{verbatim}
+
+\paragraph{Size}
+Returns the total number of elements in a tensor. Empty tensors \texttt{|[]} return \texttt{0}.
+\begin{verbatim}
+EBNF:
+"f.tnsr.size", "(", argument, ")"
+\end{verbatim}
+\begin{verbatim}
+f.tnsr.size(|[1, 2, 3])           #c# Returns 3
+f.tnsr.size(|[[1,2],[3,4]])       #c# Returns 4
+f.tnsr.size(|[[[1,2],[3,4]],[[5,6],[7,8]]])  #c# Returns 8
+f.tnsr.size(|[])                  #c# Returns 0
+\end{verbatim}
+
+\paragraph{Memory}
+Returns the runtime memory usage of a tensor in bytes. Measured via runtime introspection — no compile-time limit.
+\begin{verbatim}
+EBNF:
+"f.tnsr.tmem", "(", argument, ")"
+\end{verbatim}
+\begin{verbatim}
+f.tnsr.tmem(|[1, 2, 3])           #c# Returns 12  (3 int × 4 bytes)
+f.tnsr.tmem(|[1.0, 2.0])         #c# Returns 16  (2 real × 8 bytes)
+f.tnsr.tmem(|[[1,2],[3,4]])       #c# Returns 16  (4 int × 4 bytes)
+f.tnsr.tmem(|[])                  #c# Returns 0  (0D)
+\end{verbatim}
+
+\subsubsection{Cumulative Operations}
+
+\paragraph{Cumulative Sum}
+Returns the cumulative sum of elements along the given axis.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.csum", "(", argument, [ ",", "axis", "=", int ], ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: list or tensor, optional axis (default: last axis)
+\item Result: list or tensor of cumulative sums
+\item A \texttt{Value Error} is raised if axis is out of bounds.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.csum([1, 2, 3])                  #c# Returns [1, 3, 6]
+f.tnsr.csum([1.0, 2.0, 3.0])           #c# Returns [1.0, 3.0, 6.0]
+f.tnsr.csum([true, true, false])        #c# Returns [1, 2, 2]
+f.tnsr.csum([])                          #c# Returns []
+f.tnsr.csum(|[[1,2],[3,4]], axis=0)    #c# Returns |[[1,2],[4,6]]
+f.tnsr.csum(|[[1,2],[3,4]], axis=1)    #c# Returns |[[1,3],[3,7]]
+\end{verbatim}
+
+\paragraph{Cumulative Product}
+Returns the cumulative product of elements along the given axis.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.cprod", "(", argument, [ ",", "axis", "=", int ], ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: list or tensor, optional axis (default: last axis)
+\item Result: list or tensor of cumulative products
+\item A \texttt{Value Error} is raised if axis is out of bounds.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.cprod([1, 2, 3])                 #c# Returns [1, 2, 6]
+f.tnsr.cprod([0, 1, 2])                 #c# Returns [0, 0, 0]
+f.tnsr.cprod([])                         #c# Returns []
+\end{verbatim}
+
+\paragraph{Difference}
+Returns the nth discrete difference along the given axis.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.diff", "(", argument, [ ",", "n", "=", int ], [ ",", "axis", "=", int ], ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: list or tensor, optional n (default: 1), optional axis (default: last axis)
+\item Result: list or tensor with difference applied
+\item A \texttt{Value Error} is raised if \texttt{n $<$ 0} or axis is out of bounds.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.diff([1, 2, 4, 7])                 #c# Returns [1, 2, 3]
+f.tnsr.diff([1, 2, 4, 7], n=2)           #c# Returns [1, 1]
+f.tnsr.diff([1])                           #c# Returns []  (single element)
+f.tnsr.diff([])                            #c# Returns []
+f.tnsr.diff(|[[1,2],[4,7]], axis=1)      #c# Returns |[[1],[3]]
 \end{verbatim}
 
 \paragraph{Sort}
+Returns a new sorted list without modifying the original. The sort is stable: equal elements preserve their original relative order. An optional lambda comparator can be provided for custom ordering (see Higher-Order Functions section).\\
+Morphology:
 \begin{verbatim}
 EBNF:
 "f.util.sort", "(", argument, [ ",", lambda ], ")"
 \end{verbatim}
-Returns a new sorted list (does not modify the original). An optional lambda comparator can be provided for custom ordering (see Higher-Order Functions section).
+\begin{itemize}
+\item Operands: list of comparable elements (all same type), optional comparator lambda
+\item Result: new list with elements in sorted order
+\item A \texttt{Type Error} is raised if elements are of mixed incomparable types.
+\end{itemize}
+Examples:
 \begin{verbatim}
 f.util.sort([5, 3, 1, 4])           #c# Returns [1, 3, 4, 5]
 f.util.sort([3.1, 2.7, 1.4])       #c# Returns [1.4, 2.7, 3.1]
@@ -3460,24 +4981,61 @@ f.util.sort([5, 1, 3], L::($a [int], $b [int])->{ $b - $a })
 #c# Returns [5, 3, 1]  (descending)
 \end{verbatim}
 
+\paragraph{Argsort}
+Returns a list of indices that would sort the list. The returned indices can be used to reorder another list in the same order without sorting it directly, which is useful when multiple lists share the same sort key (e.g., sorting coordinates by x-value while keeping y-values aligned). The sort is stable: equal elements preserve their original relative order. An optional lambda comparator can be provided for custom ordering (see Higher-Order Functions section).\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.util.argsort", "(", argument, [ ",", lambda ], ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: list of comparable elements (all same type), optional comparator lambda
+\item Result: list of ints (indices into the original list)
+\item A \texttt{Type Error} is raised if elements are of mixed incomparable types.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.util.argsort([5, 3, 1, 4])        #c# Returns [2, 1, 3, 0]
+f.util.argsort([1, 2, 3])            #c# Returns [0, 1, 2]  (already sorted)
+f.util.argsort([3, 2, 1])            #c# Returns [2, 1, 0]  (reverse sorted)
+f.util.argsort([])                   #c# Returns []
+f.util.argsort([5, 3, 1], L::($a [int], $b [int])->{ $b - $a })
+#c# Returns [0, 2, 1]  (descending)
+f.util.argsort([3, 1, 3])            #c# Returns [1, 0, 2]  (stable)
+\end{verbatim}
+
 \paragraph{Reverse}
+Returns a new reversed list without modifying the original.\\
+Morphology:
 \begin{verbatim}
 EBNF:
 "f.util.reverse", "(", argument, ")"
 \end{verbatim}
-Returns a new reversed list (does not modify the original).
+\begin{itemize}
+\item Operands: list or tensor
+\item Result: new list/tensor with elements in reverse order
+\end{itemize}
+Examples:
 \begin{verbatim}
 f.util.reverse([1, 2, 3])           #c# Returns [3, 2, 1]
 f.util.reverse([[1,2],[3,4]])       #c# Returns [[3,4],[1,2]]
 \end{verbatim}
 
 \paragraph{Unique}
+Returns a new list with duplicate elements removed. The order of first occurrence is preserved.\\
+Morphology:
 \begin{verbatim}
 EBNF:
 "f.util.unique", "(", argument, ")"
 \end{verbatim}
+\begin{itemize}
+\item Operands: list
+\item Result: new list with unique elements in order of first appearance
+\end{itemize}
+Examples:
 \begin{verbatim}
 f.util.unique([1, 2, 2, 3, 3, 3])   #c# Returns [1, 2, 3]
+f.util.unique([3, 1, 2, 1])         #c# Returns [3, 1, 2]
 \end{verbatim}
 
 \subsubsection{Linear Algebra Functions}
@@ -3487,7 +5045,7 @@ f.util.unique([1, 2, 2, 3, 3, 3])   #c# Returns [1, 2, 3]
 \item A \texttt{Type Error} is raised if the argument is not an \texttt{tensor} (matrix).
 \item A \texttt{Value Error} is raised for \texttt{f.linalg.det}, \texttt{f.linalg.inv}, \texttt{f.linalg.eig}, \texttt{f.linalg.eigvec}, \texttt{f.linalg.lu}, \texttt{f.linalg.qr}, \texttt{f.linalg.trace}, \texttt{f.linalg.cond} if the matrix is not square.
 \item A \texttt{Value Error} is raised for \texttt{f.linalg.cond} if the matrix is singular.
-\item A \texttt{Value Error} is raised for \texttt{f.arr.normalize} if the vector has zero magnitude.
+\item A \texttt{Value Error} is raised for \texttt{f.tnsr.normalize} if the vector has zero magnitude.
 \end{itemize}
 
 \paragraph{Determinant}
@@ -3624,6 +5182,165 @@ Returns the Moore--Penrose pseudo-inverse. Works for non-square or singular matr
 f.linalg.pinv([[1,2],[3,4]])   #c# Returns [[-2, 1],[1.5, -0.5]]
 \end{verbatim}
 
+\paragraph{Least Squares}
+The \texttt{lstsq} function computes the least-squares solution to $A\mathbf{x} = \mathbf{b}$.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.linalg.lstsq", "(", tensor, ",", tensor, ")"
+\end{verbatim}
+\begin{itemize}
+\item Returns [x, residuals, rank, sv] where:
+  \begin{itemize}
+  \item x: solution vector
+  \item residuals: sum of squared residuals (empty if rank < n or overdetermined)
+  \item rank: rank of A
+  \item sv: singular values of A
+  \end{itemize}
+\item Works for overdetermined (more equations than unknowns) and underdetermined systems.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.linalg.lstsq([[1,1],[1,2],[1,3]], [1,2,2])
+#c# Returns [0.667, 0.5, [], 2, [3.172, 0.265]]
+
+f.linalg.lstsq([[1,0],[0,1]], [3,4])
+#c# Returns [3, 4, [], 2, [1.0, 1.0]]
+\end{verbatim}
+
+\paragraph{Cross Product}
+The \texttt{cross} function computes the vector cross product.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.linalg.cross", "(", tensor, ",", tensor, ")"
+\end{verbatim}
+\begin{itemize}
+\item Both arguments must be 3-element vectors
+\item A \texttt{Value Error} is raised if vectors don't have exactly 3 elements.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.linalg.cross([1, 0, 0], [0, 1, 0])   #c# Returns [0, 0, 1]
+f.linalg.cross([1, 2, 3], [4, 5, 6])   #c# Returns [-3, 6, -3]
+f.linalg.cross([1, 0, 0], [1, 0, 0])   #c# Returns [0, 0, 0]
+\end{verbatim}
+
+\paragraph{Outer Product}
+The \texttt{outer} function computes the outer product of two vectors.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.linalg.outer", "(", tensor, ",", tensor, ")"
+\end{verbatim}
+\begin{itemize}
+\item Flattens inputs to 1D vectors
+\item Returns 2D tensor of shape (m, n) where m = len(a), n = len(b)
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.linalg.outer([1, 2, 3], [4, 5])   #c# Returns [[4,5],[8,10],[12,15]]
+f.linalg.outer([1, 0], [0, 1])      #c# Returns [[0,1],[0,0]]
+\end{verbatim}
+
+\paragraph{Kronecker Product}
+The \texttt{kron} function computes the Kronecker product.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.linalg.kron", "(", tensor, ",", tensor, ")"
+\end{verbatim}
+\begin{itemize}
+\item Returns 2D tensor
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.linalg.kron([[1,2],[3,4]], [[0,1],[1,0]])   #c# Returns [[0,1,0,2],[1,0,2,0],[0,3,0,4],[3,0,4,0]]
+f.linalg.kron([[1,0],[0,1]], [[1,2],[3,4]])   #c# Returns [[1,2,0,0],[3,4,0,0],[0,0,1,2],[0,0,3,4]]
+\end{verbatim}
+
+\paragraph{Tensor Dot}
+The \texttt{tensordot} function computes tensor contraction over specified axes.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.linalg.tensordot", "(", tensor, ",", tensor, ",", list[int], ")"
+\end{verbatim}
+\begin{itemize}
+\item Third argument: [axesA, axesB] — axes to contract over
+\item Result: tensor with contracted axes removed
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.linalg.tensordot([[1,2],[3,4]], [[5,6],[7,8]], [[0],[0]])
+#c# Returns [[19, 22], [43, 50]]
+
+f.linalg.tensordot([[1,2],[3,4]], [[5,6],[7,8]], [[1],[0]])
+#c# Returns [[17, 23], [39, 53]]
+\end{verbatim}
+
+\paragraph{Hermitian Eigendecomposition}
+The \texttt{eigh} function computes eigendecomposition optimized for Hermitian (symmetric) matrices.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.linalg.eigh", "(", argument, ")"
+\end{verbatim}
+\begin{itemize}
+\item Returns [eigenvalues, eigenvectors]
+\item Eigenvalues are returned in ascending order
+\item More efficient and numerically stable than \texttt{eig} for symmetric matrices
+\item A \texttt{Value Error} is raised if the matrix is not symmetric.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.linalg.eigh([[2,1],[1,2]])   #c# Returns [1, 3], [[-0.707, 0.707], [0.707, 0.707]]
+f.linalg.eigh([[4,0],[0,9]])   #c# Returns [4, 9], [[1,0],[0,1]]
+\end{verbatim}
+
+\paragraph{Sign-Log Determinant}
+The \texttt{slogdet} function returns the sign and natural log of the determinant.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.linalg.slogdet", "(", argument, ")"
+\end{verbatim}
+\begin{itemize}
+\item Returns [sign, logabsdet] where:
+  \begin{itemize}
+  \item sign: -1, 0, or 1
+  \item logabsdet: natural log of absolute value of determinant
+  \end{itemize}
+\item More numerically stable than computing det() directly for large matrices
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.linalg.slogdet([[1,2],[3,4]])   #c# Returns [-1, 0.693]
+f.linalg.slogdet([[2,0],[0,3]])   #c# Returns [1, 1.792]
+f.linalg.slogdet([[1,0],[0,0]])   #c# Returns [0, -inf]
+\end{verbatim}
+
+\paragraph{Multi-Matrix Multiply}
+The \texttt{multiDot} function performs chained matrix multiplication.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.linalg.multiDot", "(", list[tensor], ")"
+\end{verbatim}
+\begin{itemize}
+\item Optimizes multiplication order for efficiency
+\item Requires at least 2 matrices
+\item A \texttt{Value Error} is raised if fewer than 2 matrices provided or dimensions incompatible.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.linalg.multiDot([[[1,2],[3,4]], [[5,6],[7,8]]])
+#c# Returns [[19, 22], [43, 50]]
+
+f.linalg.multiDot([[[1,2],[3,4]], [[5,6],[7,8]], [[1,0],[0,1]]])
+#c# Returns [[19, 22], [43, 50]]
+\end{verbatim}
+
 \subsubsection{Statistical Functions}
 \paragraph{Histogram}
 \begin{verbatim}
@@ -3644,6 +5361,37 @@ f.stat.histogram([1, 2, 3, 4, 5], 3)
 #c# Returns [[1.0, 2.333, 3.667, 5.0], [2, 1, 2]]
 \end{verbatim}
 
+\paragraph{Weighted Average}
+The \texttt{weightedMean} function computes the weighted average: $\frac{\sum(v_i \cdot w_i)}{\sum w_i}$.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.stat.weightedMean", "(", list, ",", list, ")"
+\end{verbatim}
+\begin{itemize}
+\item First argument: values (list of int, real, or complex).
+\item Second argument: weights (list of int or real, same length as values).
+\item Result: \texttt{real} or \texttt{complex}.
+\item Negative weights are allowed.
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+f.stat.weightedMean([10, 20, 30], [1, 2, 3])           #c# Returns 23.333...
+f.stat.weightedMean([1.0, 2.0, 3.0], [0.5, 0.5, 1.0]) #c# Returns 2.25
+f.stat.weightedMean([100], [1])                         #c# Returns 100
+f.stat.weightedMean([10, 20], [1, -1])                  #c# Returns -10
+\end{verbatim}
+
+Edge Cases:
+\begin{itemize}
+\item A \texttt{Type Error} is raised if either argument is not a list.
+\item A \texttt{Type Error} is raised if values contain non-numeric types.
+\item A \texttt{Value Error} is raised if lists are empty.
+\item A \texttt{Value Error} is raised if lists have different lengths.
+\item A \texttt{Value Error} is raised if sum of weights is zero.
+\end{itemize}
+
 \subsubsection{Linear System Solver}
 The \texttt{solve} function solves the linear system $A\mathbf{x} = \mathbf{b}$ and returns $\mathbf{x}$.\\
 Morphology:
@@ -3662,6 +5410,258 @@ Examples:
 \begin{verbatim}
 f.linalg.solve([[2,1],[5,7]], [11,13])     #c# Returns [7.333, -3.667]
 f.linalg.solve([[1,0],[0,1]], [3,4])       #c# Returns [3, 4]
+\end{verbatim}
+
+
+\subsection{Integer Sequence Functions}
+Functions in the \texttt{f.seq} namespace compute mathematical integer sequences. All functions use 0-based indexing and return a single value at index $n$. Negative indices raise a \texttt{Value Error}.
+
+\subsubsection{Fibonacci}
+Computes the $n$-th Fibonacci number: $F(0) = 0$, $F(1) = 1$, $F(n) = F(n-1) + F(n-2)$.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.seq.fibonacci", "(", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: non-negative \texttt{int} ($n \geq 0$).
+\item Result: \texttt{int}.
+\item A \texttt{Value Error} is raised if $n < 0$.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.seq.fibonacci(0)    #c# Returns 0
+f.seq.fibonacci(1)    #c# Returns 1
+f.seq.fibonacci(10)   #c# Returns 55
+f.seq.fibonacci(20)   #c# Returns 6765
+\end{verbatim}
+
+\subsubsection{Lucas}
+Computes the $n$-th Lucas number: $L(0) = 2$, $L(1) = 1$, $L(n) = L(n-1) + L(n-2)$.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.seq.lucas", "(", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: non-negative \texttt{int} ($n \geq 0$).
+\item Result: \texttt{int}.
+\item A \texttt{Value Error} is raised if $n < 0$.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.seq.lucas(0)    #c# Returns 2
+f.seq.lucas(1)    #c# Returns 1
+f.seq.lucas(10)   #c# Returns 123
+f.seq.lucas(20)   #c# Returns 15127
+\end{verbatim}
+
+\subsubsection{Pell}
+Computes the $n$-th Pell number: $P(0) = 0$, $P(1) = 1$, $P(n) = 2 \cdot P(n-1) + P(n-2)$.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.seq.pell", "(", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: non-negative \texttt{int} ($n \geq 0$).
+\item Result: \texttt{int}.
+\item A \texttt{Value Error} is raised if $n < 0$.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.seq.pell(0)    #c# Returns 0
+f.seq.pell(1)    #c# Returns 1
+f.seq.pell(10)   #c# Returns 2378
+f.seq.pell(20)   #c# Returns 195025
+\end{verbatim}
+
+\subsubsection{Tribonacci}
+Computes the $n$-th Tribonacci number: $T(0) = 0$, $T(1) = 0$, $T(2) = 1$, $T(n) = T(n-1) + T(n-2) + T(n-3)$.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.seq.tribonacci", "(", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: non-negative \texttt{int} ($n \geq 0$).
+\item Result: \texttt{int}.
+\item A \texttt{Value Error} is raised if $n < 0$.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.seq.tribonacci(0)    #c# Returns 0
+f.seq.tribonacci(1)    #c# Returns 0
+f.seq.tribonacci(2)    #c# Returns 1
+f.seq.tribonacci(10)   #c# Returns 44
+f.seq.tribonacci(20)   #c# Returns 35890
+\end{verbatim}
+
+\subsubsection{Catalan}
+Computes the $n$-th Catalan number: $C(0) = 1$, $C(n) = \sum_{i=0}^{n-1} C(i) \cdot C(n-1-i)$.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.seq.catalan", "(", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: non-negative \texttt{int} ($n \geq 0$).
+\item Result: \texttt{int}.
+\item A \texttt{Value Error} is raised if $n < 0$.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.seq.catalan(0)    #c# Returns 1
+f.seq.catalan(1)    #c# Returns 1
+f.seq.catalan(10)   #c# Returns 16796
+f.seq.catalan(20)   #c# Returns 6564120420
+\end{verbatim}
+
+\subsubsection{Bell}
+Computes the $n$-th Bell number (total number of partitions of a set of $n$ elements): $B(0) = 1$.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.seq.bell", "(", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: non-negative \texttt{int} ($n \geq 0$).
+\item Result: \texttt{int}.
+\item A \texttt{Value Error} is raised if $n < 0$.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.seq.bell(0)    #c# Returns 1
+f.seq.bell(1)    #c# Returns 1
+f.seq.bell(10)   #c# Returns 115975
+f.seq.bell(20)   #c# Returns 51724158235372
+\end{verbatim}
+
+\subsubsection{Bernoulli}
+Computes the $n$-th Bernoulli number: $B(0) = 1$, $B(1) = -1/2$, $B(n) = 0$ for odd $n > 1$.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.seq.bernoulli", "(", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: non-negative \texttt{int} ($n \geq 0$).
+\item Result: \texttt{real}.
+\item A \texttt{Value Error} is raised if $n < 0$.
+\item A warning is issued for odd $n > 1$ (function returns 0).
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.seq.bernoulli(0)    #c# Returns 1.0
+f.seq.bernoulli(1)    #c# Returns -0.5
+f.seq.bernoulli(2)    #c# Returns 0.16667
+f.seq.bernoulli(10)   #c# Returns 0.0757576
+\end{verbatim}
+
+\subsubsection{Euler Number}
+Computes the $n$-th Euler number (alternating permutations): $E(0) = 1$.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.seq.eulerNumber", "(", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: non-negative \texttt{int} ($n \geq 0$).
+\item Result: \texttt{int}.
+\item A \texttt{Value Error} is raised if $n < 0$.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.seq.eulerNumber(0)    #c# Returns 1
+f.seq.eulerNumber(1)    #c# Returns 1
+f.seq.eulerNumber(2)    #c# Returns 0
+f.seq.eulerNumber(10)   #c# Returns -50521
+\end{verbatim}
+
+\subsubsection{Stirling Numbers of the First Kind}
+Computes the unsigned Stirling number of the first kind $|s(n,k)|$ (number of permutations of $n$ elements with exactly $k$ cycles).\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.seq.stirling1", "(", int, ",", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: non-negative \texttt{int} ($n \geq 0$, $k \geq 0$).
+\item Result: \texttt{int}.
+\item A \texttt{Value Error} is raised if $n < 0$ or $k < 0$.
+\item Returns 0 if $k > n$ (with a warning).
+\item $|s(0,0)| = 1$, $|s(n,0)| = 0$ for $n > 0$.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.seq.stirling1(0, 0)   #c# Returns 1
+f.seq.stirling1(5, 0)   #c# Returns 0
+f.seq.stirling1(5, 1)   #c# Returns 24
+f.seq.stirling1(5, 5)   #c# Returns 1
+f.seq.stirling1(5, 3)   #c# Returns 35
+\end{verbatim}
+
+\subsubsection{Stirling Numbers of the Second Kind}
+Computes the Stirling number of the second kind $S(n,k)$ (number of ways to partition a set of $n$ elements into $k$ non-empty subsets).\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.seq.stirling2", "(", int, ",", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: non-negative \texttt{int} ($n \geq 0$, $k \geq 0$).
+\item Result: \texttt{int}.
+\item A \texttt{Value Error} is raised if $n < 0$ or $k < 0$.
+\item Returns 0 if $k > n$ (with a warning).
+\item $S(0,0) = 1$, $S(n,0) = 0$ for $n > 0$.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.seq.stirling2(0, 0)   #c# Returns 1
+f.seq.stirling2(5, 0)   #c# Returns 0
+f.seq.stirling2(5, 1)   #c# Returns 1
+f.seq.stirling2(5, 5)   #c# Returns 1
+f.seq.stirling2(5, 3)   #c# Returns 25
+\end{verbatim}
+
+\subsubsection{Partition Number}
+Computes the number of integer partitions of $n$: $P(0) = 1$.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.seq.partitionNumber", "(", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: non-negative \texttt{int} ($n \geq 0$).
+\item Result: \texttt{int}.
+\item A \texttt{Value Error} is raised if $n < 0$.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.seq.partitionNumber(0)    #c# Returns 1
+f.seq.partitionNumber(1)    #c# Returns 1
+f.seq.partitionNumber(10)   #c# Returns 42
+f.seq.partitionNumber(20)   #c# Returns 627
+\end{verbatim}
+
+\subsubsection{Harmonic Number}
+Computes the $n$-th harmonic number: $H(0) = 0$, $H(n) = 1 + 1/2 + \cdots + 1/n$.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.seq.harmonicNumber", "(", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: non-negative \texttt{int} ($n \geq 0$).
+\item Result: \texttt{real}.
+\item A \texttt{Value Error} is raised if $n < 0$.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.seq.harmonicNumber(0)    #c# Returns 0.0
+f.seq.harmonicNumber(1)    #c# Returns 1.0
+f.seq.harmonicNumber(10)   #c# Returns 2.92897
+f.seq.harmonicNumber(100)  #c# Returns 5.18738
 \end{verbatim}
 
 
@@ -3816,21 +5816,23 @@ f.util.reduce([[1,2],[3,4]],
 \end{itemize}
 
 \subsubsection{Where}
-The \texttt{where} function returns a list of \textbf{indices} (ints) for which the lambda returns \texttt{True}. Indices are 0-based.
+The \texttt{where} function returns a list of \textbf{indices} (ints) for which the lambda returns \texttt{True}. Indices are 0-based. When two additional lists are provided, it returns \textbf{values} from the first list where the condition is \texttt{True}, and from the second list where \texttt{False}.
 
 \paragraph{Morphology}
 \begin{verbatim}
 EBNF:
-"f.util.where", "(", list, ",", lambda, ")"
+"f.util.where", "(", list, ",", lambda, [ ",", list, ",", list ], ")"
 \end{verbatim}
 
 \paragraph{Type Overloading}
 \begin{itemize}
 \item \texttt{where(list[T], L::(\$x [T])->\{bool\})} $\rightarrow$ \texttt{list[int]}
+\item \texttt{where(list[T], L::(\$x [T])->\{bool\}, list[A], list[B])} $\rightarrow$ \texttt{list[A|B]}
 \item The lambda must return \texttt{bool}
+\item In value-selection mode, both value lists must have the same length as the input list.
 \end{itemize}
 
-\paragraph{Examples}
+\paragraph{Examples — Index Mode}
 \begin{verbatim}
 f.util.where([-1, 3, -2, 5], L::($x [int])->{ $x > 0 })
 #c# Returns [1, 3]
@@ -3848,10 +5850,56 @@ f.util.where([], L::($x [int])->{ $x > 0 })
 #c# Returns []  (empty input)
 \end{verbatim}
 
+\paragraph{Examples — Value Selection Mode}
+\begin{verbatim}
+f.util.where([1, 2, 3], L::($x [int])->{ $x > 1 },
+    |[10, 20, 30], |[100, 200, 300])
+#c# Returns |[100, 20, 30]
+
+f.util.where([1, 2, 3], L::($x [int])->{ $x > 1 },
+    |["a", "b", "c"], |["x", "y", "z"])
+#c# Returns |["x", "b", "c"]
+
+f.util.where([1, 2, 3], L::($x [int])->{ $x > 5 },
+    |[10, 20, 30], |[100, 200, 300])
+#c# Returns |[100, 200, 300]  (all False)
+
+f.util.where([], L::($x [int])->{ $x > 0 }, [], [])
+#c# Returns []
+\end{verbatim}
+
 \paragraph{Error Conditions}
 \begin{itemize}
 \item Type mismatch: lambda parameter type does not match element type raises a Runtime Error
 \item Lambda does not return \texttt{bool} raises a Type Error
+\item In value-selection mode, lists of different lengths raises a Value Error
+\end{itemize}
+
+\subsubsection{Nonzero}
+The \texttt{nonzero} function returns a list of indices where elements are non-zero. For boolean lists, returns indices where \texttt{True}. For complex lists, nonzero if real $\neq$ 0 OR imag $\neq$ 0.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.util.nonzero", "(", list, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: list of bool, int, real, or complex.
+\item Result: \texttt{list[int]} of 0-based indices.
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+f.util.nonzero([0, 5, 0, 3, 0])        #c# Returns [1, 3]
+f.util.nonzero([1, 2, 3, 4])           #c# Returns [0, 1, 2, 3]
+f.util.nonzero([0, 0, 0])              #c# Returns []
+f.util.nonzero([])                      #c# Returns []
+f.util.nonzero([0, 1+0i, 0, 2+3i])     #c# Returns [1, 3]
+f.util.nonzero([true, false, true])     #c# Returns [0, 2]
+\end{verbatim}
+
+Edge Cases:
+\begin{itemize}
+\item A \texttt{Type Error} is raised if the argument is not a list.
 \end{itemize}
 
 \subsubsection{Count}
@@ -4033,6 +6081,7 @@ error_type = "Assertion Error" | "aerr"
            | "Value Error"      | "verr"
            | "Division by Zero Error" | "0div"
            | "Runtime Error"    | "rerr"
+           | "Permission Error" | "perm"
 \end{verbatim}
 
 \paragraph{Function Form}
@@ -4103,6 +6152,7 @@ error_type = "Assertion Error" | "aerr"
            | "Value Error"      | "verr"
            | "Division by Zero Error" | "0div"
            | "Runtime Error"    | "rerr"
+           | "Permission Error" | "perm"
 \end{verbatim}
 
 Reuses the \texttt{error\_type} rule defined for \texttt{assert}.
@@ -4188,8 +6238,8 @@ EBNF:
 
 \paragraph{Type Overloading}
 \begin{itemize}
-\item \texttt{fft(list[int])} $\rightarrow$ \texttt{list[complex]}
-\item \texttt{fft(list[real])} $\rightarrow$ \texttt{list[complex]}
+\item \texttt{fft(list[int])} $\rightarrow$ \texttt{tensor[complex]}
+\item \texttt{fft(list[real])} $\rightarrow$ \texttt{tensor[complex]}
 \item Output length equals input length
 \item Works on any signal length (not restricted to powers of 2)
 \end{itemize}
@@ -4197,18 +6247,18 @@ EBNF:
 \paragraph{Examples}
 \begin{verbatim}
 #c# FFT of a simple signal
-f.ee.fft([1, 0, 1, 0])   #c# Returns [2+0i, 0+0i, 2+0i, 0+0i]
+f.ee.fft([1, 0, 1, 0])   #c# Returns |[2+0i, 0+0i, 2+0i, 0+0i]
 
 #c# FFT of a single impulse
-f.ee.fft([1, 0, 0, 0])   #c# Returns [1+0i, 1+0i, 1+0i, 1+0i]
+f.ee.fft([1, 0, 0, 0])   #c# Returns |[1+0i, 1+0i, 1+0i, 1+0i]
 
 #c# FFT of a DC signal (constant value)
-f.ee.fft([5, 5, 5, 5])   #c# Returns [20+0i, 0+0i, 0+0i, 0+0i]
+f.ee.fft([5, 5, 5, 5])   #c# Returns |[20+0i, 0+0i, 0+0i, 0+0i]
 
 #c# Extract magnitude spectrum
-$freq [list]= f.ee.fft([1, 0, 1, 0])
-$mags [list]= f.util.map($freq, L::($z [complex])->{ f.math.abs($z) })
-#c# $mags = [2.0, 0.0, 2.0, 0.0]
+$freq [tensor]= f.ee.fft([1, 0, 1, 0])
+$mags [tensor]= f.math.abs($freq)
+#c# $mags = |[2.0, 0.0, 2.0, 0.0]
 \end{verbatim}
 
 \paragraph{Error Conditions}
@@ -4225,7 +6275,7 @@ EBNF:
 
 \paragraph{Type Overloading}
 \begin{itemize}
-\item \texttt{ifft(list[complex])} $\rightarrow$ \texttt{list[real]}
+\item \texttt{ifft(tensor[complex])} $\rightarrow$ \texttt{tensor[real]}
 \item Output length equals input length
 \item Imaginary parts are discarded (reconstructed signal is real)
 \end{itemize}
@@ -4233,22 +6283,227 @@ EBNF:
 \paragraph{Examples}
 \begin{verbatim}
 #c# Round-trip: fft then ifft
-$signal [list]= [1, 0, 1, 0]
-$freq [list]= f.ee.fft($signal)
-$reconstructed [list]= f.ee.ifft($freq)
-#c# $reconstructed is approximately [1, 0, 1, 0]
+$signal [tensor]= |[1, 0, 1, 0]
+$freq [tensor]= f.ee.fft($signal)
+$reconstructed [tensor]= f.ee.ifft($freq)
+#c# $reconstructed is approximately |[1, 0, 1, 0]
 
 #c# ifft of DC component
-f.ee.ifft([4+0i, 0+0i, 0+0i, 0+0i])   #c# Returns [1, 1, 1, 1]
+f.ee.ifft(|[4+0i, 0+0i, 0+0i, 0+0i])   #c# Returns |[1, 1, 1, 1]
 
 #c# ifft of impulse in frequency domain
-f.ee.ifft([1+0i, 1+0i, 1+0i, 1+0i])   #c# Returns [1, 0, 0, 0]
+f.ee.ifft(|[1+0i, 1+0i, 1+0i, 1+0i])   #c# Returns |[1, 0, 0, 0]
 \end{verbatim}
 
 \paragraph{Error Conditions}
 \begin{itemize}
 \item Empty list raises a Value Error
 \end{itemize}
+
+\subsubsection{FFT Utilities}
+
+\paragraph{FFT Shift}
+Shifts the zero-frequency component to the center of the spectrum. Useful for visualizing FFT output where DC component should be in the middle.
+\begin{verbatim}
+EBNF:
+"f.ee.fftshift", "(", list, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: list or tensor
+\item Result: shifted list or tensor of same length
+\end{itemize}
+\begin{verbatim}
+f.ee.fftshift(|[0, 1, 2, 3])           #c# Returns |[2, 3, 0, 1]
+f.ee.fftshift(|[0, 1, 2, 3, 4])        #c# Returns |[3, 4, 0, 1, 2]
+f.ee.fftshift(|[5])                     #c# Returns |[5]
+f.ee.fftshift(|[])                      #c# Returns |[]
+\end{verbatim}
+
+\paragraph{Inverse FFT Shift}
+Undoes fftshift, moving zero-frequency component back to beginning.
+\begin{verbatim}
+EBNF:
+"f.ee.ifftshift", "(", list, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: list or tensor
+\item Result: unshifted list or tensor of same length
+\end{itemize}
+\begin{verbatim}
+f.ee.ifftshift(|[2, 3, 0, 1])          #c# Returns |[0, 1, 2, 3]
+f.ee.ifftshift(|[3, 4, 0, 1, 2])       #c# Returns |[0, 1, 2, 3, 4]
+f.ee.ifftshift(|[5])                    #c# Returns |[5]
+f.ee.ifftshift(|[])                     #c# Returns |[]
+\end{verbatim}
+
+\paragraph{FFT Frequencies}
+Returns the frequency bins for an FFT output. Pair with fftshift to get frequency axis for centered spectrum.
+\begin{verbatim}
+EBNF:
+"f.ee.fftfreq", "(", int, [",", "d", "=", real], ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: \texttt{n} (number of samples), optional \texttt{d} (sample spacing, default 1.0)
+\item Result: tensor of n frequency bins
+\item A \texttt{Value Error} is raised if n $<$ 0.
+\end{itemize}
+\begin{verbatim}
+f.ee.fftfreq(4)                         #c# Returns |[0.0, 0.25, -0.5, -0.25]
+f.ee.fftfreq(4, d=0.001)               #c# Returns |[0.0, 250.0, -500.0, -250.0]
+f.ee.fftfreq(5)                         #c# Returns |[0.0, 0.2, 0.4, -0.4, -0.2]
+f.ee.fftfreq(1)                         #c# Returns |[0.0]
+f.ee.fftfreq(0)                         #c# Returns |[]
+\end{verbatim}
+
+\subsubsection{Real FFT}
+\label{sec:rfft}
+Computes the one-dimensional Discrete Fourier Transform for \emph{real-valued} input, returning only the non-negative frequency terms. For real input, the DFT exhibits Hermitian symmetry: $X[k] = X[n-k]^*$. The \texttt{rfft} function exploits this by computing only the first $(n/2)+1$ points (for even $n$), discarding the redundant negative-frequency mirror. This yields approximately 33\% speedup over \texttt{f.ee.fft} for real signals.
+
+\paragraph{Output Length}
+For input of length $n$:
+\begin{itemize}
+\item If $n$ is even: output length is $(n/2) + 1$ (includes DC and Nyquist)
+\item If $n$ is odd: output length is $(n+1) / 2$ (includes DC, no Nyquist)
+\end{itemize}
+
+\paragraph{Comparison to fft}
+\begin{verbatim}
+# For real input [0, 1, 0, 0]:
+
+f.ee.fft(|[0, 1, 0, 0])              #c# Returns |[1+0j, 0-1j, -1+0j, 0+1j]   (4 points)
+f.ee.rfft(|[0, 1, 0, 0])            #c# Returns |[1+0j, 0-1j, -1+0j]          (3 points)
+
+# Output[0] (DC) and Output[n/2] (Nyquist) are real-valued
+# Output[k] for 0 < k < n/2 are complex
+\end{verbatim}
+
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.ee.rfft", "(", list, [",", int], ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: input signal (\texttt{list} of \texttt{int} or \texttt{real}), optional output length $n$ (\texttt{int}).
+\item Result: \texttt{list[complex]} of length $(n/2)+1$ (even $n$) or $(n+1)/2$ (odd $n$).
+\item If $n$ is given, the input is zero-padded (with zeros) or truncated to length $n$ before transforming.
+\item If $n < $ input length, input is truncated. If $n > $ input length, input is zero-padded.
+\item A \texttt{Type Error} is raised if any input element is \texttt{complex}.
+\end{itemize}
+
+\paragraph{Examples}
+\begin{verbatim}
+f.ee.rfft(|[0, 1, 0, 0])             #c# Returns |[1+0j, 0-1j, -1+0j]
+f.ee.rfft(|[1, 2, 3])                #c# Returns |[6+0j, -1.5+0.866j]
+f.ee.rfft(|[1])                      #c# Returns |[1+0j]
+f.ee.rfft(|[])                       #c# Returns |[]
+\end{verbatim}
+
+\paragraph{Zero-Padding and Truncation}
+\begin{verbatim}
+f.ee.rfft(|[0, 1, 0, 0], 8)          #c# Zero-pads to 8, returns 5 complex points
+f.ee.rfft(|[0, 1, 0, 0, 0, 0], 4)   #c# Truncates to 4, returns 3 complex points
+\end{verbatim}
+
+\paragraph{Typical Workflow}
+\begin{verbatim}
+# Analyze frequency content of a real signal
+$signal [tensor]= |[0.0, 1.0, 0.0, -1.0, 0.0, 1.0, 0.0, -1.0]
+$S [tensor]= f.ee.rfft($signal)
+$freqs [tensor]= f.ee.rfftfreq(8, d=0.001)
+$power [tensor]= f.math.abs($S) ^ 2
+\end{verbatim}
+
+\subsubsection{Inverse Real FFT}
+\label{sec:irfft}
+Computes the inverse of \texttt{f.ee.rfft}. Recovers a real-valued signal from its non-negative frequency representation. The input must be in the form returned by \texttt{rfft}: real-valued DC component followed by complex positive-frequency terms in order of increasing frequency.
+
+\paragraph{Output Length}
+For input of length $m$:
+\begin{itemize}
+\item Default output length: $2 \times (m-1)$
+\item If $n$ is specified, output has exactly $n$ points
+\item For $n$ output points, $(n/2)+1$ input points are needed (even $n$)
+\end{itemize}
+
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.ee.irfft", "(", list, [",", int], ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: \texttt{list[complex]} (Hermitian-symmetric form from \texttt{rfft}), optional output length $n$ (\texttt{int}).
+\item Result: \texttt{list[real]} of length $n$.
+\item Roundtrip identity: \texttt{f.ee.irfft(f.ee.rfft(a), f.list.len(a))} $== a$ (within numerical precision).
+\end{itemize}
+
+\paragraph{Examples}
+\begin{verbatim}
+f.ee.irfft(|[1+0j, 0-1j, -1+0j])    #c# Returns |[0.0, 1.0, 0.0, 0.0]
+f.ee.irfft(|[6+0j, -1.5+0.866j])    #c# Returns |[1.0, 2.0, 3.0]
+f.ee.irfft(|[4+0j])                  #c# Returns |[4.0]
+\end{verbatim}
+
+\paragraph{Roundtrip Verification}
+\begin{verbatim}
+$orig [tensor]= |[1.0, 2.0, 3.0, 4.0]
+$fwd [tensor]= f.ee.rfft($orig)
+$inv [tensor]= f.ee.irfft($fwd, 4)
+# $inv == |[1.0, 2.0, 3.0, 4.0] (within numerical precision)
+\end{verbatim}
+
+\paragraph{Resampling via Fourier Interpolation}
+\begin{verbatim}
+# Resample from 4 points to 8 points (zero-padding in frequency domain)
+$S [tensor]= f.ee.rfft(|[1.0, 2.0, 3.0, 4.0])
+$resampled [tensor]= f.ee.irfft($S, 8)
+# $resampled has 8 points (interpolated from original 4)
+\end{verbatim}
+
+\subsubsection{Real FFT Frequencies}
+\label{sec:rfftfreq}
+Returns the frequency bins for use with \texttt{f.ee.rfft}. Unlike \texttt{f.ee.fftfreq} which returns both positive and negative frequencies, \texttt{rfftfreq} returns only the non-negative frequencies (DC through Nyquist). Pair with \texttt{f.ee.fftshift} to center the spectrum.
+
+\paragraph{Relationship to fftfreq}
+\begin{verbatim}
+# fftfreq returns both positive and negative frequencies (n points)
+f.ee.fftfreq(4)                         #c# Returns |[0.0, 0.25, -0.5, -0.25]
+
+# rfftfreq returns only non-negative frequencies (n/2+1 points)
+f.ee.rfftfreq(4)                        #c# Returns |[0.0, 0.25, 0.5]
+\end{verbatim}
+
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.ee.rfftfreq", "(", int, [",", "d", "=", real], ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: \texttt{n} (original signal length), optional \texttt{d} (sample spacing, default 1.0).
+\item Result: \texttt{list[real]} of $(n/2)+1$ frequency bins (only non-negative frequencies).
+\item Units: frequencies are in cycles per unit of \texttt{d}. For \texttt{d} in seconds, result is in Hz.
+\end{itemize}
+
+\paragraph{Examples}
+\begin{verbatim}
+f.ee.rfftfreq(4)                         #c# Returns |[0.0, 0.25, 0.5]
+f.ee.rfftfreq(4, d=0.001)               #c# Returns |[0.0, 250.0, 500.0]
+f.ee.rfftfreq(5)                         #c# Returns |[0.0, 0.2, 0.4]
+f.ee.rfftfreq(1)                         #c# Returns |[0.0]
+f.ee.rfftfreq(0)                         #c# Returns |[]
+\end{verbatim}
+
+\paragraph{Complete Example}
+\begin{verbatim}
+# Analyze a 1kHz sine wave sampled at 8kHz
+$fs [int]= 8000
+$N [int]= 64
+$t [tensor]= |[f.math.range(0, $N)] / $fs
+$signal [tensor]= f.trig.sin(2 * f.math.pi * 1000 * $t)
+$S [tensor]= f.ee.rfft($signal)
+$freqs [tensor]= f.ee.rfftfreq($N, d=1.0/$fs)
+$mag [tensor]= f.math.abs($S)
+# $mag peaks at index where $freqs == 1000.0
+\end{verbatim}
 
 \subsection{Debug Functions}
 \label{sec:debug-functions}
@@ -4437,8 +6692,9 @@ The \texttt{f.sys.getConfig} function retrieves a named configuration value. Con
 \begin{verbatim}
 "f.sys.getConfig", "(", string, ")"
 \end{verbatim}
-\\ Returns: The value associated with the given key (type depends on the key). \\
-\\ Raises: \texttt{Runtime Error} if the key is not recognized.
+Returns: The value associated with the given key (type depends on the key). \\
+
+Raises: \texttt{Runtime Error} if the key is not recognized. \\
 
 \begin{verbatim}
 $f max_iter = f.sys.getConfig("max_loop_iter")
@@ -4508,6 +6764,108 @@ The \texttt{f.sys.features} function returns a list of supported runtime feature
 \begin{verbatim}
 $f feats = f.sys.features()
 \end{verbatim}
+
+\subsection{System Variables}
+System variables (\texttt{\$\$sys\_*}) provide read-only access to hardware state and configuration. Unlike \texttt{syst.flag} assignments (declarative) or \texttt{f.sys.*} functions (callable), system variables are accessed like regular variables but cannot be assigned.
+
+\begin{verbatim}
+EBNF:
+sys_var = "$$", sys_var_name
+
+sys_var_name = "sys_mem_SHA512"
+             | "sys_temp_", id
+             | "sys_temp_available_sensors"
+\end{verbatim}
+
+\begin{itemize}
+\item All \texttt{\$\$sys\_*} variables are \textbf{read-only}
+\item Assignment (\texttt{\$\$sys\_* = val}) raises a \texttt{Type Error}
+\item Compound assignment (\texttt{\$\$sys\_* += val}) raises a \texttt{Type Error}
+\item Lazy binding (\texttt{\$x :Lt= \$\$sys_*}) is allowed
+\item Available in all scopes (main body, functions, lambdas)
+\item Returns \texttt{null} if hardware doesn't support the feature
+\item Unknown sensor names return \texttt{null} (no error)
+\end{itemize}
+
+\subsubsection{Memory Hash Variable}
+The \texttt{\$\$sys\_mem\_SHA512} variable returns a SHA-512 hash of the current system memory state. This is a \textbf{live value} that may change between reads as memory state changes.
+
+\begin{itemize}
+\item Type: \texttt{string}
+\item Returns: SHA-512 hash hex string
+\item Returns \texttt{null} if memory introspection is unavailable
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$hash [string]= $$sys_mem_SHA512
+f.util.print(f.str.str("Memory hash: ", $hash))
+
+# Compare memory state between two points
+$hash1 [string]= $$sys_mem_SHA512
+# ... some code ...
+$hash2 [string]= $$sys_mem_SHA512
+if $hash1 != $hash2 ::{
+    f.util.print("Memory state changed")
+}
+\end{verbatim}
+
+\subsubsection{Temperature Sensor Variables}
+Temperature sensor variables provide read-only access to hardware temperature readings. Sensor names are validated at runtime; unknown names return \texttt{null}.
+
+\begin{itemize}
+\item Type: \texttt{real} (temperature in °C)
+\item Returns \texttt{null} if sensor is unavailable
+\item Common sensor names: \texttt{cpu}, \texttt{gpu}, \texttt{ambient}
+\item Any identifier is valid (unknown names return \texttt{null})
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$cpu_temp [real]= $$sys_temp_cpu
+if $cpu_temp != null ::{
+    f.util.print(f.str.str("CPU temp: ", $cpu_temp))
+}
+
+$gpu_temp [real]= $$sys_temp_gpu
+if $gpu_temp != null ::{
+    f.util.print(f.str.str("GPU temp: ", $gpu_temp))
+}
+
+# Unknown sensor returns null (no error)
+$unknown [real]= $$sys_temp_foo
+f.util.print($unknown)   #c# prints "null"
+\end{verbatim}
+
+\subsubsection{Available Sensors Variable}
+The \texttt{\$\$sys\_temp\_available\_sensors} variable returns a list of available temperature sensor names.
+
+\begin{itemize}
+\item Type: \texttt{list[string]}
+\item Returns \texttt{[]} (empty list) if no sensors are available
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$sensors [list]= $$sys_temp_available_sensors
+for $s E $sensors ::{
+    f.util.print(f.str.str("Sensor: ", $s))
+}
+
+# Check if a specific sensor is available
+$sensors [list]= $$sys_temp_available_sensors
+if "cpu" E $sensors ::{
+    $temp [real]= $$sys_temp_cpu
+    f.util.print(f.str.str("CPU: ", $temp))
+}
+\end{verbatim}
+
+\subsubsection{Comparison to Other System Access}
+\begin{itemize}
+\item \texttt{syst.flag.*} --- Declarative flags, set before program body, configure runtime behavior
+\item \texttt{f.sys.*} --- Callable functions, return runtime information, can be used in expressions
+\item \texttt{\$\$sys\_*} --- Read-only variables, access hardware state, live values
+\end{itemize}
 
 \subsection{Time Functions}
 
@@ -9293,6 +11651,94 @@ Examples:
 f.special.incompleteBeta(1, 1, 0)   #c# Returns 1.0  (= B(1,1) = 1)
 f.special.incompleteBeta(1, 1, 1)   #c# Returns 0.0
 f.special.incompleteBeta(2, 3, 0.5) #c# Returns approximately 0.3125
+\end{verbatim}
+
+\subsubsection{Inverse Tangent Integral (Ti₂)}
+Computes the inverse tangent integral $\text{Ti}_2(x) = \int_0^x \frac{\arctan(t)}{t}\,dt$. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.special.ti2", "(", ( int | real | complex ), ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: \texttt{int}, \texttt{real}, or \texttt{complex}.
+\item Result: \texttt{real} for real input, \texttt{complex} for complex input.
+\item Odd function: $\text{Ti}_2(-x) = -\text{Ti}_2(x)$.
+\item Special values: $\text{Ti}_2(0) = 0$, $\text{Ti}_2(1) = G$ (Catalan's constant $\approx 0.915965594$).
+\item Related to the dilogarithm: $\text{Ti}_2(x) = \frac{1}{2i}[\text{Li}_2(ix) - \text{Li}_2(-ix)]$.
+\item A \texttt{Type Error} is raised for non-numeric arguments.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.special.ti2(0)          #c# Returns 0.0
+f.special.ti2(1)          #c# Returns approximately 0.9160  (= Catalan's constant)
+f.special.ti2(0.5)        #c# Returns approximately 0.4872
+\end{verbatim}
+
+\subsubsection{Rogers Dilogarithm}
+Computes the Rogers dilogarithm $L(x) = \text{Li}_2(x) + \frac{1}{2}\ln(x)\ln(1-x)$, a normalized variant satisfying Abel's five-term identity. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.special.rogersL", "(", ( int | real ), ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: \texttt{int} or \texttt{real}, $0 \leq x \leq 1$.
+\item Result: \texttt{real}.
+\item Special values: $L(0) = 0$, $L(1) = \frac{\pi^2}{6}$, $L\!\left(\frac{\sqrt{5}-1}{2}\right) = \frac{\pi^2}{10}$.
+\item The normalized form $\frac{6}{\pi^2}L(x)$ satisfies Abel's five-term identity.
+\item A \texttt{Value Error} is raised for $x < 0$ or $x > 1$ (domain restriction).
+\item A \texttt{Type Error} is raised for non-numeric arguments.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.special.rogersL(0)             #c# Returns 0.0
+f.special.rogersL(1)             #c# Returns approximately 1.6449  (= pi^2/6)
+f.special.rogersL(0.5)           #c# Returns approximately 0.5822
+\end{verbatim}
+
+\subsubsection{Bloch-Wigner Dilogarithm}
+Computes the Bloch-Wigner dilogarithm $D(z) = \text{Im}(\text{Li}_2(z)) + \arg(1-z)\log|z|$, a single-valued modification of the complex dilogarithm used to compute volumes of ideal hyperbolic tetrahedra. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.special.blochWigner", "(", ( int | real | complex ), ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: \texttt{int}, \texttt{real}, or \texttt{complex}.
+\item Result: \texttt{real} (always real-valued, even for complex input).
+\item $D(z) = 0$ for all real $z$.
+\item Special values: $D(i) = G$ (Catalan's constant), $D(e^{\pi i/3}) = \frac{\sqrt{3}}{4}L(\chi_{-3}, 2)$.
+\item Computes the hyperbolic volume of the ideal tetrahedron with vertices $0, 1, \infty, z$.
+\item A \texttt{Type Error} is raised for non-numeric arguments.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.special.blochWigner(0)       #c# Returns 0.0
+f.special.blochWigner(1)       #c# Returns 0.0
+f.special.blochWigner(0+1i)    #c# Returns approximately 0.9160  (= Catalan's constant)
+\end{verbatim}
+
+\subsubsection{Legendre Chi Function}
+Computes the Legendre chi function $\chi_\nu(z) = \sum_{k=0}^{\infty} \frac{z^{2k+1}}{(2k+1)^\nu} = \frac{1}{2}[\text{Li}_\nu(z) - \text{Li}_\nu(-z)]$. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.special.legendreChi", "(", ( int | real ), ",", ( int | real | complex ), ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: order $\nu$ (\texttt{int} or \texttt{real}), argument $z$ (\texttt{int}, \texttt{real}, or \texttt{complex}).
+\item Result: \texttt{real} for real input, \texttt{complex} for complex input.
+\item Special cases: $\chi_1(x) = \text{arctanh}(x)$, $\chi_2(x) = \int_0^x \frac{\text{arctanh}(t)}{t}\,dt$.
+\item Special values: $\chi_2(1) = \frac{\pi^2}{8}$, $\chi_2(i) = iG$ (where $G$ is Catalan's constant).
+\item Derivative: $\frac{d}{dx}\chi_\nu(x) = \frac{\chi_{\nu-1}(x)}{x}$.
+\item A \texttt{Type Error} is raised for non-numeric arguments.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.special.legendreChi(2, 1)       #c# Returns approximately 1.2337  (= pi^2/8)
+f.special.legendreChi(2, 0.5)     #c# Returns approximately 0.5203
+f.special.legendreChi(1, 0.5)     #c# Returns approximately 0.5493  (= arctanh(0.5))
 \end{verbatim}
 
 \section{User-defined Functions}

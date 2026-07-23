@@ -13,6 +13,9 @@ n / m  Division (always returns real)
 n // m Floor Division (returns int)
 n % m  Modulo
 n ^ m  Exponentiation
+n ** m  Tetration (n ↑↑ m)
+n *** m Pentation (n ↑↑↑ m)
+n **** m Hexation (n ↑⁶ m)
 n << m Left Shift (returns int)
 n >> m Right Shift (returns int)
 n <<<[w] m Left Rotate (returns int, w-bit word)
@@ -79,6 +82,14 @@ n >>>[w] m Right Rotate (returns int, w-bit word)
 \item \texttt{\^{}}: \texttt{complex \^{} int} $\rightarrow$ \texttt{complex}
 \item \texttt{\^{}}: \texttt{complex \^{} real} $\rightarrow$ \texttt{complex}
 \item \texttt{\^{}}: \texttt{complex \^{} complex} $\rightarrow$ \texttt{complex}
+\item \texttt{**}: \texttt{int ** int} $\rightarrow$ \texttt{int} (arbitrary precision)
+\item \texttt{**}: \texttt{int ** real} $\rightarrow$ \texttt{real}
+\item \texttt{**}: \texttt{real ** int} $\rightarrow$ \texttt{real}
+\item \texttt{**}: \texttt{real ** real} $\rightarrow$ \texttt{real}
+\item \texttt{**}: any \texttt{complex} operand $\rightarrow$ \texttt{complex}
+\item \texttt{***}: same type rules as \texttt{**}
+\item \texttt{****}: same type rules as \texttt{**}
+\item For \texttt{**}, \texttt{***}, \texttt{****}: right operand must be \texttt{int}. A \texttt{Type Error} is raised otherwise.
 \end{itemize}
 
 Mixed-type operations promote to \texttt{real}. If any operand is \texttt{complex}, the result is \texttt{complex}. Floor division (\texttt{//}) truncates toward negative infinity. Modulo uses truncated division (\texttt{sign(result) = sign(dividend)}). Exponentiation is right-associative: \texttt{-2\^{}3 = -8}.
@@ -90,6 +101,39 @@ Mixed-type operations promote to \texttt{real}. If any operand is \texttt{comple
 \item Shift operators (\texttt{<<}, \texttt{>>}) require \texttt{int} operands; a \texttt{Type Error} is raised otherwise. The right operand must be non-negative; a \texttt{Value Error} is raised for negative shift amounts.
 \item Rotation operators (\texttt{<<<[w]}, \texttt{>>>[w]}) require \texttt{int} operands; a \texttt{Type Error} is raised otherwise. The word width \texttt{w} must be a positive \texttt{int}; a \texttt{Value Error} is raised for non-positive widths. The rotation amount must be non-negative; a \texttt{Value Error} is raised otherwise.
 \item A \texttt{Type Error} is raised when operands are incompatible (e.g., \texttt{string + int}).
+\end{itemize}
+
+\subsection{Hyperoperations}
+Hyperoperation operators compute iterated exponentiation and beyond. The right operand must always be \texttt{int}.
+\begin{verbatim}
+n ** m   Tetration    (n ↑↑ m)   iterated exponentiation
+n *** m  Pentation    (n ↑↑↑ m)  iterated tetration
+n **** m Hexation     (n ↑⁶ m)   iterated pentation
+\end{verbatim}
+
+\paragraph{Semantics}
+\begin{itemize}
+\item \texttt{n ** m}: $n \uparrow\uparrow m$ = $\underbrace{n^{n^{\cdot^{\cdot^n}}}}_{m \text{ times}}$. Right-associative like \texttt{\^{}}.
+\item \texttt{n *** m}: $n \uparrow\uparrow\uparrow m$ = iterated tetration.
+\item \texttt{n **** m}: $n \uparrow^{6} m$ = iterated pentation.
+\item The right operand must be \texttt{int} $\geq 0$. A \texttt{Type Error} is raised for non-integer right operand. A \texttt{Value Error} is raised for negative right operand.
+\item These operators are equivalent to \texttt{f.log.hyperop(4, n, m)}, \texttt{f.log.hyperop(5, n, m)}, \texttt{f.log.hyperop(6, n, m)} respectively.
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+2 ** 4         #c# Returns 65536      (2 ↑↑ 4 = 2^2^2^2)
+3 ** 3         #c# Returns 7625597484987  (3 ↑↑ 3 = 3^3^3)
+2 ** 1         #c# Returns 2          (2 ↑↑ 1 = 2)
+2 ** 0         #c# Returns 1          (2 ↑↑ 0 = 1 by convention)
+2 *** 3        #c# Returns 65536      (2 ↑↑↑ 3 = 2 ↑↑ (2 ↑↑ 2))
+2 **** 3       #c# Returns 65536      (2 ↑⁶ 3)
+\end{verbatim}
+
+\paragraph{Edge Cases}
+\begin{itemize}
+\item Overflow: values grow astronomically fast. A \texttt{Value Error} is raised if the result exceeds $2^{20}$ bits.
+\item Complex operands: supported for \texttt{**} (tetration) with integer right operand. Returns \texttt{complex}.
 \end{itemize}
 
 \subsection{Increment / Decrement}
@@ -162,6 +206,17 @@ $var .^r= expr $var = expr .^ $var  (reverse matrix power)
 $var ~.T       $var = $var .T       (transpose in place)
 $var ~.H       $var = $var .H       (hermitian transpose in place)
 $var ~.E       $var = null          (erase, secure zeroize)
+$var ~.E+      $var = null          (cryptographic shred, zeroize + overwrite)
+\end{verbatim}
+
+\subsubsection{Hyperoperations}
+\begin{verbatim}
+$var **= expr   $var = $var ** expr   (tetration)
+$var ***= expr  $var = $var *** expr  (pentation)
+$var ****= expr $var = $var **** expr (hexation)
+$var **r= expr  $var = expr ** $var   (reverse tetration)
+$var ***r= expr $var = expr *** $var  (reverse pentation)
+$var ****r= expr $var = expr **** $var (reverse hexation)
 \end{verbatim}
 
 \subsubsection{Bitwise / Shift}
@@ -747,7 +802,7 @@ $var ~.E  Erase (sets variable to null)
 \item Result: none (statement, not expression)
 \item \texttt{\textasciitilde.E} clears the variable's value, setting it to \texttt{null}. The variable binding remains and can be reassigned.
 \item Any subsequent access to the variable before reassignment raises a \texttt{Runtime Error}.
-\item Use case: secure zeroization of sensitive data (passwords, keys, tokens). The old value is released immediately and cannot be recovered.
+\item Use case: secure zeroization of sensitive data (passwords, keys, tokens). The old value is released immediately and cannot be recovered. For cryptographic-grade destruction (provable irrecoverability), use \texttt{\textasciitilde.E+} instead.
 \end{itemize}
 
 Examples:
@@ -760,6 +815,33 @@ $password ~.E                 #c# $password is now null
 $pin [string]= "1234"
 $pin ~.E
 $pin [string]= "5678"         #c# reassign after erase is valid
+\end{verbatim}
+
+\subsubsection{Cryptographic Shred}
+\begin{verbatim}
+$var ~.E+  Cryptographic shred (overwrite + erase)
+\end{verbatim}
+
+\begin{itemize}
+\item Operands: any variable
+\item Result: none (statement, not expression)
+\item \texttt{\textasciitilde.E+} performs a cryptographic shred of the variable's memory. Before releasing the value, the memory region is overwritten with pseudorandom data (8 passes alternating random bytes and complement bits), then the variable is set to \texttt{null}.
+\item The variable binding remains and can be reassigned.
+\item Any subsequent access to the variable before reassignment raises a \texttt{Runtime Error}.
+\item Use case: destruction of highly sensitive data (private keys, master secrets, cryptographic material) where a simple pointer nullification is insufficient to prevent forensic recovery.
+\item Overhead compared to \texttt{\textasciitilde.E}: ~8x (8 overwrite passes). Recommended for secrets that must be provably irrecoverable.
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$secret [string]= "RSA-PRIVATE-KEY-..."
+#c# ... use $secret ...
+$secret ~.E+               #c# memory overwritten 8x, then null
+#c# $secret               #c# Runtime Error (access before reassign)
+
+$key [tensor]= |[0x4a, 0x9f, ...]
+$key ~.E+                  #c# tensor memory shredded, then null
+$key [tensor]= |[0x00]    #c# reassign after shred is valid
 \end{verbatim}
 
 \subsubsection{Matrix Power}
@@ -874,11 +956,18 @@ obj?.member   Returns obj.member if obj is not null, else null
 \subsubsection{Safe Indexing (\texttt{?[]})}
 Returns the index access result if the left operand is not \texttt{null}, otherwise returns \texttt{null} without raising a \texttt{Runtime Error}.
 \begin{verbatim}
-array?[index]   Returns array[index] if array is not null, else null
+array?[index]       Returns array[index] if array is not null, else null
+tensor?[i]          Returns tensor[i] if tensor is not null, else null
+tensor?[i, j]       Returns tensor[i, j] if tensor is not null, else null
+tensor?[start:end]  Returns tensor[start:end] if tensor is not null, else null
+tensor?[[indices]]  Returns tensor[[indices]] if tensor is not null, else null
+tensor?[condition]  Returns tensor[condition] if tensor is not null, else null
+tensor?[..., i]     Returns tensor[..., i] if tensor is not null, else null
 \end{verbatim}
 \begin{itemize}
 \item Operands: any, any
-\item Result: element type of the collection if left operand is not null, else null
+\item Result: element/sub-tensor of the collection if left operand is not null, else null
+\item Type Error / Value Error still raised if indexing is invalid (wrong type, out of bounds)
 \end{itemize}
 
 Examples:
@@ -887,6 +976,17 @@ $data = null
 $val [int]= $data?.field        #c# $val = null (no Runtime Error)
 $arr = null
 $item [int]= $arr?[0]           #c# $item = null (no Runtime Error)
+
+# Safe tensor indexing
+$mat = null
+$mat?[0, 1]              #c# Returns null (no error)
+$mat?[0:2]               #c# Returns null (no error)
+$mat?[0:2, 0]            #c# Returns null (no error)
+$mat?[$mat > 0]          #c# Returns null (no error)
+$mat?[..., 0]            #c# Returns null (no error)
+
+# Safe assignment
+$mat?[0] = 99            #c# No-op ($mat is null)
 \end{verbatim}
 
 \subsubsection{Safe Function Call (\texttt{?()})}
@@ -1130,6 +1230,7 @@ Operators are evaluated in the following order (highest to lowest):
 \item \texttt{<<}, \texttt{>>}, \texttt{<<<}, \texttt{>>>} -- Left shift, right shift, left rotate, right rotate
 \item \texttt{+}, \texttt{-} -- Addition, subtraction
 \item \texttt{<}, \texttt{<=}, \texttt{==}, \texttt{!=}, \texttt{=n=}, \texttt{><}, \texttt{>=}, \texttt{>}, \texttt{\textasciitilde}, \texttt{\textasciitilde*}, \texttt{\textasciitilde+()\textasciitilde}, \texttt{\textasciitilde*()\textasciitilde} -- Comparison
+\item \texttt{as} -- Type casting (e.g., \texttt{\$x as real})
 \item \texttt{c}, \texttt{E}, \texttt{!E} -- Set comparison
 \item \texttt{\&\&}, \texttt{!\&}, \texttt{b\&\&}, \texttt{b!\&} -- Logical AND, NAND, Bitwise AND, Bitwise NAND
 \item \texttt{||}, \texttt{!|}, \texttt{b||}, \texttt{b!|} -- Logical OR, NOR, Bitwise OR, Bitwise NOR

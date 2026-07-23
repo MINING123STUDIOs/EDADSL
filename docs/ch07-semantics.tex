@@ -113,7 +113,7 @@ EDADSL performs type checking at both compile time and runtime:
 \end{itemize}
 
 \section{Error Types}
-EDADSL defines six error types. Each error type has a full name and a short alias for use in \texttt{assert} statements and \texttt{f.util.assert} calls.
+EDADSL defines seven error types. Each error type has a full name and a short alias for use in \texttt{assert} statements and \texttt{f.util.assert} calls.
 
 \begin{center}
 \begin{tabular}{lll}
@@ -123,6 +123,7 @@ Full Name & Alias & Typical Cause \\ \hline
 \texttt{Division by Zero Error} & \texttt{0div} & Division by zero \\
 \texttt{Runtime Error} & \texttt{rerr} & Invalid runtime state \\
 \texttt{Assertion Error} & \texttt{aerr} & Failed assertion \\
+\texttt{Permission Error} & \texttt{perm} & Filesystem sandbox violation \\
 \end{tabular}
 \end{center}
 

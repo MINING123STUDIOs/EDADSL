@@ -158,7 +158,7 @@ halt
 \end{verbatim}
 
 \subsection{Explanation}
-The \texttt{if}/\texttt{otherwise}/\texttt{else} chain classifies the resistor into ranges. Use \texttt{otherwise} for else-if conditions. There is no \texttt{match}/\texttt{case} statement; equality checks use nested \texttt{if} with \texttt{==}. The expected output is \texttt{4700.0 ohms: E24 common, standard}.
+The \texttt{if}/\texttt{otherwise}/\texttt{else} chain classifies the resistor into ranges. Use \texttt{otherwise} for else-if conditions. For cleaner multi-branch logic, use the \texttt{cases} statement. The expected output is \texttt{4700.0 ohms: E24 common, standard}.
 
 \section{Lambdas and Higher-Order Functions}
 \subsection{Intent}
@@ -517,16 +517,18 @@ The following diagram visualizes operator precedence from highest (top) to lowes
     level/.style={draw, rectangle, rounded corners, minimum width=5cm, minimum height=0.55cm, align=center, font=\small},
     arrow/.style={->, thick, draw=gray!60}
 ]
-  \node[level, fill=red!20]    (p1) {1. Exponentiation};
-  \node[level, fill=orange!20] (p2) [below of=p1] {2. Boolean NOT, Set Cardinality};
-  \node[level, fill=yellow!20](p3) [below of=p2] {3. Mul, Div, Mod, Matrix};
-  \node[level, fill=green!20]  (p4) [below of=p3] {4. Shift, Rotate};
-  \node[level, fill=cyan!20]   (p5) [below of=p4] {5. Add, Sub};
-  \node[level, fill=blue!20]   (p6) [below of=p5] {6. Comparison};
-  \node[level, fill=purple!20] (p7) [below of=p6] {7. Logical AND, NAND};
-  \node[level, fill=pink!20]   (p8) [below of=p7] {8. Logical OR, NOR};
-  \node[level, fill=red!10]    (p9) [below of=p8] {9. XOR, XNOR, IMPLY, NIMPLY};
+  \node[level, fill=red!20]    (p0) {1. Hexation, Pentation, Tetration};
+  \node[level, fill=orange!20] (p1) [below of=p0] {2. Exponentiation};
+  \node[level, fill=yellow!20] (p2) [below of=p1] {3. Boolean NOT, Set Cardinality};
+  \node[level, fill=green!20] (p3) [below of=p2] {4. Mul, Div, Mod, Matrix};
+  \node[level, fill=cyan!20]  (p4) [below of=p3] {5. Shift, Rotate};
+  \node[level, fill=blue!20]  (p5) [below of=p4] {6. Add, Sub};
+  \node[level, fill=blue!20]  (p6) [below of=p5] {7. Comparison};
+  \node[level, fill=purple!20] (p7) [below of=p6] {8. Logical AND, NAND};
+  \node[level, fill=pink!20]  (p8) [below of=p7] {9. Logical OR, NOR};
+  \node[level, fill=red!10]  (p9) [below of=p8] {10. XOR, XNOR, IMPLY, NIMPLY};
 
+  \draw[arrow] (p0) -- (p1);
   \draw[arrow] (p1) -- (p2);
   \draw[arrow] (p2) -- (p3);
   \draw[arrow] (p3) -- (p4);
@@ -537,6 +539,7 @@ The following diagram visualizes operator precedence from highest (top) to lowes
   \draw[arrow] (p8) -- (p9);
 
   % Annotations on the right
+  \node[draw=none, font=\small, right of=p0, xshift=4cm] {\texttt{** *** ****}};
   \node[draw=none, font=\small, right of=p1, xshift=4cm] {\texttt{\^{}}};
   \node[draw=none, font=\small, right of=p2, xshift=4cm] {\texttt{! ||a}};
   \node[draw=none, font=\small, right of=p3, xshift=4cm] {\texttt{* / // \% .* .\^{}}};
@@ -548,7 +551,7 @@ The following diagram visualizes operator precedence from highest (top) to lowes
   \node[draw=none, font=\small, right of=p9, xshift=4cm] {\texttt{\^{}}\texttt{\^{}} \texttt{!}\texttt{\^{}} \texttt{->} \texttt{!->}};
 
   % Label
-  \node[draw=none, font=\small\bfseries, above of=p1, yshift=0.4cm] {Highest};
+  \node[draw=none, font=\small\bfseries, above of=p0, yshift=0.4cm] {Highest};
   \node[draw=none, font=\small\bfseries, below of=p9, yshift=-0.4cm] {Lowest};
 \end{tikzpicture}
 \end{center}
@@ -556,6 +559,7 @@ The following diagram visualizes operator precedence from highest (top) to lowes
 \vspace{5mm}
 \textbf{Precedence Table:}
 \begin{enumerate}
+\item Hexation (\texttt{****}), Pentation (\texttt{***}), Tetration (\texttt{**}) -- right-associative
 \item Exponentiation (\texttt{\^{}}) -- right-associative
 \item Boolean negation (\texttt{!}), Set cardinality (\texttt{||a})
 \item Multiplication (\texttt{*}), Division (\texttt{/}), Floor Division (\texttt{//}), Modulo (\texttt{\%}), Matrix (\texttt{.* .\^{}})
@@ -689,11 +693,11 @@ The following diagram visualizes key tensor operations: element-wise operations,
 
 \textbf{EDADSL Code:}
 \begin{verbatim}
-|$a [tensor]= |[1, 2, 3]
-|$b [tensor]= |[4, 5, 6]
+$a [tensor]= |[1, 2, 3]
+$b [tensor]= |[4, 5, 6]
 $a + $b         #c# = |[5, 7, 9]
-|$m1 [tensor]= |[[1,2],[3,4]]
-|$m2 [tensor]= |[[5,6],[7,8]]
+$m1 [tensor]= |[[1,2],[3,4]]
+$m2 [tensor]= |[[5,6],[7,8]]
 $m1 .* $m2      #c# = |[[19,22],[43,50]]
 $a + 10         #c# = |[11, 12, 13]
 \end{verbatim}
