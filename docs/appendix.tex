@@ -102,10 +102,10 @@ start
 
 $a [int]= 10
 $b [real]= 3.14
-$c [complex]= 2 + 3i
+$c [complex]= 2 + 3j
 
 $sum t= $a + $b           #c# 13.14 (int + real -> real)
-$prod t= $a * $c          #c# 20 + 30i (int * complex -> complex)
+$prod t= $a * $c          #c# 20 + 30j (int * complex -> complex)
 $hyp t= f.log.sqrt($a^2 + $b^2) #c# ~10.49 (real)
 $ang t= f.cplx.angle($c)          #c# ~0.9828 rad (real)
 
@@ -207,13 +207,13 @@ Perform complex arithmetic, generate a signal, and compute its frequency spectru
 start
 
 # Complex arithmetic
-$z1 [complex]= 3 + 4i
-$z2 [complex]= 1 - 2i
+$z1 [complex]= 3 + 4j
+$z2 [complex]= 1 - 2j
 
-$sum     t= $z1 + $z2         # 4 + 2i
-$product t= $z1 * $z2         # 11 - 2i
+$sum     t= $z1 + $z2         # 4 + 2j
+$product t= $z1 * $z2         # 11 - 2j
 $mag     t= f.math.abs($z1)         # 5.0
-$conj_z  t= f.cplx.conj($z2)        # 1 + 2i
+$conj_z  t= f.cplx.conj($z2)        # 1 + 2j
 
 f.util.print(f.str.str("|z1| = ", $mag))
 f.util.print(f.str.str("z1 * z2 = ", $product))
@@ -482,7 +482,7 @@ The following diagram shows the EDADSL type hierarchy, including numeric promoti
   \node (bool) {bool\\[-2pt]\texttt{True}};
   \node (int) [above of=bool] {int\\[-2pt]\texttt{5}};
   \node (real) [above of=int] {real\\[-2pt]\texttt{5.0}};
-  \node (complex) [above of=real] {complex\\[-2pt]\texttt{3 + 4i}};
+  \node (complex) [above of=real] {complex\\[-2pt]\texttt{3 + 4j}};
 
   \draw[promote] (bool) -- node[right, draw=none] {promote} (int);
   \draw[promote] (int) -- node[right, draw=none] {promote} (real);
@@ -517,16 +517,15 @@ The following diagram visualizes operator precedence from highest (top) to lowes
     level/.style={draw, rectangle, rounded corners, minimum width=5cm, minimum height=0.55cm, align=center, font=\small},
     arrow/.style={->, thick, draw=gray!60}
 ]
-  \node[level, fill=red!20]    (p0) {1. Hexation, Pentation, Tetration};
-  \node[level, fill=orange!20] (p1) [below of=p0] {2. Exponentiation};
-  \node[level, fill=yellow!20] (p2) [below of=p1] {3. Boolean NOT, Set Cardinality};
-  \node[level, fill=green!20] (p3) [below of=p2] {4. Mul, Div, Mod, Matrix};
-  \node[level, fill=cyan!20]  (p4) [below of=p3] {5. Shift, Rotate};
-  \node[level, fill=blue!20]  (p5) [below of=p4] {6. Add, Sub};
-  \node[level, fill=blue!20]  (p6) [below of=p5] {7. Comparison};
-  \node[level, fill=purple!20] (p7) [below of=p6] {8. Logical AND, NAND};
-  \node[level, fill=pink!20]  (p8) [below of=p7] {9. Logical OR, NOR};
-  \node[level, fill=red!10]  (p9) [below of=p8] {10. XOR, XNOR, IMPLY, NIMPLY};
+  \node[level, fill=orange!20] (p0) {1. Exponentiation};
+  \node[level, fill=yellow!20] (p1) [below of=p0] {2. Boolean NOT, Set Cardinality};
+  \node[level, fill=green!20] (p2) [below of=p1] {3. Mul, Div, Mod, Matrix};
+  \node[level, fill=cyan!20]  (p3) [below of=p2] {4. Shift, Rotate};
+  \node[level, fill=blue!20]  (p4) [below of=p3] {5. Add, Sub};
+  \node[level, fill=blue!20]  (p5) [below of=p4] {6. Comparison};
+  \node[level, fill=purple!20] (p6) [below of=p5] {7. Logical AND, NAND};
+  \node[level, fill=pink!20]  (p7) [below of=p6] {8. Logical OR, NOR};
+  \node[level, fill=red!10]  (p8) [below of=p7] {9. XOR, XNOR, IMPLY, NIMPLY};
 
   \draw[arrow] (p0) -- (p1);
   \draw[arrow] (p1) -- (p2);
@@ -536,30 +535,27 @@ The following diagram visualizes operator precedence from highest (top) to lowes
   \draw[arrow] (p5) -- (p6);
   \draw[arrow] (p6) -- (p7);
   \draw[arrow] (p7) -- (p8);
-  \draw[arrow] (p8) -- (p9);
 
   % Annotations on the right
-  \node[draw=none, font=\small, right of=p0, xshift=4cm] {\texttt{** *** ****}};
-  \node[draw=none, font=\small, right of=p1, xshift=4cm] {\texttt{\^{}}};
-  \node[draw=none, font=\small, right of=p2, xshift=4cm] {\texttt{! ||a}};
-  \node[draw=none, font=\small, right of=p3, xshift=4cm] {\texttt{* / // \% .* .\^{}}};
-  \node[draw=none, font=\small, right of=p4, xshift=4cm] {\texttt{<< >> <<< >>>}};
-  \node[draw=none, font=\small, right of=p5, xshift=4cm] {\texttt{+ -}};
-  \node[draw=none, font=\small, right of=p6, xshift=4cm] {\texttt{< <= == != >< >= >}};
-  \node[draw=none, font=\small, right of=p7, xshift=4cm] {\texttt{\&\& !\&}};
-  \node[draw=none, font=\small, right of=p8, xshift=4cm] {\texttt{|| !|}};
-  \node[draw=none, font=\small, right of=p9, xshift=4cm] {\texttt{\^{}}\texttt{\^{}} \texttt{!}\texttt{\^{}} \texttt{->} \texttt{!->}};
+  \node[draw=none, font=\small, right of=p0, xshift=4cm] {\texttt{\^{}}};
+  \node[draw=none, font=\small, right of=p1, xshift=4cm] {\texttt{! ||a}};
+  \node[draw=none, font=\small, right of=p2, xshift=4cm] {\texttt{* / // \% .* .\^{}}};
+  \node[draw=none, font=\small, right of=p3, xshift=4cm] {\texttt{<< >> <<< >>>}};
+  \node[draw=none, font=\small, right of=p4, xshift=4cm] {\texttt{+ -}};
+  \node[draw=none, font=\small, right of=p5, xshift=4cm] {\texttt{< <= == != >< >= >}};
+  \node[draw=none, font=\small, right of=p6, xshift=4cm] {\texttt{\&\& !\&}};
+  \node[draw=none, font=\small, right of=p7, xshift=4cm] {\texttt{|| !|}};
+  \node[draw=none, font=\small, right of=p8, xshift=4cm] {\texttt{\^{}}\texttt{\^{}} \texttt{!}\texttt{\^{}} \texttt{->} \texttt{!->}};
 
   % Label
   \node[draw=none, font=\small\bfseries, above of=p0, yshift=0.4cm] {Highest};
-  \node[draw=none, font=\small\bfseries, below of=p9, yshift=-0.4cm] {Lowest};
+  \node[draw=none, font=\small\bfseries, below of=p8, yshift=-0.4cm] {Lowest};
 \end{tikzpicture}
 \end{center}
 
 \vspace{5mm}
 \textbf{Precedence Table:}
 \begin{enumerate}
-\item Hexation (\texttt{****}), Pentation (\texttt{***}), Tetration (\texttt{**}) -- right-associative
 \item Exponentiation (\texttt{\^{}}) -- right-associative
 \item Boolean negation (\texttt{!}), Set cardinality (\texttt{||a})
 \item Multiplication (\texttt{*}), Division (\texttt{/}), Floor Division (\texttt{//}), Modulo (\texttt{\%}), Matrix (\texttt{.* .\^{}})

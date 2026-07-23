@@ -346,6 +346,9 @@ writetolog "Board design completed successfully"
 \item \texttt{writetolog} -- Keyword that appends a message to the log file
 \end{itemize}
 
+
+
+
 \chapter{Functions}
 \section{Built-in Functions}
 
@@ -414,9 +417,9 @@ The Result is always a Real Number, even if the Argument is Complex.\\
 Domain: All Complex Numbers ($\mathbb{C}$).\\
 Example:
 \begin{verbatim}
-f.math.abs(3 + 4i)   #c# Returns 5.0
-f.math.abs(1 + 1i)   #c# Returns approximately 1.41421
-f.math.abs(0 - 5i)   #c# Returns 5.0
+f.math.abs(3 + 4j)   #c# Returns 5.0
+f.math.abs(1 + 1j)   #c# Returns approximately 1.41421
+f.math.abs(0 - 5j)   #c# Returns 5.0
 \end{verbatim}
 
 \subsubsection{Parallel Equivalent Function}
@@ -454,9 +457,9 @@ f.math.parallel([100, 200, inf])      #c# Returns 66.666... (inf ignored)
 When the List contains Complex Numbers, the function computes the parallel combination using Complex Arithmetic. If the Result has a Zero Imaginary Part, it is Returned as \texttt{real}. \\
 Example:
 \begin{verbatim}
-f.math.parallel([100 + 0i, 200 + 0i])
+f.math.parallel([100 + 0j, 200 + 0j])
     #c# Returns 66.666... (real, imag=0)
-f.math.parallel([3 + 4i, 1 - 2i])           #c# Returns complex result
+f.math.parallel([3 + 4j, 1 - 2j])           #c# Returns complex result
 \end{verbatim}
 Domain: All Lists of Numeric Values. Empty Lists raise a Value Error. Lists with a single Element return that Element unchanged (after \texttt{softint}(\texttt{softreal}())).\\
 
@@ -490,11 +493,48 @@ When the Argument is a Complex Number $z = a + bi$, \texttt{sign} returns the un
 Domain: All Complex Numbers ($\mathbb{C}$).
 Examples:
 \begin{verbatim}
-f.math.sign(3 + 4i)     #c# Returns approximately 0.6 + 0.8i
-f.math.sign(0 + 0i)     #c# Returns 0 (int)
-f.math.sign(1 + 0i)     #c# Returns 1 + 0i
+f.math.sign(3 + 4j)     #c# Returns approximately 0.6 + 0.8j
+f.math.sign(0 + 0j)     #c# Returns 0 (int)
+f.math.sign(1 + 0j)     #c# Returns 1 + 0j
 \end{verbatim}
 
+\subsubsection{Heaviside Step Function}
+The Heaviside Step Function ( denoted as \texttt{hstep} ) returns \texttt{0} for negative arguments, \texttt{1} for positive arguments, and a configurable value at zero. \\
+Morphology of the Heaviside Step Function:
+\begin{verbatim}
+EBNF:
+"f.math.hstep", "(", argument, [",", at_zero], ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: \texttt{int}, \texttt{real}, or \texttt{complex} (\texttt{argument}); optional \texttt{int} or \texttt{real} (\texttt{at\_zero}, default \texttt{0.5}).
+\item Result: \texttt{real} (or \texttt{complex} if \texttt{argument} is complex).
+\item \texttt{at\_zero} controls the return value when the argument is zero: \texttt{0} yields right-continuous ($H(0) = 0$), \texttt{1} yields left-continuous ($H(0) = 1$), \texttt{0.5} (default) is the standard math convention.
+\item A \texttt{Value Error} is raised if \texttt{at\_zero} is not numeric.
+\item A \texttt{Type Error} is raised if the argument is not numeric.
+\end{itemize}
+\[
+\text{hstep}(x) = \begin{cases} 0 & x < 0 \\ \texttt{at\_zero} & x = 0 \\ 1 & x > 0 \end{cases}
+\]
+Examples:
+\begin{verbatim}
+f.math.hstep(-3)              #c# Returns 0
+f.math.hstep(0)               #c# Returns 0.5
+f.math.hstep(5)               #c# Returns 1
+f.math.hstep(0, 0)            #c# Returns 0
+f.math.hstep(0, 1)            #c# Returns 1
+f.math.hstep([-2, 0, 3])      #c# Returns [0, 0.5, 1]
+f.math.hstep([-2, 0, 3], 0)   #c# Returns [0, 0, 1]
+\end{verbatim}
+
+\paragraph{Complex Overload}
+For complex arguments, \texttt{hstep} thresholds on the real part: \texttt{Re(z) > 0} yields \texttt{1}, \texttt{Re(z) < 0} yields \texttt{0}, \texttt{Re(z) = 0} yields \texttt{at\_zero + 0j}.
+Examples:
+\begin{verbatim}
+f.math.hstep(3 + 4j)         #c# Returns 1      (Re > 0)
+f.math.hstep(-3 + 4j)        #c# Returns 0      (Re < 0)
+f.math.hstep(0 + 4j)         #c# Returns 0.5+0j (Re = 0)
+f.math.hstep(0 + 4j, 0)      #c# Returns 0+0j   (Re = 0, at_zero=0)
+\end{verbatim}
 
 \subsubsection{Sine Function}
 Computes the sine of an angle. Angles are interpreted as radians by default. \\
@@ -514,7 +554,7 @@ Examples:
 \begin{verbatim}
 f.trig.sin(1.570796327)              #c# Returns approximately 1.0
 f.trig.sin([0, 30, 90], unit="deg")  #c# Returns [0, 0.5, 1]
-f.trig.sin(1 + 2i)                  #c# Returns approximately 3.1658 - 1.9596i
+f.trig.sin(1 + 2j)                  #c# Returns approximately 3.1658 - 1.9596j
 \end{verbatim}
 
 \subsubsection{Cosine Function}
@@ -535,7 +575,7 @@ Examples:
 \begin{verbatim}
 f.trig.cos(0)                       #c# Returns 1.0
 f.trig.cos([0, 60, 90], unit="deg")  #c# Returns [1, 0.5, 0]
-f.trig.cos(1 + 2i)                  #c# Returns approximately 2.0327 + 3.0519i
+f.trig.cos(1 + 2j)                  #c# Returns approximately 2.0327 + 3.0519j
 \end{verbatim}
 
 \subsubsection{Tangent Function}
@@ -557,7 +597,7 @@ Examples:
 \begin{verbatim}
 f.trig.tan(0)                       #c# Returns 0.0
 f.trig.tan([0, 45, 90], unit="deg")  #c# Returns [0, 1, inf]
-f.trig.tan(0 + 1i)                  #c# Returns approximately 0.0 + 0.7616i
+f.trig.tan(0 + 1j)                  #c# Returns approximately 0.0 + 0.7616j
 \end{verbatim}
 
 \subsubsection{Cotangent Function}
@@ -768,7 +808,7 @@ Examples:
 \begin{verbatim}
 f.hyp.sinh(0)          #c# Returns 0.0
 f.hyp.sinh(1.443635475)  #c# Returns approximately 2.0
-f.hyp.sinh(1 + 2i)     #c# Returns approximately -0.4891 + 0.9889i
+f.hyp.sinh(1 + 2j)     #c# Returns approximately -0.4891 + 0.9889j
 \end{verbatim}
 
 \subsubsection{Hyperbolic Cosine Function}
@@ -788,7 +828,7 @@ Examples:
 \begin{verbatim}
 f.hyp.cosh(0)          #c# Returns 1.0
 f.hyp.cosh(1)          #c# Returns approximately 1.5431
-f.hyp.cosh(1 + 2i)     #c# Returns approximately -0.4891 + 0.9889i
+f.hyp.cosh(1 + 2j)     #c# Returns approximately -0.4891 + 0.9889j
 \end{verbatim}
 
 \subsubsection{Hyperbolic Tangent Function}
@@ -808,7 +848,7 @@ Examples:
 \begin{verbatim}
 f.hyp.tanh(0)          #c# Returns 0.0
 f.hyp.tanh(1)          #c# Returns approximately 0.7616
-f.hyp.tanh(0 + 1i)     #c# Returns approximately 0.0 + 0.5524i
+f.hyp.tanh(0 + 1j)     #c# Returns approximately 0.0 + 0.5524j
 \end{verbatim}
 
 \subsubsection{Hyperbolic Cotangent Function}
@@ -893,7 +933,7 @@ Examples:
 \begin{verbatim}
 f.hyp.asinh(0)          #c# Returns 0.0
 f.hyp.asinh(1)          #c# Returns approximately 0.8814
-f.hyp.asinh(1 + 2i)     #c# Returns approximately 1.4694 + 1.0987i
+f.hyp.asinh(1 + 2j)     #c# Returns approximately 1.4694 + 1.0987j
 \end{verbatim}
 
 \subsubsection{Hyperbolic Arccosine Function}
@@ -914,7 +954,7 @@ Examples:
 \begin{verbatim}
 f.hyp.acosh(1)          #c# Returns 0.0
 f.hyp.acosh(2)          #c# Returns approximately 1.3170
-f.hyp.acosh(1 + 2i)     #c# Returns approximately 1.5286 + 1.1437i
+f.hyp.acosh(1 + 2j)     #c# Returns approximately 1.5286 + 1.1437j
 \end{verbatim}
 
 \subsubsection{Hyperbolic Arctangent Function}
@@ -935,7 +975,7 @@ Examples:
 \begin{verbatim}
 f.hyp.atanh(0)          #c# Returns 0.0
 f.hyp.atanh(0.5)        #c# Returns approximately 0.5493
-f.hyp.atanh(0.5 + 0i)   #c# Returns approximately 0.5493 + 0.0i
+f.hyp.atanh(0.5 + 0j)   #c# Returns approximately 0.5493 + 0.0j
 \end{verbatim}
 
 \subsubsection{Inverse Hyperbolic Cotangent Function}
@@ -1019,8 +1059,8 @@ Examples:
 \begin{verbatim}
 f.log.exp(0)              #c# Returns 1.0
 f.log.exp(1)              #c# Returns approximately 2.71828
-f.log.exp(0 + 3.14159i)   #c# Returns approximately -1 + 0.0i (Euler's Identity)
-f.log.exp(1 + 1i)         #c# Returns approximately 1.4687 + 2.2874i
+f.log.exp(0 + 3.14159j)   #c# Returns approximately -1 + 0.0j (Euler's Identity)
+f.log.exp(1 + 1j)         #c# Returns approximately 1.4687 + 2.2874j
 \end{verbatim}
 
 \subsubsection{Square Root Function}
@@ -1041,9 +1081,9 @@ Examples:
 \begin{verbatim}
 f.log.sqrt(9)          #c# Returns 3.0
 f.log.sqrt(2)          #c# Returns approximately 1.41421
-f.log.sqrt(-1)         #c# Returns 0 + 1i
-f.log.sqrt(-4)         #c# Returns 0 + 2i
-f.log.sqrt(3 + 4i)     #c# Returns approximately 2 + 1i
+f.log.sqrt(-1)         #c# Returns 0 + 1j
+f.log.sqrt(-4)         #c# Returns 0 + 2j
+f.log.sqrt(3 + 4j)     #c# Returns approximately 2 + 1j
 f.log.sqrt(0)          #c# Returns 0.0
 \end{verbatim}
 
@@ -1070,8 +1110,8 @@ f.log.pow(9, 0.5)       #c# Returns 3.0 (real)
 f.log.pow(3, 4, 7)      #c# Returns 4  (81 mod 7)
 f.log.pow(2, 32, 100)   #c# Returns 96  (4294967296 mod 100)
 f.log.pow(3, -1, 7)     #c# Returns 5  (modular inverse: 3*5=15==1 mod 7)
-f.log.pow(2, 1 + 1i)    #c# Returns approximately 1.538 + 0.999i
-f.log.pow(1 + 1i, 2)    #c# Returns 0 + 2i
+f.log.pow(2, 1 + 1j)    #c# Returns approximately 1.538 + 0.999j
+f.log.pow(1 + 1j, 2)    #c# Returns 0 + 2j
 \end{verbatim}
 
 \subsubsection{Hyperoperation}
@@ -1127,7 +1167,7 @@ f.log.hyperop(4, 2, 4)      #c# Returns 65536      (tetration: 2^2^2^2)
 f.log.hyperop(4, 3, 3)      #c# Returns 7625597484987  (3^3^3)
 f.log.hyperop(5, 2, 3)      #c# Returns 65536      (pentation)
 f.log.hyperop(6, 2, 3)      #c# Returns 65536      (hexation)
-f.log.hyperop(4, 1+1i, 2)   #c# Returns approximately 0 + 2i
+f.log.hyperop(4, 1+1j, 2)   #c# Returns approximately 0 + 2j
 f.log.hyperop(3, 2.5, 3)    #c# Returns 15.625     (real)
 
 # With modulus
@@ -1173,7 +1213,7 @@ f.log.nthhyprt(27, 3, 3)     #c# Returns 3.0       (cube root of 27)
 f.log.nthhyprt(65536, 4, 2)  #c# Returns 4          (2nd hyperroot: x^x = 65536 → x = 4)
 f.log.nthhyprt(7625597484987, 4, 3)  #c# Returns 3  (3rd hyperroot: x^x^x = ...)
 f.log.nthhyprt(16, 3, 4)     #c# Returns 2.0       (4th root of 16)
-f.log.nthhyprt(0 + 64i, 3, 3) #c# Returns approximately 2 + 2i  (complex root)
+f.log.nthhyprt(0 + 64j, 3, 3) #c# Returns approximately 2 + 2j  (complex root)
 \end{verbatim}
 
 \subsubsection{Super-Logarithm}
@@ -1230,7 +1270,7 @@ Examples:
 f.log.ln(1)          #c# Returns 0.0
 f.log.ln(c.math.e)        #c# Returns approximately 1.0
 f.log.ln(100)        #c# Returns approximately 4.6052
-f.log.ln(1 + 1i)     #c# Returns approximately 0.3466 + 0.7854i
+f.log.ln(1 + 1j)     #c# Returns approximately 0.3466 + 0.7854j
 \end{verbatim}
 
 \subsubsection{Base-10 Logarithm}
@@ -1251,7 +1291,7 @@ Examples:
 f.log10(1)          #c# Returns 0.0
 f.log10(10)         #c# Returns 1.0
 f.log10(1000)       #c# Returns 3.0
-f.log10(1 + 1i)     #c# Returns approximately 0.1505 + 0.3411i
+f.log10(1 + 1j)     #c# Returns approximately 0.1505 + 0.3411j
 \end{verbatim}
 
 \subsubsection{Expm1 Function}
@@ -1446,8 +1486,8 @@ EBNF:
 \end{itemize}
 Examples:
 \begin{verbatim}
-f.cplx.real(3 + 4i)   #c# Returns 3.0
-f.cplx.real(-2i)      #c# Returns 0.0
+f.cplx.real(3 + 4j)   #c# Returns 3.0
+f.cplx.real(-2j)      #c# Returns 0.0
 f.cplx.real(5)        #c# Returns 5.0 (int promoted)
 \end{verbatim}
 
@@ -1465,8 +1505,8 @@ EBNF:
 \end{itemize}
 Examples:
 \begin{verbatim}
-f.cplx.imag(3 + 4i)   #c# Returns 4.0
-f.cplx.imag(-2i)      #c# Returns -2.0
+f.cplx.imag(3 + 4j)   #c# Returns 4.0
+f.cplx.imag(-2j)      #c# Returns -2.0
 f.cplx.imag(5)        #c# Returns 0.0 (real has no imaginary part)
 \end{verbatim}
 
@@ -1485,10 +1525,10 @@ EBNF:
 \end{itemize}
 Examples:
 \begin{verbatim}
-f.cplx.angle(1 + 0i)      #c# Returns 0.0
-f.cplx.angle(0 + 1i)      #c# Returns 1.5708 (pi/2)
-f.cplx.angle(-1 + 0i)     #c# Returns 3.14159 (pi)
-f.cplx.angle(1 + 1i)      #c# Returns 0.7854 (pi/4)
+f.cplx.angle(1 + 0j)      #c# Returns 0.0
+f.cplx.angle(0 + 1j)      #c# Returns 1.5708 (pi/2)
+f.cplx.angle(-1 + 0j)     #c# Returns 3.14159 (pi)
+f.cplx.angle(1 + 1j)      #c# Returns 0.7854 (pi/4)
 \end{verbatim}
 
 \subsubsection{Complex Conjugate Function}
@@ -1505,8 +1545,8 @@ EBNF:
 \end{itemize}
 Examples:
 \begin{verbatim}
-f.cplx.conj(3 + 4i)   #c# Returns 3 - 4i
-f.cplx.conj(-2i)      #c# Returns 2i
+f.cplx.conj(3 + 4j)   #c# Returns 3 - 4j
+f.cplx.conj(-2j)      #c# Returns 2j
 f.cplx.conj(5)        #c# Returns 5 (real numbers are self-conjugate)
 \end{verbatim}
 
@@ -1525,9 +1565,9 @@ EBNF:
 \end{itemize}
 Examples:
 \begin{verbatim}
-f.cplx.polar(3 + 4i)     #c# Returns [5.0, 0.9273]
-f.cplx.polar(1 + 0i)     #c# Returns [1.0, 0.0]
-f.cplx.polar(0 + 1i)     #c# Returns [1.0, 1.5708]
+f.cplx.polar(3 + 4j)     #c# Returns [5.0, 0.9273]
+f.cplx.polar(1 + 0j)     #c# Returns [1.0, 0.0]
+f.cplx.polar(0 + 1j)     #c# Returns [1.0, 1.5708]
 \end{verbatim}
 
 \subsubsection{Rectangular Conversion Function}
@@ -1545,9 +1585,9 @@ EBNF:
 \end{itemize}
 Examples:
 \begin{verbatim}
-f.cplx.rect(5, 0.9273)      #c# Returns approximately 3 + 4i
-f.cplx.rect(1, 0)           #c# Returns 1 + 0i
-f.cplx.rect(1, 1.5708)      #c# Returns approximately 0 + 1i
+f.cplx.rect(5, 0.9273)      #c# Returns approximately 3 + 4j
+f.cplx.rect(1, 0)           #c# Returns 1 + 0j
+f.cplx.rect(1, 1.5708)      #c# Returns approximately 0 + 1j
 \end{verbatim}
 
 \subsubsection{Cis Function}
@@ -1565,10 +1605,10 @@ EBNF:
 \end{itemize}
 Examples:
 \begin{verbatim}
-f.cplx.cis(0)           #c# Returns 1 + 0i
-f.cplx.cis(1.5708)      #c# Returns approximately 0 + 1i  (pi/2)
-f.cplx.cis(3.14159)     #c# Returns approximately -1 + 0i (pi)
-f.cplx.cis(-1.5708)     #c# Returns approximately 0 - 1i  (-pi/2)
+f.cplx.cis(0)           #c# Returns 1 + 0j
+f.cplx.cis(1.5708)      #c# Returns approximately 0 + 1j  (pi/2)
+f.cplx.cis(3.14159)     #c# Returns approximately -1 + 0j (pi)
+f.cplx.cis(-1.5708)     #c# Returns approximately 0 - 1j  (-pi/2)
 \end{verbatim}
 
 \subsubsection{Radians to Degrees Function}
@@ -1726,12 +1766,13 @@ Returns the minimum value in a list. For tensors, an optional \texttt{axis} para
 Morphology:
 \begin{verbatim}
 EBNF:
-"f.math.min", "(", list, [ ",", "axis", "=", int ], ")"
+"f.math.min", "(", list, [ ",", "axis", "=", int ], [ ",", "ignoreNan", "=", bool ], ")"
 \end{verbatim}
 \begin{itemize}
 \item Operands: \texttt{list} of comparable elements, or \texttt{tensor}. Optional \texttt{axis}: \texttt{int} (tensor only).
 \item Result: the smallest element in the list/array.
 \item For tensors with \texttt{axis}, reduces along the specified axis, returning an tensor.
+\item Optional \texttt{ignoreNan}: if \texttt{true}, NaN elements are skipped (default: \texttt{false}).
 \item A \texttt{Value Error} is raised if the list is empty.
 \item A \texttt{Type Error} is raised if the argument is not a list or tensor.
 \item A \texttt{Type Error} is raised if elements are not comparable (e.g., mixing \texttt{int} and \texttt{string}).
@@ -1741,6 +1782,7 @@ Examples:
 f.math.min([3, 1, 4, 1, 5])              #c# Returns 1
 f.math.min([[3,1],[4,2]], axis=0)        #c# Returns [3, 1]
 f.math.min([[3,1],[4,2]], axis=1)        #c# Returns [1, 2]
+f.math.min([3, c.math.NaN, 1], ignoreNan=true)  #c# Returns 1
 \end{verbatim}
 
 \subsubsection{Maximum Function}
@@ -1748,12 +1790,13 @@ Returns the maximum value in a list. For tensors, an optional \texttt{axis} para
 Morphology:
 \begin{verbatim}
 EBNF:
-"f.math.max", "(", list, [ ",", "axis", "=", int ], ")"
+"f.math.max", "(", list, [ ",", "axis", "=", int ], [ ",", "ignoreNan", "=", bool ], ")"
 \end{verbatim}
 \begin{itemize}
 \item Operands: \texttt{list} of comparable elements, or \texttt{tensor}. Optional \texttt{axis}: \texttt{int} (tensor only).
 \item Result: the largest element in the list/array.
 \item For tensors with \texttt{axis}, reduces along the specified axis, returning an tensor.
+\item Optional \texttt{ignoreNan}: if \texttt{true}, NaN elements are skipped (default: \texttt{false}).
 \item A \texttt{Value Error} is raised if the list is empty.
 \item A \texttt{Type Error} is raised if the argument is not a list or tensor.
 \item A \texttt{Type Error} is raised if elements are not comparable.
@@ -1763,6 +1806,7 @@ Examples:
 f.math.max([3, 1, 4, 1, 5])              #c# Returns 5
 f.math.max([[3,1],[4,2]], axis=0)        #c# Returns [4, 2]
 f.math.max([[3,1],[4,2]], axis=1)        #c# Returns [3, 4]
+f.math.max([3, c.math.NaN, 1], ignoreNan=true)  #c# Returns 3
 \end{verbatim}
 
 \subsubsection{Inverse Tangent Function based on a Vector Argument}
@@ -1998,7 +2042,7 @@ Examples:
 \begin{verbatim}
 f.math.trunc(3.7)        #c# Returns 3
 f.math.trunc(-3.7)       #c# Returns -3
-f.math.trunc(3.2 + 4.8i) #c# Returns 3 + 4i
+f.math.trunc(3.2 + 4.8j) #c# Returns 3 + 4j
 \end{verbatim}
 
 \subsubsection{Cube Root}
@@ -2044,10 +2088,10 @@ f.math.nthrt(3, 27)       #c# Returns 3.0 (cube root)
 f.math.nthrt(4, 16)       #c# Returns 2.0 (fourth root)
 f.math.nthrt(-2, 9)       #c# Returns 0.333... (reciprocal: 1/sqrt(9))
 f.math.nthrt(3, -8)       #c# Returns -2.0 (real odd root)
-f.math.nthrt(2, -4)       #c# Returns 0 + 2i (complex even root)
+f.math.nthrt(2, -4)       #c# Returns 0 + 2j (complex even root)
 f.math.nthrt(1, 42)       #c# Returns 42.0 (first root)
 f.math.nthrt(0.5, 4)      #c# Returns 16.0 (real n)
-f.math.nthrt(2+0i, 9)     #c# Returns 3 + 0i (complex n)
+f.math.nthrt(2+0j, 9)     #c# Returns 3 + 0j (complex n)
 \end{verbatim}
 
 \subsubsection{Base-2 Logarithm}
@@ -2088,7 +2132,7 @@ Examples:
 f.log.log(10, 100)    #c# Returns 2.0
 f.log.log(2, 8)       #c# Returns 3.0
 f.log.log(c.math.e, 1)       #c# Returns 0.0
-f.log.log(10, 1 + 1i) #c# Returns approximately 0.6505 + 0.3411i
+f.log.log(10, 1 + 1j) #c# Returns approximately 0.6505 + 0.3411j
 \end{verbatim}
 
 \subsubsection{Hypotenuse}
@@ -3177,14 +3221,14 @@ EBNF:
 \item Operands: \texttt{string}.
 \item Result: \texttt{bool}.
 \item Returns \texttt{False} for empty strings and whitespace-only strings.
-\item \texttt{"1+2i"} returns \texttt{True} (complex), \texttt{"3.14"} returns \texttt{True} (real), \texttt{"42"} returns \texttt{True} (int).
+\item \texttt{"1+2j"} returns \texttt{True} (complex), \texttt{"3.14"} returns \texttt{True} (real), \texttt{"42"} returns \texttt{True} (int).
 \item A \texttt{Type Error} is raised if the argument is not a \texttt{string}.
 \end{itemize}
 Examples:
 \begin{verbatim}
 f.str.isNumeric("42")       #c# Returns True
 f.str.isNumeric("3.14")     #c# Returns True
-f.str.isNumeric("1+2i")     #c# Returns True
+f.str.isNumeric("1+2j")     #c# Returns True
 f.str.isNumeric("abc")      #c# Returns False
 f.str.isNumeric("")         #c# Returns False
 \end{verbatim}
@@ -3206,7 +3250,7 @@ Examples:
 \begin{verbatim}
 f.str.isInteger("42")       #c# Returns True
 f.str.isInteger("3.14")     #c# Returns False
-f.str.isInteger("1+2i")     #c# Returns False
+f.str.isInteger("1+2j")     #c# Returns False
 \end{verbatim}
 
 \subsubsection{Is Real Function}
@@ -3219,14 +3263,14 @@ EBNF:
 \begin{itemize}
 \item Operands: \texttt{string}.
 \item Result: \texttt{bool}.
-\item \texttt{"3.0"} returns \texttt{True}, \texttt{"1+2i"} returns \texttt{False}.
+\item \texttt{"3.0"} returns \texttt{True}, \texttt{"1+2j"} returns \texttt{False}.
 \item Returns \texttt{False} for empty strings.
 \item A \texttt{Type Error} is raised if the argument is not a \texttt{string}.
 \end{itemize}
 Examples:
 \begin{verbatim}
 f.str.isReal("3.14")        #c# Returns True
-f.str.isReal("1+2i")        #c# Returns False
+f.str.isReal("1+2j")        #c# Returns False
 \end{verbatim}
 
 \subsubsection{Is Identifier Function}
@@ -3428,7 +3472,7 @@ All scalar math, trigonometric, and complex functions automatically operate on t
 
 \subsubsection{Edge Cases}
 \begin{itemize}
-\item Complex results: \texttt{f.math.sqrt(|[-1, 4, 9])} returns \texttt{|[0+1i, 2.0, 3.0]}
+\item Complex results: \texttt{f.math.sqrt(|[-1, 4, 9])} returns \texttt{|[0+1j, 2.0, 3.0]}
 \item Undefined results: \texttt{f.math.log(|[0, 1, 2])} returns \texttt{|[null, 0.0, 0.693]}
 \item Empty tensor: \texttt{f.math.abs(|[])} returns \texttt{|[]}
 \end{itemize}
@@ -3437,7 +3481,7 @@ All scalar math, trigonometric, and complex functions automatically operate on t
 \begin{verbatim}
 f.math.abs(|[-3, 4, -5])              #c# Returns |[3, 4, 5]
 f.math.sqrt(|[1, 4, 9, 16])           #c# Returns |[1.0, 2.0, 3.0, 4.0]
-f.math.sqrt(|[-1, 0, 4])              #c# Returns |[0+1i, 0.0, 2.0]
+f.math.sqrt(|[-1, 0, 4])              #c# Returns |[0+1j, 0.0, 2.0]
 f.math.exp(|[0, 1, 2])                #c# Returns |[1.0, 2.718, 7.389]
 f.math.log(|[1, 2.718])               #c# Returns |[0.0, 1.0]
 f.trig.sin(|[0, 3.14159/2])           #c# Returns |[0.0, 1.0]
@@ -3550,7 +3594,7 @@ Returns 1D tensor of elements where condition is True.
 Conditions: any expression returning a boolean tensor:
 \begin{itemize}
 \item Comparisons: \texttt{\$a > 3}, \texttt{\$a == 0}, \texttt{\$a != 5}
-\item Approximate equality: \texttt{\$a \$\sim{} 3}
+\item Approximate equality: \texttt{\$a \textasciitilde{} 3}
 \item Compound: \texttt{\$a > 0 \&\& \$a < 10}
 \item Vectorized functions: \texttt{f.math.isinf(\$a)}, \texttt{f.math.isnan(\$a)}
 \end{itemize}
@@ -3897,7 +3941,7 @@ Examples:
 f.tnsr.full([3, 4], 0)           #c# Returns [[0,0,0,0],[0,0,0,0],[0,0,0,0]]
 f.tnsr.full([2, 3], 5.5)         #c# Returns [[5.5,5.5,5.5],[5.5,5.5,5.5]]
 f.tnsr.full([5], #inf)           #c# Returns [inf, inf, inf, inf, inf]
-f.tnsr.full([2, 2], 1+2i)        #c# Returns [[1+2i,1+2i],[1+2i,1+2i]]
+f.tnsr.full([2, 2], 1+2j)        #c# Returns [[1+2j,1+2j],[1+2j,1+2j]]
 \end{verbatim}
 
 \paragraph{Diagonal}
@@ -3991,6 +4035,52 @@ f.tnsr.eye(2)             #c# Returns [[1,0],[0,1]]
 f.tnsr.eye(3, k=1)       #c# Returns [[0,1,0],[0,0,1],[0,0,0]]
 f.tnsr.eye(3, k=-1)      #c# Returns [[0,0,0],[1,0,0],[0,1,0]]
 f.tnsr.eye(4, k=2)       #c# Returns [[0,0,1,0],[0,0,0,1],[0,0,0,0],[0,0,0,0]]
+\end{verbatim}
+
+\paragraph{Logspace}
+The \texttt{logspace} function creates a list of numbers evenly spaced on a log10 scale.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.logspace", "(", int | real, ",", int | real, [ ",", "num", "=", int ], ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: \texttt{start} and \texttt{stop} are exponents (base 10).
+\item Optional \texttt{num}: number of points (default \texttt{50}).
+\item Returns $10^{\text{linspace}(\text{start},\,\text{stop},\,\text{num})}$.
+\item Result: \texttt{list[real]} of \texttt{num} elements.
+\item A \texttt{Value Error} is raised if \texttt{num} $< 0$.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.logspace(0, 3, 4)     #c# Returns [1.0, 10.0, 100.0, 1000.0]
+f.tnsr.logspace(0, 0, 5)     #c# Returns [1.0, 1.0, 1.0, 1.0, 1.0]
+f.tnsr.logspace(-1, 1, 3)    #c# Returns [0.1, 1.0, 10.0]
+f.tnsr.logspace(0, 2, 0)     #c# Returns []
+f.tnsr.logspace(0, 2, 1)     #c# Returns [100.0]
+\end{verbatim}
+
+\paragraph{Geomspace}
+The \texttt{geomspace} function creates a list of numbers on a geometric progression from \texttt{start} to \texttt{stop}.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.geomspace", "(", int | real, ",", int | real, [ ",", "num", "=", int ], ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: \texttt{start} and \texttt{stop} define the endpoints (both must be non-zero).
+\item Optional \texttt{num}: number of points (default \texttt{50}).
+\item Each step is multiplied by $(\text{stop} / \text{start})^{1/(\text{num}-1)}$.
+\item Result: \texttt{list[real]} of \texttt{num} elements.
+\item A \texttt{Value Error} is raised if \texttt{num} $< 0$ or \texttt{start} $= 0$.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.tnsr.geomspace(1, 8, 4)    #c# Returns [1.0, 2.0, 4.0, 8.0]
+f.tnsr.geomspace(1, 1, 5)    #c# Returns [1.0, 1.0, 1.0, 1.0, 1.0]
+f.tnsr.geomspace(2, 32, 4)   #c# Returns [2.0, 4.0, 8.0, 16.0]
+f.tnsr.geomspace(1, 100, 0)  #c# Returns []
+f.tnsr.geomspace(1, 100, 1)  #c# Returns [100.0]
 \end{verbatim}
 
 \subsubsection{Dimension Manipulation}
@@ -4294,6 +4384,175 @@ f.tnsr.trimZeros(|[0,0,0])              #c# Returns []
 f.tnsr.trimZeros(|[1,2,3])              #c# Returns [1,2,3]
 \end{verbatim}
 
+\paragraph{Meshgrid}
+The \texttt{meshgrid} function creates N-D coordinate grids from 1-D coordinate vectors. Returns one tensor per input, all having the same shape. \\ Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.meshgrid", "(", tensor, ",", tensor, { ",", tensor }, [ ",", "indexing", "=", string ], ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: two or more flat tensors (1-D coordinate vectors).
+\item Optional \texttt{indexing}: \texttt{"xy"} (default, Cartesian) or \texttt{"ij"} (matrix/index).
+\item Result: list of tensors, one per input, all sharing the same shape.
+\item With \texttt{indexing = "xy"}: first input varies along columns (axis 1), second along rows (axis 0).
+\item With \texttt{indexing = "ij"}: first input varies along rows (axis 0), second along columns (axis 1).
+\item A \texttt{Value Error} is raised if \texttt{indexing} is not \texttt{"xy"} or \texttt{"ij"}.
+\end{itemize}
+
+\textbf{Basic 2D (Cartesian):}
+\begin{verbatim}
+$X, $Y = f.tnsr.meshgrid(|[0, 1, 2], |[0, 1])
+# $X = |[[0, 1, 2],     #c# shape (2, 3), xs along columns
+#       [0, 1, 2]]
+# $Y = |[[0, 0, 0],     #c# shape (2, 3), ys along rows
+#       [1, 1, 1]]
+\end{verbatim}
+
+\textbf{Evaluate a 2D function over a grid:}
+\begin{verbatim}
+$xs = |[0, 1, 2, 3]
+$ys = |[0, 1, 2]
+$X, $Y = f.tnsr.meshgrid($xs, $ys)
+$Z = $X^2 + $Y^2
+# $Z = |[[0, 1, 4, 9],
+#        [1, 2, 5, 10],
+#        [2, 5, 8, 13]]
+\end{verbatim}
+
+\textbf{Matrix indexing:}
+\begin{verbatim}
+$X, $Y = f.tnsr.meshgrid(|[0, 1, 2], |[0, 1], indexing="ij")
+# $X = |[[0, 0],         #c# shape (3, 2), xs along rows
+#        [1, 1],
+#        [2, 2]]
+# $Y = |[[0, 1],         #c# shape (3, 2), ys along columns
+#        [0, 1],
+#        [0, 1]]
+\end{verbatim}
+
+\textbf{3D meshgrid:}
+\begin{verbatim}
+$X, $Y, $Z = f.tnsr.meshgrid(|[0, 1], |[0, 1], |[0, 1], indexing="ij")
+# Each has shape (2, 2, 2)
+# $X varies along axis 0, $Y along axis 1, $Z along axis 2
+\end{verbatim}
+
+\textbf{Single input:}
+\begin{verbatim}
+f.tnsr.meshgrid(|[5, 10, 15])     #c# Returns [|[[5, 10, 15]]]
+\end{verbatim}
+
+\paragraph{Einstein Summation}
+The \texttt{einsum} function evaluates Einstein summation on tensors using a compact subscript string notation. It can express matrix multiplication, traces, transposes, contractions, and element-wise reductions in a single call.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.tnsr.einsum", "(", string, ",", tensor, { ",", tensor }, ")"
+\end{verbatim}
+
+\textbf{Subscript notation:}
+The first argument is a string of the form \texttt{"sub1,sub2,...->out"} where each \texttt{sub} is a sequence of lowercase index letters corresponding to one tensor argument, and \texttt{out} specifies the output axes.
+\begin{itemize}
+\item Lowercase letters \texttt{a}--\texttt{z} represent axes.
+\item Each comma-separated group of letters on the left of \texttt{->} corresponds to one tensor argument.
+\item Repeated letter \textbf{within} one argument: diagonal extraction.
+\item Repeated letter \textbf{across} arguments: summation (contraction) over that axis.
+\item Letters appearing only on the left of \texttt{->} are contracted (summed out).
+\item Letters on the right of \texttt{->} define the output shape.
+\item \texttt{->} may be omitted when no contraction is needed.
+\end{itemize}
+
+\textbf{Common patterns:}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Subscript} & \textbf{Operation} & \textbf{Description} \\
+\hline
+\texttt{ij,jk->ik} & Matrix multiply & Contract over shared index \texttt{j} \\
+\texttt{i,i->} & Inner product & Sum of element-wise products \\
+\texttt{ij,ij->} & Element-wise dot & Sum of element-wise products \\
+\texttt{ij,kl->ijkl} & Outer product & No contraction \\
+\texttt{ij->ji} & Transpose & Permute axes \\
+\texttt{ii->} & Trace & Sum of diagonal \\
+\texttt{ij->i} & Row sum & Sum over axis 1 \\
+\texttt{ij->j} & Column sum & Sum over axis 0 \\
+\texttt{ijk->ikj} & Axis permutation & General reshape \\
+\texttt{ijj->i} & Column sum (alt) & Repeated index sums \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{Worked example — matrix multiply:}
+Let $A = \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}$ and $B = \begin{bmatrix} 5 & 6 \\ 7 & 8 \end{bmatrix}$.
+\begin{align*}
+\texttt{f.tnsr.einsum}("ij,jk \rightarrow ik",\; A,\; B)
+\end{align*}
+The index \texttt{j} appears in both arguments, so it is contracted (summed over):
+\begin{align*}
+C_{ik} &= \sum_{j} A_{ij} \, B_{jk} \\
+C_{11} &= A_{11} B_{11} + A_{12} B_{21} = 1 \cdot 5 + 2 \cdot 7 = 19 \\
+C_{12} &= A_{11} B_{12} + A_{12} B_{22} = 1 \cdot 6 + 2 \cdot 8 = 22 \\
+C_{21} &= A_{21} B_{11} + A_{22} B_{21} = 3 \cdot 5 + 4 \cdot 7 = 43 \\
+C_{22} &= A_{21} B_{12} + A_{22} B_{22} = 3 \cdot 6 + 4 \cdot 8 = 50 \\
+C &= \begin{bmatrix} 19 & 22 \\ 43 & 50 \end{bmatrix}
+\end{align*}
+
+\textbf{Worked example — trace:}
+\begin{align*}
+\texttt{f.tnsr.einsum}("ii \rightarrow",\; \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}) &= \sum_{i} A_{ii} = 1 + 4 = 5
+\end{align*}
+
+\textbf{Worked example — inner product:}
+\begin{align*}
+\texttt{f.tnsr.einsum}("i,i \rightarrow",\; [1, 2, 3],\; [4, 5, 6]) &= \sum_{i} a_i \, b_i = 1 \cdot 4 + 2 \cdot 5 + 3 \cdot 6 = 32
+\end{align*}
+
+\textbf{Worked example — outer product:}
+\begin{align*}
+\texttt{f.tnsr.einsum}("i,j \rightarrow ij",\; [1, 2, 3],\; [4, 5]) &= \begin{bmatrix} 1 \cdot 4 & 1 \cdot 5 \\ 2 \cdot 4 & 2 \cdot 5 \\ 3 \cdot 4 & 3 \cdot 5 \end{bmatrix} = \begin{bmatrix} 4 & 5 \\ 8 & 10 \\ 12 & 15 \end{bmatrix}
+\end{align*}
+
+\textbf{Worked example — row sums:}
+\begin{align*}
+\texttt{f.tnsr.einsum}("ij \rightarrow i",\; \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{bmatrix}) &= \begin{bmatrix} 1+2+3 \\ 4+5+6 \end{bmatrix} = \begin{bmatrix} 6 \\ 15 \end{bmatrix}
+\end{align*}
+
+\begin{itemize}
+\item A \texttt{Value Error} is raised if the subscript string is invalid, the number of arguments doesn't match, or tensor dimensions are incompatible.
+\item A \texttt{Value Error} is raised if index letters are outside \texttt{a}--\texttt{z} or more than 26 unique indices are used.
+\end{itemize}
+\begin{verbatim}
+f.tnsr.einsum("ij,jk->ik", [[1,2],[3,4]], [[5,6],[7,8]])
+# [[19, 22], [43, 50]]
+
+f.tnsr.einsum("ij->ji", [[1,2,3],[4,5,6]])
+# [[1, 4], [2, 5], [3, 6]]
+
+f.tnsr.einsum("ii->", [[1,2],[3,4]])
+# 5  (trace: 1+4)
+
+f.tnsr.einsum("ij,ij->", [[1,2],[3,4]], [[5,6],[7,8]])
+# 70  (1*5 + 2*6 + 3*7 + 4*8)
+
+f.tnsr.einsum("ij->i", [[1,2,3],[4,5,6]])
+# [6, 15]  (row sums)
+
+f.tnsr.einsum("ij->j", [[1,2,3],[4,5,6]])
+# [5, 7, 9]  (column sums)
+
+f.tnsr.einsum("i,i->", [1,2,3], [4,5,6])
+# 32  (inner product: 1*4 + 2*5 + 3*6)
+
+f.tnsr.einsum("i,j->ij", [1,2,3], [4,5])
+# [[4, 5], [8, 10], [12, 15]]  (outer product)
+
+f.tnsr.einsum("ijj->i", [[1,2,3],[4,5,6]])
+# [6, 15]  (column sum via repeated index)
+
+f.tnsr.einsum("ijk->ikj", [[[1,2],[3,4]],[[5,6],[7,8]]])
+# [[[1,2],[3,4]],[[5,6],[7,8]]]  (axis permutation)
+\end{verbatim}
+
 \paragraph{Edge Cases -- Reduction Functions}
 \begin{itemize}
 \item \texttt{f.stat.sum([])} returns \texttt{0} (additive identity).
@@ -4309,56 +4568,79 @@ Reduction functions collapse an tensor along an axis. When \texttt{axis} is omit
 \paragraph{Sum}
 \begin{verbatim}
 EBNF:
-"f.stat.sum", "(", argument, [ ",", "axis", "=", int ], ")"
+"f.stat.sum", "(", argument, [ ",", "axis", "=", int ], [ ",", "ignoreNan", "=", bool ], ")"
 \end{verbatim}
+\begin{itemize}
+\item Optional \texttt{ignoreNan}: if \texttt{true}, NaN elements are skipped (default: \texttt{false}).
+\item If all elements are NaN and \texttt{ignoreNan} is \texttt{true}, returns \texttt{0} (additive identity).
+\end{itemize}
 \begin{verbatim}
 f.stat.sum([1, 2, 3])              #c# Returns 6
 f.stat.sum([[1,2],[3,4]])          #c# Returns 10 (flattened)
 f.stat.sum([[1,2],[3,4]], axis=0)  #c# Returns [4, 6]  (row-wise)
 f.stat.sum([[1,2],[3,4]], axis=1)  #c# Returns [3, 7]  (column-wise)
+f.stat.sum([1, c.math.NaN, 3], ignoreNan=true)  #c# Returns 4
 \end{verbatim}
 
 \paragraph{Product}
 \begin{verbatim}
 EBNF:
-"f.stat.prod", "(", argument, [ ",", "axis", "=", int ], ")"
+"f.stat.prod", "(", argument, [ ",", "axis", "=", int ], [ ",", "ignoreNan", "=", bool ], ")"
 \end{verbatim}
+\begin{itemize}
+\item Optional \texttt{ignoreNan}: if \texttt{true}, NaN elements are skipped (default: \texttt{false}).
+\item If all elements are NaN and \texttt{ignoreNan} is \texttt{true}, returns \texttt{1} (multiplicative identity).
+\end{itemize}
 \begin{verbatim}
 f.stat.prod([2, 3, 4])              #c# Returns 24
 f.stat.prod([[2,3],[4,5]], axis=0)  #c# Returns [8, 15]
 f.stat.prod([[2,3],[4,5]], axis=1)  #c# Returns [6, 20]
+f.stat.prod([2, c.math.NaN, 4], ignoreNan=true)  #c# Returns 8
 \end{verbatim}
 
 \paragraph{Mean}
 \begin{verbatim}
 EBNF:
-"f.stat.mean", "(", argument, [ ",", "axis", "=", int ], ")"
+"f.stat.mean", "(", argument, [ ",", "axis", "=", int ], [ ",", "ignoreNan", "=", bool ], ")"
 \end{verbatim}
+\begin{itemize}
+\item Optional \texttt{ignoreNan}: if \texttt{true}, NaN elements are skipped (default: \texttt{false}).
+\item If all elements are NaN and \texttt{ignoreNan} is \texttt{true}, raises a \texttt{Value Error}.
+\end{itemize}
 \begin{verbatim}
 f.stat.mean([1, 2, 3, 4])            #c# Returns 2.5
 f.stat.mean([[1,2],[3,4]], axis=0)   #c# Returns [2.0, 3.0]
 f.stat.mean([[1,2],[3,4]], axis=1)   #c# Returns [1.5, 3.5]
+f.stat.mean([1, c.math.NaN, 3], ignoreNan=true)  #c# Returns 2.0
 \end{verbatim}
 
 \paragraph{Standard Deviation}
 \begin{verbatim}
 EBNF:
-"f.stat.std", "(", argument, [ ",", "axis", "=", int ], ")"
+"f.stat.std", "(", argument, [ ",", "axis", "=", int ], [ ",", "ignoreNan", "=", bool ], ")"
 \end{verbatim}
+\begin{itemize}
+\item Optional \texttt{ignoreNan}: if \texttt{true}, NaN elements are skipped (default: \texttt{false}).
+\end{itemize}
 \begin{verbatim}
 f.stat.std([1, 2, 3, 4, 5])         #c# Returns ~1.4142
 f.stat.std([1, 1, 1, 1])            #c# Returns 0.0
+f.stat.std([1, c.math.NaN, 3], ignoreNan=true)  #c# Returns ~1.0
 \end{verbatim}
 
 \paragraph{Variance}
 Computes the population variance (divides by $N$, not $N-1$).
 \begin{verbatim}
 EBNF:
-"f.stat.var", "(", argument, [ ",", "axis", "=", int ], ")"
+"f.stat.var", "(", argument, [ ",", "axis", "=", int ], [ ",", "ignoreNan", "=", bool ], ")"
 \end{verbatim}
+\begin{itemize}
+\item Optional \texttt{ignoreNan}: if \texttt{true}, NaN elements are skipped (default: \texttt{false}).
+\end{itemize}
 \begin{verbatim}
 f.stat.var([1, 2, 3, 4, 5])         #c# Returns 2.0
 f.stat.var([1, 1, 1, 1])            #c# Returns 0.0
+f.stat.var([1, c.math.NaN, 3], ignoreNan=true)  #c# Returns 1.0
 \end{verbatim}
 
 \paragraph{Median}
@@ -4468,6 +4750,64 @@ f.stat.peak([1, -3, 2, -5, 4], mode="neg")      #c# Returns -5
 \item A \texttt{Value Error} is raised if an invalid mode is specified.
 \end{itemize}
 
+\paragraph{Skewness}
+Computes the sample skewness (adjusted Fisher-Pearson moment coefficient). Measures the asymmetry of a distribution: positive for right-skewed, negative for left-skewed, zero for symmetric.
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.stat.skew", "(", list, [ ",", "ignoreNan", "=", bool ], ")"
+\end{verbatim}
+\begin{align*}
+G_1 &= \frac{n}{(n-1)(n-2)} \sum_{i=1}^{n} \left( \frac{x_i - \bar{x}}{s} \right)^3
+\end{align*}
+Where $n$ is the sample size, $\bar{x}$ is the sample mean, and $s$ is the sample standard deviation (Bessel-corrected).
+\begin{itemize}
+\item Requires at least 3 elements.
+\item Optional \texttt{ignoreNan}: if \texttt{true}, NaN elements are skipped (default: \texttt{false}).
+\end{itemize}
+
+\textbf{Worked example:}
+\begin{align*}
+\texttt{f.stat.skew}([1, 2, 3, 4, 10]) &= \frac{5}{4 \cdot 3} \sum_{i=1}^{5} \left( \frac{x_i - 4}{3.162} \right)^3 \\
+&= \frac{5}{12} \left[ (-0.949)^3 + (-0.632)^3 + (-0.316)^3 + 0 + (1.897)^3 \right] \\
+&\approx 1.095
+\end{align*}
+
+\begin{verbatim}
+f.stat.skew([1, 2, 3, 4, 5])             #c# Returns 0.0 (symmetric)
+f.stat.skew([1, 1, 1, 10])               #c# Returns ~1.732 (right-skewed)
+f.stat.skew([1, c.math.NaN, 3, 4, 5], ignoreNan=true)  #c# Returns 0.0
+\end{verbatim}
+
+\paragraph{Kurtosis}
+Computes the sample excess kurtosis (Fisher's definition). Measures the ``tailedness'' of a distribution: positive for heavy-tailed (leptokurtic), negative for light-tailed (platykurtic), zero for mesokurtic (normal-like).
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.stat.kurtosis", "(", list, [ ",", "ignoreNan", "=", bool ], ")"
+\end{verbatim}
+\begin{align*}
+g_2 &= \frac{n(n+1)}{(n-1)(n-2)(n-3)} \sum_{i=1}^{n} \left( \frac{x_i - \bar{x}}{s} \right)^4 - \frac{3(n-1)^2}{(n-2)(n-3)}
+\end{align*}
+Where $n$ is the sample size, $\bar{x}$ is the sample mean, and $s$ is the sample standard deviation (Bessel-corrected).
+\begin{itemize}
+\item Requires at least 4 elements.
+\item Optional \texttt{ignoreNan}: if \texttt{true}, NaN elements are skipped (default: \texttt{false}).
+\end{itemize}
+
+\textbf{Worked example:}
+\begin{align*}
+\texttt{f.stat.kurtosis}([1, 2, 3, 4, 10]) &= \frac{5 \cdot 6}{4 \cdot 3 \cdot 2} \sum_{i=1}^{5} \left( \frac{x_i - 4}{3.162} \right)^4 - \frac{3 \cdot 16}{3 \cdot 2} \\
+&= \frac{30}{24} \left[ 0.809 + 0.160 + 0.010 + 0 + 12.960 \right] - 8 \\
+&\approx -1.200
+\end{align*}
+
+\begin{verbatim}
+f.stat.kurtosis([1, 2, 3, 4, 5])         #c# Returns -1.3 (platykurtic)
+f.stat.kurtosis([1, 1, 1, 1, 10, 10])    #c# Returns ~-0.769
+f.stat.kurtosis([1, c.math.NaN, 3, 4, 5], ignoreNan=true)  #c# Returns ~-1.2
+\end{verbatim}
+
 \subsubsection{Search Functions}
 
 \paragraph{Edge Cases -- Search Functions}
@@ -4478,19 +4818,27 @@ f.stat.peak([1, -3, 2, -5, 4], mode="neg")      #c# Returns -5
 \paragraph{Index of Minimum}
 \begin{verbatim}
 EBNF:
-"f.stat.argmin", "(", argument, ")"
+"f.stat.argmin", "(", argument, [ ",", "ignoreNan", "=", bool ], ")"
 \end{verbatim}
+\begin{itemize}
+\item Optional \texttt{ignoreNan}: if \texttt{true}, NaN elements are skipped (default: \texttt{false}).
+\end{itemize}
 \begin{verbatim}
 f.stat.argmin([5, 3, 1, 4])   #c# Returns 2 (index of 1)
+f.stat.argmin([5, c.math.NaN, 1], ignoreNan=true)  #c# Returns 2 (index of 1)
 \end{verbatim}
 
 \paragraph{Index of Maximum}
 \begin{verbatim}
 EBNF:
-"f.stat.argmax", "(", argument, ")"
+"f.stat.argmax", "(", argument, [ ",", "ignoreNan", "=", bool ], ")"
 \end{verbatim}
+\begin{itemize}
+\item Optional \texttt{ignoreNan}: if \texttt{true}, NaN elements are skipped (default: \texttt{false}).
+\end{itemize}
 \begin{verbatim}
 f.stat.argmax([5, 3, 1, 4])   #c# Returns 0 (index of 5)
+f.stat.argmax([5, c.math.NaN, 1], ignoreNan=true)  #c# Returns 0 (index of 5)
 \end{verbatim}
 
 \paragraph{Binary Search}
@@ -4525,7 +4873,7 @@ EBNF:
 \end{verbatim}
 \begin{itemize}
 \item Returns modified list (original unchanged)
-\item Elements before kth are ≤ it; elements after are ≥ it
+\item Elements before kth are $\leq$ it; elements after are $\geq$ it
 \item A \texttt{Value Error} is raised if k is out of range or list is empty.
 \end{itemize}
 Examples:
@@ -5341,6 +5689,71 @@ f.linalg.multiDot([[[1,2],[3,4]], [[5,6],[7,8]], [[1,0],[0,1]]])
 #c# Returns [[19, 22], [43, 50]]
 \end{verbatim}
 
+\paragraph{Vandermonde Matrix}
+The \texttt{vander} function constructs a Vandermonde matrix from a list of values.\\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.linalg.vander", "(", argument, [ ",", int ], ")"
+\end{verbatim}
+
+\textbf{Definition:} Given a vector $v$ of length $M$ and an integer $N$ (defaulting to $M$), the Vandermonde matrix $V$ is an $M \times N$ tensor with elements:
+\begin{align*}
+V_{i,j} &= v_i^{\,N-1-j} \\
+V &= \begin{bmatrix}
+v_1^{N-1} & v_1^{N-2} & \cdots & v_1^1 & v_1^0 \\
+v_2^{N-1} & v_2^{N-2} & \cdots & v_2^1 & v_2^0 \\
+\vdots    & \vdots    & \ddots & \vdots & \vdots  \\
+v_M^{N-1} & v_M^{N-2} & \cdots & v_M^1 & v_M^0
+\end{bmatrix}
+\end{align*}
+
+\textbf{Worked example:}
+\begin{align*}
+\texttt{f.linalg.vander}([1, 2, 3],\; 4) &=
+\begin{bmatrix}
+1^3 & 1^2 & 1^1 & 1^0 \\
+2^3 & 2^2 & 2^1 & 2^0 \\
+3^3 & 3^2 & 3^1 & 3^0
+\end{bmatrix} \\
+&= \begin{bmatrix}
+1  & 1 & 1 & 1 \\
+8  & 4 & 2 & 1 \\
+27 & 9 & 3 & 1
+\end{bmatrix}
+\end{align*}
+
+\begin{itemize}
+\item First argument: 1-D numeric list (values).
+\item Second argument (optional, default $= M$): integer $N$, number of columns.
+\item Powers run in \textbf{decreasing} order: highest power first, constant term last.
+\item A \texttt{Type Error} is raised if the list contains non-numeric elements or $N$ is not an integer.
+\item A \texttt{Value Error} is raised if $N \leq 0$.
+\item An empty list \texttt{[]} returns an empty tensor \texttt{|[]} (shape $(0, 0)$).
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.linalg.vander([1, 2, 3])
+# [
+#   [1, 1, 1],
+#   [4, 2, 1],
+#   [9, 3, 1]
+# ]
+
+f.linalg.vander([1, 2, 3], 5)
+# [
+#   [1,  1, 1, 1, 1],
+#   [16, 8, 4, 2, 1],
+#   [81, 27, 9, 3, 1]
+# ]
+
+f.linalg.vander([5, 10])
+# [
+#   [5, 1],
+#   [10, 1]
+# ]
+\end{verbatim}
+
 \subsubsection{Statistical Functions}
 \paragraph{Histogram}
 \begin{verbatim}
@@ -5893,7 +6306,7 @@ f.util.nonzero([0, 5, 0, 3, 0])        #c# Returns [1, 3]
 f.util.nonzero([1, 2, 3, 4])           #c# Returns [0, 1, 2, 3]
 f.util.nonzero([0, 0, 0])              #c# Returns []
 f.util.nonzero([])                      #c# Returns []
-f.util.nonzero([0, 1+0i, 0, 2+3i])     #c# Returns [1, 3]
+f.util.nonzero([0, 1+0j, 0, 2+3j])     #c# Returns [1, 3]
 f.util.nonzero([true, false, true])     #c# Returns [0, 2]
 \end{verbatim}
 
@@ -5901,6 +6314,25 @@ Edge Cases:
 \begin{itemize}
 \item A \texttt{Type Error} is raised if the argument is not a list.
 \end{itemize}
+
+\subsubsection{NaN Fill}
+The \texttt{nanFill} function replaces all NaN values in a list with a user-defined value. Returns a new list; the original is not mutated. Works element-wise on nested lists/tensors.
+\begin{verbatim}
+EBNF:
+"f.util.nanFill", "(", list, ",", value, ")"
+\end{verbatim}
+\begin{itemize}
+\item First argument: list (may contain \texttt{c.math.NaN}).
+\item Second argument: scalar value to substitute for NaN (any type).
+\item Returns: new list with all NaN replaced by the given value.
+\item Non-NaN elements are unchanged.
+\end{itemize}
+\begin{verbatim}
+f.util.nanFill([1, c.math.NaN, 3, c.math.NaN], 0)           #c# Returns [1, 0, 3, 0]
+f.util.nanFill([c.math.NaN, c.math.NaN, c.math.NaN], 99)    #c# Returns [99, 99, 99]
+f.util.nanFill([1, 2, 3], 0)                                 #c# Returns [1, 2, 3]
+f.util.nanFill([[1, c.math.NaN], [c.math.NaN, 4]], -1)      #c# Returns [[1, -1], [-1, 4]]
+\end{verbatim}
 
 \subsubsection{Count}
 The \texttt{count} function returns the number of elements for which the lambda returns \texttt{True}.
@@ -6247,13 +6679,13 @@ EBNF:
 \paragraph{Examples}
 \begin{verbatim}
 #c# FFT of a simple signal
-f.ee.fft([1, 0, 1, 0])   #c# Returns |[2+0i, 0+0i, 2+0i, 0+0i]
+f.ee.fft([1, 0, 1, 0])   #c# Returns |[2+0j, 0+0j, 2+0j, 0+0j]
 
 #c# FFT of a single impulse
-f.ee.fft([1, 0, 0, 0])   #c# Returns |[1+0i, 1+0i, 1+0i, 1+0i]
+f.ee.fft([1, 0, 0, 0])   #c# Returns |[1+0j, 1+0j, 1+0j, 1+0j]
 
 #c# FFT of a DC signal (constant value)
-f.ee.fft([5, 5, 5, 5])   #c# Returns |[20+0i, 0+0i, 0+0i, 0+0i]
+f.ee.fft([5, 5, 5, 5])   #c# Returns |[20+0j, 0+0j, 0+0j, 0+0j]
 
 #c# Extract magnitude spectrum
 $freq [tensor]= f.ee.fft([1, 0, 1, 0])
@@ -6289,10 +6721,10 @@ $reconstructed [tensor]= f.ee.ifft($freq)
 #c# $reconstructed is approximately |[1, 0, 1, 0]
 
 #c# ifft of DC component
-f.ee.ifft(|[4+0i, 0+0i, 0+0i, 0+0i])   #c# Returns |[1, 1, 1, 1]
+f.ee.ifft(|[4+0j, 0+0j, 0+0j, 0+0j])   #c# Returns |[1, 1, 1, 1]
 
 #c# ifft of impulse in frequency domain
-f.ee.ifft(|[1+0i, 1+0i, 1+0i, 1+0i])   #c# Returns |[1, 0, 0, 0]
+f.ee.ifft(|[1+0j, 1+0j, 1+0j, 1+0j])   #c# Returns |[1, 0, 0, 0]
 \end{verbatim}
 
 \paragraph{Error Conditions}
@@ -6688,7 +7120,7 @@ System functions (\texttt{f.sys.*}) provide runtime introspection and configurat
 
 \subsubsection{Get Configuration Function}
 The \texttt{f.sys.getConfig} function retrieves a named configuration value. Configuration keys are strings referencing runtime settings.
-\\ Morphology:
+Morphology:
 \begin{verbatim}
 "f.sys.getConfig", "(", string, ")"
 \end{verbatim}
@@ -6707,8 +7139,8 @@ The \texttt{f.sys.setConfig} function assigns a value to a named configuration k
 \begin{verbatim}
 "f.sys.setConfig", "(", string, ",", data, ")"
 \end{verbatim}
-\\ Returns: \texttt{None}. \\
-\\ Raises: \texttt{Runtime Error} if the key is read-only or not recognized.
+Returns: \texttt{None}. \\
+Raises: \texttt{Runtime Error} if the key is read-only or not recognized.
 
 \begin{verbatim}
 f.sys.setConfig("max_loop_iter", 5000)
@@ -6717,12 +7149,12 @@ f.sys.setConfig("debug_mode", True)
 
 \subsubsection{Environment Variable Function}
 The \texttt{f.sys.environment} function retrieves the value of an environment variable by name.
-\\ Morphology:
+Morphology:
 \begin{verbatim}
 "f.sys.environment", "(", string, ")"
 \end{verbatim}
-\\ Returns: \texttt{string} --- the value of the environment variable. \\
-\\ Raises: \texttt{Runtime Error} if the variable is not set.
+Returns: \texttt{string} --- the value of the environment variable. \\
+Raises: \texttt{Runtime Error} if the variable is not set.
 
 \begin{verbatim}
 $f home = f.sys.environment("HOME")
@@ -6731,11 +7163,11 @@ $f path = f.sys.environment("PATH")
 
 \subsubsection{Set Environment Function}
 The \texttt{f.sys.setEnvironment} function sets an environment variable for the current runtime session.
-\\ Morphology:
+Morphology:
 \begin{verbatim}
 "f.sys.setEnvironment", "(", string, ",", string, ")"
 \end{verbatim}
-\\ Returns: \texttt{None}.
+Returns: \texttt{None}.
 
 \begin{verbatim}
 f.sys.setEnvironment("EDA_LIB", "/opt/eda/lib")
@@ -6743,11 +7175,11 @@ f.sys.setEnvironment("EDA_LIB", "/opt/eda/lib")
 
 \subsubsection{Version Function}
 The \texttt{f.sys.version} function returns the language or runtime version string.
-\\ Morphology:
+Morphology:
 \begin{verbatim}
 "f.sys.version", "(", ")"
 \end{verbatim}
-\\ Returns: \texttt{string} --- version identifier (e.g.\ \texttt{"0.1.0"}).
+Returns: \texttt{string} --- version identifier (e.g.\ \texttt{"0.1.0"}).
 
 \begin{verbatim}
 $f ver = f.sys.version()
@@ -6755,11 +7187,11 @@ $f ver = f.sys.version()
 
 \subsubsection{Features Function}
 The \texttt{f.sys.features} function returns a list of supported runtime feature identifiers.
-\\ Morphology:
+Morphology:
 \begin{verbatim}
 "f.sys.features", "(", ")"
 \end{verbatim}
-\\ Returns: \texttt{list[string]} --- feature identifiers enabled in the current runtime.
+Returns: \texttt{list[string]} --- feature identifiers enabled in the current runtime.
 
 \begin{verbatim}
 $f feats = f.sys.features()
@@ -6781,7 +7213,7 @@ sys_var_name = "sys_mem_SHA512"
 \item All \texttt{\$\$sys\_*} variables are \textbf{read-only}
 \item Assignment (\texttt{\$\$sys\_* = val}) raises a \texttt{Type Error}
 \item Compound assignment (\texttt{\$\$sys\_* += val}) raises a \texttt{Type Error}
-\item Lazy binding (\texttt{\$x :Lt= \$\$sys_*}) is allowed
+\item Lazy binding (\texttt{\$x :Lt= \$\$sys\_*}) is allowed
 \item Available in all scopes (main body, functions, lambdas)
 \item Returns \texttt{null} if hardware doesn't support the feature
 \item Unknown sensor names return \texttt{null} (no error)
@@ -8703,6 +9135,177 @@ f.math.spline([0, 1, 2], [0, 1, 4], 1.5, "clamp")             #c# 2.25
 f.math.spline([0, 1, 2, 3], [0, 1, 0, -1], 4.0, "periodic")   #c# 0.0 (wraps to start)
 \end{verbatim}
 
+\subsubsection{Polynomial Functions}
+
+Polynomials are represented as flat tensors of coefficients in \textbf{highest-degree-first} order: $p(x) = a_n x^n + a_{n-1} x^{n-1} + \cdots + a_0$ is written as \texttt{[a\_n, a\_\{n-1\}, ..., a\_0]}. Leading zeros are trimmed; the degree is $\texttt{len(coeffs)} - 1$.
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Polynomial} & \textbf{Coefficients} & \textbf{Degree} \\
+\hline
+$3x^2 + 2x + 1$ & \texttt{[3, 2, 1]} & 2 \\
+$x^3 - 1$ & \texttt{[1, 0, 0, -1]} & 3 \\
+$5$ & \texttt{[5]} & 0 \\
+\hline
+\end{tabular}
+\end{center}
+
+\paragraph{Polynomial Evaluation}
+The \texttt{polyval} function evaluates a polynomial at a point using Horner's method. \\ Morphology:
+\begin{verbatim}
+EBNF:
+"f.math.polyval", "(", tensor, ",", ( int | real | complex | list | tensor ), ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: \texttt{coeffs} (polynomial coefficients, highest degree first), \texttt{x} (evaluation point or list/tensor of points).
+\item Result: same type as \texttt{x} (or \texttt{complex} if coefficients are complex).
+\item Evaluates via Horner's method: $((a_n x + a_{n-1}) x + a_{n-2}) x + \cdots$ --- $O(n)$ multiplications, numerically stable.
+\item Vectorized: when \texttt{x} is a list or tensor, evaluates at each element.
+\item A \texttt{Value Error} is raised if \texttt{coeffs} is empty.
+\end{itemize}
+Examples:
+\begin{verbatim}
+f.math.polyval([3, 2, 1], 0)       #c# Returns 1        (constant term)
+f.math.polyval([3, 2, 1], 1)       #c# Returns 6        (3+2+1)
+f.math.polyval([3, 2, 1], 2)       #c# Returns 17       (12+4+1)
+f.math.polyval([1, 0, 0, -1], 1)   #c# Returns 0        (root)
+f.math.polyval([5], 100)            #c# Returns 5        (constant, ignores x)
+f.math.polyval([1, 1], [0, 1, 2])  #c# Returns [1, 2, 3] (vectorized)
+f.math.polyval([1, -2, 1], [1, 2, 3]) #c# Returns [0, 1, 4] (x-1)^2
+\end{verbatim}
+
+\paragraph{Polynomial Fit}
+The \texttt{polyfit} function computes a least-squares polynomial fit of given degree. \\ Morphology:
+\begin{verbatim}
+EBNF:
+"f.math.polyfit", "(", tensor, ",", tensor, ",", int, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: \texttt{xs} (x-coordinates), \texttt{ys} (y-coordinates), \texttt{degree} ($\geq 0$).
+\item Result: \texttt{tensor} of coefficients (highest degree first).
+\item Solves the normal equations $X^T X \mathbf{a} = X^T \mathbf{y}$ where $X$ is the Vandermonde matrix.
+\item \texttt{degree} $= 0$ returns \texttt{[mean(ys)]} (horizontal line through the mean).
+\item \texttt{degree} $\geq$ \texttt{len(xs)} $- 1$ gives an exact fit (equivalent to \texttt{f.math.interpolate} with method \texttt{"polynomial"}).
+\item A \texttt{Value Error} is raised if lists are empty, lengths differ, or \texttt{degree} $< 0$.
+\end{itemize}
+Examples:
+\begin{verbatim}
+# Perfect linear fit
+f.math.polyfit([0, 1, 2], [1, 2, 3], 1)     #c# Returns [1.0, 1.0]  (y = x + 1)
+
+# Perfect quadratic fit
+f.math.polyfit([0, 1, 2], [1, 2, 5], 2)     #c# Returns [1.0, 0.0, 1.0]  (y = x^2 + 1)
+
+# Noisy data: underfit to degree 1 (best linear approximation)
+f.math.polyfit([0, 1, 2], [1, 2, 5], 1)     #c# Returns [2.0, 0.666...]
+
+# Constant fit (degree 0): returns mean
+f.math.polyfit([0, 1], [3, 3], 0)           #c# Returns [3.0]
+
+# Verify: fit then evaluate
+$f coeffs = f.math.polyfit([0, 1, 2, 3], [0, 1, 4, 9], 2)
+f.math.polyval($f coeffs, 2.5)              #c# Returns 6.25
+\end{verbatim}
+
+\paragraph{Polynomial Roots}
+The \texttt{polyroot} function finds all roots of a polynomial using the companion matrix eigenvalue method. \\ Morphology:
+\begin{verbatim}
+EBNF:
+"f.math.polyroot", "(", tensor, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: \texttt{coeffs} (polynomial coefficients, highest degree first).
+\item Result: \texttt{tensor} (flat, complex) --- roots, always complex even when all roots are real.
+\item Uses the companion matrix eigenvalue decomposition via \texttt{f.linalg.eig}.
+\item Degree 0 (\texttt{[c]} where $c \neq 0$) returns \texttt{[]} (no roots).
+\item Leading zeros are trimmed before processing.
+\item A \texttt{Value Error} is raised for \texttt{[0]} (zero polynomial) or empty input.
+\end{itemize}
+\paragraph{Roundtrip Property} \texttt{polyval(polyroot(p), 0)} evaluates to approximately 0 for each root. Combined with \texttt{polyval} this enables root verification:
+\begin{verbatim}
+$f roots = f.math.polyroot([1, -3, 2])
+f.math.polyval([1, -3, 2], $f roots[0])     #c# Returns approximately 0 (root verified)
+\end{verbatim}
+Examples:
+\begin{verbatim}
+# Quadratic with two real roots
+f.math.polyroot([1, -3, 2])      #c# Returns [2.0+0j, 1.0+0j]  (x-1)(x-2)
+
+# Difference of squares
+f.math.polyroot([1, 0, -4])      #c# Returns [2.0+0j, -2.0+0j]
+
+# Complex conjugate pair
+f.math.polyroot([1, 0, 1])       #c# Returns [0+1j, 0-1j]  (x^2+1)
+
+# Repeated root (multiplicity 2)
+f.math.polyroot([1, -2, 1])      #c# Returns [1.0+0j, 1.0+0j]
+
+# Cubic: three real roots
+f.math.polyroot([1, -6, 11, -6]) #c# Returns [3.0+0j, 2.0+0j, 1.0+0j]
+
+# Linear
+f.math.polyroot([2, -4])         #c# Returns [2.0+0j]
+
+# Nonzero constant: no roots
+f.math.polyroot([5])             #c# Returns []
+\end{verbatim}
+
+\paragraph{Polynomial Derivative}
+The \texttt{polyder} function computes the derivative of a polynomial. \\ Morphology:
+\begin{verbatim}
+EBNF:
+"f.math.polyder", "(", tensor, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: \texttt{coeffs} (polynomial coefficients, highest degree first).
+\item Result: \texttt{tensor} (flat, numeric) --- derivative coefficients.
+\item Multiplies each coefficient $a_k \cdot k$ by its power, drops the constant term.
+\item Degree 0 (\texttt{[c]}) returns \texttt{[0]}.
+\item A \texttt{Value Error} is raised if \texttt{coeffs} is empty.
+\end{itemize}
+\paragraph{Roundtrip Property} \texttt{polyint(polyder(p))} recovers $p$ up to the constant term (which is always 0 in \texttt{polyint}).
+\begin{verbatim}
+$f orig = [3, 2, 1]                 #c# 3x^2 + 2x + 1
+$f deriv = f.math.polyder($f orig)  #c# [6, 2]
+$f back  = f.math.polyint($f deriv) #c# [2, 2, 0, 0]  (= 2x^3 + 2x^2, missing +1)
+\end{verbatim}
+Examples:
+\begin{verbatim}
+f.math.polyder([3, 2, 1])       #c# Returns [6, 2]      (3x^2+2x+1 -> 6x+2)
+f.math.polyder([1, 0, 0, 0])    #c# Returns [3, 0, 0]    (x^3 -> 3x^2)
+f.math.polyder([5])             #c# Returns [0]          (constant -> 0)
+f.math.polyder([7, 3])          #c# Returns [7]          (7x+3 -> 7)
+f.math.polyder([1, 0, -4, 0])   #c# Returns [3, 0, -4]   (x^3-4x -> 3x^2-4)
+\end{verbatim}
+
+\paragraph{Polynomial Integral}
+The \texttt{polyint} function computes the indefinite integral of a polynomial (constant of integration = 0). \\ Morphology:
+\begin{verbatim}
+EBNF:
+"f.math.polyint", "(", tensor, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: \texttt{coeffs} (polynomial coefficients, highest degree first).
+\item Result: \texttt{tensor} (flat, numeric) --- integral coefficients, constant term = 0.
+\item Divides each coefficient $a_k$ by $k + 1$ and shifts the list right (prepends a leading term, appends 0).
+\item A \texttt{Value Error} is raised if \texttt{coeffs} is empty.
+\end{itemize}
+\paragraph{Definite Integral} Combine with \texttt{polyval} to compute $\int_a^b p(x)\,dx = F(b) - F(a)$:
+\begin{verbatim}
+$f p = [6, 2]                      #c# p(x) = 6x + 2
+$f F = f.math.polyint($f p)        #c# F(x) = 3x^2 + 2x  (antiderivative, C=0)
+f.math.polyval($f F, 3) - f.math.polyval($f F, 0)  #c# Returns 33.0  (integral from 0 to 3)
+\end{verbatim}
+Examples:
+\begin{verbatim}
+f.math.polyint([6, 2])          #c# Returns [2, 2, 0]      (6x+2 -> 3x^2+2x)
+f.math.polyint([3, 0, 0])       #c# Returns [1, 0, 0, 0]    (3x^2 -> x^3)
+f.math.polyint([5])             #c# Returns [5, 0]          (5 -> 5x)
+f.math.polyint([0])             #c# Returns [0, 0]          (0 -> 0)
+f.math.polyint([4, 3, 2, 1])    #c# Returns [1, 1, 1, 1, 0]  (4x^3+3x^2+2x+1 -> x^4+x^3+x^2+x)
+\end{verbatim}
+
 \subsubsection{Adaptive Integration}
 The \texttt{f.math.integrateAdaptive} function computes the definite integral $\int_a^b f(x)\,dx$ using adaptive Simpson quadrature. The algorithm subdivides intervals where the integrand changes rapidly, concentrating computation where it matters most.
 
@@ -8994,9 +9597,9 @@ Examples:
 \begin{verbatim}
 f.util.softreal(42)        #c# Returns 42.0 (int promoted to real)
 f.util.softreal(3.14)      #c# Returns 3.14 (already real)
-f.util.softreal(5 + 0i)    #c# Returns 5.0 (complex with zero imag part)
-f.util.softreal(3 + 4i)
-    #c# Returns 3 + 4i (complex with non-zero imag, unchanged)
+f.util.softreal(5 + 0j)    #c# Returns 5.0 (complex with zero imag part)
+f.util.softreal(3 + 4j)
+    #c# Returns 3 + 4j (complex with non-zero imag, unchanged)
 f.util.softreal("hello")   #c# Returns "hello" (not numeric, unchanged)
 \end{verbatim}
 
@@ -9174,121 +9777,221 @@ Supported dimensions and unit strings:
 \begin{table}[h]
 \centering
 \footnotesize
-\begin{tabular}{|l|p{10cm}|l|}
+\begin{tabular}{|l|l|p{10cm}|l|}
 \hline
-\textbf{Dimension} & \textbf{Unit Strings} & \textbf{Base} \\
+\textbf{Alias} & \textbf{Dimension} & \textbf{Unit Strings} & \textbf{Base} \\
 \hline
-\texttt{"length"} & \texttt{"pl"} (Planck), \texttt{"fm"} (fermi), \texttt{"pm"}, \texttt{"A"} (angstrom), \texttt{"nm"}, \texttt{"um"} (micron), \texttt{"mm"}, \texttt{"cm"}, \texttt{"m"}, \texttt{"km"}, \texttt{"mil"}, \texttt{"pt"} / \texttt{"point"}, \texttt{"in"}, \texttt{"ft"}, \texttt{"survey\_foot"}, \texttt{"yd"}, \texttt{"mi"}, \texttt{"survey\_mile"}, \texttt{"nmi"}, \texttt{"au"} / \texttt{"astronomical\_unit"}, \texttt{"ly"} / \texttt{"light\_year"}, \texttt{"pc"} / \texttt{"parsec"} & m \\
+\texttt{"l"} & \texttt{"length"} & \texttt{"pl"} (Planck), \texttt{"fm"} (fermi), \texttt{"pm"}, \texttt{"A"} (angstrom), \texttt{"nm"}, \texttt{"um"} (micron), \texttt{"mm"}, \texttt{"cm"}, \texttt{"dm"}, \texttt{"m"}, \texttt{"km"}, \texttt{"mil"}, \texttt{"pt"} / \texttt{"point"}, \texttt{"in"}, \texttt{"ft"}, \texttt{"survey\_foot"}, \texttt{"yd"}, \texttt{"mi"}, \texttt{"survey\_mile"}, \texttt{"nmi"}, \texttt{"au"} / \texttt{"astronomical\_unit"}, \texttt{"ly"} / \texttt{"light\_year"}, \texttt{"pc"} / \texttt{"parsec"} & m \\
 \hline
-\texttt{"mass"} & \texttt{"ug"}, \texttt{"mg"}, \texttt{"g"} / \texttt{"gram"}, \texttt{"grain"}, \texttt{"kg"}, \texttt{"carat"}, \texttt{"t"} / \texttt{"metric\_ton"}, \texttt{"oz"} / \texttt{"ounce"}, \texttt{"troy\_ounce"}, \texttt{"lb"} / \texttt{"pound"}, \texttt{"troy\_pound"}, \texttt{"stone"}, \texttt{"blob"} / \texttt{"slinch"}, \texttt{"slug"}, \texttt{"short\_ton"}, \texttt{"long\_ton"}, \texttt{"u"} / \texttt{"m\_u"} / \texttt{"amu"} / \texttt{"atomic\_mass"} & kg \\
+\texttt{"m"} & \texttt{"mass"} & \texttt{"ug"}, \texttt{"mg"}, \texttt{"g"} / \texttt{"gram"}, \texttt{"grain"}, \texttt{"kg"}, \texttt{"carat"}, \texttt{"t"} / \texttt{"metric\_ton"}, \texttt{"oz"} / \texttt{"ounce"}, \texttt{"troy\_ounce"}, \texttt{"lb"} / \texttt{"pound"}, \texttt{"troy\_pound"}, \texttt{"stone"}, \texttt{"blob"} / \texttt{"slinch"}, \texttt{"slug"}, \texttt{"short\_ton"}, \texttt{"long\_ton"}, \texttt{"u"} / \texttt{"m\_u"} / \texttt{"amu"} / \texttt{"atomic\_mass"} & kg \\
 \hline
-\texttt{"time"} & \texttt{"ps"}, \texttt{"ns"}, \texttt{"us"}, \texttt{"ms"}, \texttt{"s"}, \texttt{"min"}, \texttt{"h"}, \texttt{"d"}, \texttt{"wk"}, \texttt{"yr"}, \texttt{"Julian\_year"} & s \\
+\texttt{"t"} & \texttt{"time"} & \texttt{"fs"}, \texttt{"ps"}, \texttt{"ns"}, \texttt{"us"}, \texttt{"ms"}, \texttt{"s"}, \texttt{"min"}, \texttt{"h"}, \texttt{"d"}, \texttt{"wk"}, \texttt{"yr"}, \texttt{"Julian\_year"} & s \\
 \hline
-\texttt{"frequency"} & \texttt{"mHz"}, \texttt{"Hz"}, \texttt{"kHz"}, \texttt{"MHz"}, \texttt{"GHz"}, \texttt{"THz"} & Hz \\
+\texttt{"f"} & \texttt{"frequency"} & \texttt{"mHz"}, \texttt{"Hz"}, \texttt{"kHz"}, \texttt{"MHz"}, \texttt{"GHz"}, \texttt{"THz"} & Hz \\
 \hline
-\texttt{"angle"} & \texttt{"deg"} / \texttt{"degree"}, \texttt{"rad"}, \texttt{"grad"}, \texttt{"arcmin"} / \texttt{"arcminute"}, \texttt{"arcsec"} / \texttt{"arcsecond"}, \texttt{"rev"} & rad \\
+\texttt{"r"} & \texttt{"angle"} & \texttt{"deg"} / \texttt{"degree"}, \texttt{"rad"}, \texttt{"grad"}, \texttt{"arcmin"} / \texttt{"arcminute"}, \texttt{"arcsec"} / \texttt{"arcsecond"}, \texttt{"rev"} & rad \\
 \hline
-\texttt{"temperature"} & \texttt{"C"}, \texttt{"F"}, \texttt{"K"}, \texttt{"R"} (Rankine), \texttt{"zero\_Celsius"}, \texttt{"degree\_Fahrenheit"} & K (offset) \\
+\texttt{"T"} & \texttt{"temperature"} & \texttt{"C"}, \texttt{"F"}, \texttt{"K"}, \texttt{"R"} (Rankine), \texttt{"zero\_Celsius"}, \texttt{"degree\_Fahrenheit"} & K (offset) \\
 \hline
-\texttt{"voltage"} & \texttt{"uV"}, \texttt{"mV"}, \texttt{"V"}, \texttt{"kV"}, \texttt{"MV"}, \texttt{"dBV"} & V \\
+\texttt{"U"} & \texttt{"voltage"} & \texttt{"uV"}, \texttt{"mV"}, \texttt{"V"}, \texttt{"kV"}, \texttt{"MV"}, \texttt{"dBV"} & V \\
 \hline
-\texttt{"current"} & \texttt{"pA"}, \texttt{"nA"}, \texttt{"uA"}, \texttt{"mA"}, \texttt{"A"}, \texttt{"kA"} & A \\
+\texttt{"I"} & \texttt{"current"} & \texttt{"pA"}, \texttt{"nA"}, \texttt{"uA"}, \texttt{"mA"}, \texttt{"A"}, \texttt{"kA"} & A \\
 \hline
-\texttt{"resistance"} & \texttt{"uohm"}, \texttt{"mohm"}, \texttt{"ohm"}, \texttt{"kohm"}, \texttt{"Mohm"}, \texttt{"Gohm"} & $\Omega$ \\
+\texttt{"R"} & \texttt{"resistance"} & \texttt{"uohm"}, \texttt{"mohm"}, \texttt{"ohm"}, \texttt{"kohm"}, \texttt{"Mohm"}, \texttt{"Gohm"} & $\Omega$ \\
 \hline
-\texttt{"capacitance"} & \texttt{"pF"}, \texttt{"nF"}, \texttt{"uF"}, \texttt{"mF"}, \texttt{"F"} & F \\
+\texttt{"C"} & \texttt{"capacitance"} & \texttt{"pF"}, \texttt{"nF"}, \texttt{"uF"}, \texttt{"mF"}, \texttt{"F"} & F \\
 \hline
-\texttt{"inductance"} & \texttt{"nH"}, \texttt{"uH"}, \texttt{"mH"}, \texttt{"H"} & H \\
+\texttt{"L"} & \texttt{"inductance"} & \texttt{"nH"}, \texttt{"uH"}, \texttt{"mH"}, \texttt{"H"} & H \\
 \hline
-\texttt{"charge"} & \texttt{"pC"}, \texttt{"nC"}, \texttt{"uC"}, \texttt{"mC"}, \texttt{"C"}, \texttt{"Ah"}, \texttt{"mAh"} & C \\
+\texttt{"Q"} & \texttt{"charge"} & \texttt{"pC"}, \texttt{"nC"}, \texttt{"uC"}, \texttt{"mC"}, \texttt{"C"}, \texttt{"nAh"}, \texttt{"uAh"}, \texttt{"Ah"}, \texttt{"mAh"} & C \\
 \hline
-\texttt{"power"} & \texttt{"uW"}, \texttt{"mW"}, \texttt{"W"}, \texttt{"kW"}, \texttt{"MW"}, \texttt{"hp"} / \texttt{"horsepower"}, \texttt{"dBm"}, \texttt{"dBW"} & W \\
+\texttt{"P"} & \texttt{"power"} & \texttt{"uW"}, \texttt{"mW"}, \texttt{"W"}, \texttt{"kW"}, \texttt{"MW"}, \texttt{"hp"} / \texttt{"horsepower"}, \texttt{"dBm"}, \texttt{"dBW"} & W \\
 \hline
-\texttt{"energy"} & \texttt{"eV"} / \texttt{"electron\_volt"}, \texttt{"keV"}, \texttt{"MeV"}, \texttt{"erg"}, \texttt{"J"}, \texttt{"kJ"}, \texttt{"cal"} / \texttt{"calorie\_th"}, \texttt{"calorie\_IT"}, \texttt{"kcal"}, \texttt{"BTU"} / \texttt{"Btu\_th"}, \texttt{"Btu\_IT"}, \texttt{"ton\_TNT"} & J \\
+\texttt{"E"} & \texttt{"energy"} & \texttt{"eV"} / \texttt{"electron\_volt"}, \texttt{"keV"}, \texttt{"MeV"}, \texttt{"erg"}, \texttt{"J"}, \texttt{"kJ"}, \texttt{"MJ"}, \texttt{"cal"} / \texttt{"calorie\_th"}, \texttt{"calorie\_IT"}, \texttt{"kcal"}, \texttt{"Wh"}, \texttt{"kWh"}, \texttt{"MWh"}, \texttt{"BTU"} / \texttt{"Btu\_th"}, \texttt{"Btu\_IT"}, \texttt{"ton\_TNT"} & J \\
 \hline
-\texttt{"force"} & \texttt{"dyn"} / \texttt{"dyne"}, \texttt{"N"}, \texttt{"kN"}, \texttt{"lbf"} / \texttt{"pound\_force"}, \texttt{"kgf"} / \texttt{"kilogram\_force"} & N \\
+\texttt{"F"} & \texttt{"force"} & \texttt{"dyn"} / \texttt{"dyne"}, \texttt{"uN"}, \texttt{"mN"}, \texttt{"N"}, \texttt{"kN"}, \texttt{"lbf"} / \texttt{"pound\_force"}, \texttt{"kgf"} / \texttt{"kilogram\_force"} & N \\
 \hline
-\texttt{"pressure"} & \texttt{"Pa"}, \texttt{"kPa"}, \texttt{"MPa"}, \texttt{"bar"}, \texttt{"mbar"}, \texttt{"atm"} / \texttt{"atmosphere"}, \texttt{"psi"}, \texttt{"torr"} / \texttt{"mmHg"} & Pa \\
+\texttt{"p"} & \texttt{"pressure"} & \texttt{"Pa"}, \texttt{"kPa"}, \texttt{"MPa"}, \texttt{"GPa"}, \texttt{"bar"}, \texttt{"mbar"}, \texttt{"atm"} / \texttt{"atmosphere"}, \texttt{"psi"}, \texttt{"torr"} / \texttt{"mmHg"}, \texttt{"inHg"} & Pa \\
 \hline
-\texttt{"area"} & \texttt{"mm2"}, \texttt{"cm2"}, \texttt{"m2"}, \texttt{"km2"}, \texttt{"in2"}, \texttt{"ft2"}, \texttt{"ac"} / \texttt{"acre"}, \texttt{"ha"} / \texttt{"hectare"}, \texttt{"mi2"} & m$^2$ \\
+\texttt{"A"} & \texttt{"area"} & \texttt{"mm2"}, \texttt{"cm2"}, \texttt{"m2"}, \texttt{"km2"}, \texttt{"in2"}, \texttt{"ft2"}, \texttt{"ac"} / \texttt{"acre"}, \texttt{"ha"} / \texttt{"hectare"}, \texttt{"mi2"} & m$^2$ \\
 \hline
-\texttt{"volume"} & \texttt{"mm3"}, \texttt{"cm3"}, \texttt{"m3"}, \texttt{"mL"}, \texttt{"L"} / \texttt{"liter"} / \texttt{"litre"}, \texttt{"in3"}, \texttt{"ft3"}, \texttt{"gal"} / \texttt{"gallon\_US"}, \texttt{"gallon\_imp"}, \texttt{"fl\_oz"} / \texttt{"fluid\_ounce\_US"}, \texttt{"fluid\_ounce\_imp"}, \texttt{"bbl"} / \texttt{"barrel"} & m$^3$ \\
+\texttt{"V"} & \texttt{"volume"} & \texttt{"mm3"}, \texttt{"cm3"}, \texttt{"m3"}, \texttt{"mL"}, \texttt{"cL"}, \texttt{"dL"}, \texttt{"L"} / \texttt{"liter"} / \texttt{"litre"}, \texttt{"tsp"}, \texttt{"tbsp"}, \texttt{"fl\_oz"} / \texttt{"fluid\_ounce\_US"}, \texttt{"fluid\_ounce\_imp"}, \texttt{"cup"}, \texttt{"qt"}, \texttt{"gal"} / \texttt{"gallon\_US"}, \texttt{"gallon\_imp"}, \texttt{"in3"}, \texttt{"ft3"}, \texttt{"bbl"} / \texttt{"barrel"} & m$^3$ \\
 \hline
-\texttt{"velocity"} & \texttt{"m/s"}, \texttt{"km/h"} / \texttt{"kmh"}, \texttt{"mph"}, \texttt{"kn"} / \texttt{"knot"}, \texttt{"mach"} / \texttt{"speed\_of\_sound"}, \texttt{"c"} & m/s \\
+\texttt{"v"} & \texttt{"velocity"} & \texttt{"m/s"}, \texttt{"km/h"} / \texttt{"kmh"}, \texttt{"mph"}, \texttt{"kn"} / \texttt{"knot"}, \texttt{"mach"} / \texttt{"speed\_of\_sound"}, \texttt{"c"} & m/s \\
 \hline
-\texttt{"acceleration"} & \texttt{"m/s2"}, \texttt{"g"} & m/s$^2$ \\
+\texttt{"a"} & \texttt{"acceleration"} & \texttt{"m/s2"}, \texttt{"g"} & m/s$^2$ \\
 \hline
-\texttt{"voltage*time"} & \texttt{"Vs"}, \texttt{"mVs"}, \texttt{"uVs"}, \texttt{"Wb"} & V$\cdot$s \\
+\texttt{"w"} & \texttt{"voltage*time"} & \texttt{"Vs"}, \texttt{"mVs"}, \texttt{"uVs"}, \texttt{"Wb"} & V$\cdot$s \\
 \hline
 \end{tabular}
-\caption{Supported dimensions and unit strings for \texttt{f.math.convert}.}
+\caption{Supported dimensions and unit strings for \texttt{f.math.convert}. Full names and short aliases (column 1) are both accepted.}
 \label{tab:unit-strings}
 \end{table}
 
 Examples:
 \begin{verbatim}
-# Length: astronomical
-f.math.convert(1, "length", "parsec", "light_year")   #c# Returns approximately 3.2616
-f.math.convert(1, "length", "light_year", "km")      #c# Returns approximately 9.461e12
-f.math.convert(1, "length", "au", "m")               #c# Returns approximately 1.496e11
+# Length: astronomical (alias "L")
+f.math.convert(1, "L", "parsec", "light_year")     #c# Returns approximately 3.2616
+f.math.convert(1, "L", "light_year", "km")         #c# Returns approximately 9.461e12
+f.math.convert(1, "L", "au", "m")                  #c# Returns approximately 1.496e11
 
 # Length: imperial / PCB
-f.math.convert(1, "length", "mile", "km")            #c# Returns approximately 1.609
-f.math.convert(1, "length", "angstrom", "nm")        #c# Returns 0.1
-f.math.convert(25.4, "length", "mil", "mm")          #c# Returns 25.4
-f.math.convert(1, "length", "inch", "mm")            #c# Returns 25.4
-f.math.convert(1, "length", "survey_foot", "ft")     #c# Returns approximately 1.000002
+f.math.convert(1, "L", "mile", "km")               #c# Returns approximately 1.609
+f.math.convert(1, "L", "angstrom", "nm")           #c# Returns 0.1
+f.math.convert(25.4, "L", "mil", "mm")             #c# Returns 25.4
+f.math.convert(1, "L", "inch", "mm")               #c# Returns 25.4
+f.math.convert(1, "L", "survey_foot", "ft")        #c# Returns approximately 1.000002
+f.math.convert(1, "L", "dm", "cm")                 #c# Returns 10.0
 
-# Mass
-f.math.convert(1, "mass", "pound", "kg")             #c# Returns approximately 0.4536
-f.math.convert(1, "mass", "stone", "lb")             #c# Returns 14.0
-f.math.convert(1, "mass", "slug", "kg")              #c# Returns approximately 14.594
-f.math.convert(1, "mass", "carat", "mg")             #c# Returns 200.0
-f.math.convert(1, "mass", "troy_ounce", "g")         #c# Returns approximately 31.103
-f.math.convert(1, "mass", "long_ton", "kg")          #c# Returns approximately 1016.0
-f.math.convert(1, "mass", "short_ton", "kg")         #c# Returns approximately 907.2
+# Mass (alias "m")
+f.math.convert(1, "m", "pound", "kg")               #c# Returns approximately 0.4536
+f.math.convert(1, "m", "stone", "lb")               #c# Returns 14.0
+f.math.convert(1, "m", "slug", "kg")                #c# Returns approximately 14.594
+f.math.convert(1, "m", "carat", "mg")               #c# Returns 200.0
+f.math.convert(1, "m", "troy_ounce", "g")           #c# Returns approximately 31.103
+f.math.convert(1, "m", "long_ton", "kg")            #c# Returns approximately 1016.0
+f.math.convert(1, "m", "short_ton", "kg")           #c# Returns approximately 907.2
 
-# Time
-f.math.convert(1, "time", "hour", "s")              #c# Returns 3600.0
-f.math.convert(1, "time", "day", "hour")            #c# Returns 24.0
-f.math.convert(1, "time", "Julian_year", "day")     #c# Returns 365.25
+# Time (alias "t")
+f.math.convert(1, "t", "hour", "s")                 #c# Returns 3600.0
+f.math.convert(1, "t", "day", "hour")               #c# Returns 24.0
+f.math.convert(1, "t", "Julian_year", "day")        #c# Returns 365.25
+f.math.convert(1, "t", "fs", "ps")                  #c# Returns 0.001
 
-# Electrical
-f.math.convert(100, "resistance", "ohm", "kohm")    #c# Returns 0.1
-f.math.convert(1, "frequency", "MHz", "Hz")         #c# Returns 1000000.0
-f.math.convert(30, "power", "dBm", "mW")            #c# Returns 1000.0
-f.math.convert(1, "power", "horsepower", "W")       #c# Returns approximately 745.7
+# Electrical (aliases "R", "f", "P", "Q")
+f.math.convert(100, "R", "ohm", "kohm")             #c# Returns 0.1
+f.math.convert(1, "f", "MHz", "Hz")                 #c# Returns 1000000.0
+f.math.convert(30, "P", "dBm", "mW")                #c# Returns 1000.0
+f.math.convert(1, "P", "horsepower", "W")           #c# Returns approximately 745.7
+f.math.convert(1, "Q", "mAh", "C")                  #c# Returns 3.6
+f.math.convert(1, "Q", "uAh", "mAh")                #c# Returns 0.001
 
-# Force
-f.math.convert(1, "force", "lbf", "N")             #c# Returns approximately 4.448
-f.math.convert(1, "force", "dyne", "N")            #c# Returns 1e-5
+# Force (alias "F")
+f.math.convert(1, "F", "lbf", "N")                  #c# Returns approximately 4.448
+f.math.convert(1, "F", "dyne", "N")                 #c# Returns 1e-5
+f.math.convert(1, "F", "mN", "N")                   #c# Returns 0.001
+f.math.convert(1, "F", "uN", "N")                   #c# Returns 1e-6
 
-# Energy
-f.math.convert(1, "energy", "electron_volt", "J")   #c# Returns approximately 1.602e-19
-f.math.convert(1, "energy", "calorie_IT", "J")      #c# Returns approximately 4.1868
-f.math.convert(1, "energy", "Btu_IT", "J")          #c# Returns approximately 1055.06
-f.math.convert(1, "energy", "erg", "J")             #c# Returns 1e-7
-f.math.convert(1, "energy", "ton_TNT", "kJ")        #c# Returns 4184.0
+# Energy (alias "E")
+f.math.convert(1, "E", "electron_volt", "J")        #c# Returns approximately 1.602e-19
+f.math.convert(1, "E", "calorie_IT", "J")           #c# Returns approximately 4.1868
+f.math.convert(1, "E", "Btu_IT", "J")               #c# Returns approximately 1055.06
+f.math.convert(1, "E", "erg", "J")                  #c# Returns 1e-7
+f.math.convert(1, "E", "ton_TNT", "kJ")             #c# Returns 4184.0
+f.math.convert(1, "E", "kWh", "J")                  #c# Returns 3600000.0
+f.math.convert(1, "E", "Wh", "J")                   #c# Returns 3600.0
 
-# Temperature
-f.math.convert(100, "temperature", "C", "F")        #c# Returns 212.0
-f.math.convert(0, "temperature", "C", "K")          #c# Returns 273.15
+# Temperature (alias "T")
+f.math.convert(100, "T", "C", "F")                   #c# Returns 212.0
+f.math.convert(0, "T", "C", "K")                     #c# Returns 273.15
 
-# Pressure
-f.math.convert(1, "pressure", "atm", "psi")         #c# Returns approximately 14.696
-f.math.convert(1, "pressure", "torr", "Pa")         #c# Returns approximately 133.322
+# Pressure (alias "p")
+f.math.convert(1, "p", "atm", "psi")                #c# Returns approximately 14.696
+f.math.convert(1, "p", "torr", "Pa")                #c# Returns approximately 133.322
+f.math.convert(1, "p", "inHg", "kPa")               #c# Returns approximately 3.386
 
-# Velocity
-f.math.convert(1, "velocity", "mach", "m/s")        #c# Returns approximately 340.3
-f.math.convert(1, "velocity", "knot", "mph")        #c# Returns approximately 1.151
+# Velocity (alias "v")
+f.math.convert(1, "v", "mach", "m/s")               #c# Returns approximately 340.3
+f.math.convert(1, "v", "knot", "mph")               #c# Returns approximately 1.151
 
-# Volume
-f.math.convert(1, "volume", "gallon_imp", "L")      #c# Returns approximately 4.546
-f.math.convert(1, "volume", "barrel", "L")          #c# Returns approximately 159.0
+# Volume (alias "V")
+f.math.convert(1, "V", "gallon_imp", "L")           #c# Returns approximately 4.546
+f.math.convert(1, "V", "barrel", "L")               #c# Returns approximately 159.0
+f.math.convert(1, "V", "cup", "mL")                 #c# Returns approximately 236.6
+f.math.convert(1, "V", "tbsp", "mL")                #c# Returns approximately 14.79
+f.math.convert(1, "V", "tsp", "mL")                 #c# Returns approximately 4.93
+f.math.convert(1, "V", "qt", "L")                   #c# Returns approximately 0.946
 
-# Angle
-f.math.convert(1, "angle", "rev", "deg")            #c# Returns 360.0
-f.math.convert(90, "angle", "degree", "arcminute")  #c# Returns 5400.0
+# Angle (alias "r")
+f.math.convert(1, "r", "rev", "deg")                 #c# Returns 360.0
+f.math.convert(90, "r", "degree", "arcminute")       #c# Returns 5400.0
+\end{verbatim}
+
+\subsubsection{SI Prefix Conversion}
+Converts a numeric value between SI decimal and IEC binary prefix scales. Pure prefix multiplier math — does not touch units. \\
+Morphology:
+\begin{verbatim}
+EBNF:
+"f.math.SIconvert", "(", ( int | real ), ",", string, ",", string, ")"
+\end{verbatim}
+\begin{itemize}
+\item Operands: value (\texttt{int} or \texttt{real}), source prefix (\texttt{string}), target prefix (\texttt{string}).
+\item Result: \texttt{real} — value × multiplier(source) ÷ multiplier(target).
+\item A \texttt{Value Error} is raised if either prefix string is unknown.
+\item A \texttt{Type Error} is raised if the value is not numeric.
+\end{itemize}
+
+\paragraph{SI Decimal Prefixes (2022 standard)}
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Symbol} & \textbf{Name} & \textbf{Factor} \\
+\hline
+\texttt{"Q"} & quetta & $10^{30}$ \\
+\texttt{"R"} & ronna & $10^{27}$ \\
+\texttt{"Y"} & yotta & $10^{24}$ \\
+\texttt{"Z"} & zetta & $10^{21}$ \\
+\texttt{"E"} & exa & $10^{18}$ \\
+\texttt{"P"} & peta & $10^{15}$ \\
+\texttt{"T"} & tera & $10^{12}$ \\
+\texttt{"G"} & giga & $10^{9}$ \\
+\texttt{"M"} & mega & $10^{6}$ \\
+\texttt{"k"} & kilo & $10^{3}$ \\
+\texttt{"h"} & hecto & $10^{2}$ \\
+\texttt{"da"} & deca & $10^{1}$ \\
+\texttt{""} & (base) & $10^{0}$ \\
+\texttt{"d"} & deci & $10^{-1}$ \\
+\texttt{"c"} & centi & $10^{-2}$ \\
+\texttt{"m"} & milli & $10^{-3}$ \\
+\texttt{"u"} & micro & $10^{-6}$ \\
+\texttt{"n"} & nano & $10^{-9}$ \\
+\texttt{"p"} & pico & $10^{-12}$ \\
+\texttt{"f"} & femto & $10^{-15}$ \\
+\texttt{"a"} & atto & $10^{-18}$ \\
+\texttt{"z"} & zepto & $10^{-21}$ \\
+\texttt{"y"} & yocto & $10^{-24}$ \\
+\texttt{"r"} & ronto & $10^{-27}$ \\
+\texttt{"q"} & quecto & $10^{-30}$ \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{IEC Binary Prefixes}
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Symbol} & \textbf{Name} & \textbf{Factor} \\
+\hline
+\texttt{"Qi"} & quebi & $2^{100}$ \\
+\texttt{"Ri"} & robi & $2^{90}$ \\
+\texttt{"Yi"} & yobi & $2^{80}$ \\
+\texttt{"Zi"} & zebi & $2^{70}$ \\
+\texttt{"Ei"} & exbi & $2^{60}$ \\
+\texttt{"Pi"} & pebi & $2^{50}$ \\
+\texttt{"Ti"} & tebi & $2^{40}$ \\
+\texttt{"Gi"} & gibi & $2^{30}$ \\
+\texttt{"Mi"} & mebi & $2^{20}$ \\
+\texttt{"Ki"} & kibi & $2^{10}$ \\
+\hline
+\end{tabular}
+\end{table}
+
+Cross-family conversions are allowed (e.g. \texttt{"Ki"} → \texttt{"k"}). Examples:
+\begin{verbatim}
+f.math.SIconvert(1.5, "k", "m")       #c# Returns 1500000.0 (kilo → milli)
+f.math.SIconvert(1, "", "m")          #c# Returns 1000.0 (base → milli)
+f.math.SIconvert(1, "n", "p")         #c# Returns 1000.0 (nano → pico)
+f.math.SIconvert(1, "G", "u")         #c# Returns 1e15 (giga → micro)
+f.math.SIconvert(42, "k", "k")        #c# Returns 42.0 (identity)
+f.math.SIconvert(1, "Ki", "k")        #c# Returns 1.024 (binary → decimal)
+f.math.SIconvert(1, "M", "Mi")        #c# Returns approximately 0.9537 (decimal → binary)
+f.math.SIconvert(1, "Q", "q")         #c# Returns 1e60 (full range)
+f.math.SIconvert(1, "Ti", "T")        #c# Returns approximately 1.0995 (tebi → tera)
+f.math.SIconvert(1024, "Ki", "Mi")    #c# Returns 1.0 (binary self-conversion)
 \end{verbatim}
 
 \subsubsection{Wavelength to Frequency}
@@ -9850,8 +10553,8 @@ EBNF:
 \end{itemize}
 Examples:
 \begin{verbatim}
-f.special.airyC(0)          #c# Returns [0.3551+0i, -0.2588+0i, 0.6149+0i, 0.4483+0i]
-f.special.airyC(1+1i)       #c# Returns complex Airy values
+f.special.airyC(0)          #c# Returns [0.3551+0j, -0.2588+0j, 0.6149+0j, 0.4483+0j]
+f.special.airyC(1+1j)       #c# Returns complex Airy values
 \end{verbatim}
 
 \subsubsection{Scaled Airy Function}
@@ -9995,8 +10698,8 @@ EBNF:
 \item For real arguments, prefer \texttt{f.special.scorerHi} which returns \texttt{real} values.
 \end{itemize}
 \begin{verbatim}
-f.special.scorerHiC(0)          #c# Returns approximately 0.5+0i
-f.special.scorerHiC(1+1i)       #c# Returns complex Scorer Hi value
+f.special.scorerHiC(0)          #c# Returns approximately 0.5+0j
+f.special.scorerHiC(1+1j)       #c# Returns complex Scorer Hi value
 \end{verbatim}
 
 \subsubsection{Scorer's Function Gi (Complex)}
@@ -10012,8 +10715,8 @@ EBNF:
 \item For real arguments, prefer \texttt{f.special.scorerGi} which returns \texttt{real} values.
 \end{itemize}
 \begin{verbatim}
-f.special.scorerGiC(0)          #c# Returns approximately 0.5+0i
-f.special.scorerGiC(1+1i)       #c# Returns complex Scorer Gi value
+f.special.scorerGiC(0)          #c# Returns approximately 0.5+0j
+f.special.scorerGiC(1+1j)       #c# Returns complex Scorer Gi value
 \end{verbatim}
 
 \subsubsection{Align Up Function}
@@ -10666,7 +11369,7 @@ EBNF:
 \end{itemize}
 Examples:
 \begin{verbatim}
-f.int.legendreSymbol(2, 7)     #c# Returns 1  (2 is QR mod 7: 3^2 ≡ 2)
+f.int.legendreSymbol(2, 7)     #c# Returns 1  (2 is QR mod 7: 3^2 = 2)
 f.int.legendreSymbol(3, 7)     #c# Returns -1
 f.int.legendreSymbol(4, 7)     #c# Returns 1  (4 = 2^2)
 \end{verbatim}
@@ -11205,7 +11908,7 @@ EBNF:
 \end{itemize}
 Examples:
 \begin{verbatim}
-f.special.hankelH1(0, 1)   #c# Returns approximately 0.7652+0.0883i
+f.special.hankelH1(0, 1)   #c# Returns approximately 0.7652+0.0883j
 \end{verbatim}
 
 \subsubsection{Hankel Function of the Second Kind}
@@ -11221,7 +11924,7 @@ EBNF:
 \end{itemize}
 Examples:
 \begin{verbatim}
-f.special.hankelH2(0, 1)   #c# Returns approximately 0.7652-0.0883i
+f.special.hankelH2(0, 1)   #c# Returns approximately 0.7652-0.0883j
 \end{verbatim}
 
 \subsubsection{Kelvin Function ber}
@@ -11653,7 +12356,7 @@ f.special.incompleteBeta(1, 1, 1)   #c# Returns 0.0
 f.special.incompleteBeta(2, 3, 0.5) #c# Returns approximately 0.3125
 \end{verbatim}
 
-\subsubsection{Inverse Tangent Integral (Ti₂)}
+\subsubsection{Inverse Tangent Integral (Ti$_2$)}
 Computes the inverse tangent integral $\text{Ti}_2(x) = \int_0^x \frac{\arctan(t)}{t}\,dt$. \\
 Morphology:
 \begin{verbatim}
@@ -11716,7 +12419,7 @@ Examples:
 \begin{verbatim}
 f.special.blochWigner(0)       #c# Returns 0.0
 f.special.blochWigner(1)       #c# Returns 0.0
-f.special.blochWigner(0+1i)    #c# Returns approximately 0.9160  (= Catalan's constant)
+f.special.blochWigner(0+1j)    #c# Returns approximately 0.9160  (= Catalan's constant)
 \end{verbatim}
 
 \subsubsection{Legendre Chi Function}

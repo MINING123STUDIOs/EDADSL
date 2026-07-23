@@ -86,7 +86,7 @@ hex_literal      = "0x", hexdigit, {hexdigit}, [si_prefix | bin_prefix]
 bin_exp_int = ["+" | "-"], digit, {digit}, ("w" | "W"), "+", digit, {digit}
 
 si_prefix = "q" | "r" | "y" | "z" | "a" | "f" | "p" | "n" | "u" | "m"
-          | "c" | "d" | "h" | "D"
+          | "c" | "d" | "h" | "da"
           | "k" | "M" | "G" | "T" | "P" | "E" | "Z" | "Y" | "R" | "Q"
 
 bin_prefix = "ki" | "Mi" | "Gi" | "Ti" | "Pi" | "Ei" | "Zi" | "Yi" | "Ri" | "Qi"
@@ -205,7 +205,7 @@ n  & $10^{-9}$  & nano    & Y  & $10^{24}$ & yotta \\
 u  & $10^{-6}$  & micro   & R  & $10^{27}$ & ronna \\
 m  & $10^{-3}$  & milli   & Q  & $10^{30}$ & quetta \\
 c  & $10^{-2}$  & centi   & h  & $10^{2}$  & hecto  \\
-d  & $10^{-1}$  & deci    & D  & $10^{1}$  & deca   \\
+d  & $10^{-1}$  & deci    & da & $10^{1}$  & deca   \\
 \hline
 \end{tabular}
 \end{center}
@@ -250,7 +250,7 @@ The Complex data type represents complex numbers (elements of $\mathbb{C}$). A c
 \paragraph{Type Hierarchy}
 \begin{center}
 \begin{tikzpicture}[>=stealth, node distance=2.5cm, every node/.style={draw, rectangle, minimum width=2.5cm, minimum height=1cm, align=center}]
-  \node (complex) {complex\\[-2pt]\texttt{5 + 0i}};
+  \node (complex) {complex\\[-2pt]\texttt{5 + 0j}};
   \node (real) [below of=complex] {real\\[-2pt]\texttt{5.0}};
   \node (int) [below of=real] {int\\[-2pt]\texttt{5}};
   \draw[->, thick] (int) -- node[right, draw=none] {promote} (real);
@@ -265,25 +265,25 @@ Auto-promotion is implicit and lossless: an \texttt{int} can be used wherever a 
 EBNF:
 complex_literal = rectangular_literal | polar_literal
 
-rectangular_literal = ["+" | "-"], number, ["+", number, "i"] 
-                    | ["+" | "-"], number, "-", number, "i"
-                    | ["+" | "-"], number, "i"
+rectangular_literal = ["+" | "-"], number, ["+", number, "j"] 
+                    | ["+" | "-"], number, "-", number, "j"
+                    | ["+" | "-"], number, "j"
 
 polar_literal = number, "<|", number
 \end{verbatim}
 
-The \texttt{i} suffix on a number creates a complex literal. The \texttt{<|} operator creates a polar literal (magnitude <| angle in radians).
+The \texttt{j} suffix on a number creates a complex literal. The \texttt{<|} operator creates a polar literal (magnitude <| angle in radians).
 
 \paragraph{Rectangular Form}
 \begin{verbatim}
-3 + 4i        #c# real=3, imag=4
--2 - 7i       #c# real=-2, imag=-7
-5i            #c# real=0, imag=5
+3 + 4j        #c# real=3, imag=4
+-2 - 7j       #c# real=-2, imag=-7
+5j            #c# real=0, imag=5
 3             #c# real=3, imag=0 (int promoted to complex)
-3.14 + 2.71i  #c# real=3.14, imag=2.71
+3.14 + 2.71j  #c# real=3.14, imag=2.71
 \end{verbatim}
 
-Note: \texttt{3 + 4i} is a single complex literal in rectangular form. The \texttt{+} is part of the literal, not the addition operator.
+Note: \texttt{3 + 4j} is a single complex literal in rectangular form. The \texttt{+} is part of the literal, not the addition operator.
 
 \paragraph{Polar Form}
 \begin{verbatim}
@@ -294,11 +294,11 @@ Note: \texttt{3 + 4i} is a single complex literal in rectangular form. The \text
 
 \subsubsection{Complex Data Type Casting and Coercion}
 \begin{itemize}
-\item \texttt{int} promotes to \texttt{complex}: \texttt{5} becomes \texttt{5 + 0i}
-\item \texttt{real} promotes to \texttt{complex}: \texttt{3.14} becomes \texttt{3.14 + 0i}
+\item \texttt{int} promotes to \texttt{complex}: \texttt{5} becomes \texttt{5 + 0j}
+\item \texttt{real} promotes to \texttt{complex}: \texttt{3.14} becomes \texttt{3.14 + 0j}
 \item Mixed operations (\texttt{int + complex}, \texttt{real + complex}) produce \texttt{complex}
 \item \texttt{complex} cannot be coerced to \texttt{real} or \texttt{int} (use \texttt{real()} or \texttt{int()} to extract parts)
-\item Booleans coerce to \texttt{complex}: \texttt{True} becomes \texttt{1 + 0i}
+\item Booleans coerce to \texttt{complex}: \texttt{True} becomes \texttt{1 + 0j}
 \item Lists of complex can be passed to mathematical functions, which operate element-wise
 \end{itemize}
 
@@ -371,22 +371,54 @@ $my_set [set]= f.set( $my_list )  #c# { 1, 2, 3 }
 Sets can be converted to Lists using the \texttt{f.list()} function. The order of elements in the resulting List is determined by the order they appear in the global set \texttt{*e}.
 \subsection{String}
 \subsubsection{String Data Type Definition}
-The String data type represents textual data. Strings can be delimited by single or double quotes, and support escape sequences. Long strings (multi-line) are delimited by triple quotes.
+The String data type represents textual data. Strings can be delimited by single or double quotes, and support escape sequences. Long strings (multi-line) are delimited by triple quotes. Raw strings (suffix \texttt{R}) disable escape processing.
 \subsubsection{String Data Type Literals}
 \begin{verbatim}
 EBNF:
 string_literal = long_string | short_string
-short_string   =   '"', {short_string_item_I},  '"'   |
-                   "'", {short_string_item_II}, "'"
+short_string   =   '"', {short_string_item_I},  '"', ["R"]   |
+                   "'", {short_string_item_II}, "'", ["R"]
 long_string    = '"""',  {long_string_item_I},  '"""' |
                  "'''",  {long_string_item_II}, "'''"
 
 RegEx:
-short_string_item_I  = [^"\\\n)]|(\\.)
-short_string_item_II = [^'\\\n)]|(\\.)
+short_string_item_I  = [^"\\\n]|(\\.)
+short_string_item_II = [^'\\\n]|(\\.)
  long_string_item_I  = [^"\\]|(\\.)
  long_string_item_II = [^'\\]|(\\.)
 \end{verbatim}
+
+\paragraph{Escape Sequences}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Sequence} & \textbf{Name} & \textbf{Description} \\
+\hline
+\texttt{\textbackslash n} & Newline & Line feed (U+000A) \\
+\texttt{\textbackslash t} & Tab & Horizontal tab (U+0009) \\
+\texttt{\textbackslash r} & Carriage Return & CR (U+000D) \\
+\texttt{\textbackslash 0} & Null & Null character (U+0000) \\
+\texttt{\textbackslash\textbackslash} & Backslash & Literal backslash \\
+\texttt{\textbackslash"} & Double Quote & Literal double quote inside \texttt{"..."} \\
+\texttt{\textbackslash'} & Single Quote & Literal single quote inside \texttt{'...'} \\
+\texttt{\textbackslash r\textbackslash n} & CRLF & Windows line ending (CR+LF) \\
+\texttt{\textbackslash xHH} & Hex Byte & Two-digit hex, e.g. \texttt{\textbackslash x41} = \texttt{A} \\
+\texttt{\textbackslash uHHHH} & Unicode & 4-digit codepoint, e.g. \texttt{\textbackslash u0041} = \texttt{A} \\
+\texttt{\textbackslash UHHHHHHHH} & Unicode & 8-digit codepoint for supplementary chars \\
+\texttt{\textbackslash\textless{}other\textgreater{}} & Literal & Unknown sequences remain as-is (e.g. \texttt{\textbackslash q} $\rightarrow$ \texttt{\textbackslash q}) \\
+\hline
+\end{tabular}
+\end{center}
+
+\paragraph{Raw Strings}
+Append \texttt{R} to the closing quote to disable escape processing. Content is literal. Useful for file paths, regex patterns, and any string where backslashes should not be interpreted.
+\begin{verbatim}
+$path [string]= "C:\Users\test\file.txt"R   #c# Literal: C:\Users\test\file.txt
+$regex [string]= '\d+\.\d+'R              #c# Literal: \d+\.\d+
+$normal [string]= "Line1\nLine2"           #c# Contains actual newline
+$raw [string]= "Line1\nLine2"R            #c# Literal: Line1\nLine2
+\end{verbatim}
+
 \subsubsection{String Data Type Casting and Coercion}
 Strings can be created from other types using the \texttt{f.str()} function, which concatenates all arguments into a single string.\\
 Example:
@@ -534,9 +566,9 @@ A list literal is a valid Tensor if and only if:
 \paragraph{Examples}
 \begin{itemize}
 \item \texttt{|[1, 2, 3]} — valid tensor (1D, shape (3))
-\item \texttt{|[1+2i, 3+4i]} — valid tensor (1D, shape (2), complex)
+\item \texttt{|[1+2j, 3+4j]} — valid tensor (1D, shape (2), complex)
 \item \texttt{|[[1,2], [3,4], [5,6]]} — valid tensor (2D, shape (3,2))
-\item \texttt{|[[1+2i, 3], [4, 5+6i]]} — valid tensor (2D, shape (2,2), complex)
+\item \texttt{|[[1+2j, 3], [4, 5+6j]]} — valid tensor (2D, shape (2,2), complex)
 \item \texttt{|[[[1,2],[3,4]],[[5,6],[7,8]]]} — valid tensor (3D, shape (2,2,2))
 \item \texttt{|[[1,2], [3,4,5]]} — INVALID (different lengths)
 \item \texttt{|[1, "hello", True]} — INVALID (non-numeric)
@@ -610,8 +642,9 @@ Tensors have dedicated functions in the \texttt{f.arr}, \texttt{f.stat}, and \te
 \begin{itemize}
 \item Creation: \texttt{f.tnsr.zeros}, \texttt{f.tnsr.ones}, \texttt{f.tnsr.identity}
 \item Inspection: \texttt{f.tnsr.flatten}, \texttt{f.tnsr.norm}, \texttt{f.tnsr.normalize}
+\item Manipulation: \texttt{f.tnsr.einsum}
 \item Statistics: \texttt{f.stat.sum}, \texttt{f.stat.prod}, \texttt{f.stat.mean}, \texttt{f.stat.median}, \texttt{f.stat.mode}, \texttt{f.stat.std}, \texttt{f.stat.var}, \texttt{f.stat.min}, \texttt{f.stat.max}, \texttt{f.stat.argmin}, \texttt{f.stat.argmax}, \texttt{f.stat.peak}, \texttt{f.stat.rms}, \texttt{f.stat.percentile}, \texttt{f.stat.quantile}, \texttt{f.stat.histogram}, \texttt{f.stat.correlation}, \texttt{f.stat.covariance}, \texttt{f.stat.linearRegression}
-\item Linear algebra: \texttt{f.linalg.det}, \texttt{f.linalg.inv}, \texttt{f.linalg.pinv}, \texttt{f.linalg.rank}, \texttt{f.linalg.trace}, \texttt{f.linalg.solve}, \texttt{f.linalg.eig}, \texttt{f.linalg.eigvec}, \texttt{f.linalg.lu}, \texttt{f.linalg.qr}, \texttt{f.linalg.chol}, \texttt{f.linalg.svd}, \texttt{f.linalg.cond}
+\item Linear algebra: \texttt{f.linalg.det}, \texttt{f.linalg.inv}, \texttt{f.linalg.pinv}, \texttt{f.linalg.rank}, \texttt{f.linalg.trace}, \texttt{f.linalg.solve}, \texttt{f.linalg.eig}, \texttt{f.linalg.eigvec}, \texttt{f.linalg.lu}, \texttt{f.linalg.qr}, \texttt{f.linalg.chol}, \texttt{f.linalg.svd}, \texttt{f.linalg.cond}, \texttt{f.linalg.vander}
 \end{itemize}
 See Section~\ref{ch:control} for detailed function descriptions.
 
@@ -848,29 +881,29 @@ Converts real to boolean.
 \paragraph{int as complex}
 Promotes an integer to complex with zero imaginary part.
 \begin{verbatim}
-5 as complex       #c# Returns 5 + 0i
--3 as complex      #c# Returns -3 + 0i
+5 as complex       #c# Returns 5 + 0j
+-3 as complex      #c# Returns -3 + 0j
 \end{verbatim}
 
 \paragraph{real as complex}
 Promotes a real to complex with zero imaginary part.
 \begin{verbatim}
-3.14 as complex    #c# Returns 3.14 + 0i
+3.14 as complex    #c# Returns 3.14 + 0j
 \end{verbatim}
 
 \paragraph{complex as real}
 Returns the real part if the imaginary part is zero. A warning is issued if the imaginary part is non-zero (returns the magnitude).
 \begin{verbatim}
-(3 + 0i) as real   #c# Returns 3.0
-(3 + 4i) as real   #c# Warning: imaginary part lost; returns 5.0
+(3 + 0j) as real   #c# Returns 3.0
+(3 + 4j) as real   #c# Warning: imaginary part lost; returns 5.0
 \end{verbatim}
 
 \paragraph{complex as int}
 Truncates the real part to integer if the imaginary part is zero. A warning is issued if the imaginary part is non-zero (truncates the magnitude).
 \begin{verbatim}
-(5 + 0i) as int    #c# Returns 5
-(3.7 + 0i) as int  #c# Returns 3
-(3 + 4i) as int    #c# Warning: imaginary part lost; returns 3
+(5 + 0j) as int    #c# Returns 5
+(3.7 + 0j) as int  #c# Returns 3
+(3 + 4j) as int    #c# Warning: imaginary part lost; returns 3
 \end{verbatim}
 
 \subsection{List/Tensor Conversions}
@@ -1010,7 +1043,7 @@ function_call_var   = variable, "(", [{ data, "," }], data, ")"
 
 arithmetic_expression = expression,
     ("+" | "-" | "*" | "/" | "%" | "^" | "." | "x"
-     | ".*" | ".^" | "**" | "***" | "****"),
+     | ".*" | ".^"),
     expression
   | "-" expression
   | expression, (".T" | ".H")
@@ -1045,7 +1078,6 @@ compound_assignment = variable,
   | variable, (".=" | "x=" | "xr=")
     #c# tensor & secure erasure
   | variable, (".*=" | ".^=" | ".*r=" | ".^r=")
-  | variable, ("**=" | "***=" | "****=" | "**r=" | "***r=" | "****r=")
   | variable, ("~.T" | "~.H" | "~.E" | "~.E+")
     #c# bitwise / shift
   | variable, ("<<=" | ">>=" | "<<r=" | ">>r=")
@@ -1067,7 +1099,6 @@ compound_assignment = variable,
 \section{Operator Precedence}
 Operators are evaluated in the following order of precedence (highest to lowest):
 \begin{enumerate}
-\item Hexation (\texttt{****}), Pentation (\texttt{***}), Tetration (\texttt{**}) -- right-associative
 \item Exponentiation (\texttt{\^{}}) -- right-associative
 \item Boolean negation (\texttt{!}), Bitwise NOT (\texttt{b!})
 \item Postfix increment/decrement (\texttt{\$var++}, \texttt{\$var--}), transpose (\texttt{.T}), Hermitian transpose (\texttt{.H}), erase (\texttt{~.E}), cryptographic shred (\texttt{~.E+})

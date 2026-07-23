@@ -18,11 +18,11 @@ The complete operator precedence is defined in Section~\ref{sec:operators}.
 Type coercion follows the hierarchy: \texttt{int} $<$ \texttt{real} $<$ \texttt{complex}.
 \begin{itemize}
 \item \texttt{int} coerces to \texttt{real}: \texttt{5} becomes \texttt{5.0}
-\item \texttt{real} coerces to \texttt{complex}: \texttt{3.14} becomes \texttt{3.14 + 0i}
-\item \texttt{int} coerces to \texttt{complex}: \texttt{5} becomes \texttt{5 + 0i}
+\item \texttt{real} coerces to \texttt{complex}: \texttt{3.14} becomes \texttt{3.14 + 0j}
+\item \texttt{int} coerces to \texttt{complex}: \texttt{5} becomes \texttt{5 + 0j}
 \item \texttt{bool} coerces to \texttt{int}: \texttt{True} becomes \texttt{1}
 \item \texttt{bool} coerces to \texttt{real}: \texttt{True} becomes \texttt{1.0}
-\item \texttt{bool} coerces to \texttt{complex}: \texttt{True} becomes \texttt{1 + 0i}
+\item \texttt{bool} coerces to \texttt{complex}: \texttt{True} becomes \texttt{1 + 0j}
 \item \texttt{bool} coerces to \texttt{string}: \texttt{True} becomes \texttt{"true"}, \texttt{False} becomes \texttt{"false"}
 \item Mixed numeric operations promote to the wider type: \texttt{int + real} $\rightarrow$ \texttt{real}, \texttt{real + complex} $\rightarrow$ \texttt{complex}
 \item Coercion is never lossy in the upward direction
