@@ -393,6 +393,66 @@ Examples:
 [0] * 5                   #c# = [0,0,0,0,0]
 \end{verbatim}
 
+\subsection{Swap}
+The \texttt{<->} operator swaps the values of two assignable targets in a single statement. It eliminates the need for a temporary variable.
+
+\begin{verbatim}
+assignable <-> assignable
+\end{verbatim}
+
+\begin{itemize}
+\item Both sides must be assignable (variable, indexed element, or safe-indexed element)
+\item Statement only (not an expression) -- cannot be used in \texttt{\$c = \$a <-> \$b}
+\item Lowest precedence -- evaluated after all other operators
+\item Atomic swap -- both values are exchanged simultaneously
+\end{itemize}
+
+\[
+\text{swap}(a, b) \iff (a, b) \leftarrow (b, a)
+\]
+
+\paragraph{Edge Cases}
+\begin{itemize}
+\item Same target: \texttt{\$a <-> \$a} -- no-op (legal but useless)
+\item Different types: allowed (values are swapped regardless of type)
+\item Undefined variable: \texttt{Runtime Error}
+\item Index out of range: \texttt{Runtime Error}
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+# Variable swap
+$a [int]= 10
+$b [int]= 20
+$a <-> $b
+# $a = 20, $b = 10
+
+# Tensor element swap
+$t [tensor]= |[10, 20, 30]
+$t[0] <-> $t[2]
+# $t = |[30, 20, 10]
+
+# Mixed swap
+$a [int]= 5
+$t [tensor]= |[10, 20, 30]
+$a <-> $t[1]
+# $a = 20, $t = |[10, 5, 30]
+
+# Bubble sort
+for $i E [0:n-1] ::{
+    for $j E [0:n-$i-2] ::{
+        if $t[$j] > $t[$j+1] ::{
+            $t[$j] <-> $t[$j+1]
+        }
+    }
+}
+
+# Error cases
+$a <-> $b       #c# Runtime Error (if $b undefined)
+$t[10] <-> $a   #c# Runtime Error (out of range)
+$c = $a <-> $b  #c# Runtime Error (swap is statement, not expression)
+\end{verbatim}
+
 \subsection{Comparison}
 Comparison operators evaluate to \texttt{True} or \texttt{False}.
 \begin{verbatim}
@@ -1187,6 +1247,7 @@ Operators are evaluated in the following order (highest to lowest):
 \item \texttt{|=>} -- Pipeline (left-associative)
 \item \texttt{L::(...)->\{...\}} -- Lambda expression
 \item User-defined operators (\texttt{o.u.*})
+\item \texttt{<->} -- Swap statement (lowest precedence)
 \end{enumerate}
 
 Note: \texttt{||} has two distinct meanings depending on position. As a \textbf{prefix} operator (\texttt{||expr}), it denotes cardinality/length and has high precedence (level 3). As an \textbf{infix} operator (\texttt{expr || expr}), it denotes logical OR and has low precedence (level 9). Parentheses override precedence. Function arguments are evaluated before the function is called.

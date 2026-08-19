@@ -22,6 +22,7 @@ syst.flag.<flag_name> <value>
 \item \texttt{approx\_eps} -- Additive tolerance for approximate equality operator \texttt{\textasciitilde} (default: 1)
 \item \texttt{approx\_eps\_mult} -- Multiplicative tolerance for approximate equality operator \texttt{\textasciitilde*} (default: 1)
 \item \texttt{max\_loop\_iter} -- Maximum iterations per while/do-while loop before raising a \texttt{Value Error} (default: 100000)
+\item \texttt{sigmoid\_optim\_threshold} -- Absolute input threshold for sigmoid fast-path clamping (default: \texttt{150}). When $|x|$ exceeds this value, \texttt{f.math.sigmoid} returns \texttt{min} or \texttt{max} directly without evaluating the curve. Set to \texttt{0} to disable the optimization entirely. A \texttt{Warning} is raised when $T < 10$ due to potential discontinuities at the clamping boundary.
 \item \texttt{show\_pcb\_part\_ref} -- Show reference designator on PCB (default: \texttt{true})
 \item \texttt{show\_pcb\_part\_value} -- Show component value on PCB (default: \texttt{true})
 \item \texttt{show\_pcb\_part\_tol} -- Show tolerance/rating on PCB (default: \texttt{true})

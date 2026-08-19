@@ -460,6 +460,10 @@ slice_spec       = [expression], ":", [expression], [":", ["-", ] expression]
 safe_tensor_indexing = expression, "?[", indexing_expr, "]"
 
 reshape     = ".", "reshape", "(", int, {",", int}, ")"
+
+assignable  = variable
+            | variable, "[", indexing_expr, "]"
+            | variable, "?[", indexing_expr, "]"
 \end{verbatim}
 
 \paragraph{Exclusive Ranges}
@@ -1095,6 +1099,7 @@ compound_assignment = variable,
     #c# function composition
   | variable, ("<o=" | "o>=")
   | variable, "~b!"
+  | assignable, "<->", assignable
 \end{verbatim}
 
 \section{Operator Precedence}
@@ -1118,6 +1123,7 @@ Operators are evaluated in the following order of precedence (highest to lowest)
 \item Pipeline (\texttt{|=>}) -- left-associative, applies RHS function to LHS value
 \item Lambda expression (\texttt{L::(...) -> \{...\}})
 \item User-defined operators (\texttt{o.u.*})
+\item Swap statement (\texttt{<->}) -- lowest precedence
 \end{enumerate}
 
 Note: \texttt{||} has two distinct meanings depending on position. As a \textbf{prefix} operator (\texttt{||expr}), it denotes cardinality/length and has high precedence (level 4). As an \textbf{infix} operator (\texttt{expr || expr}), it denotes logical OR and has low precedence (level 10). Parentheses override precedence. See Section~\ref{sec:operators} for detailed operator descriptions.

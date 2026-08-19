@@ -12,9 +12,9 @@ This document is organized into the following parts:
 \item \textbf{Part II: Formal Semantics} -- Describes the evaluation model, execution order, constraint resolution, and type system rules.
 \item \textbf{Part III: Core Formal Model} -- Defines the structure of programs, the electrical system, and the solver.
 \item \textbf{Part IV: Hardware Model} -- Describes the circuit model, electrical objects, and querying system.
-\item \textbf{Part V: Physical System} -- Defines physical constraints, the solver model, and system flags.
-\item \textbf{Part VI: Toolchain} -- Describes the compiler pipeline, code generation, standard library, and debugging.
-\item \textbf{Part VII: Reference} -- Contains exceptions, error model, future improvements, and references.
+\item \textbf{Part V: Physical System} -- Defines physical constraints and the solver model.
+\item \textbf{Part VI: Toolchain} -- Describes system flags, the compiler pipeline, code generation, standard library, external library integration, and debugging.
+\item \textbf{Part VII: Reference} -- Contains exceptions, error model, future improvements, implementations, and references.
 \item \textbf{Appendices} -- Contains standard libraries, examples, and diagrams.
 \end{itemize}
 
@@ -37,7 +37,7 @@ EDADSL was designed with the following primary goals:
 
 \item \textbf{Readability} -- Use clear, prefixed syntax (elec.*, phys.*, syst.*) to make code self-documenting and easy to understand.
 
-\item \textbf{Simplicity} -- Provide a minimal set of powerful constructs rather than a large number of specialized features.
+\item \textbf{Comprehensiveness} -- Provide a comprehensive set of built-in functions covering trigonometry, linear algebra, signal processing, and other domains needed for EDA workflows.
 
 \item \textbf{Accessibility} -- Serve both professional engineers and hobbyists with appropriate defaults while supporting advanced features for complex designs.
 \end{enumerate}
