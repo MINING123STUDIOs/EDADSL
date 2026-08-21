@@ -1,0 +1,3067 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.2.5)  21 AUG 2026 12:13
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**Doc.tex
+(./Doc.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/report.cls
+Document Class: report 2025/01/22 v1.4n Standard LaTeX document class
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count275
+\c@chapter=\count276
+\c@section=\count277
+\c@subsection=\count278
+\c@subsubsection=\count279
+\c@paragraph=\count280
+\c@subparagraph=\count281
+\c@figure=\count282
+\c@table=\count283
+\abovecaptionskip=\skip49
+\belowcaptionskip=\skip50
+\bibindent=\dimen148
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2025/07/09 v2.17z AMS math features
+\@mathmargin=\skip51
+
+For additional information on amsmath, use the `?' option.
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2024/11/17 v2.01 AMS text
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks17
+\ex@=\dimen149
+))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen150
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2022/04/08 v2.04 operator names
+)
+\inf@bad=\count284
+LaTeX Info: Redefining \frac on input line 233.
+\uproot@=\count285
+\leftroot@=\count286
+LaTeX Info: Redefining \overline on input line 398.
+LaTeX Info: Redefining \colon on input line 409.
+\classnum@=\count287
+\DOTSCASE@=\count288
+LaTeX Info: Redefining \ldots on input line 495.
+LaTeX Info: Redefining \dots on input line 498.
+LaTeX Info: Redefining \cdots on input line 619.
+\Mathstrutbox@=\box53
+\strutbox@=\box54
+LaTeX Info: Redefining \big on input line 721.
+LaTeX Info: Redefining \Big on input line 722.
+LaTeX Info: Redefining \bigg on input line 723.
+LaTeX Info: Redefining \Bigg on input line 724.
+\big@size=\dimen151
+LaTeX Font Info:    Redeclaring font encoding OML on input line 742.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 743.
+\macc@depth=\count289
+LaTeX Info: Redefining \bmod on input line 904.
+LaTeX Info: Redefining \pmod on input line 909.
+LaTeX Info: Redefining \smash on input line 939.
+LaTeX Info: Redefining \relbar on input line 969.
+LaTeX Info: Redefining \Relbar on input line 970.
+\c@MaxMatrixCols=\count290
+\dotsspace@=\muskip17
+\c@parentequation=\count291
+\dspbrk@lvl=\count292
+\tag@help=\toks18
+\row@=\count293
+\column@=\count294
+\maxfields@=\count295
+\andhelp@=\toks19
+\eqnshift@=\dimen152
+\alignsep@=\dimen153
+\tagshift@=\dimen154
+\tagwidth@=\dimen155
+\totwidth@=\dimen156
+\lineht@=\dimen157
+\@envbody=\toks20
+\multlinegap=\skip52
+\multlinetaggap=\skip53
+\mathdisplay@stack=\toks21
+LaTeX Info: Redefining \[ on input line 2950.
+LaTeX Info: Redefining \] on input line 2951.
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks22
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/iftex/ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+
+(/usr/local/texlive/2025/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2024/12/12 v1.0g TeX engine tests
+))
+\Gm@cnth=\count296
+\Gm@cntv=\count297
+\c@Gm@tempcnt=\count298
+\Gm@bindingoffset=\dimen158
+\Gm@wd@mp=\dimen159
+\Gm@odd@mp=\dimen160
+\Gm@even@mp=\dimen161
+\Gm@layoutwidth=\dimen162
+\Gm@layoutheight=\dimen163
+\Gm@layouthoffset=\dimen164
+\Gm@layoutvoffset=\dimen165
+\Gm@dimlist=\toks23
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/tools/verbatim.sty
+Package: verbatim 2024-01-22 v1.5x LaTeX2e package for verbatim enhancements
+\every@verbatim=\toks24
+\verbatim@line=\toks25
+\verbatim@in@stream=\read2
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 274.
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2025/09/29 v1.2d Graphics/color driver for pdftex
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/mathcolor.ltx)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1353.
+Package xcolor Info: Model `RGB' extended on input line 1365.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1367.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/colortbl/colortbl.sty
+Package: colortbl 2024/10/29 v1.0k Color table columns (DPC)
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/tools/array.sty
+Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
+\col@sep=\dimen166
+\ar@mcellbox=\box55
+\extrarowheight=\dimen167
+\NC@list=\toks26
+\extratabsurround=\skip54
+\backup@length=\skip55
+\ar@cellbox=\box56
+)
+\everycr=\toks27
+\minrowclearance=\skip56
+\rownum=\count299
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/multirow/multirow.sty
+Package: multirow 2024/11/12 v2.9 Span multiple rows of a table
+\multirow@colwidth=\skip57
+\multirow@cntb=\count300
+\multirow@dima=\skip58
+\bigstrutjot=\dimen168
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.te
+x
+\pgfutil@everybye=\toks28
+\pgfutil@tempdima=\dimen169
+\pgfutil@tempdimb=\dimen170
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
+\pgfutil@abb=\box57
+) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/pgf.revision.tex)
+Package: pgfrcs 2025-08-29 v3.1.11a (3.1.11a)
+))
+Package: pgf 2025-08-29 v3.1.11a (3.1.11a)
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/basiclayer/pgfcore.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 106.
+)
+\Gin@req@height=\dimen171
+\Gin@req@width=\dimen172
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/systemlayer/pgfsys.sty
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsys.code.tex
+Package: pgfsys 2025-08-29 v3.1.11a (3.1.11a)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex
+\pgfkeys@pathtoks=\toks29
+\pgfkeys@temptoks=\toks30
+
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfkeyslibraryfil
+tered.code.tex
+\pgfkeys@tmptoks=\toks31
+))
+\pgf@x=\dimen173
+\pgf@y=\dimen174
+\pgf@xa=\dimen175
+\pgf@ya=\dimen176
+\pgf@xb=\dimen177
+\pgf@yb=\dimen178
+\pgf@xc=\dimen179
+\pgf@yc=\dimen180
+\pgf@xd=\dimen181
+\pgf@yd=\dimen182
+\w@pgf@writea=\write3
+\r@pgf@reada=\read3
+\c@pgf@counta=\count301
+\c@pgf@countb=\count302
+\c@pgf@countc=\count303
+\c@pgf@countd=\count304
+\t@pgf@toka=\toks32
+\t@pgf@tokb=\toks33
+\t@pgf@tokc=\toks34
+\pgf@sys@id@count=\count305
+
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg
+File: pgf.cfg 2025-08-29 v3.1.11a (3.1.11a)
+)
+Driver file for pgf: pgfsys-pdftex.def
+
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-pdftex.d
+ef
+File: pgfsys-pdftex.def 2025-08-29 v3.1.11a (3.1.11a)
+
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-common-p
+df.def
+File: pgfsys-common-pdf.def 2025-08-29 v3.1.11a (3.1.11a)
+)))
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.
+code.tex
+File: pgfsyssoftpath.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfsyssoftpath@smallbuffer@items=\count306
+\pgfsyssoftpath@bigbuffer@items=\count307
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.
+code.tex
+File: pgfsysprotocol.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+))
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex
+Package: pgfcore 2025-08-29 v3.1.11a (3.1.11a)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
+\pgfmath@dimen=\dimen183
+\pgfmath@count=\count308
+\pgfmath@box=\box58
+\pgfmath@toks=\toks35
+\pgfmath@stack@operand=\toks36
+\pgfmath@stack@operation=\toks37
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.
+tex)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic
+.code.tex)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigo
+nometric.code.tex)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.rando
+m.code.tex)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.compa
+rison.code.tex)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.
+code.tex)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round
+.code.tex)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.
+code.tex)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integ
+erarithmetics.code.tex)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
+\c@pgfmathroundto@lastzeros=\count309
+)) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfint.code.tex)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.co
+de.tex
+File: pgfcorepoints.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@picminx=\dimen184
+\pgf@picmaxx=\dimen185
+\pgf@picminy=\dimen186
+\pgf@picmaxy=\dimen187
+\pgf@pathminx=\dimen188
+\pgf@pathmaxx=\dimen189
+\pgf@pathminy=\dimen190
+\pgf@pathmaxy=\dimen191
+\pgf@xx=\dimen192
+\pgf@xy=\dimen193
+\pgf@yx=\dimen194
+\pgf@yy=\dimen195
+\pgf@zx=\dimen196
+\pgf@zy=\dimen197
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconst
+ruct.code.tex
+File: pgfcorepathconstruct.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@path@lastx=\dimen198
+\pgf@path@lasty=\dimen199
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage
+.code.tex
+File: pgfcorepathusage.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@shorten@end@additional=\dimen256
+\pgf@shorten@start@additional=\dimen257
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.co
+de.tex
+File: pgfcorescopes.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfpic=\box59
+\pgf@hbox=\box60
+\pgf@layerbox@main=\box61
+\pgf@picture@serial@count=\count310
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicst
+ate.code.tex
+File: pgfcoregraphicstate.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgflinewidth=\dimen258
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransform
+ations.code.tex
+File: pgfcoretransformations.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@pt@x=\dimen259
+\pgf@pt@y=\dimen260
+\pgf@pt@temp=\dimen261
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.cod
+e.tex
+File: pgfcorequick.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreobjects.c
+ode.tex
+File: pgfcoreobjects.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathproce
+ssing.code.tex
+File: pgfcorepathprocessing.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.co
+de.tex
+File: pgfcorearrows.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfarrowsep=\dimen262
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.cod
+e.tex
+File: pgfcoreshade.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@max=\dimen263
+\pgf@sys@shading@range@num=\count311
+\pgf@shadingcount=\count312
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.cod
+e.tex
+File: pgfcoreimage.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.
+code.tex
+File: pgfcoreexternal.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfexternal@startupbox=\box62
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelayers.co
+de.tex
+File: pgfcorelayers.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretranspare
+ncy.code.tex
+File: pgfcoretransparency.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepatterns.
+code.tex
+File: pgfcorepatterns.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorerdf.code.
+tex
+File: pgfcorerdf.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)))
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmoduleshapes.cod
+e.tex
+File: pgfmoduleshapes.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfnodeparttextbox=\box63
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmoduleplot.code.
+tex
+File: pgfmoduleplot.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version
+-0-65.sty
+Package: pgfcomp-version-0-65 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@nodesepstart=\dimen264
+\pgf@nodesepend=\dimen265
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version
+-1-18.sty
+Package: pgfcomp-version-1-18 2025-08-29 v3.1.11a (3.1.11a)
+))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgffor.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex)
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/math/pgfmath.sty
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex))
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgffor.code.tex
+Package: pgffor 2025-08-29 v3.1.11a (3.1.11a)
+\pgffor@iter=\dimen266
+\pgffor@skip=\dimen267
+\pgffor@stack=\toks38
+\pgffor@toks=\toks39
+))
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.cod
+e.tex
+Package: tikz 2025-08-29 v3.1.11a (3.1.11a)
+
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothan
+dlers.code.tex
+File: pgflibraryplothandlers.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@plot@mark@count=\count313
+\pgfplotmarksize=\dimen268
+)
+\tikz@lastx=\dimen269
+\tikz@lasty=\dimen270
+\tikz@lastxsaved=\dimen271
+\tikz@lastysaved=\dimen272
+\tikz@lastmovetox=\dimen273
+\tikz@lastmovetoy=\dimen274
+\tikzleveldistance=\dimen275
+\tikzsiblingdistance=\dimen276
+\tikz@figbox=\box64
+\tikz@figbox@bg=\box65
+\tikz@tempbox=\box66
+\tikz@tempbox@bg=\box67
+\tikztreelevel=\count314
+\tikznumberofchildren=\count315
+\tikznumberofcurrentchild=\count316
+\tikz@fig@count=\count317
+
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.cod
+e.tex
+File: pgfmodulematrix.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfmatrixcurrentrow=\count318
+\pgfmatrixcurrentcolumn=\count319
+\pgf@matrix@numberofcolumns=\count320
+)
+\tikz@expandcount=\count321
+
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
+s/tikzlibrarytopaths.code.tex
+File: tikzlibrarytopaths.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count322
+)
+(./Doc.aux)
+\openout1 = `Doc.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 47.
+LaTeX Font Info:    ... okay on input line 47.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 47.
+LaTeX Font Info:    ... okay on input line 47.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 47.
+LaTeX Font Info:    ... okay on input line 47.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 47.
+LaTeX Font Info:    ... okay on input line 47.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 47.
+LaTeX Font Info:    ... okay on input line 47.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 47.
+LaTeX Font Info:    ... okay on input line 47.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 47.
+LaTeX Font Info:    ... okay on input line 47.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(72.26999pt, 469.75502pt, 72.26999pt)
+* v-part:(T,H,B)=(72.26999pt, 650.43001pt, 72.26999pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=469.75502pt
+* \textheight=650.43001pt
+* \oddsidemargin=0.0pt
+* \evensidemargin=0.0pt
+* \topmargin=-37.0pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=10.0pt
+* \footskip=30.0pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+(/usr/local/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count323
+\scratchdimen=\dimen277
+\scratchbox=\box68
+\nofMPsegments=\count324
+\nofMParguments=\count325
+\everyMPshowfont=\toks40
+\MPscratchCnt=\count326
+\MPscratchDim=\dimen278
+\MPnumerator=\count327
+\makeMPintoPDFobject=\count328
+\everyMPtoPDFconversion=\toks41
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+LaTeX Font Info:    Trying to load font information for U+msa on input line 49.
+
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 49.
+
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+) [1
+
+{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (./Doc.
+toc [1
+
+
+]
+[2] [3] [4] [5] [6] [7] [8])
+\tf@toc=\write4
+\openout4 = `Doc.toc'.
+
+ [9] (./ch01-introduction.tex
+Chapter 1.
+[10
+
+
+{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
+ [11
+
+]
+Chapter 2.
+[12
+
+]) (./ch02-lexical.tex [13]
+Chapter 3.
+LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
+19.
+LaTeX Font Info:    No file OMScmtt.fd. on input line 19.
+
+LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
+(Font)              using `OMS/cmsy/m/n' instead
+(Font)              for symbol `textbraceleft' on input line 19.
+
+[14
+
+]
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 44--44
+[]\OT1/cmtt/m/n/12 Generic_Keywords:    start halt if else otherwise for while 
+do break continue 
+ []
+
+
+Overfull \hbox (28.08289pt too wide) in paragraph at lines 78--79
+\OT1/cmr/m/n/12 by an op-er-a-tor name and used in in-fix po-si-tion, while dot
+-access is al-ways \OT1/cmtt/m/n/12 identifier.identifier
+ []
+
+[15]) (./ch03-grammar.tex [16]
+Chapter 4.
+[17
+
+]
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 49--49
+[]                              \OT1/cmtt/m/n/12 { "otherwise", boolean_express
+ion, "::", code_block },[] 
+ []
+
+
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 52--52
+[]\OT1/cmtt/m/n/12 cases                         = "cases", "(", variable, type
+d_assign, data, ")",[] 
+ []
+
+
+Overfull \hbox (42.77023pt too wide) in paragraph at lines 53--53
+[]                              \OT1/cmtt/m/n/12 "::", "{", { case_clause }, [ 
+otherwise_clause ], "}"[] 
+ []
+
+
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 65--65
+[]\OT1/cmtt/m/n/12 while_loop                    = "while", boolean_expression,
+ "::", code_block,[] 
+ []
+
+[18]
+Overfull \hbox (79.82025pt too wide) in paragraph at lines 108--108
+[]                               \OT1/cmtt/m/n/12 | "seq" | "sig" | "debg" | "s
+ys" | "time" | "rng" | "hash"[] 
+ []
+
+
+Overfull \hbox (73.64525pt too wide) in paragraph at lines 121--121
+[]\OT1/cmtt/m/n/12 lazy_binding                  = variable, ( typed_lazy_bindi
+ng | inferred_lazy_binding )[] 
+ []
+
+[19]
+Overfull \hbox (42.77023pt too wide) in paragraph at lines 138--138
+[]                              \OT1/cmtt/m/n/12 | "b&&=" | "b||=" | "b^^=" | "
+b!&=" | "b!|=" | "b!^="[] 
+ []
+
+
+Overfull \hbox (18.07022pt too wide) in paragraph at lines 169--169
+[]\OT1/cmtt/m/n/12 boolean_data_type             = expression  (any expression 
+evaluating to bool)[] 
+ []
+
+[20]
+Overfull \hbox (36.59523pt too wide) in paragraph at lines 178--178
+[]                              \OT1/cmtt/m/n/12 | expression  (see Chapter 4 f
+or expression grammar)[] 
+ []
+
+
+Overfull \hbox (18.07022pt too wide) in paragraph at lines 206--206
+[]                              \OT1/cmtt/m/n/12 , { "otherwise", [error_type],
+ "::", code_block }[] 
+ []
+
+[21] [22] [23] [24]) (./ch04-types.tex [25]
+Chapter 5.
+[26
+
+] [27]
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 92--92
+[]\OT1/cmtt/m/n/12 bin_prefix = "ki" | "Mi" | "Gi" | "Ti" | "Pi" | "Ei" | "Zi" 
+| "Yi" | "Ri" | "Qi"[] 
+ []
+
+[28] [29] [30] [31] [32] [33]
+LaTeX Font Info:    Trying to load font information for OML+cmtt on input line 
+408.
+LaTeX Font Info:    No file OMLcmtt.fd. on input line 408.
+
+
+LaTeX Font Warning: Font shape `OML/cmtt/m/n' undefined
+(Font)              using `OML/cmm/m/it' instead
+(Font)              for symbol `textless' on input line 408.
+
+
+Overfull \hbox (18.07022pt too wide) in paragraph at lines 416--416
+[]\OT1/cmtt/m/n/12 $path [string]= "C:\Users\test\file.txt"R   #c# Literal: C:\
+Users\test\file.txt 
+ []
+
+[34]
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 452--452
+[]\OT1/cmtt/m/n/12 indexing_expr    = expression                        # singl
+e index or boolean[] 
+ []
+
+
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 458--458
+[]\OT1/cmtt/m/n/12 slice_spec       = [expression], ":", [expression], [":", ["
+-", ] expression][] 
+ []
+
+[35] [36] [37]
+Overfull \hbox (2.04362pt too wide) in paragraph at lines 558--559
+[]\OT1/cmr/m/n/12 4D: \OT1/cmtt/m/n/12 |[[[[1,2],[3,4]],[[5,6],[7,8]]],[[[9,10]
+,[11,12]],[[13,14],[15,16]]]]
+ []
+
+[38]
+Overfull \hbox (43.71068pt too wide) in paragraph at lines 603--604
+ \OT1/cmr/bx/n/10 Slic-ing[] \OT1/cmr/m/n/12 Ten-sors (and all lists) sup-port 
+Python-style slic-ing with the syn-tax \OT1/cmtt/m/n/12 list[start:stop:step]\O
+T1/cmr/m/n/12 : 
+ []
+
+[39]
+Overfull \hbox (9.12827pt too wide) in paragraph at lines 651--652
+\OT1/cmtt/m/n/12 f.stat.peak\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 f.stat.rms\OT1/c
+mr/m/n/12 , \OT1/cmtt/m/n/12 f.stat.percentile\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/1
+2 f.stat.quantile\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 f.stat.histogram\OT1/cmr/m/
+n/12 ,
+ []
+
+
+Overfull \hbox (58.7052pt too wide) in paragraph at lines 652--653
+[]\OT1/cmr/m/n/12 Linear al-ge-bra: \OT1/cmtt/m/n/12 f.linalg.det\OT1/cmr/m/n/1
+2 , \OT1/cmtt/m/n/12 f.linalg.inv\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 f.linalg.pi
+nv\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 f.linalg.rank\OT1/cmr/m/n/12 , \OT1/cmtt/m
+/n/12 f.linalg.trace\OT1/cmr/m/n/12 ,
+ []
+
+
+Overfull \hbox (58.48933pt too wide) in paragraph at lines 652--653
+\OT1/cmtt/m/n/12 f.linalg.solve\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 f.linalg.eig\
+OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 f.linalg.eigvec\OT1/cmr/m/n/12 , \OT1/cmtt/m/
+n/12 f.linalg.lu\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 f.linalg.qr\OT1/cmr/m/n/12 ,
+ \OT1/cmtt/m/n/12 f.linalg.chol\OT1/cmr/m/n/12 ,
+ []
+
+
+LaTeX Warning: Reference `ch:control' on page 40 undefined on input line 654.
+
+[40] [41] [42] [43] [44]
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 832.
+ [45] [46] [47]
+Chapter 6.
+[48
+
+] [49] [50]
+Chapter 7.
+[51
+
+]
+Overfull \hbox (190.9703pt too wide) in paragraph at lines 1098--1098
+[]  \OT1/cmtt/m/n/12 | variable, ("b&&=" | "b||=" | "b^^=" | "b!&=" | "b!|=" | 
+"b!^=" | "b->=" | "b!->=" | "b->r=" | "b!->r=")[] 
+ []
+
+[52]) (./ch05-operators.tex [53]
+Chapter 8.
+[54
+
+] [55] [56] [57]
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 165--165
+[]\OT1/cmtt/m/n/12 $var ~.E+      $var = null          (cryptographic shred, ze
+roize + overwrite)[] 
+ []
+
+[58] [59]
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 296.
+ [60]
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 327--327
+[]\OT1/cmtt/m/n/12 $config ?[string]?= f.str.toLower("DEFAULT")   #c# only eval
+uated because null[] 
+ []
+
+
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 340--340
+[]\OT1/cmtt/m/n/12 $var :L[type]= expr   Lazy binding: expr evaluated on first 
+access, type checked 
+ []
+
+[61] [62] [63]
+Overfull \hbox (7.68484pt too wide) in paragraph at lines 490--491
+[]\OT1/cmtt/m/n/12 L::(\TS1/cmtt/m/n/12 $\OT1/cmtt/m/n/12 x [int])->\OMS/cmtt/m
+/n/12 f\TS1/cmtt/m/n/12 $\OT1/cmtt/m/n/12 x\OMS/cmtt/m/n/12 g \OT1/cmtt/m/n/12 
+== L::(\TS1/cmtt/m/n/12 $\OT1/cmtt/m/n/12 x [int])->\OMS/cmtt/m/n/12 f\TS1/cmtt
+/m/n/12 $\OT1/cmtt/m/n/12 x\OMS/cmtt/m/n/12 g $!$ \OT1/cmtt/m/n/12 False \OT1/c
+mr/m/n/12 (lamb-das are al-ways unique) 
+ []
+
+[64] [65] [66] [67] [68] [69] [70] [71] [72] [73]
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 968--968
+[]\OT1/cmtt/m/n/12 tensor?[start:end]  Returns tensor[start:end] if tensor is n
+ot null, else null[] 
+ []
+
+
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 969--969
+[]\OT1/cmtt/m/n/12 tensor?[[indices]]  Returns tensor[[indices]] if tensor is n
+ot null, else null[] 
+ []
+
+
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 970--970
+[]\OT1/cmtt/m/n/12 tensor?[condition]  Returns tensor[condition] if tensor is n
+ot null, else null[] 
+ []
+
+[74] [75]
+Overfull \hbox (18.80406pt too wide) in paragraph at lines 1028--1029
+[]\OT1/cmr/m/n/12 If the func-tion call raises any er-ror (\OT1/cmtt/m/n/12 Typ
+e\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 Value\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 Div
+ision by Zero\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 Runtime\OT1/cmr/m/n/12 , \OT1/c
+mtt/m/n/12 Assertion\OT1/cmr/m/n/12 ):
+ []
+
+
+Overfull \hbox (36.59523pt too wide) in paragraph at lines 1034--1034
+[]\OT1/cmtt/m/n/12 $val2 [int]= $f??(0)          #c# $val2 = null (Division by 
+Zero Error suppressed)[] 
+ []
+
+[76] [77]
+Overfull \hbox (19.17989pt too wide) in paragraph at lines 1156--1157
+[]\OT1/cmr/m/n/12 The right-hand side must be a func-tion ref-er-ence or lambda
+ -- a func-tion call (\OT1/cmtt/m/n/12 f.math.sin()\OT1/cmr/m/n/12 )
+ []
+
+[78]
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 1192--1192
+[]\OT1/cmtt/m/n/12 $double_then_inc(3)        #c# Returns 8  (inc first: 3+1=4,
+ then double: 4*2=8)[] 
+ []
+
+[79]
+Overfull \hbox (67.47025pt too wide) in paragraph at lines 1210--1210
+[]\OT1/cmtt/m/n/12 $f(3)                       #c# Returns 26  ($f is now ($x)-
+>($x+10)*2, so (3+10)*2=26)[] 
+ []
+
+[80] [81] [82]
+Chapter 9.
+[83
+
+] [84] [85]
+Overfull \hbox (19.26457pt too wide) in paragraph at lines 1389--1390
+[]\OT1/cmtt/m/n/12 c.phys.comptonWavelengthReduced \OT1/cmr/m/n/12 -- Re-duced 
+Comp-ton wave-length $[] \OMS/cmtt/m/n/12 ^^Y \OT1/cmr/m/n/12 3\OML/cmtt/m/n/12
+ :\OT1/cmr/m/n/12 861 592 674 \OMS/cmtt/m/n/12 ^^B
+ []
+
+
+Overfull \hbox (0.15657pt too wide) in paragraph at lines 1397--1398
+[]\OT1/cmtt/m/n/12 c.phys.comptonWavelengthNeutron \OT1/cmr/m/n/12 -- Neu-tron 
+Comp-ton wave-length $\OMS/cmtt/m/n/12 ^^Y \OT1/cmr/m/n/12 1\OML/cmtt/m/n/12 :\
+OT1/cmr/m/n/12 319 591 000 \OMS/cmtt/m/n/12 ^^B
+ []
+
+[86]
+Overfull \hbox (8.69028pt too wide) in paragraph at lines 1423--1424
+[]\OT1/cmtt/m/n/12 c.phys.molarVolumeSTP[]100 \OT1/cmr/m/n/12 -- Mo-lar vol-ume
+ of ideal gas (273.15K, 100kPa) $\OMS/cmtt/m/n/12 ^^Y \OT1/cmr/m/n/12 0\OML/cmt
+t/m/n/12 :\OT1/cmr/m/n/12 022 711$
+ []
+
+[87]
+Overfull \hbox (3.04039pt too wide) in paragraph at lines 1461--1462
+[]\OT1/cmtt/m/n/12 c.phys.SackurTetrode[]101 \OT1/cmr/m/n/12 -- Sackur-Tetrode 
+con-stant (1K, 101.325kPa) $\OMS/cmtt/m/n/12 ^^Y ^^@\OT1/cmr/m/n/12 1\OML/cmtt/
+m/n/12 :\OT1/cmr/m/n/12 164 871$ 
+ []
+
+[88]) (./ch06-control.tex [89]
+Chapter 10.
+[90
+
+] [91] [92]
+Overfull \hbox (9.26073pt too wide) in paragraph at lines 145--146
+[]\OT1/cmr/m/n/12 A \OT1/cmtt/m/n/12 Type Error \OT1/cmr/m/n/12 is raised if th
+e alias tar-get does not ex-ist (e.g., \OT1/cmtt/m/n/12 alias f.trig.nonexisten
+t
+ []
+
+[93] [94] [95] [96] [97]
+Chapter 11.
+[98
+
+] [99] [100] [101]
+Overfull \hbox (61.29524pt too wide) in paragraph at lines 564--564
+[]\OT1/cmtt/m/n/12 f.math.parallel([100, 200, inf])     #c# Returns approximate
+ly 66.666... (inf ignored)[] 
+ []
+
+
+Overfull \hbox (36.59523pt too wide) in paragraph at lines 570--570
+[]\OT1/cmtt/m/n/12 f.math.parallel([100 + 0j, 200 + 0j])   #c# Returns approxim
+ately 66.666... (real) 
+ []
+
+
+Overfull \hbox (42.77023pt too wide) in paragraph at lines 585--585
+[]\OT1/cmtt/m/n/12 f.math.parallel([42])              #c# Returns 42 (single el
+ement, softint applied)[] 
+ []
+
+[102] [103] [104] [105]
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 779--779
+[]\OT1/cmtt/m/n/12 f.math.hstep([-1, 0, 1], [0, 0.5, 1])  #c# Returns |[0, 0.5,
+ 1] (tensor at_zero)[] 
+ []
+
+[106] [107] [108] [109]
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 980--980
+[]\OT1/cmtt/m/n/12 f.math.sigmoid(|[-2, 0, 2])                 #c# Returns |[0.
+1192, 0.5, 0.8808] 
+ []
+
+
+Overfull \hbox (18.07022pt too wide) in paragraph at lines 981--981
+[]\OT1/cmtt/m/n/12 f.math.sigmoid(|[-2, 0, 2], min=-1, max=1)  #c# Returns |[-0
+.7616, 0.0, 0.7616][] 
+ []
+
+
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 982--982
+[]\OT1/cmtt/m/n/12 f.math.sigmoid(|[-2, 0, 2], curve="erf")    #c# Returns |[0.
+0455, 0.0, 0.9953][] 
+ []
+
+[110]
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 1000--1000
+[]\OT1/cmtt/m/n/12 f.math.sigmoid(149)                   #c# Returns approximat
+ely 1.0 (curve evaluated)[] 
+ []
+
+
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 1005--1005
+[]\OT1/cmtt/m/n/12 f.math.sigmoid(9)                     #c# Returns approximat
+ely 1.0 (curve evaluated)[] 
+ []
+
+
+Overfull \hbox (98.34526pt too wide) in paragraph at lines 1009--1009
+[]\OT1/cmtt/m/n/12 f.math.sigmoid(200)                   #c# Returns approximat
+ely 1.0 (always curve evaluated)[] 
+ []
+
+
+Overfull \hbox (92.17026pt too wide) in paragraph at lines 1012--1012
+[]\OT1/cmtt/m/n/12 syst.flag.sigmoid_optim_threshold 1   #c# Warning: threshold
+ < 10 may cause discontinuities[] 
+ []
+
+
+Overfull \hbox (203.32031pt too wide) in paragraph at lines 1013--1013
+[]\OT1/cmtt/m/n/12 f.math.sigmoid(2)                     #c# Returns 1.0 (clamp
+ed, but sigma(1) approximately 0.731 -- 27% jump)[] 
+ []
+
+[111] [112]
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 1117--1117
+[]\OT1/cmtt/m/n/12 f.trig.sin(|[[0, 1], [2, 3]])          #c# Returns |[[0.0, 0
+.8415], [0.9093, 0.1411]][] 
+ []
+
+[113] [114]
+Overfull \hbox (67.47025pt too wide) in paragraph at lines 1252--1252
+[]\OT1/cmtt/m/n/12 f.trig.cos(|[[0, 1], [2, 3]])          #c# Returns |[[1.0, 0
+.5403], [-0.4161, -0.9900]][] 
+ []
+
+[115] [116] [117]
+Overfull \hbox (67.47025pt too wide) in paragraph at lines 1387--1387
+[]\OT1/cmtt/m/n/12 f.trig.tan(|[[0, 1], [2, 3]])          #c# Returns |[[0.0, 1
+.5574], [-2.1850, -0.1425]][] 
+ []
+
+[118] [119] [120] [121] [122]
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 1653--1653
+[]\OT1/cmtt/m/n/12 f.trig.sec(|[[0, 1], [2, 3]])        #c# Returns |[[1.0, 1.8
+508], [-2.4030, -1.0101]][] 
+ []
+
+[123] [124] [125] [126] [127] [128] [129] [130] [131]
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 2156--2156
+[]\OT1/cmtt/m/n/12 f.trig.coversin([1, 2], unit=["deg"])  #c# Runtime Error (un
+it shape mismatch)[] 
+ []
+
+[132] [133]
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 2268--2268
+[]\OT1/cmtt/m/n/12 f.trig.covercos([1, 2], unit=["deg"])  #c# Runtime Error (un
+it shape mismatch)[] 
+ []
+
+[134] [135] [136] [137]
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 2496--2496
+[]\OT1/cmtt/m/n/12 f.trig.havercos([1, 2], unit=["deg"])  #c# Runtime Error (un
+it shape mismatch)[] 
+ []
+
+[138] [139]
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 2608--2608
+[]\OT1/cmtt/m/n/12 f.trig.hacoversin([1, 2], unit=["deg"])  #c# Runtime Error (
+unit shape mismatch)[] 
+ []
+
+[140] [141]
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 2720--2720
+[]\OT1/cmtt/m/n/12 f.trig.hacovercos([1, 2], unit=["deg"])  #c# Runtime Error (
+unit shape mismatch)[] 
+ []
+
+[142] [143] [144] [145]
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 2927--2927
+[]\OT1/cmtt/m/n/12 f.trig.excsc(|[1.5708, 0.5236, 0.7854])       #c# Returns |[
+0.0, 1.0, 0.4142] 
+ []
+
+
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 2928--2928
+[]\OT1/cmtt/m/n/12 f.trig.excsc(|[90, 30, 45], unit="deg")       #c# Returns |[
+0.0, 1.0, 0.4142][] 
+ []
+
+[146] [147] [148] [149] [150] [151] [152] [153] [154] [155] [156] [157]
+[158] [159] [160]
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 3711--3711
+[]\OT1/cmtt/m/n/12 f.trig.acsc(1)                        #c# Returns approximat
+ely 1.5708 (pi/2) 
+ []
+
+
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 3712--3712
+[]\OT1/cmtt/m/n/12 f.trig.acsc(2)                        #c# Returns approximat
+ely 0.5236 (pi/6)[] 
+ []
+
+[161] [162] [163] [164] [165] [166] [167]
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 4077--4077
+[]\OT1/cmtt/m/n/12 f.log.exp(0 + 3.14159j)   #c# Returns approximately -1 + 0.0
+j (Euler's Identity)[] 
+ []
+
+[168]
+Overfull \hbox (98.34526pt too wide) in paragraph at lines 4110--4110
+[]\OT1/cmtt/m/n/12 "f.log.pow", "(", ( int | real | complex ), ",", ( int | rea
+l | complex ), [ ",", int ], ")"[] 
+ []
+
+[169]
+Overfull \hbox (73.64525pt too wide) in paragraph at lines 4137--4137
+[]\OT1/cmtt/m/n/12 "f.log.hyperop", "(", int, ",", ( int | real | complex ), ",
+", ( int | real | complex ),[] 
+ []
+
+
+Overfull \hbox (18.07022pt too wide) in paragraph at lines 4177--4177
+[]\OT1/cmtt/m/n/12 f.log.hyperop(0, 5, 99)           #c# Returns 6          (su
+ccessor, b ignored) 
+ []
+
+
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 4181--4181
+[]\OT1/cmtt/m/n/12 f.log.hyperop(4, 2, 4)            #c# Returns 65536      (te
+tration: 2^2^2^2)[] 
+ []
+
+[170]
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 4189--4189
+[]\OT1/cmtt/m/n/12 f.log.hyperop(3, 2, 10, 1000)     #c# Returns 24     (2^10 m
+od 1000 = 1024 mod 1000)[] 
+ []
+
+
+Overfull \hbox (98.34526pt too wide) in paragraph at lines 4191--4191
+[]\OT1/cmtt/m/n/12 f.log.hyperop(4, 3, 3, 100)       #c# Returns 87     (3^3^3 
+mod 100 = 7625597484987 mod 100)[] 
+ []
+
+
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 4193--4193
+[]\OT1/cmtt/m/n/12 f.log.hyperop(2, 13, 17, 10)      #c# Returns 1      (13*17 
+mod 10 = 221 mod 10)[] 
+ []
+
+
+Overfull \hbox (6.48677pt too wide) in paragraph at lines 4198--4200
+\OT1/cmr/m/n/12 Computes the hy-per-root: the in-verse of a hy-per-op-er-a-tion
+. Finds $\OML/cmtt/m/n/12 x$ \OT1/cmr/m/n/12 such that $[](\OML/cmtt/m/n/12 n; 
+x; b\OT1/cmr/m/n/12 ) =
+ []
+
+
+Overfull \hbox (123.04376pt too wide) in paragraph at lines 4228--4228
+[]\OT1/cmtt/m/n/12 f.log.nthhyprt(65536, 4, 2)          #c# Returns 4          
+(2nd hyperroot: x^x = 65536 \TS1/cmtt/m/n/12 ^^Y \OT1/cmtt/m/n/12 x = 4)[] 
+ []
+
+[171]
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 4229--4229
+[]\OT1/cmtt/m/n/12 f.log.nthhyprt(7625597484987, 4, 3)  #c# Returns 3  (3rd hyp
+erroot: x^x^x = ...)[] 
+ []
+
+
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 4231--4231
+[]\OT1/cmtt/m/n/12 f.log.nthhyprt(0 + 64j, 3, 3)        #c# Returns approximate
+ly 2 + 2j  (complex root)[] 
+ []
+
+
+Overfull \hbox (18.07022pt too wide) in paragraph at lines 4266--4266
+[]\OT1/cmtt/m/n/12 f.log.slog(2, 3)             #c# Returns approximately 1.409
+  (between 1 and 2)[] 
+ []
+
+
+Overfull \hbox (18.07022pt too wide) in paragraph at lines 4267--4267
+[]\OT1/cmtt/m/n/12 f.log.slog(10, 1000)         #c# Returns approximately 2.388
+  (between 2 and 3)[] 
+ []
+
+[172]
+Overfull \hbox (104.52026pt too wide) in paragraph at lines 4327--4327
+[]\OT1/cmtt/m/n/12 f.math.expm1(0.001)   #c# Returns approximately 0.0010005  (
+more precise than exp(0.001) - 1)[] 
+ []
+
+[173]
+Overfull \hbox (73.64525pt too wide) in paragraph at lines 4346--4346
+[]\OT1/cmtt/m/n/12 f.math.log1p(0.001)   #c# Returns approximately 0.0009995  (
+more precise than ln(1.001))[] 
+ []
+
+[174]
+Overfull \hbox (240.37033pt too wide) in paragraph at lines 4414--4414
+[]\OT1/cmtt/m/n/12 "f.math.isclose", "(", ( int | real ), ",", ( int | real ), 
+[",", "rtol", "=", real], [",", "atol", "=", real], ")"[] 
+ []
+
+
+Overfull \hbox (81.4277pt too wide) in paragraph at lines 4426--4427
+[]\OT1/cmtt/m/n/12 f.math.isclose(a, b) \OT1/cmr/m/n/12 uses \OT1/cmtt/m/n/12 r
+tol=1e-9\OT1/cmr/m/n/12 , which is much tighter than the de-fault \OT1/cmtt/m/n
+/12 syst.flag.approx[]eps
+ []
+
+
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 4431--4431
+[]                                            \OT1/cmtt/m/n/12 #c# Basic floati
+ng-point rounding 
+ []
+
+
+Overfull \hbox (104.52026pt too wide) in paragraph at lines 4432--4432
+[]\OT1/cmtt/m/n/12 f.math.isclose(0.1 + 0.2, 0.3)              #c# Returns True
+  (0.1+0.2 = 0.30000000000000004)[] 
+ []
+
+[175]
+Overfull \hbox (110.69527pt too wide) in paragraph at lines 4437--4437
+[]\OT1/cmtt/m/n/12 f.math.isclose(0.1 + 0.2, 0.3, rtol=0)      #c# Returns Fals
+e  (strict: no relative tolerance)[] 
+ []
+
+
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 4438--4438
+[]\OT1/cmtt/m/n/12 f.math.isclose(1000.0, 1000.001)            #c# Returns Fals
+e  (rtol=1e-9 too small)[] 
+ []
+
+
+Overfull \hbox (61.29524pt too wide) in paragraph at lines 4439--4439
+[]\OT1/cmtt/m/n/12 f.math.isclose(1000.0, 1000.001, rtol=1e-4) #c# Returns True
+  (1e-4 covers 0.001/1000)[] 
+ []
+
+
+Overfull \hbox (110.69527pt too wide) in paragraph at lines 4442--4442
+[]\OT1/cmtt/m/n/12 f.math.isclose(0.0, 1e-10)                  #c# Returns Fals
+e  (atol=0, no absolute tolerance)[] 
+ []
+
+
+Overfull \hbox (79.82025pt too wide) in paragraph at lines 4443--4443
+[]\OT1/cmtt/m/n/12 f.math.isclose(0.0, 1e-10, atol=1e-9)       #c# Returns True
+   (atol dominates near zero)[] 
+ []
+
+
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 4446--4446
+[]\OT1/cmtt/m/n/12 $f [func]= L::($x [real], $y [real]) -> { f.math.isclose($x,
+ $y, rtol=1e-6) }[] 
+ []
+
+
+Overfull \hbox (30.42023pt too wide) in paragraph at lines 4447--4447
+[]\OT1/cmtt/m/n/12 $f(0.1 + 0.2, 0.3)                          #c# Returns True
+  (usable in lambdas)[] 
+ []
+
+
+Overfull \hbox (123.04527pt too wide) in paragraph at lines 4458--4458
+[]\OT1/cmtt/m/n/12 "f.math.allclose", "(", list, ",", list, [",", "rtol", "=", 
+real], [",", "atol", "=", real], ")"[] 
+ []
+
+
+Overfull \hbox (73.64525pt too wide) in paragraph at lines 4469--4469
+[]                                                                         \OT1
+/cmtt/m/n/12 #c# Basic usage 
+ []
+
+
+Overfull \hbox (79.82025pt too wide) in paragraph at lines 4470--4470
+[]\OT1/cmtt/m/n/12 f.math.allclose(|[0.1, 0.2, 0.3], |[0.1+0.2, 0.2+0.1, 0.3+0.
+0])          #c# Returns True[] 
+ []
+
+
+Overfull \hbox (79.82025pt too wide) in paragraph at lines 4471--4471
+[]\OT1/cmtt/m/n/12 f.math.allclose(|[1.0, 2.0], |[1.0, 2.0])                   
+             #c# Returns True[] 
+ []
+
+
+Overfull \hbox (85.99525pt too wide) in paragraph at lines 4472--4472
+[]\OT1/cmtt/m/n/12 f.math.allclose(|[1.0, 2.0], |[1.0, 2.1])                   
+             #c# Returns False[] 
+ []
+
+
+Overfull \hbox (67.47025pt too wide) in paragraph at lines 4474--4474
+[]                                                                         \OT1
+/cmtt/m/n/12 #c# Edge cases[] 
+ []
+
+
+Overfull \hbox (172.4453pt too wide) in paragraph at lines 4475--4475
+[]\OT1/cmtt/m/n/12 f.math.allclose(|[], |[])                                   
+             #c# Returns True  (empty lists)[] 
+ []
+
+
+Overfull \hbox (79.82025pt too wide) in paragraph at lines 4476--4476
+[]\OT1/cmtt/m/n/12 f.math.allclose(|[0.0, 1e-10], |[0.0, 0.0], atol=1e-9)      
+             #c# Returns True[] 
+ []
+
+[176]
+Overfull \hbox (79.82025pt too wide) in paragraph at lines 4478--4478
+[]                                                                         \OT1
+/cmtt/m/n/12 #c# Nested lists[] 
+ []
+
+
+Overfull \hbox (79.82025pt too wide) in paragraph at lines 4479--4479
+[]\OT1/cmtt/m/n/12 f.math.allclose(|[|1.0, 2.0], |3.0, 4.0]|], |[|1.0, 2.0], |3
+.0, 4.0]|])  #c# Returns True[] 
+ []
+
+
+Overfull \hbox (289.77036pt too wide) in paragraph at lines 4481--4481
+[]                                                                         \OT1
+/cmtt/m/n/12 #c# Typical workflow: compare two filter responses[] 
+ []
+
+
+Overfull \hbox (197.14531pt too wide) in paragraph at lines 4484--4484
+[]\OT1/cmtt/m/n/12 f.math.allclose($response_a, $response_b, rtol=1e-6)        
+             #c# Returns True if responses match[] 
+ []
+
+[177] [178] [179] [180] [181]
+Overfull \hbox (30.42023pt too wide) in paragraph at lines 4742--4742
+[]\OT1/cmtt/m/n/12 "f.math.eseries", "(", ( int | real ), ",", string, [",", "r
+m", "=", string], ")"[] 
+ []
+
+[182]
+Overfull \hbox (73.64525pt too wide) in paragraph at lines 4788--4788
+[]\OT1/cmtt/m/n/12 "f.math.min", "(", list, [ ",", "axis", "=", int ], [ ",", "
+ignoreNan", "=", bool ], ")"[] 
+ []
+
+[183]
+Overfull \hbox (73.64525pt too wide) in paragraph at lines 4812--4812
+[]\OT1/cmtt/m/n/12 "f.math.max", "(", list, [ ",", "axis", "=", int ], [ ",", "
+ignoreNan", "=", bool ], ")"[] 
+ []
+
+[184] [185]
+Overfull \hbox (36.59523pt too wide) in paragraph at lines 4901--4901
+[]\OT1/cmtt/m/n/12 "f.tnsr.norm", "(", ( list | list[list] ), [",", "p", "=", (
+ real | "fro" ) ], ")"[] 
+ []
+
+[186]
+Overfull \hbox (73.64525pt too wide) in paragraph at lines 4940--4940
+[]\OT1/cmtt/m/n/12 f.tnsr.norm([[1,2],[3,4]])              #c# Returns approxim
+ately 5.4649 (spectral norm)[] 
+ []
+
+
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 4941--4941
+[]\OT1/cmtt/m/n/12 f.tnsr.norm([[1,2],[3,4]], p="fro")     #c# Returns approxim
+ately 5.4772 (Frobenius)[] 
+ []
+
+
+Overfull \hbox (98.34526pt too wide) in paragraph at lines 4942--4942
+[]\OT1/cmtt/m/n/12 f.tnsr.norm([[1,2],[3,4]], p=1)         #c# Returns 7 (max c
+olumn sum: |3|+|1|=4, |4|+|2|=6)[] 
+ []
+
+
+Overfull \hbox (135.39528pt too wide) in paragraph at lines 4944--4944
+[]\OT1/cmtt/m/n/12 f.tnsr.norm([[1,2],[3,4]], p=-2)        #c# Returns approxim
+ately 0.1010 (smallest singular value)[] 
+ []
+
+
+Overfull \hbox (135.39528pt too wide) in paragraph at lines 4976--4976
+[]\OT1/cmtt/m/n/12 "f.math.clamp", "(", ( int | real | list | tensor ), ",", ( 
+int | real ), ",", ( int | real ), ")"[] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4978--4980
+
+ []
+
+[187]
+Overfull \hbox (135.39528pt too wide) in paragraph at lines 5000--5000
+[]\OT1/cmtt/m/n/12 "f.math.lerp", "(", ( int | real ), ",", ( int | real ), ","
+, real, [",", "clamp", "=", bool], ")"[] 
+ []
+
+[188] [189] [190]
+Overfull \hbox (30.42023pt too wide) in paragraph at lines 5142--5142
+[]\OT1/cmtt/m/n/12 "f.math.nthrt", "(", ( int | real | complex ), ",", ( int | 
+real | complex ), ")"[] 
+ []
+
+[191] [192] [193] [194] [195] [196] [197]
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 5513--5513
+[]\OT1/cmtt/m/n/12 f.math.partitions(5)   #c# Returns 7  (5, 4+1, 3+2, 3+1+1, 2
++2+1, 2+1+1+1, 1+1+1+1+1)[] 
+ []
+
+[198] [199] [200] [201] [202] [203] [204] [205] [206] [207]
+Overfull \hbox (36.59523pt too wide) in paragraph at lines 5966--5966
+[]\OT1/cmtt/m/n/12 "f.str.remove", "(", string, ",", data, ",", data, [",", "mo
+de", "=", string], ")"[] 
+ []
+
+
+Overfull \hbox (4.57677pt too wide) in paragraph at lines 5970--5971
+[]\OT1/cmtt/m/n/12 mode="index"\OT1/cmr/m/n/12 : \OT1/cmtt/m/n/12 f.str.remove(
+str, start, end) \OT1/cmr/m/n/12 re-moves char-ac-ters from in-dex \OT1/cmtt/m/
+n/12 start
+ []
+
+[208] [209] [210] [211]
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 6163--6163
+[]\OT1/cmtt/m/n/12 f.str.splitLines("line1\nline2\nline3")  #c# Returns ["line1
+", "line2", "line3"] 
+ []
+
+
+Overfull \hbox (10.05377pt too wide) in paragraph at lines 6188--6190
+\OT1/cmr/m/n/12 Splits at the first oc-cur-rence of the sep-a-ra-tor, re-turn-i
+ng a 3-element list: \OT1/cmtt/m/n/12 [before, separator,
+ []
+
+[212] [213] [214] [215]
+Overfull \hbox (30.42023pt too wide) in paragraph at lines 6362--6362
+[]\OT1/cmtt/m/n/12 f.str.isIdentifier("if")       #c# Returns True  (keyword is
+ syntactically valid)[] 
+ []
+
+[216] [217]
+Overfull \hbox (129.22028pt too wide) in paragraph at lines 6493--6493
+[]\OT1/cmtt/m/n/12 ("f.str.isUpper" | "f.str.isLower" | "f.str.isAlpha" | "f.st
+r.isDigit" | "f.str.isAlphanumeric"),[] 
+ []
+
+[218]
+Overfull \hbox (11.9247pt too wide) in paragraph at lines 6564--6565
+\OT1/cmr/m/n/12 Tensor in-dex-ing pro-vides flex-i-ble ac-cess to el-e-ments, s
+ub-tensors, and slices of multi-dimensional
+ []
+
+[219] [220] [221]
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 6695--6695
+[]\OT1/cmtt/m/n/12 $c[..., 0]                   #c# Returns |[[1,3],[5,7]]  (fi
+rst along last axis)[] 
+ []
+
+[222] [223] [224] [225] [226] [227] [228]
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 7031--7031
+[]\OT1/cmtt/m/n/12 f.tnsr.diag([1, 2, 3])                   #c# Returns [[1,0,0
+],[0,2,0],[0,0,3]] 
+ []
+
+
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 7050--7050
+[]\OT1/cmtt/m/n/12 f.tnsr.diagflat([1, 2, 3])              #c# Returns [[1,0,0]
+,[0,2,0],[0,0,3]] 
+ []
+
+
+Overfull \hbox (104.52026pt too wide) in paragraph at lines 7051--7051
+[]\OT1/cmtt/m/n/12 f.tnsr.diagflat([[1, 2], [3]])          #c# Returns [[1,0,0,
+0],[0,2,0,0],[0,0,3,0],[0,0,0,0]][] 
+ []
+
+
+Overfull \hbox (18.07022pt too wide) in paragraph at lines 7067--7067
+[]\OT1/cmtt/m/n/12 f.tnsr.tril(|[[1,2,3],[4,5,6],[7,8,9]])   #c# Returns [[1,0,
+0],[4,5,0],[7,8,9]] 
+ []
+
+[229]
+Overfull \hbox (18.07022pt too wide) in paragraph at lines 7084--7084
+[]\OT1/cmtt/m/n/12 f.tnsr.triu(|[[1,2,3],[4,5,6],[7,8,9]])   #c# Returns [[1,2,
+3],[0,5,6],[0,0,9]] 
+ []
+
+
+Overfull \hbox (18.07022pt too wide) in paragraph at lines 7107--7107
+[]\OT1/cmtt/m/n/12 f.tnsr.eye(4, k=2)        #c# Returns [[0,0,1,0],[0,0,0,1],[
+0,0,0,0],[0,0,0,0]][] 
+ []
+
+
+Overfull \hbox (36.59523pt too wide) in paragraph at lines 7115--7115
+[]\OT1/cmtt/m/n/12 "f.tnsr.linspace", "(", int | real, ",", int | real, [ ",", 
+"num", "=", int ], ")"[] 
+ []
+
+
+Overfull \hbox (135.39528pt too wide) in paragraph at lines 7128--7128
+[]\OT1/cmtt/m/n/12 f.tnsr.linspace(0, 10, 11)    #c# Returns [0.0, 1.0, 2.0, 3.
+0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0][] 
+ []
+
+[230]
+Overfull \hbox (36.59523pt too wide) in paragraph at lines 7140--7140
+[]\OT1/cmtt/m/n/12 "f.tnsr.logspace", "(", int | real, ",", int | real, [ ",", 
+"num", "=", int ], ")"[] 
+ []
+
+
+Overfull \hbox (42.77023pt too wide) in paragraph at lines 7163--7163
+[]\OT1/cmtt/m/n/12 "f.tnsr.geomspace", "(", int | real, ",", int | real, [ ",",
+ "num", "=", int ], ")"[] 
+ []
+
+[231]
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 7198--7198
+[]\OT1/cmtt/m/n/12 f.tnsr.stack([|[1,2], |[3,4], |[5,6]])           #c# Returns
+ [[1,2],[3,4],[5,6]] 
+ []
+
+
+Overfull \hbox (42.77023pt too wide) in paragraph at lines 7235--7235
+[]\OT1/cmtt/m/n/12 f.tnsr.hstack([|[1,2], |[3,4]], |[5,6], |[7,8]])  #c# Return
+s [[1,2,5,7],[3,4,6,8]][] 
+ []
+
+[232]
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 7243--7243
+[]\OT1/cmtt/m/n/12 "f.tnsr.cleave", "(", tensor, ",", int_or_list, [ ",", "axis
+", "=", int ], ")"[] 
+ []
+
+
+Overfull \hbox (79.82025pt too wide) in paragraph at lines 7254--7254
+[]\OT1/cmtt/m/n/12 f.tnsr.cleave(|[1,2,3,4,5,6], 3)                     #c# Ret
+urns [|[1,2], |[3,4], |[5,6]] 
+ []
+
+
+Overfull \hbox (79.82025pt too wide) in paragraph at lines 7255--7255
+[]\OT1/cmtt/m/n/12 f.tnsr.cleave(|[[1,2,3],[4,5,6]], 3, axis=1)         #c# Ret
+urns [|[1,4], |[2,5], |[3,6]][] 
+ []
+
+
+Overfull \hbox (67.47025pt too wide) in paragraph at lines 7256--7256
+[]\OT1/cmtt/m/n/12 f.tnsr.cleave(|[1,2,3,4,5], [2,4])                   #c# Ret
+urns [|[1,2], |[3,4], |[5]][] 
+ []
+
+
+Overfull \hbox (42.77023pt too wide) in paragraph at lines 7257--7257
+[]\OT1/cmtt/m/n/12 f.tnsr.cleave(|[1,2,3,4,5], [2])                     #c# Ret
+urns [|[1,2], |[3,4,5]][] 
+ []
+
+
+Overfull \hbox (20.99753pt too wide) in paragraph at lines 7287--7288
+\OT1/cmr/m/n/12 For a ten-sor $\OML/cmtt/m/n/12 A$ \OT1/cmr/m/n/12 with shape $
+(\OML/cmtt/m/n/12 d[]; d[]; [] ; d[]\OT1/cmr/m/n/12 )$, the trans-pose with per
+-mu-ta-tion $\OML/cmtt/m/n/12 ^^Y \OT1/cmr/m/n/12 = [\OML/cmtt/m/n/12 ^^Y[]; ^^
+Y[]; [] ; ^^Y[]\OT1/cmr/m/n/12 ]$
+ []
+
+[233]
+Overfull \hbox (20.45456pt too wide) in paragraph at lines 7302--7303
+[]\OT1/cmr/m/n/12 Without \OT1/cmtt/m/n/12 axes\OT1/cmr/m/n/12 : re-verses di-m
+en-sion or-der. Shape $(\OML/cmtt/m/n/12 d[]; d[]; [] ; d[]\OT1/cmr/m/n/12 )$ b
+e-comes $(\OML/cmtt/m/n/12 d[]; [] ; d[]; d[]\OT1/cmr/m/n/12 )$. 
+ []
+
+
+Overfull \hbox (42.77023pt too wide) in paragraph at lines 7332--7332
+[]\OT1/cmtt/m/n/12 f.tnsr.transpose(|[[1, 2, 3], [4, 5, 6]])     #c# Returns |[
+[1, 4], [2, 5], [3, 6]] 
+ []
+
+[234]
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 7343--7343
+[]\OT1/cmtt/m/n/12 f.tnsr.transpose($f, [2, 0, 1])              #c# Returns ten
+sor with shape (4, 2, 3)[] 
+ []
+
+
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 7346--7346
+[]\OT1/cmtt/m/n/12 f.tnsr.transpose($f, [1, 2, 0])              #c# Returns ten
+sor with shape (3, 4, 2)[] 
+ []
+
+
+Overfull \hbox (67.47025pt too wide) in paragraph at lines 7365--7365
+[]\OT1/cmtt/m/n/12 f.tnsr.transpose(|[[1,2],[3,4]], [0, 1])     #c# Returns |[[
+1, 2], [3, 4]]  (no change) 
+ []
+
+[235]
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 7416--7416
+[]\OT1/cmtt/m/n/12 f.tnsr.moveaxis($f, 2, 0)              #c# Returns tensor wi
+th shape (4, 2, 3)[] 
+ []
+
+[236]
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 7463--7463
+[]\OT1/cmtt/m/n/12 f.tnsr.rollaxis($f, 2)                #c# Returns tensor wit
+h shape (4, 2, 3)[] 
+ []
+
+[237] [238]
+Overfull \hbox (18.20354pt too wide) in paragraph at lines 7581--7583
+ \OT1/cmr/bx/n/10 Flip Hor-i-zon-tal[] \OT1/cmr/m/n/12 The \OT1/cmtt/m/n/12 fli
+plr \OT1/cmr/m/n/12 func-tion flips hor-i-zon-tally (left-right). Equiv-a-lent 
+to \OT1/cmtt/m/n/12 flip(tensor,
+ []
+
+[239]
+Overfull \hbox (30.42023pt too wide) in paragraph at lines 7631--7631
+[]\OT1/cmtt/m/n/12 f.tnsr.roll(|[1, 2, 3, 4, 5], 2)                     #c# Ret
+urns |[4, 5, 1, 2, 3] 
+ []
+
+
+Overfull \hbox (30.42023pt too wide) in paragraph at lines 7632--7632
+[]\OT1/cmtt/m/n/12 f.tnsr.roll(|[1, 2, 3, 4, 5], -1)                    #c# Ret
+urns |[2, 3, 4, 5, 1][] 
+ []
+
+
+Overfull \hbox (42.77023pt too wide) in paragraph at lines 7633--7633
+[]\OT1/cmtt/m/n/12 f.tnsr.roll(|[[1,2,3],[4,5,6]], 1, axis=0)           #c# Ret
+urns |[[4,5,6],[1,2,3]][] 
+ []
+
+
+Overfull \hbox (42.77023pt too wide) in paragraph at lines 7634--7634
+[]\OT1/cmtt/m/n/12 f.tnsr.roll(|[[1,2,3],[4,5,6]], 1, axis=1)           #c# Ret
+urns |[[3,1,2],[6,4,5]][] 
+ []
+
+
+Overfull \hbox (42.77023pt too wide) in paragraph at lines 7635--7635
+[]\OT1/cmtt/m/n/12 f.tnsr.roll(|[[1,2,3],[4,5,6]], 1)                   #c# Ret
+urns |[[6,1,2],[3,4,5]][] 
+ []
+
+
+Overfull \hbox (197.14531pt too wide) in paragraph at lines 7673--7673
+[]\OT1/cmtt/m/n/12 f.tnsr.tile(|[[1,2],[3,4]], [2, 3])    #c# Returns [[1,2,1,2
+,1,2],[3,4,3,4,3,4],[1,2,1,2,1,2],[3,4,3,4,3,4]][] 
+ []
+
+
+Overfull \hbox (73.64525pt too wide) in paragraph at lines 7681--7681
+[]\OT1/cmtt/m/n/12 "f.tnsr.pad", "(", tensor, ",", ( int | list[int] ), [ ",", 
+"constant", "=", real ], ")"[] 
+ []
+
+[240]
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 7692--7692
+[]\OT1/cmtt/m/n/12 f.tnsr.pad(|[[1,2],[3,4]], [[1,1],[0,0]])      #c# Returns [
+[0,0],[1,2],[3,4],[0,0]][] 
+ []
+
+[241]
+Overfull \hbox (141.57028pt too wide) in paragraph at lines 7769--7769
+[]\OT1/cmtt/m/n/12 "f.tnsr.meshgrid", "(", tensor, ",", tensor, { ",", tensor }
+, [ ",", "indexing", "=", string ], ")"[] 
+ []
+
+[242] [243] [244] [245]
+Overfull \hbox (12.30157pt too wide) in paragraph at lines 7938--7939
+[]\OT1/cmtt/m/n/12 f.stat.mean([])\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 f.stat.std
+([])\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 f.stat.var([])\OT1/cmr/m/n/12 , \OT1/cmt
+t/m/n/12 f.stat.median([]) \OT1/cmr/m/n/12 raise a \OT1/cmtt/m/n/12 Value
+ []
+
+
+Overfull \hbox (1.6772pt too wide) in paragraph at lines 7939--7940
+[]\OT1/cmtt/m/n/12 f.util.sort([])\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 f.util.rev
+erse([])\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 f.util.unique([]) \OT1/cmr/m/n/12 re
+-turn \OT1/cmtt/m/n/12 [] \OT1/cmr/m/n/12 on empty lists. 
+ []
+
+
+Overfull \hbox (98.34526pt too wide) in paragraph at lines 7949--7949
+[]\OT1/cmtt/m/n/12 "f.stat.sum", "(", argument, [ ",", "axis", "=", int ], [ ",
+", "ignoreNan", "=", bool ], ")"[] 
+ []
+
+
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 7958--7958
+[]\OT1/cmtt/m/n/12 f.stat.sum([[1,2],[3,4]], axis=0)               #c# Returns 
+[4, 6]  (row-wise)[] 
+ []
+
+
+Overfull \hbox (30.42023pt too wide) in paragraph at lines 7959--7959
+[]\OT1/cmtt/m/n/12 f.stat.sum([[1,2],[3,4]], axis=1)               #c# Returns 
+[3, 7]  (column-wise)[] 
+ []
+
+
+Overfull \hbox (104.52026pt too wide) in paragraph at lines 7966--7966
+[]\OT1/cmtt/m/n/12 "f.stat.prod", "(", argument, [ ",", "axis", "=", int ], [ "
+,", "ignoreNan", "=", bool ], ")"[] 
+ []
+
+
+Overfull \hbox (104.52026pt too wide) in paragraph at lines 7982--7982
+[]\OT1/cmtt/m/n/12 "f.stat.mean", "(", argument, [ ",", "axis", "=", int ], [ "
+,", "ignoreNan", "=", bool ], ")"[] 
+ []
+
+[246]
+Overfull \hbox (98.34526pt too wide) in paragraph at lines 7998--7998
+[]\OT1/cmtt/m/n/12 "f.stat.std", "(", argument, [ ",", "axis", "=", int ], [ ",
+", "ignoreNan", "=", bool ], ")"[] 
+ []
+
+
+Overfull \hbox (98.34526pt too wide) in paragraph at lines 8013--8013
+[]\OT1/cmtt/m/n/12 "f.stat.var", "(", argument, [ ",", "axis", "=", int ], [ ",
+", "ignoreNan", "=", bool ], ")"[] 
+ []
+
+[247]
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 8068--8068
+[]\OT1/cmtt/m/n/12 f.stat.mode([1, 2, 3])              #c# Returns [1, 2, 3] (a
+ll equally frequent)[] 
+ []
+
+[248]
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 8119--8119
+[]\OT1/cmtt/m/n/12 f.stat.peak([1, -3, 2, -5, 4])                  #c# Returns 
+9 (p2p: 4 - (-5)) 
+ []
+
+[249]
+Overfull \hbox (36.59523pt too wide) in paragraph at lines 8155--8155
+[]\OT1/cmtt/m/n/12 f.stat.skew([1, 2, 3, 4, 5])                           #c# R
+eturns 0.0 (symmetric) 
+ []
+
+
+Overfull \hbox (73.64525pt too wide) in paragraph at lines 8156--8156
+[]\OT1/cmtt/m/n/12 f.stat.skew([1, 1, 1, 10])                             #c# R
+eturns ~1.732 (right-skewed)[] 
+ []
+
+
+Overfull \hbox (79.82025pt too wide) in paragraph at lines 8184--8184
+[]\OT1/cmtt/m/n/12 f.stat.kurtosis([1, 2, 3, 4, 5])                           #
+c# Returns -1.3 (platykurtic) 
+ []
+
+
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 8185--8185
+[]\OT1/cmtt/m/n/12 f.stat.kurtosis([1, 1, 1, 1, 10, 10])                      #
+c# Returns ~-0.769[] 
+ []
+
+[250]
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 8205--8205
+[]\OT1/cmtt/m/n/12 f.stat.argmin([5, 3, 1, 4])                        #c# Retur
+ns 2 (index of 1) 
+ []
+
+
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 8206--8206
+[]\OT1/cmtt/m/n/12 f.stat.argmin([5, c.math.NaN, 1], ignoreNan=true)  #c# Retur
+ns 2 (index of 1)[] 
+ []
+
+
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 8218--8218
+[]\OT1/cmtt/m/n/12 f.stat.argmax([5, 3, 1, 4])                        #c# Retur
+ns 0 (index of 5) 
+ []
+
+
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 8219--8219
+[]\OT1/cmtt/m/n/12 f.stat.argmax([5, c.math.NaN, 1], ignoreNan=true)  #c# Retur
+ns 0 (index of 5)[] 
+ []
+
+[251]
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 8259--8259
+[]\OT1/cmtt/m/n/12 f.util.partition([3, 1, 4, 1, 5, 9, 2, 6], 3)    #c# Returns
+ [1,1,2,3,4,5,6,9] 
+ []
+
+
+Overfull \hbox (30.42023pt too wide) in paragraph at lines 8315--8315
+[]\OT1/cmtt/m/n/12 f.util.isin([1, 2, 3, 4], [2, 4, 6])       #c# Returns [fals
+e, true, false, true] 
+ []
+
+[252]
+Overfull \hbox (18.07022pt too wide) in paragraph at lines 8330--8330
+[]\OT1/cmtt/m/n/12 f.util.in1d(|[[1,2],[3,4]], [2,4])       #c# Returns [false,
+ true, false, true][] 
+ []
+
+
+Overfull \hbox (30.42023pt too wide) in paragraph at lines 8338--8338
+[]\OT1/cmtt/m/n/12 "f.util.select", "(", list[lambda], ",", list, [ ",", "defau
+lt", "=", data ], ")"[] 
+ []
+
+[253]
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 8374--8374
+[]\OT1/cmtt/m/n/12 f.util.compress([true, false, true, false], [10, 20, 30, 40]
+)    #c# Returns [10, 30] 
+ []
+
+
+Overfull \hbox (61.29524pt too wide) in paragraph at lines 8375--8375
+[]\OT1/cmtt/m/n/12 f.util.compress([true, true, true], [1, 2, 3])              
+     #c# Returns [1, 2, 3][] 
+ []
+
+
+Overfull \hbox (18.07022pt too wide) in paragraph at lines 8376--8376
+[]\OT1/cmtt/m/n/12 f.util.compress([false, false, false], [1, 2, 3])           
+     #c# Returns [][] 
+ []
+
+
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 8399--8399
+[]\OT1/cmtt/m/n/12 f.util.place($b, |[false, false, false, false, false], |[99,
+ 99, 99, 99, 99])[] 
+ []
+
+[254]
+Overfull \hbox (18.07022pt too wide) in paragraph at lines 8440--8440
+[]\OT1/cmtt/m/n/12 f.util.take(|[10, 20, 30, 40, 50], [4, 3, 2, 1])  #c# Return
+s |[50, 40, 30, 20][] 
+ []
+
+[255] [256] [257] [258]
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 8674--8674
+[]\OT1/cmtt/m/n/12 "f.tnsr.diff", "(", argument, [ ",", "n", "=", int ], [ ",",
+ "axis", "=", int ], ")"[] 
+ []
+
+[259]
+Overfull \hbox (98.34526pt too wide) in paragraph at lines 8753--8753
+[]\OT1/cmtt/m/n/12 f.tnsr.grad(|[[1, 2], [4, 8]])                  #c# Returns 
+[|[[3,6],[3,6]], |[[1,1],[4,4]]][] 
+ []
+
+
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 8754--8754
+[]\OT1/cmtt/m/n/12 f.tnsr.grad(|[[1, 2], [4, 8]], axis=0)          #c# Returns 
+|[[3, 6], [3, 6]][] 
+ []
+
+[260]
+Overfull \hbox (135.39528pt too wide) in paragraph at lines 8755--8755
+[]\OT1/cmtt/m/n/12 f.tnsr.grad(|[[1, 2], [4, 8]], [0.5, 2])        #c# Returns 
+[|[[6,12],[6,12]], |[[0.5,0.5],[2,2]]][] 
+ []
+
+
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 8756--8756
+[]\OT1/cmtt/m/n/12 f.tnsr.grad(|[42])                              #c# Returns 
+|[0.0]  (single element)[] 
+ []
+
+[261]
+Overfull \hbox (33.65541pt too wide) in paragraph at lines 8841--8842
+[]\OT1/cmr/m/n/12 A \OT1/cmtt/m/n/12 Value Error \OT1/cmr/m/n/12 is raised for 
+\OT1/cmtt/m/n/12 f.linalg.det\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 f.linalg.inv\OT
+1/cmr/m/n/12 , \OT1/cmtt/m/n/12 f.linalg.eig\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 
+f.linalg.eigvec\OT1/cmr/m/n/12 ,
+ []
+
+[262]
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 8915--8915
+[]\OT1/cmtt/m/n/12 f.linalg.qr([[1,1],[1,-1]])   #c# Returns Q and R such that 
+Q .* R = original 
+ []
+
+[263]
+Underfull \hbox (badness 10000) in paragraph at lines 8923--8924
+
+ []
+
+[264] [265]
+Overfull \hbox (141.57028pt too wide) in paragraph at lines 9053--9053
+[]\OT1/cmtt/m/n/12 f.linalg.kron([[1,2],[3,4]], [[0,1],[1,0]])   #c# Returns [[
+0,1,0,2],[1,0,2,0],[0,3,0,4],[3,0,4,0]] 
+ []
+
+
+Overfull \hbox (141.57028pt too wide) in paragraph at lines 9054--9054
+[]\OT1/cmtt/m/n/12 f.linalg.kron([[1,0],[0,1]], [[1,2],[3,4]])   #c# Returns [[
+1,2,0,0],[3,4,0,0],[0,0,1,2],[0,0,3,4]][] 
+ []
+
+[266]
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 9092--9092
+[]\OT1/cmtt/m/n/12 f.linalg.eigh([[2,1],[1,2]])   #c# Returns [1, 3], [[-0.707,
+ 0.707], [0.707, 0.707]] 
+ []
+
+[267] [268]
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 9240--9240
+[]\OT1/cmtt/m/n/12 f.stat.weightedMean([10, 20, 30], [1, 2, 3])            #c# 
+Returns 23.333... 
+ []
+
+[269] [270] [271] [272] [273] [274] [275] [276]
+Overfull \hbox (30.42023pt too wide) in paragraph at lines 9606--9606
+[]\OT1/cmtt/m/n/12 f.util.filter(["a", "bb", "ccc", "dd"], L::($x [string])->{ 
+f.util.len($x) > 2 })[] 
+ []
+
+[277] [278] [279] [280]
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 9778--9778
+[]\OT1/cmtt/m/n/12 f.util.nanFill([1, c.math.NaN, 3, c.math.NaN], 0)           
+ #c# Returns [1, 0, 3, 0] 
+ []
+
+
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 9779--9779
+[]\OT1/cmtt/m/n/12 f.util.nanFill([c.math.NaN, c.math.NaN, c.math.NaN], 99)    
+ #c# Returns [99, 99, 99][] 
+ []
+
+
+Overfull \hbox (36.59523pt too wide) in paragraph at lines 9780--9780
+[]\OT1/cmtt/m/n/12 f.util.nanFill([1, 2, 3], 0)                                
+ #c# Returns [1, 2, 3][] 
+ []
+
+
+Overfull \hbox (92.17026pt too wide) in paragraph at lines 9781--9781
+[]\OT1/cmtt/m/n/12 f.util.nanFill([[1, c.math.NaN], [c.math.NaN, 4]], -1)      
+ #c# Returns [[1, -1], [-1, 4]][] 
+ []
+
+[281] [282]
+Overfull \hbox (5.00748pt too wide) in paragraph at lines 9877--9879
+[]\OT1/cmtt/m/n/12 sort(list[T], L::(\TS1/cmtt/m/n/12 $\OT1/cmtt/m/n/12 a [T], 
+\TS1/cmtt/m/n/12 $\OT1/cmtt/m/n/12 b [T])->\OMS/cmtt/m/n/12 f\OT1/cmtt/m/n/12 i
+nt\OMS/cmtt/m/n/12 g\OT1/cmtt/m/n/12 ) $\OMS/cmtt/m/n/12 !$ \OT1/cmtt/m/n/12 li
+st[T] \OT1/cmr/m/n/12 (cus-tom com-para-tor, must
+ []
+
+
+Overfull \hbox (79.82025pt too wide) in paragraph at lines 9905--9905
+[]\OT1/cmtt/m/n/12 f.util.sort([-5, 3, -1, 4], L::($a [int], $b [int])->{ f.mat
+h.abs($a) - f.math.abs($b) })[] 
+ []
+
+[283] [284] [285] [286] [287] [288] [289]
+Overfull \hbox (73.64525pt too wide) in paragraph at lines 10212--10212
+[]                                       \OT1/cmtt/m/n/12 #c# $reconstructed is
+ approximately |[1, 0, 1, 0][] 
+ []
+
+
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 10217--10217
+[]                                       \OT1/cmtt/m/n/12 #c# ifft of impulse i
+n frequency domain[] 
+ []
+
+[290]
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 10274--10274
+[]\OT1/cmtt/m/n/12 f.ee.fftfreq(4)                         #c# Returns |[0.0, 0
+.25, -0.5, -0.25] 
+ []
+
+
+Overfull \hbox (30.42023pt too wide) in paragraph at lines 10275--10275
+[]\OT1/cmtt/m/n/12 f.ee.fftfreq(4, d=0.001)                #c# Returns |[0.0, 2
+50.0, -500.0, -250.0][] 
+ []
+
+
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 10276--10276
+[]\OT1/cmtt/m/n/12 f.ee.fftfreq(5)                         #c# Returns |[0.0, 0
+.2, 0.4, -0.4, -0.2][] 
+ []
+
+
+Overfull \hbox (73.64525pt too wide) in paragraph at lines 10296--10296
+[]\OT1/cmtt/m/n/12 f.ee.fft(|[0, 1, 0, 0])              #c# Returns |[1+0j, 0-1
+j, -1+0j, 0+1j]   (4 points)[] 
+ []
+
+
+Overfull \hbox (79.82025pt too wide) in paragraph at lines 10297--10297
+[]\OT1/cmtt/m/n/12 f.ee.rfft(|[0, 1, 0, 0])             #c# Returns |[1+0j, 0-1
+j, -1+0j]          (3 points)[] 
+ []
+
+[291]
+Overfull \hbox (30.42023pt too wide) in paragraph at lines 10326--10326
+[]\OT1/cmtt/m/n/12 f.ee.rfft(|[0, 1, 0, 0], 8)          #c# Zero-pads to 8, ret
+urns 5 complex points 
+ []
+
+
+Overfull \hbox (30.42023pt too wide) in paragraph at lines 10327--10327
+[]\OT1/cmtt/m/n/12 f.ee.rfft(|[0, 1, 0, 0, 0, 0], 4)    #c# Truncates to 4, ret
+urns 3 complex points[] 
+ []
+
+[292]
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 10392--10392
+[]\OT1/cmtt/m/n/12 f.ee.fftfreq(4)                         #c# Returns |[0.0, 0
+.25, -0.5, -0.25][] 
+ []
+
+[293] [294] [295]
+Overfull \hbox (17.26514pt too wide) in paragraph at lines 10553--10554
+ \OT1/cmr/bx/n/10 Real FFT Fre-quen-cies --- \OT1/cmtt/m/n/10 f.sig.rfftfreq(n,
+ d)[] \OT1/cmr/m/n/12 Re-turns fre-quency bins for use with \OT1/cmtt/m/n/12 f.
+sig.rfft\OT1/cmr/m/n/12 .
+ []
+
+[296]
+Overfull \hbox (4.0593pt too wide) in paragraph at lines 10617--10617
+ \OT1/cmr/bx/n/10 En-ve-lope and Phase --- \OT1/cmtt/m/n/10 f.sig.envelope(sign
+al)\OT1/cmr/bx/n/10 , \OT1/cmtt/m/n/10 f.sig.phase(signal)\OT1/cmr/bx/n/10 , \O
+T1/cmtt/m/n/10 f.sig.unwrapPhase(signal)[] 
+ []
+
+[297] [298]
+Overfull \hbox (11.66039pt too wide) in paragraph at lines 10686--10687
+ \OT1/cmr/bx/n/10 Ar-chi-tec-ture[] \OT1/cmr/m/n/12 Fil-ters re-turn \OT1/cmr/b
+x/n/12 trans-fer func-tions \OT1/cmr/m/n/12 --- pure func-tions ap-plied via \O
+T1/cmtt/m/n/12 f.sig.ufilter\OT1/cmr/m/n/12 .
+ []
+
+[299] [300] [301]
+Overfull \hbox (6.89027pt too wide) in paragraph at lines 10891--10892
+ \OT1/cmr/bx/n/10 Least-Squares --- \OT1/cmtt/m/n/10 f.sig.firls(numtaps, bands
+, desired, fs)[] \OT1/cmr/m/n/12 Min-i-mizes $[] \OMS/cmtt/m/n/12 j\OML/cmtt/m/
+n/12 H\OT1/cmr/m/n/12 (\OML/cmtt/m/n/12 !\OT1/cmr/m/n/12 ) \OMS/cmtt/m/n/12 ^^@
+ \OML/cmtt/m/n/12 D\OT1/cmr/m/n/12 (\OML/cmtt/m/n/12 !\OT1/cmr/m/n/12 )\OMS/cmt
+t/m/n/12 j[]\OML/cmtt/m/n/12 d!$
+ []
+
+
+Overfull \hbox (2.59929pt too wide) in paragraph at lines 10894--10895
+ \OT1/cmr/bx/n/10 Equirip-ple --- \OT1/cmtt/m/n/10 f.sig.remez(numtaps, bands, 
+desired, fs)[] \OT1/cmr/m/n/12 Parks-McClellan al-go-rithm, min-
+ []
+
+[302] [303] [304] [305] [306]
+Overfull \hbox (1.26587pt too wide) in paragraph at lines 11178--11179
+ \OT1/cmr/bx/n/10 Pre-witt Ker-nel --- \OT1/cmtt/m/n/10 f.sig.prewittKernel(dir
+ection)[] \OT1/cmr/m/n/12 Pre-witt op-er-a-tor --- sim-pli-fied So-bel with-
+ []
+
+[307]
+Overfull \hbox (3.41164pt too wide) in paragraph at lines 11199--11200
+ \OT1/cmr/bx/n/10 Lapla-cian Ker-nel --- \OT1/cmtt/m/n/10 f.sig.laplacianKernel
+(variant)[] \OT1/cmr/m/n/12 Lapla-cian op-er-a-tor for second-derivative
+ []
+
+[308]
+Overfull \hbox (61.29524pt too wide) in paragraph at lines 11304--11304
+[]\OT1/cmtt/m/n/12 #c# Returns |[[-0.125, -0.125, -0.125], [-0.125, 1, -0.125],
+ [-0.125, -0.125, -0.125]][] 
+ []
+
+[309] [310] [311] [312] [313]
+Overfull \hbox (16.44946pt too wide) in paragraph at lines 11576--11577
+ \OT1/cmr/bx/n/10 Up-sam-ple --- \OT1/cmtt/m/n/10 f.sig.upsample(signal, factor
+)[] \OT1/cmr/m/n/12 Zero-insertion: $\OML/cmtt/m/n/12 y\OT1/cmr/m/n/12 [\OML/cm
+tt/m/n/12 n\OT1/cmr/m/n/12 ] = \OML/cmtt/m/n/12 x\OT1/cmr/m/n/12 [\OML/cmtt/m/n
+/12 n=[]\OT1/cmr/m/n/12 ]$ if $\OML/cmtt/m/n/12 n\OT1/cmr/m/n/12 %[] ==
+ []
+
+[314]
+Overfull \hbox (2.08426pt too wide) in paragraph at lines 11649--11650
+[]\OT1/cmr/m/n/12 Result: \OT1/cmtt/m/n/12 tuple[tensor[real], tensor[real]] \O
+T1/cmr/m/n/12 --- $[[]\OML/cmtt/m/n/12 ; []\OT1/cmr/m/n/12 ]$. 
+ []
+
+[315] [316] [317] [318] [319]
+Overfull \hbox (12.62859pt too wide) in paragraph at lines 11885--11886
+\OT1/cmr/m/n/12 The \OT1/cmtt/m/n/12 debg.cpu \OT1/cmr/m/n/12 func-tion re-turn
+s the cur-rent CPU us-age as a per-cent-age. Un-like \OT1/cmtt/m/n/12 debg.reso
+urces
+ []
+
+[320]
+Overfull \hbox (14.58917pt too wide) in paragraph at lines 11949--11950
+\OT1/cmr/m/n/12 System func-tions (\OT1/cmtt/m/n/12 f.sys.*\OT1/cmr/m/n/12 ) pr
+o-vide run-time in-tro-spec-tion and con-fig-u-ra-tion. Un-like \OT1/cmtt/m/n/1
+2 syst.flag
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 11957--11958
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 11959--11960
+
+ []
+
+[321] [322] [323] [324] [325]
+Overfull \hbox (30.42023pt too wide) in paragraph at lines 12183--12183
+[]\OT1/cmtt/m/n/12 f.time.nsToISO8601(f.time.now())        #c# "2025-07-20T14:3
+0:00Z" (current time)[] 
+ []
+
+[326] [327] [328] [329] [330]
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 12443--12443
+[]\OT1/cmtt/m/n/12 $f uid = f.rng.csprng(128)   #c# 289483927489372847298374892
+3748923 (varies, 128-bit) 
+ []
+
+[331]
+Overfull \hbox (79.01039pt too wide) in paragraph at lines 12471--12473
+\OT1/cmr/m/n/12 The \OT1/cmtt/m/n/12 f.hash.hash \OT1/cmr/m/n/12 func-tion com-
+putes a hash value us-ing the al-go-rithm spec-i-fied by \OT1/cmtt/m/n/12 syst.
+flag.default[]hash
+ []
+
+
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 12475--12475
+[]\OT1/cmtt/m/n/12 "f.hash.hash", "(", ( string | list[int] ), [",", ( "hex" | 
+"bytes" | "int" ) ], ")"[] 
+ []
+
+
+Overfull \hbox (215.67032pt too wide) in paragraph at lines 12483--12483
+[]\OT1/cmtt/m/n/12 f.hash.hash("Hello World")               #c# "a591a6d40bf420
+404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e" 
+ []
+
+
+Overfull \hbox (30.42023pt too wide) in paragraph at lines 12485--12485
+[]\OT1/cmtt/m/n/12 f.hash.hash("Hello World", "int")        #c# 101020304050607
+08091011... (integer)[] 
+ []
+
+
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 12510--12510
+[]\OT1/cmtt/m/n/12 "f.hash.fnv1a", "(", ( string | list[int] ), [",", ( "hex" |
+ "bytes" | "int" ) ], ")"[] 
+ []
+
+[332]
+Overfull \hbox (85.99525pt too wide) in paragraph at lines 12528--12528
+[]\OT1/cmtt/m/n/12 "f.hash.murmurHash", "(", ( string | list[int] ), [",", ( "h
+ex" | "bytes" | "int" ) ], ")"[] 
+ []
+
+
+Overfull \hbox (61.29524pt too wide) in paragraph at lines 12546--12546
+[]\OT1/cmtt/m/n/12 "f.hash.xxHash", "(", ( string | list[int] ), [",", ( "hex" 
+| "bytes" | "int" ) ], ")"[] 
+ []
+
+
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 12564--12564
+[]\OT1/cmtt/m/n/12 "f.hash.crc32", "(", ( string | list[int] ), [",", ( "hex" |
+ "bytes" | "int" ) ], ")"[] 
+ []
+
+[333]
+Overfull \hbox (67.47025pt too wide) in paragraph at lines 12582--12582
+[]\OT1/cmtt/m/n/12 "f.hash.adler32", "(", ( string | list[int] ), [",", ( "hex"
+ | "bytes" | "int" ) ], ")"[] 
+ []
+
+
+Overfull \hbox (42.77023pt too wide) in paragraph at lines 12600--12600
+[]\OT1/cmtt/m/n/12 "f.hash.md5", "(", ( string | list[int] ), [",", ( "hex" | "
+bytes" | "int" ) ], ")"[] 
+ []
+
+
+Overfull \hbox (123.04527pt too wide) in paragraph at lines 12608--12608
+[]\OT1/cmtt/m/n/12 f.hash.md5("Hello World")                  #c# "b10a8db164e0
+754105b7a99be72e3fe5" (hex, default) 
+ []
+
+[334]
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 12618--12618
+[]\OT1/cmtt/m/n/12 "f.hash.sha1", "(", ( string | list[int] ), [",", ( "hex" | 
+"bytes" | "int" ) ], ")"[] 
+ []
+
+
+Overfull \hbox (178.6203pt too wide) in paragraph at lines 12626--12626
+[]\OT1/cmtt/m/n/12 f.hash.sha1("Hello World")                  #c# "0a4d55a8d77
+8e5022fab701977c5d840bbc486d0" (hex, default) 
+ []
+
+
+Overfull \hbox (61.29524pt too wide) in paragraph at lines 12636--12636
+[]\OT1/cmtt/m/n/12 "f.hash.sha224", "(", ( string | list[int] ), [",", ( "hex" 
+| "bytes" | "int" ) ], ")"[] 
+ []
+
+
+Overfull \hbox (141.57028pt too wide) in paragraph at lines 12644--12644
+[]\OT1/cmtt/m/n/12 f.hash.sha224("Hello World")                  #c# "c8b073b54
+8cd38f5e0eea5727bea4657" (hex, default) 
+ []
+
+
+Overfull \hbox (61.29524pt too wide) in paragraph at lines 12654--12654
+[]\OT1/cmtt/m/n/12 "f.hash.sha256", "(", ( string | list[int] ), [",", ( "hex" 
+| "bytes" | "int" ) ], ")"[] 
+ []
+
+[335]
+Overfull \hbox (339.17038pt too wide) in paragraph at lines 12662--12662
+[]\OT1/cmtt/m/n/12 f.hash.sha256("Hello World")                  #c# "a591a6d40
+bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e" (hex, default) 
+ []
+
+
+Overfull \hbox (61.29524pt too wide) in paragraph at lines 12672--12672
+[]\OT1/cmtt/m/n/12 "f.hash.sha384", "(", ( string | list[int] ), [",", ( "hex" 
+| "bytes" | "int" ) ], ")"[] 
+ []
+
+
+Overfull \hbox (215.67032pt too wide) in paragraph at lines 12680--12680
+[]\OT1/cmtt/m/n/12 f.hash.sha384("Hello World")                  #c# "14fdb4453
+b92a0c18562b5a9705826b45a3ef8de5..." (hex, default) 
+ []
+
+
+Overfull \hbox (61.29524pt too wide) in paragraph at lines 12690--12690
+[]\OT1/cmtt/m/n/12 "f.hash.sha512", "(", ( string | list[int] ), [",", ( "hex" 
+| "bytes" | "int" ) ], ")"[] 
+ []
+
+
+Overfull \hbox (215.67032pt too wide) in paragraph at lines 12698--12698
+[]\OT1/cmtt/m/n/12 f.hash.sha512("Hello World")                  #c# "861844d67
+04e8573fec34d967e20bcfef3d424cf4..." (hex, default) 
+ []
+
+
+Overfull \hbox (73.64525pt too wide) in paragraph at lines 12708--12708
+[]\OT1/cmtt/m/n/12 "f.hash.sha3_256", "(", ( string | list[int] ), [",", ( "hex
+" | "bytes" | "int" ) ], ")"[] 
+ []
+
+[336]
+Overfull \hbox (153.92029pt too wide) in paragraph at lines 12716--12716
+[]\OT1/cmtt/m/n/12 f.hash.sha3_256("Hello World")                  #c# "644bcc7
+e56197e90906997b5657bd..." (hex, default) 
+ []
+
+
+Overfull \hbox (73.64525pt too wide) in paragraph at lines 12726--12726
+[]\OT1/cmtt/m/n/12 "f.hash.sha3_512", "(", ( string | list[int] ), [",", ( "hex
+" | "bytes" | "int" ) ], ")"[] 
+ []
+
+
+Overfull \hbox (67.47025pt too wide) in paragraph at lines 12744--12744
+[]\OT1/cmtt/m/n/12 "f.hash.blake2b", "(", ( string | list[int] ), [",", ( "hex"
+ | "bytes" | "int" ) ], ")"[] 
+ []
+
+[337]
+Overfull \hbox (67.47025pt too wide) in paragraph at lines 12762--12762
+[]\OT1/cmtt/m/n/12 "f.hash.blake2s", "(", ( string | list[int] ), [",", ( "hex"
+ | "bytes" | "int" ) ], ")"[] 
+ []
+
+
+Overfull \hbox (61.29524pt too wide) in paragraph at lines 12780--12780
+[]\OT1/cmtt/m/n/12 "f.hash.blake3", "(", ( string | list[int] ), [",", ( "hex" 
+| "bytes" | "int" ) ], ")"[] 
+ []
+
+[338] [339] [340] [341] [342] [343] [344] [345] [346] [347] [348] [349]
+Overfull \hbox (16.30963pt too wide) in paragraph at lines 13375--13376
+\OT1/cmr/m/n/12 The \OT1/cmtt/m/n/12 f.stat.fDistributionPDF \OT1/cmr/m/n/12 fu
+nc-tion com-putes the prob-a-bil-ity den-sity of the F-distribution. 
+ []
+
+[350]
+Overfull \hbox (8.7251pt too wide) in paragraph at lines 13421--13422
+\OT1/cmr/m/n/12 The \OT1/cmtt/m/n/12 f.stat.fDistributionRandom \OT1/cmr/m/n/12
+ func-tion re-turns a ran-dom sam-ple from the F-distribution. 
+ []
+
+[351] [352] [353] [354] [355] [356] [357] [358]
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 13791--13791
+[]\OT1/cmtt/m/n/12 f.math.newton($sq, -1.0)        #c# -1.41421 (sqrt(2), found
+ from guess -1.0)[] 
+ []
+
+[359]
+Overfull \hbox (5.02765pt too wide) in paragraph at lines 13827--13828
+[]\OT1/cmr/bx/n/12 Algorithm: \OT1/cmr/m/n/12 Start-ing from two points $\OML/c
+mtt/m/n/12 x[]; x[]$\OT1/cmr/m/n/12 , it-er-ate $\OML/cmtt/m/n/12 x[] \OT1/cmr/
+m/n/12 = \OML/cmtt/m/n/12 x[] \OMS/cmtt/m/n/12 ^^@ \OML/cmtt/m/n/12 f\OT1/cmr/m
+/n/12 (\OML/cmtt/m/n/12 x[]\OT1/cmr/m/n/12 ) \OMS/cmtt/m/n/12 ^^A \OT1/cmr/m/n/
+12 (\OML/cmtt/m/n/12 x[] \OMS/cmtt/m/n/12 ^^@ \OML/cmtt/m/n/12 x[]\OT1/cmr/m/n/
+12 )\OML/cmtt/m/n/12 =\OT1/cmr/m/n/12 (\OML/cmtt/m/n/12 f\OT1/cmr/m/n/12 (\OML/
+cmtt/m/n/12 x[]\OT1/cmr/m/n/12 ) \OMS/cmtt/m/n/12 ^^@
+ []
+
+
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 13835--13835
+[]\OT1/cmtt/m/n/12 "f.math.secant", "(", func, ",", real, ",", real, [",", real
+], [",", int], ")"[] 
+ []
+
+[360] [361]
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 13909--13909
+[]\OT1/cmtt/m/n/12 "f.math.interpolate", "(", list[real], ",", list[real], ",",
+ real, [",", string], ")"[] 
+ []
+
+
+Overfull \hbox (73.64525pt too wide) in paragraph at lines 13925--13925
+[]\OT1/cmtt/m/n/12 f.math.interpolate([0, 1, 2], [0, 1, 4], 3.0)               
+      #c# 7.0 (extrapolated)[] 
+ []
+
+[362]
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 13948--13948
+[]\OT1/cmtt/m/n/12 "f.math.spline", "(", list[real], ",", list[real], ",", real
+, [",", string], ")"[] 
+ []
+
+
+Overfull \hbox (61.29524pt too wide) in paragraph at lines 13965--13965
+[]\OT1/cmtt/m/n/12 f.math.spline([0, 1, 2, 3], [0, 1, 0, -1], 4.0, "periodic") 
+  #c# 0.0 (wraps to start)[] 
+ []
+
+
+Overfull \hbox (30.42023pt too wide) in paragraph at lines 13988--13988
+[]\OT1/cmtt/m/n/12 "f.math.polyval", "(", tensor, ",", ( int | real | complex |
+ list | tensor ), ")"[] 
+ []
+
+[363]
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 14003--14003
+[]\OT1/cmtt/m/n/12 f.math.polyval([5], 100)              #c# Returns 5        (
+constant, ignores x)[] 
+ []
+
+
+Overfull \hbox (18.07022pt too wide) in paragraph at lines 14025--14025
+[]\OT1/cmtt/m/n/12 f.math.polyfit([0, 1, 2], [1, 2, 3], 1)     #c# Returns [1.0
+, 1.0]  (y = x + 1)[] 
+ []
+
+
+Overfull \hbox (61.29524pt too wide) in paragraph at lines 14028--14028
+[]\OT1/cmtt/m/n/12 f.math.polyfit([0, 1, 2], [1, 2, 5], 2)     #c# Returns [1.0
+, 0.0, 1.0]  (y = x^2 + 1)[] 
+ []
+
+[364]
+Overfull \hbox (67.47025pt too wide) in paragraph at lines 14058--14058
+[]\OT1/cmtt/m/n/12 f.math.polyval([1, -3, 2], $f roots[0])     #c# Returns appr
+oximately 0 (root verified)[] 
+ []
+
+[365]
+Overfull \hbox (30.42023pt too wide) in paragraph at lines 14101--14101
+[]\OT1/cmtt/m/n/12 $f back  = f.math.polyint($f deriv) #c# [2, 2, 0, 0]  (= 2x^
+3 + 2x^2, missing +1)[] 
+ []
+
+
+Overfull \hbox (110.69527pt too wide) in paragraph at lines 14127--14127
+[]\OT1/cmtt/m/n/12 $f F = f.math.polyint($f p)                        #c# F(x) 
+= 3x^2 + 2x  (antiderivative, C=0)[] 
+ []
+
+
+Overfull \hbox (92.17026pt too wide) in paragraph at lines 14128--14128
+[]\OT1/cmtt/m/n/12 f.math.polyval($f F, 3) - f.math.polyval($f F, 0)  #c# Retur
+ns 33.0  (integral from 0 to 3)[] 
+ []
+
+[366]
+Overfull \hbox (110.69527pt too wide) in paragraph at lines 14136--14136
+[]\OT1/cmtt/m/n/12 f.math.polyint([4, 3, 2, 1])    #c# Returns [1, 1, 1, 1, 0] 
+ (4x^3+3x^2+2x+1 -> x^4+x^3+x^2+x)[] 
+ []
+
+
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 14155--14155
+[]\OT1/cmtt/m/n/12 "f.math.integrateAdaptive", "(", func, ",", real, ",", real,
+ [",", real], ")"[] 
+ []
+
+[367]
+Overfull \hbox (30.42023pt too wide) in paragraph at lines 14202--14202
+[]\OT1/cmtt/m/n/12 f.math.differentiateNumerically($sq, 3, 1e-8) #c# 6.0 (small
+er step, same result)[] 
+ []
+
+
+Overfull \hbox (135.39528pt too wide) in paragraph at lines 14222--14222
+[]\OT1/cmtt/m/n/12 "f.math.odeSolve", "(", func, ",", real, ",", real, ",", ( r
+eal | list[real] ), [",", string], ")"[] 
+ []
+
+[368]
+Overfull \hbox (4.06386pt too wide) in paragraph at lines 14242--14243
+[]\OT1/cmtt/m/n/12 "rk4" \OT1/cmr/m/n/12 --- Clas-sic fourth-order Runge-Kutta 
+(RK4), or-der 4. (de-fault) Four-stage method.
+ []
+
+[369] [370] [371] [372]
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 14432--14432
+[]                           \OT1/cmtt/m/n/12 #c# Returns 3 + 4j (complex with 
+non-zero imag, unchanged)[] 
+ []
+
+[373] [374]
+Overfull \hbox (79.82025pt too wide) in paragraph at lines 14520--14520
+[]\OT1/cmtt/m/n/12 "f.ee.voltageDivider", "(", ( int | real ), ",", ( int | rea
+l ), ",", ( int | real ), ")"[] 
+ []
+
+
+Overfull \hbox (79.82025pt too wide) in paragraph at lines 14539--14539
+[]\OT1/cmtt/m/n/12 "f.ee.currentDivider", "(", ( int | real ), ",", ( int | rea
+l ), ",", ( int | real ), ")"[] 
+ []
+
+[375]
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 14577--14577
+[]\OT1/cmtt/m/n/12 "f.ee.reactance", "(", ( int | real ), ",", ( int | real ), 
+",", ( int | real ), ")"[] 
+ []
+
+[376]
+Overfull \hbox (30.42023pt too wide) in paragraph at lines 14595--14595
+[]\OT1/cmtt/m/n/12 "f.math.convert", "(", ( int | real ), ",", string, ",", str
+ing, ",", string, ")"[] 
+ []
+
+
+Overfull \hbox (13.71997pt too wide) in paragraph at lines 14598--14599
+[]\OT1/cmr/m/n/12 Operands: value (\OT1/cmtt/m/n/12 int \OT1/cmr/m/n/12 or \OT1
+/cmtt/m/n/12 real\OT1/cmr/m/n/12 ), di-men-sion (\OT1/cmtt/m/n/12 string\OT1/cm
+r/m/n/12 ), from[]unit (\OT1/cmtt/m/n/12 string\OT1/cmr/m/n/12 ), to[]unit (\OT
+1/cmtt/m/n/12 string\OT1/cmr/m/n/12 ). 
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 14664--14664
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "L", "parsec", "light_year")       #c# Ret
+urns approximately 3.2616[] 
+ []
+
+
+Overfull \hbox (67.47025pt too wide) in paragraph at lines 14665--14665
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "L", "light_year", "km")           #c# Ret
+urns approximately 9.461e12[] 
+ []
+
+
+Overfull \hbox (67.47025pt too wide) in paragraph at lines 14666--14666
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "L", "au", "m")                    #c# Ret
+urns approximately 1.496e11[] 
+ []
+
+
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 14669--14669
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "L", "mile", "km")                 #c# Ret
+urns approximately 1.609[] 
+ []
+
+
+Overfull \hbox (67.47025pt too wide) in paragraph at lines 14673--14673
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "L", "survey_foot", "ft")          #c# Ret
+urns approximately 1.000002[] 
+ []
+
+
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 14677--14677
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "m", "pound", "kg")                #c# Ret
+urns approximately 0.4536[] 
+ []
+
+
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 14679--14679
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "m", "slug", "kg")                 #c# Ret
+urns approximately 14.594[] 
+ []
+
+
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 14681--14681
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "m", "troy_ounce", "g")            #c# Ret
+urns approximately 31.103[] 
+ []
+
+
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 14682--14682
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "m", "long_ton", "kg")             #c# Ret
+urns approximately 1016.0[] 
+ []
+
+
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 14683--14683
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "m", "short_ton", "kg")            #c# Ret
+urns approximately 907.2[] 
+ []
+
+[377]
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 14695--14695
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "P", "horsepower", "W")            #c# Ret
+urns approximately 745.7[] 
+ []
+
+[378]
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 14700--14700
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "F", "lbf", "N")                   #c# Ret
+urns approximately 4.448[] 
+ []
+
+
+Overfull \hbox (73.64525pt too wide) in paragraph at lines 14706--14706
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "E", "electron_volt", "J")         #c# Ret
+urns approximately 1.602e-19[] 
+ []
+
+
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 14707--14707
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "E", "calorie_IT", "J")            #c# Ret
+urns approximately 4.1868[] 
+ []
+
+
+Overfull \hbox (61.29524pt too wide) in paragraph at lines 14708--14708
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "E", "Btu_IT", "J")                #c# Ret
+urns approximately 1055.06[] 
+ []
+
+
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 14719--14719
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "p", "atm", "psi")                 #c# Ret
+urns approximately 14.696[] 
+ []
+
+
+Overfull \hbox (61.29524pt too wide) in paragraph at lines 14720--14720
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "p", "torr", "Pa")                 #c# Ret
+urns approximately 133.322[] 
+ []
+
+
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 14721--14721
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "p", "inHg", "kPa")                #c# Ret
+urns approximately 3.386[] 
+ []
+
+
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 14724--14724
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "v", "mach", "m/s")                #c# Ret
+urns approximately 340.3[] 
+ []
+
+
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 14725--14725
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "v", "knot", "mph")                #c# Ret
+urns approximately 1.151[] 
+ []
+
+
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 14728--14728
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "V", "gallon_imp", "L")            #c# Ret
+urns approximately 4.546[] 
+ []
+
+
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 14729--14729
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "V", "barrel", "L")                #c# Ret
+urns approximately 159.0[] 
+ []
+
+
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 14730--14730
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "V", "cup", "mL")                  #c# Ret
+urns approximately 236.6[] 
+ []
+
+
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 14731--14731
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "V", "tbsp", "mL")                 #c# Ret
+urns approximately 14.79[] 
+ []
+
+
+Overfull \hbox (42.77023pt too wide) in paragraph at lines 14732--14732
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "V", "tsp", "mL")                  #c# Ret
+urns approximately 4.93[] 
+ []
+
+
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 14733--14733
+[]\OT1/cmtt/m/n/12 f.math.convert(1, "V", "qt", "L")                    #c# Ret
+urns approximately 0.946[] 
+ []
+
+[379]
+Overfull \hbox (79.81874pt too wide) in paragraph at lines 14821--14821
+[]\OT1/cmtt/m/n/12 f.math.SIconvert(1, "M", "Mi")        #c# Returns approximat
+ely 0.9537 (decimal \TS1/cmtt/m/n/12 ^^Y \OT1/cmtt/m/n/12 binary)[] 
+ []
+
+[380]
+Overfull \hbox (48.94373pt too wide) in paragraph at lines 14823--14823
+[]\OT1/cmtt/m/n/12 f.math.SIconvert(1, "Ti", "T")        #c# Returns approximat
+ely 1.0995 (tebi \TS1/cmtt/m/n/12 ^^Y \OT1/cmtt/m/n/12 tera)[] 
+ []
+
+
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 14824--14824
+[]\OT1/cmtt/m/n/12 f.math.SIconvert(1024, "Ki", "Mi")    #c# Returns 1.0 (binar
+y self-conversion)[] 
+ []
+
+
+Overfull \hbox (18.07022pt too wide) in paragraph at lines 14843--14843
+[]\OT1/cmtt/m/n/12 f.ee.lambda2nu(1.55e-6)     #c# Returns approximately 1.934e
+14 (C-band telecom)[] 
+ []
+
+
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 14862--14862
+[]\OT1/cmtt/m/n/12 f.ee.nu2lambda(5.996e14)    #c# Returns approximately 5.000e
+-07 (green light) 
+ []
+
+
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 14863--14863
+[]\OT1/cmtt/m/n/12 f.ee.nu2lambda(1.934e14)    #c# Returns approximately 1.550e
+-06 (C-band telecom)[] 
+ []
+
+[381] [382] [383] [384]
+Overfull \hbox (30.42023pt too wide) in paragraph at lines 15058--15058
+[]\OT1/cmtt/m/n/12 "f.special.Li", "(", ( int | real | complex ), ",", ( int | 
+real | complex ), ")"[] 
+ []
+
+[385]
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 15069--15069
+[]\OT1/cmtt/m/n/12 f.special.Li(2, 1)        #c# Returns approximately 1.6449  
+(= f.special.Li2(1))[] 
+ []
+
+
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 15070--15070
+[]\OT1/cmtt/m/n/12 f.special.Li(3, 1)        #c# Returns approximately 1.2021  
+(= f.special.Li3(1))[] 
+ []
+
+[386] [387] [388] [389]
+Overfull \hbox (18.07022pt too wide) in paragraph at lines 15278--15278
+[]\OT1/cmtt/m/n/12 "f.special.gegenbauer", "(", int, ",", ( int | real ), ",", 
+( int | real ), ")"[] 
+ []
+
+
+Overfull \hbox (129.22028pt too wide) in paragraph at lines 15295--15295
+[]\OT1/cmtt/m/n/12 "f.special.jacobiP", "(", int, ",", ( int | real ), ",", ( i
+nt | real ), ",", ( int | real ), ")"[] 
+ []
+
+[390] [391]
+Overfull \hbox (55.12024pt too wide) in paragraph at lines 15386--15386
+[]\OT1/cmtt/m/n/12 f.special.airyC(0)          #c# Returns [0.3551+0j, -0.2588+
+0j, 0.6149+0j, 0.4483+0j] 
+ []
+
+[392]
+Overfull \hbox (79.82025pt too wide) in paragraph at lines 15410--15410
+[]\OT1/cmtt/m/n/12 f.special.airyScaled(-5)    #c# Returns same as f.special.ai
+ry(-5) (no scaling for x < 0)[] 
+ []
+
+
+Overfull \hbox (135.39528pt too wide) in paragraph at lines 15429--15429
+[]\OT1/cmtt/m/n/12 f.special.airyZerosAi(3)    #c# Returns [[-2.3381, -4.0879, 
+-5.5206], [-1.0186, -3.2482, -4.8201]][] 
+ []
+
+
+Overfull \hbox (135.39528pt too wide) in paragraph at lines 15452--15452
+[]\OT1/cmtt/m/n/12 f.special.airyZerosBi(3)    #c# Returns [[-1.1737, -3.2711, 
+-4.8307], [-2.2945, -4.1034, -5.5172]][] 
+ []
+
+[393] [394] [395] [396] [397] [398] [399] [400] [401]
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 15886--15886
+[]\OT1/cmtt/m/n/12 "f.int.ch", "(", ( bool | int ), ",", ( bool | int ), ",", (
+ bool | int ), ")"[] 
+ []
+
+[402]
+Overfull \hbox (18.07022pt too wide) in paragraph at lines 15905--15905
+[]\OT1/cmtt/m/n/12 "f.int.maj", "(", ( bool | int ), ",", ( bool | int ), ",", 
+( bool | int ), ")"[] 
+ []
+
+[403] [404] [405] [406] [407] [408]
+Overfull \hbox (23.08456pt too wide) in paragraph at lines 16247--16248
+\OT1/cmr/m/n/12 Computes the con-tin-ued frac-tion rep-re-sen-ta-tion of a real
+ num-ber as a list of in-te-gers $[\OML/cmtt/m/n/12 a[]\OT1/cmr/m/n/12 ; \OML/c
+mtt/m/n/12 a[]; a[]; []\OT1/cmr/m/n/12 ]$. 
+ []
+
+[409]
+Overfull \hbox (42.77023pt too wide) in paragraph at lines 16260--16260
+[]\OT1/cmtt/m/n/12 f.int.continuedFraction(1.41421)         #c# Returns [1, 2, 
+2, 2, 2, ...] (sqrt(2))[] 
+ []
+
+
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 16275--16275
+[]\OT1/cmtt/m/n/12 f.int.continuedFractionValue([3, 7, 15, 1])        #c# Retur
+ns approximately 3.14159 
+ []
+
+
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 16276--16276
+[]\OT1/cmtt/m/n/12 f.int.continuedFractionValue([1, 2, 2, 2, 2])      #c# Retur
+ns approximately 1.41421[] 
+ []
+
+
+Overfull \hbox (166.2703pt too wide) in paragraph at lines 16277--16277
+[]\OT1/cmtt/m/n/12 f.int.continuedFractionValue([0, 1, 1, 1, 1, 1])   #c# Retur
+ns approximately 0.61803 (golden ratio - 1)[] 
+ []
+
+[410] [411] [412]
+Overfull \hbox (147.74529pt too wide) in paragraph at lines 16425--16425
+[]\OT1/cmtt/m/n/12 f.int.chineseRemainder([2, 3, 2], [3, 5, 7])    #c# Returns 
+23  (23 % 3 = 2, 23 % 5 = 3, 23 % 7 = 2) 
+ []
+
+
+Overfull \hbox (147.74529pt too wide) in paragraph at lines 16426--16426
+[]\OT1/cmtt/m/n/12 f.int.chineseRemainder([1, 2, 3], [3, 4, 5])    #c# Returns 
+58  (58 % 3 = 1, 58 % 4 = 2, 58 % 5 = 3)[] 
+ []
+
+[413]
+Overfull \hbox (98.34526pt too wide) in paragraph at lines 16468--16468
+[]\OT1/cmtt/m/n/12 f.special.polygamma(0, 1)        #c# Returns -0.5772... (Eul
+er-Mascheroni constant, negated) 
+ []
+
+
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 16487--16487
+[]\OT1/cmtt/m/n/12 f.math.isNaN(0/0)               #c# Returns True  (0/0 = NaN
+ in real division) 
+ []
+
+[414]
+Overfull \hbox (42.77023pt too wide) in paragraph at lines 16513--16513
+[]\OT1/cmtt/m/n/12 "f.math.remap", "(", ( int | real ), ",", ( int | real ), ",
+", ( int | real ), ",",[] 
+ []
+
+[415] [416] [417] [418] [419] [420] [421]
+Overfull \hbox (135.39528pt too wide) in paragraph at lines 16923--16923
+[]\OT1/cmtt/m/n/12 "f.special.lerchPhi", "(", ( int | real | complex ), ",", ( 
+int | real ), ",", ( int | real ), ")"[] 
+ []
+
+[422]
+Overfull \hbox (123.04527pt too wide) in paragraph at lines 16957--16957
+[]\OT1/cmtt/m/n/12 "f.special.hyp1F1", "(", ( int | real ), ",", ( int | real )
+, ",", ( int | real | complex ), ")"[] 
+ []
+
+
+Overfull \hbox (252.72034pt too wide) in paragraph at lines 16974--16974
+[]\OT1/cmtt/m/n/12 "f.special.hyp2F1", "(", ( int | real ), ",", ( int | real )
+, ",", ( int | real ), ",", ( int | real | complex ), ")"[] 
+ []
+
+[423]
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 17002--17002
+[]\OT1/cmtt/m/n/12 f.special.hypPFQ([1], [2], 1)          #c# Returns approxima
+tely 1.7183 (e-1) 
+ []
+
+
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 17011--17011
+[]\OT1/cmtt/m/n/12 "f.special.meijerG", "(", list, ",", list, ",", ( int | real
+ | complex ), ")"[] 
+ []
+
+[424]
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 17045--17045
+[]\OT1/cmtt/m/n/12 "f.special.jacobiTheta", "(", int, ",", ( int | real ), ",",
+ ( int | real ), ")"[] 
+ []
+
+[425]
+Overfull \hbox (283.59535pt too wide) in paragraph at lines 17138--17138
+[]\OT1/cmtt/m/n/12 "f.special.weierstrassP", "(", ( int | real | complex ), ","
+, ( int | real | complex ), ",", ( int | real | complex ), ")"[] 
+ []
+
+[426]
+Overfull \hbox (110.69527pt too wide) in paragraph at lines 17174--17174
+[]\OT1/cmtt/m/n/12 "f.special.incompleteBeta", "(", ( int | real ), ",", ( int 
+| real ), ",", ( int | real ), ")"[] 
+ []
+
+[427]
+Overfull \hbox (36.59523pt too wide) in paragraph at lines 17207--17207
+[]\OT1/cmtt/m/n/12 f.special.ti2(1)          #c# Returns approximately 0.9160  
+(= Catalan's constant)[] 
+ []
+
+
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 17229--17229
+[]\OT1/cmtt/m/n/12 f.special.rogersL(1)             #c# Returns approximately 1
+.6449  (= pi^2/6)[] 
+ []
+
+[428]
+Overfull \hbox (67.47025pt too wide) in paragraph at lines 17252--17252
+[]\OT1/cmtt/m/n/12 f.special.blochWigner(0+1j)    #c# Returns approximately 0.9
+160  (= Catalan's constant)[] 
+ []
+
+
+Overfull \hbox (24.24522pt too wide) in paragraph at lines 17260--17260
+[]\OT1/cmtt/m/n/12 "f.special.legendreChi", "(", ( int | real ), ",", ( int | r
+eal | complex ), ")"[] 
+ []
+
+
+Overfull \hbox (11.89522pt too wide) in paragraph at lines 17272--17272
+[]\OT1/cmtt/m/n/12 f.special.legendreChi(2, 1)       #c# Returns approximately 
+1.2337  (= pi^2/8) 
+ []
+
+
+Overfull \hbox (48.94524pt too wide) in paragraph at lines 17274--17274
+[]\OT1/cmtt/m/n/12 f.special.legendreChi(1, 0.5)     #c# Returns approximately 
+0.5493  (= arctanh(0.5))[] 
+ []
+
+[429] [430] [431] [432] [433
+
+]) (./ch07-semantics.tex
+Chapter 12.
+[434
+
+] [435]
+Chapter 13.
+[436
+
+]
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 61.
+
+Overfull \hbox (21.52647pt too wide) in paragraph at lines 78--79
+[]\OT1/cmr/m/n/12 If the func-tion call raises \OT1/cmr/bx/n/12 any \OT1/cmr/m/
+n/12 er-ror (\OT1/cmtt/m/n/12 Type\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 Value\OT1/
+cmr/m/n/12 , \OT1/cmtt/m/n/12 Division by Zero\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/1
+2 Runtime\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 Assertion\OT1/cmr/m/n/12 ):
+ []
+
+[437] [438]
+Chapter 14.
+[439
+
+]
+Chapter 15.
+[440
+
+] [441] [442
+
+]) (./ch08-structure.tex
+Chapter 16.
+[443
+
+]
+Chapter 17.
+[444
+
+]
+Chapter 18.
+[445
+
+] [446
+
+]
+Chapter 19.
+[447
+
+]
+Chapter 20.
+[448
+
+] [449]
+Overfull \hbox (28.4206pt too wide) in paragraph at lines 209--210
+[]\OT1/cmr/m/n/12 The \OT1/cmtt/m/n/12 model[]name \OT1/cmr/m/n/12 con-sists of
+ a cat-e-gory and vari-ant sep-a-rated by \OT1/cmtt/m/n/12 / \OT1/cmr/m/n/12 (e
+.g., \OT1/cmtt/m/n/12 mosfet/C3M0016120K1\OT1/cmr/m/n/12 ). 
+ []
+
+[450] [451] [452] [453]
+Chapter 21.
+[454
+
+] [455] [456]) (./ch09-constraints.tex [457] [458
+
+]
+Chapter 22.
+[459
+
+] [460] [461] [462] [463] [464] [465] [466] [467] [468]
+Chapter 23.
+[469
+
+] [470] [471] [472] [473] [474] [475] [476] [477] [478] [479]
+Overfull \hbox (8.70555pt too wide) in paragraph at lines 914--915
+[]\OT1/cmr/bx/n/12 connection \OT1/cmr/m/n/12 -- sorted pin pair in paren-the-s
+es (e.g., \OT1/cmtt/m/n/12 (R1[1], U1[+]) $\OMS/cmtt/m/n/12 !$ \OT1/cmtt/m/n/12
+ "(R1[1],U1[+])"\OT1/cmr/m/n/12 ) 
+ []
+
+) (./ch10-pipeline.tex [480]
+Chapter 24.
+[481
+
+]
+Overfull \hbox (22.04323pt too wide) in paragraph at lines 32--33
+\OT1/cmtt/m/n/12 "sha256"\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 "sha384"\OT1/cmr/m/
+n/12 , \OT1/cmtt/m/n/12 "sha512" \OT1/cmr/m/n/12 (de-fault), \OT1/cmtt/m/n/12 "
+sha3[]256"\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 "sha3[]512"\OT1/cmr/m/n/12 , \OT1/
+cmtt/m/n/12 "blake2b"\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 "blake2s"\OT1/cmr/m/n/1
+2 ,
+ []
+
+[482] [483
+
+]
+Chapter 25.
+[484
+
+]
+Chapter 26.
+[485
+
+]
+Chapter 27.
+
+Overfull \hbox (35.4489pt too wide) in paragraph at lines 97--98
+\OT1/cmr/m/n/12 Footprints are or-ga-nized by pack-age type: \OT1/cmtt/m/n/12 P
+ackage[]SMD\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 Package[]TH\OT1/cmr/m/n/12 , \OT1
+/cmtt/m/n/12 Package[]BGA\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 Package[]Power\OT1/
+cmr/m/n/12 ,
+ []
+
+[486
+
+]
+Chapter 28.
+[487
+
+]
+Chapter 29.
+[488
+
+] [489] [490
+
+]
+Chapter 30.
+[491
+
+]
+Chapter 31.
+[492
+
+]
+Chapter 32.
+[493
+
+]
+Chapter 33.
+[494
+
+]
+Chapter 34.
+) (./appendix.tex [495
+
+]
+Appendix A.
+[496
+
+] [497]
+Appendix B.
+[498
+
+] [499] [500]
+LaTeX Font Info:    Trying to load font information for OMS+cmr on input line 1
+99.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2024/11/19 v2.5n Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 199.
+[501] [502] [503] [504] [505] [506]
+Appendix C.
+[507
+
+] [508] [509] [510] [511] [512]
+Overfull \hbox (43.74307pt too wide) in paragraph at lines 769--770
+[]\OT1/cmr/m/n/12 When used in \OT1/cmtt/m/n/12 elec.part\OT1/cmr/m/n/12 , the 
+cus-tom model is ref-er-enced by its full name (\OT1/cmtt/m/n/12 mosfet/C3M0016
+120K1\OT1/cmr/m/n/12 ).
+ []
+
+) [513] (./Doc.aux)
+ ***********
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
+ ***********
+
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 14654 strings out of 467533
+ 288407 string characters out of 5419496
+ 698110 words of memory out of 5000000
+ 43262 multiletter control sequences out of 15000+600000
+ 644561 words of font info for 104 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 102i,18n,107p,1232b,793s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmbsy
+6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10
+.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.
+pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pf
+b></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb>
+</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
+/usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex7.pf
+b></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex8
+.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cmextra/cm
+ex9.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmit
+t10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
+12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6
+.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.p
+fb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb
+></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib9
+.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.p
+fb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb
+></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><
+/usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></us
+r/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/l
+ocal/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/loca
+l/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/t
+exlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texl
+ive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texli
+ve/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive
+/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2
+025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/202
+5/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texlive/2025
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2025/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/local/texlive/2025/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb></usr/local/texlive/2025/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2025/texmf
+-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/t
+exmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/20
+25/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/local/texlive/2025
+/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/t
+exmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/tex
+mf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
+Output written on Doc.pdf (514 pages, 1184743 bytes).
+PDF statistics:
+ 1857 PDF objects out of 2073 (max. 8388607)
+ 1252 compressed objects within 13 object streams
+ 0 named destinations out of 1000 (max. 500000)
+ 13 words of extra memory for PDF output out of 10000 (max. 10000000)
+

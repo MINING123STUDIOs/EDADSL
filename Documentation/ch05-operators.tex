@@ -1,0 +1,1505 @@
+\chapter{Operators}
+\label{sec:operators}
+
+\section{Built-in Operators}
+
+\subsection{Arithmetic}
+Arithmetic operators perform mathematical operations. Most operators support multiple type combinations.
+\begin{verbatim}
+n + m  Addition / Concatenation
+n - m  Subtraction
+n * m  Multiplication
+n / m  Division (always returns real)
+n // m Floor Division (returns int)
+n % m  Modulo
+n ^ m  Exponentiation
+n << m Left Shift (returns int)
+n >> m Right Shift (returns int)
+n <<<[w] m Left Rotate (returns int, w-bit word)
+n >>>[w] m Right Rotate (returns int, w-bit word)
+\end{verbatim}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{+}: \texttt{int + int} $\rightarrow$ \texttt{int}
+\item \texttt{+}: \texttt{int + real} $\rightarrow$ \texttt{real}
+\item \texttt{+}: \texttt{real + int} $\rightarrow$ \texttt{real}
+\item \texttt{+}: \texttt{real + real} $\rightarrow$ \texttt{real}
+\item \texttt{+}: \texttt{string + string} $\rightarrow$ \texttt{string} (concatenation)
+\item \texttt{+}: \texttt{list + list} $\rightarrow$ \texttt{list} (append)
+\item \texttt{-}: \texttt{int - int} $\rightarrow$ \texttt{int}
+\item \texttt{-}: \texttt{int - real} $\rightarrow$ \texttt{real}
+\item \texttt{-}: \texttt{real - int} $\rightarrow$ \texttt{real}
+\item \texttt{-}: \texttt{real - real} $\rightarrow$ \texttt{real}
+\item \texttt{*}: \texttt{int * int} $\rightarrow$ \texttt{int}
+\item \texttt{*}: \texttt{int * real} $\rightarrow$ \texttt{real}
+\item \texttt{*}: \texttt{real * int} $\rightarrow$ \texttt{real}
+\item \texttt{*}: \texttt{real * real} $\rightarrow$ \texttt{real}
+\item \texttt{*}: \texttt{int * string} $\rightarrow$ \texttt{string} (repetition)
+\item \texttt{*}: \texttt{int * list} $\rightarrow$ \texttt{list} (replication)
+\item \texttt{/}: \texttt{int / int} $\rightarrow$ \texttt{real} (true division)
+\item \texttt{/}: \texttt{real / int} $\rightarrow$ \texttt{real}
+\item \texttt{/}: \texttt{int / real} $\rightarrow$ \texttt{real}
+\item \texttt{/}: \texttt{real / real} $\rightarrow$ \texttt{real}
+\item \texttt{//}: \texttt{int // int} $\rightarrow$ \texttt{int} (floor division)
+\item \texttt{\%}: \texttt{int \% int} $\rightarrow$ \texttt{int}
+\item \texttt{\%}: \texttt{real \% int} $\rightarrow$ \texttt{real}
+\item \texttt{\%}: \texttt{int \% real} $\rightarrow$ \texttt{real}
+\item \texttt{\%}: \texttt{real \% real} $\rightarrow$ \texttt{real}
+\item \texttt{\^{}}: \texttt{int \^{} int} $\rightarrow$ \texttt{int} (non-negative exponents) or \texttt{real} (negative exponents)
+\item \texttt{\^{}}: \texttt{int \^{} real} $\rightarrow$ \texttt{real}
+\item \texttt{\^{}}: \texttt{real \^{} int} $\rightarrow$ \texttt{real}
+\item \texttt{\^{}}: \texttt{real \^{} real} $\rightarrow$ \texttt{real}
+\item \texttt{<<}: \texttt{int << int} $\rightarrow$ \texttt{int} (left shift)
+\item \texttt{>>}: \texttt{int >> int} $\rightarrow$ \texttt{int} (right shift)
+\item \texttt{<<<[w]}: \texttt{int <<<[w] int} $\rightarrow$ \texttt{int} (left rotate)
+\item \texttt{>>>[w]}: \texttt{int >>>[w] int} $\rightarrow$ \texttt{int} (right rotate)
+\item \texttt{+}: \texttt{int + complex} $\rightarrow$ \texttt{complex}
+\item \texttt{+}: \texttt{real + complex} $\rightarrow$ \texttt{complex}
+\item \texttt{+}: \texttt{complex + int} $\rightarrow$ \texttt{complex}
+\item \texttt{+}: \texttt{complex + real} $\rightarrow$ \texttt{complex}
+\item \texttt{+}: \texttt{complex + complex} $\rightarrow$ \texttt{complex}
+\item \texttt{-}: \texttt{int - complex} $\rightarrow$ \texttt{complex}
+\item \texttt{-}: \texttt{real - complex} $\rightarrow$ \texttt{complex}
+\item \texttt{-}: \texttt{complex - int} $\rightarrow$ \texttt{complex}
+\item \texttt{-}: \texttt{complex - real} $\rightarrow$ \texttt{complex}
+\item \texttt{-}: \texttt{complex - complex} $\rightarrow$ \texttt{complex}
+\item \texttt{*}: \texttt{int * complex} $\rightarrow$ \texttt{complex}
+\item \texttt{*}: \texttt{real * complex} $\rightarrow$ \texttt{complex}
+\item \texttt{*}: \texttt{complex * int} $\rightarrow$ \texttt{complex}
+\item \texttt{*}: \texttt{complex * real} $\rightarrow$ \texttt{complex}
+\item \texttt{*}: \texttt{complex * complex} $\rightarrow$ \texttt{complex}
+\item \texttt{/}: \texttt{int / complex} $\rightarrow$ \texttt{complex}
+\item \texttt{/}: \texttt{real / complex} $\rightarrow$ \texttt{complex}
+\item \texttt{/}: \texttt{complex / int} $\rightarrow$ \texttt{complex}
+\item \texttt{/}: \texttt{complex / real} $\rightarrow$ \texttt{complex}
+\item \texttt{/}: \texttt{complex / complex} $\rightarrow$ \texttt{complex}
+\item \texttt{\^{}}: \texttt{int \^{} complex} $\rightarrow$ \texttt{complex}
+\item \texttt{\^{}}: \texttt{real \^{} complex} $\rightarrow$ \texttt{complex}
+\item \texttt{\^{}}: \texttt{complex \^{} int} $\rightarrow$ \texttt{complex}
+\item \texttt{\^{}}: \texttt{complex \^{} real} $\rightarrow$ \texttt{complex}
+\item \texttt{\^{}}: \texttt{complex \^{} complex} $\rightarrow$ \texttt{complex}
+\end{itemize}
+
+Mixed-type operations promote to \texttt{real}. If any operand is \texttt{complex}, the result is \texttt{complex}. Floor division (\texttt{//}) truncates toward negative infinity. Modulo uses truncated division (\texttt{sign(result) = sign(dividend)}). Exponentiation is right-associative: \texttt{-2\^{}3 = -8}.
+
+\paragraph{Edge Cases}
+\begin{itemize}
+\item Division by zero (\texttt{/}, \texttt{//}, \texttt{\%}) raises a \texttt{Division by Zero Error}.
+\item Negative exponent on \texttt{int} base auto-promotes to \texttt{real}: \texttt{2 \^{} -1} returns \texttt{0.5}.
+\item Shift operators (\texttt{<<}, \texttt{>>}) require \texttt{int} operands; a \texttt{Type Error} is raised otherwise. The right operand must be non-negative; a \texttt{Value Error} is raised for negative shift amounts.
+\item Rotation operators (\texttt{<<<[w]}, \texttt{>>>[w]}) require \texttt{int} operands; a \texttt{Type Error} is raised otherwise. The word width \texttt{w} must be a positive \texttt{int}; a \texttt{Value Error} is raised for non-positive widths. The rotation amount must be non-negative; a \texttt{Value Error} is raised otherwise.
+\item A \texttt{Type Error} is raised when operands are incompatible (e.g., \texttt{string + int}).
+\end{itemize}
+
+\subsection{Increment / Decrement}
+Postfix increment and decrement operators add 1 or subtract 1 from an int or real variable. The variable must already be declared.
+\begin{verbatim}
+$var++    Increment $var by 1 (returns old value)
+$var--    Decrement $var by 1 (returns old value)
+\end{verbatim}
+
+\paragraph{Semantics}
+\texttt{\$var++} increments \texttt{\$var} by 1 and returns the original value before the increment.
+\texttt{\$var--} decrements \texttt{\$var} by 1 and returns the original value before the decrement.
+
+Examples:
+\begin{verbatim}
+$counter [int]= 0
+$counter++
+#c# $counter = 1
+
+$counter++
+#c# $counter = 2
+
+$counter--
+#c# $counter = 1
+
+#c# Can be used in expressions
+$val [int]= $counter++   #c# $val = 1, $counter = 2
+\end{verbatim}
+
+\subsection{Compound Assignment}
+Compound assignment operators combine an operation with assignment. They are available for all operators.
+
+\subsubsection{Arithmetic}
+\begin{verbatim}
+#c# forward
+$var += expr   $var = $var + expr
+$var -= expr   $var = $var - expr
+$var *= expr   $var = $var * expr
+$var /= expr   $var = $var / expr
+$var %= expr   $var = $var % expr
+$var ^= expr   $var = $var ^ expr
+
+#c# reverse (reversed operands)
+$var +r= expr  $var = expr + $var
+$var -r= expr  $var = expr - $var
+$var /r= expr  $var = expr / $var
+$var %r= expr  $var = expr % $var
+$var ^r= expr  $var = expr ^ $var
+\end{verbatim}
+
+\subsubsection{Set}
+\begin{verbatim}
+$var u= expr   $var = $var u expr
+$var n= expr   $var = $var n expr
+\end{verbatim}
+
+\subsubsection{Vector}
+\begin{verbatim}
+$var .= expr   $var = $var . expr   (dot product)
+$var x= expr   $var = $var x expr   (cross product)
+$var xr= expr  $var = expr x $var   (reverse cross product)
+\end{verbatim}
+
+\subsubsection{Tensor (Ndarray)}
+\begin{verbatim}
+$var .*= expr  $var = $var .* expr  (matrix multiply)
+$var .^= expr  $var = $var .^ expr  (matrix power)
+$var .*r= expr $var = expr .* $var  (reverse matrix multiply)
+$var .^r= expr $var = expr .^ $var  (reverse matrix power)
+$var ~.T       $var = $var .T       (transpose in place)
+$var ~.H       $var = $var .H       (hermitian transpose in place)
+$var ~.E       $var = null          (erase, secure zeroize)
+$var ~.E+      $var = null          (cryptographic shred, zeroize + overwrite)
+\end{verbatim}
+
+\subsubsection{Bitwise / Shift}
+\begin{verbatim}
+$var <<= expr    $var = $var << expr
+$var >>= expr    $var = $var >> expr
+$var <<r= expr   $var = expr << $var
+$var >>r= expr   $var = expr >> $var
+$var <<<[w]= expr  $var = $var <<<[w] expr
+$var >>>[w]= expr  $var = $var >>>[w] expr
+$var <<<[w]r= expr $var = expr <<<[w] $var
+$var >>>[w]r= expr $var = expr >>>[w] $var
+\end{verbatim}
+
+\subsubsection{Boolean}
+\begin{verbatim}
+$var &&= expr  $var = $var && expr
+$var ||= expr  $var = $var || expr
+$var ^^= expr  $var = $var ^^ expr
+$var !&= expr  $var = !($var && expr)
+$var !|= expr  $var = !($var || expr)
+$var !^= expr  $var = $var == expr
+\end{verbatim}
+
+\subsubsection{IMPLY / NIMPLY}
+\begin{verbatim}
+$var ->= expr   $var = !$var || expr
+$var !->= expr  $var = $var && !expr
+$var ->r= expr  $var = !expr || $var
+$var !->r= expr $var = expr && !$var
+\end{verbatim}
+
+\subsubsection{Bitwise Logic}
+\begin{verbatim}
+$var b&&= expr   $var = $var b&& expr
+$var b||= expr   $var = $var b|| expr
+$var b^^= expr   $var = $var b^^ expr
+$var b!&= expr   $var = $var b!& expr
+$var b!|= expr   $var = $var b!| expr
+$var b!^= expr   $var = $var b!^ expr
+$var b->= expr   $var = $var b-> expr
+$var b!->= expr  $var = $var b!-> expr
+$var b->r= expr  $var = expr b-> $var
+$var b!->r= expr $var = expr b!-> $var
+$var ~b!         $var = b! $var
+\end{verbatim}
+
+\subsubsection{Function Composition}
+\begin{verbatim}
+$var <o= expr   $var = $var <o expr   (compose-assign)
+$var o>= expr   $var = expr <o $var   (reverse compose-assign)
+\end{verbatim}
+
+Examples:
+\begin{verbatim}
+$x [int]= 5
+$x += 3        #c# $x = 8
+$x *= 2        #c# $x = 16
+$x -= 4        #c# $x = 12
+$x /= 3        #c# $x = 4
+$x %= 3        #c# $x = 1
+$x ^= 3        #c# $x = 1
+
+$str [string]= "hello"
+$str += " " + "world"   #c# $str = "hello world"
+$str +r= "cd"           #c# $str = "cdhello"
+
+$list [list]= [1, 2, 3]
+$list += [4, 5]         #c# $list = [1, 2, 3, 4, 5]
+\end{verbatim}
+
+Reverse compound assignment operators reverse the operand order:
+\begin{verbatim}
+$x [int]= 5
+$x -r= 3    #c# $x = 3 - 5 = -2
+$x /r= 2    #c# $x = 2 / 5 = 0.4
+$x %r= 2    #c# $x = 2 % 5 = 2
+
+$str [string]= "hello"
+$str +r= "cd"  #c# $str = "cdhello"
+
+$v [list]= [1, 2, 3]
+$v xr= [0, 0, 1]  #c# $v = [0, 0, 1] x [1, 2, 3]
+
+$x [int]= 5
+$x .= 3    #c# $x = $x . 3 = 15  (in-place dot product)
+$x x= [1, 0, 0]  #c# $x = $x x [1, 0, 0]  (in-place cross product)
+
+$b [bool]= True
+$b !&= False  #c# $b = !(True && False) = True  (NAND)
+$b !|= False  #c# $b = !(True || False) = False (NOR)
+$b !^= False  #c# $b = True == False = False     (XNOR)
+$b ->= False  #c# $b = !True || False = False    (IMPLY)
+$b !->= False #c# $b = True && !False = True     (NIMPLY)
+$b ->r= True  #c# $b = !True || True = True      (reverse IMPLY)
+$b !->r= True #c# $b = True && !True = False     (reverse NIMPLY)
+
+$x [int]= 5
+$x <<= 2     #c# $x = 5 << 2 = 20
+$x >>= 1     #c# $x = 20 >> 1 = 10
+$x <<r= 3    #c# $x = 3 << $x = 3 << 10 = 3072
+$x >>r= 2    #c# $x = 2 >> $x = 2 >> 3072 = 0
+
+$x [int]= 0b1101
+$x <<<[4]= 1  #c# $x = 0b1101 <<<[4] 1 = 0b1011  (left rotate by 1)
+$x >>>[4]= 1  #c# $x = 0b1011 >>>[4] 1 = 0b1101  (right rotate by 1)
+$x <<<[4]r= 2  #c# $x = 2 <<<[4] $x = 2 <<<[4]
+                #c# 1101 = 0111 (reverse left rotate)
+$x >>>[4]r= 1  #c# $x = 1 >>>[4] $x = 1 >>>[4]
+                #c# 0111 = 1011 (reverse right rotate)
+
+$m [list]= [[1,2],[3,4]]
+$m .*= [[5,6],[7,8]]   #c# $m = [[19,22],[43,50]]  (matrix multiply)
+$m .^= 2               #c# $m = $m .^ 2            (matrix power)
+
+$n [list]= [[1,2],[3,4]]
+$n ~.T
+      #c# $n = [[1,3],[2,4]]       (transpose in place)
+
+$p [list]= [[1,2],[3,4]]
+$p .*r= [[5,7],[6,8]]
+      #c# $p = [[5,7],[6,8]] .* [[1,2],[3,4]]  (reverse)
+$p .^r= 2
+      #c# $p = 2 .^ $p            (reverse matrix power)
+\end{verbatim}
+
+\subsubsection{Safe Null Assignment}
+Safe null assignment operators conditionally assign a value only when the variable is currently \texttt{null}. If the variable already holds a value, the assignment is skipped.
+
+\paragraph{Safe Typed Assignment (\texttt{?[type]?=})}
+\begin{verbatim}
+$var ?[type]?= expr   If $var is null, $var = (type) expr; else no-op
+\end{verbatim}
+\begin{itemize}
+\item The variable must already be declared
+\item If the variable is \texttt{null}: assigns the right-hand side with the specified type
+\item If the variable is not \texttt{null}: no assignment occurs, value is unchanged
+\item The right-hand side is only evaluated if the variable is \texttt{null} (short-circuit)
+\end{itemize}
+
+\paragraph{Safe Inferred Assignment (\texttt{?t?=})}
+\begin{verbatim}
+$var ?t?= expr   If $var is null, $var = expr (inferred type); else no-op
+\end{verbatim}
+\begin{itemize}
+\item The variable must already be declared
+\item If the variable is \texttt{null}: assigns the right-hand side with inferred type
+\item If the variable is not \texttt{null}: no assignment occurs, value is unchanged
+\item The right-hand side is only evaluated if the variable is \texttt{null} (short-circuit)
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$counter [int]= null
+$counter ?[int]?= 10     #c# $counter = 10 (was null)
+$counter ?[int]?= 20     #c# $counter = 10 (unchanged, not null)
+
+$name [string]= null
+$name ?t?= "Alice"       #c# $name = "Alice" (inferred string)
+
+$config [string]= null
+$config ?[string]?= f.str.toLower("DEFAULT")   #c# only evaluated because null
+\end{verbatim}
+
+\subsubsection{Lazy Binding (\texttt{:Lt=} / \texttt{:L[type]=})}
+Binds a variable to an expression that is \textbf{not evaluated} at declaration time. The expression is evaluated only on the first access of the variable. After evaluation, the result is cached and subsequent accesses return the cached value.
+
+\paragraph{Inferred Type (\texttt{:Lt=})}
+\begin{verbatim}
+$var :Lt= expr   Lazy binding: expr evaluated on first access, type inferred
+\end{verbatim}
+
+\paragraph{Explicit Type (\texttt{:L[type]=})}
+\begin{verbatim}
+$var :L[type]= expr   Lazy binding: expr evaluated on first access, type checked
+\end{verbatim}
+\begin{itemize}
+\item The variable must already be declared
+\item The right-hand side expression is \textbf{not evaluated} at binding time
+\item On first access: expression is evaluated, result is cached and returned
+\item With \texttt{:L[type]=}: if the evaluated result does not match the declared type, a \texttt{Type Error} is raised on first access
+\item On subsequent accesses: cached value is returned (no re-evaluation)
+\item The binding is immutable after first evaluation
+\item If the expression raises an error, it raises on first access (not at binding)
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$expensive [int]= null
+$expensive :Lt= f.math.factorial(100)   #c# not evaluated yet
+
+#c# ... other code ...
+
+$result [int]= $expensive   #c# NOW evaluates factorial(100), caches result
+$result2 [int]= $expensive  #c# returns cached value (no re-evaluation)
+
+$late [string]= null
+$late :Lt= f.str.toLower("HELLO")   #c# not evaluated yet
+echo($late)                          #c# NOW evaluates, prints "hello"
+
+$config [int]= null
+$config :L[int]= f.math.factorial(5)  #c# type checked on first access
+echo($config)                          #c# 120
+\end{verbatim}
+
+Examples:
+\begin{verbatim}
+#c# Scalar arithmetic
+3 + 4       #c# = 7
+10 - 3      #c# = 7
+4 * 5       #c# = 20
+15 / 4      #c# = 3.75
+17 % 5      #c# = 2
+2 ^ 10      #c# = 1024
+5 << 3      #c# = 40 (5 * 2^3)
+40 >> 3     #c# = 5  (40 / 2^3)
+0b1101 <<<[4] 1  #c# = 0b1011 (left rotate 4-bit word by 1)
+0b1101 >>>[4] 1  #c# = 0b1110 (right rotate 4-bit word by 1)
+
+#c# String concatenation
+"hello" + " " + "world"  #c# = "hello world"
+
+#c# String repetition
+"ab" * 3                  #c# = "ababab"
+
+#c# List operations
+[1,2] + [3,4]            #c# = [1,2,3,4]
+[0] * 5                   #c# = [0,0,0,0,0]
+\end{verbatim}
+
+\subsection{Swap}
+The \texttt{<->} operator swaps the values of two assignable targets in a single statement. It eliminates the need for a temporary variable.
+
+\begin{verbatim}
+assignable <-> assignable
+\end{verbatim}
+
+\begin{itemize}
+\item Both sides must be assignable (variable, indexed element, or safe-indexed element)
+\item Statement only (not an expression) -- cannot be used in \texttt{\$c = \$a <-> \$b}
+\item Lowest precedence -- evaluated after all other operators
+\item Atomic swap -- both values are exchanged simultaneously
+\end{itemize}
+
+\[
+\text{swap}(a, b) \iff (a, b) \leftarrow (b, a)
+\]
+
+\paragraph{Edge Cases}
+\begin{itemize}
+\item Same target: \texttt{\$a <-> \$a} -- no-op (legal but useless)
+\item Different types: allowed (values are swapped regardless of type)
+\item Undefined variable: \texttt{Runtime Error}
+\item Index out of range: \texttt{Runtime Error}
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+# Variable swap
+$a [int]= 10
+$b [int]= 20
+$a <-> $b
+# $a = 20, $b = 10
+
+# Tensor element swap
+$t [tensor]= |[10, 20, 30]
+$t[0] <-> $t[2]
+# $t = |[30, 20, 10]
+
+# Mixed swap
+$a [int]= 5
+$t [tensor]= |[10, 20, 30]
+$a <-> $t[1]
+# $a = 20, $t = |[10, 5, 30]
+
+# Bubble sort
+for $i E [0:n-1] ::{
+    for $j E [0:n-$i-2] ::{
+        if $t[$j] > $t[$j+1] ::{
+            $t[$j] <-> $t[$j+1]
+        }
+    }
+}
+
+# Error cases
+$a <-> $b       #c# Runtime Error (if $b undefined)
+$t[10] <-> $a   #c# Runtime Error (out of range)
+$c = $a <-> $b  #c# Runtime Error (swap is statement, not expression)
+\end{verbatim}
+
+\subsection{Comparison}
+Comparison operators evaluate to \texttt{True} or \texttt{False}.
+\begin{verbatim}
+n <  m Less Than
+n <= m Less or Equal
+b == c Equal
+b != c Not Equal
+a =n= b Numeric Equal (cross-type)
+a >< b Three-way Numeric Compare
+n >= m Greater or Equal
+n >  m Greater Than
+a ~  b Approximately Equal (uses syst.flag.approx_eps)
+a ~* b Approximately Equal (uses syst.flag.approx_eps_mult)
+a ~+( c )~ b Approximately Equal with additive tolerance c
+a ~*( c )~ b Approximately Equal with multiplicative tolerance c
+\end{verbatim}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}: \texttt{int} or \texttt{real} $\rightarrow$ \texttt{bool} (ordered)
+\item \texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}: \texttt{string} $\rightarrow$ \texttt{bool} (lexicographic)
+\item \texttt{==}, \texttt{!=}: any $\rightarrow$ \texttt{bool} (strict equality)
+\item \texttt{=n=}: \texttt{int} or \texttt{real} $\rightarrow$ \texttt{bool} (numeric equality)
+\item \texttt{><}: \texttt{int} or \texttt{real} $\rightarrow$ \texttt{int} (three-way numeric compare)
+\item \texttt{\textasciitilde}, \texttt{\textasciitilde*}, \texttt{\textasciitilde+()\textasciitilde}, \texttt{\textasciitilde*()\textasciitilde}: \texttt{int} or \texttt{real} $\rightarrow$ \texttt{bool} (approximate equality)
+\end{itemize}
+
+Ordered comparisons (\texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}) only work on ints, reals, and strings. Using them on complex numbers raises a \texttt{Type Error}. Equality (\texttt{==}, \texttt{!=}) works on any type including lists, sets, parts, connections, and functions. \texttt{=n=} works only on numeric types.
+
+\paragraph{Function Equality}
+Equality (\texttt{==}, \texttt{!=}) works on function values using reference identity. Ordered comparisons (\texttt{<}, \texttt{<=}, \texttt{>=}, \texttt{>}) raise a \texttt{Type Error} when applied to function values.
+\begin{itemize}
+\item \texttt{f.math.sin == f.math.sin} $\rightarrow$ \texttt{True} (same reference)
+\item \texttt{f.math.sin == f.math.cos} $\rightarrow$ \texttt{False} (different references)
+\item \texttt{L::(\$x [int])-\texttt{>}\{\$x\} == L::(\$x [int])-\texttt{>}\{\$x\}} $\rightarrow$ \texttt{False} (lambdas are always unique)
+\end{itemize}
+
+\paragraph{Numeric Equality}
+\texttt{=n=} compares values numerically across types. Unlike \texttt{==} which is type-strict, \texttt{=n=} returns \texttt{True} if the numeric values are equal regardless of whether the operands are \texttt{int} or \texttt{real}.
+
+\begin{itemize}
+\item \texttt{5 == 5.0} $\rightarrow$ \texttt{False} (strict: int vs real)
+\item \texttt{5 =n= 5.0} $\rightarrow$ \texttt{True} (numeric: same value)
+\end{itemize}
+
+\textbf{Note:} \texttt{==} is strict type equality. \texttt{5 == 5.0} is \texttt{False} because the left operand is \texttt{int} and the right is \texttt{real}. Use \texttt{=n=} when you want to compare values regardless of numeric type.
+
+\paragraph{Three-way Numeric Compare}
+\texttt{a >< b} performs a three-way numeric comparison using \texttt{=n=} semantics.
+\begin{itemize}
+\item Returns \texttt{1} if $a > b$
+\item Returns \texttt{0} if $a \mathbin{\texttt{=n=}} b$
+\item Returns \texttt{-1} if $a < b$
+\end{itemize}
+Raises a Type Error if either operand is not numeric.
+
+\paragraph{Approximate Equality}
+\texttt{a \textasciitilde b} returns \texttt{True} if $|a - b| \leq \texttt{syst.flag.approx\_eps}$.
+\texttt{a \textasciitilde* b} returns \texttt{True} if $|a - b| \leq \texttt{syst.flag.approx\_eps\_mult} \cdot \max(|a|, |b|)$.
+\texttt{a \textasciitilde+(c)\textasciitilde b} returns \texttt{True} if $|a - b| \leq c$.
+\texttt{a \textasciitilde*(c)\textasciitilde b} returns \texttt{True} if $|a - b| \leq c \cdot \max(|a|, |b|)$.
+The default value of \texttt{syst.flag.approx\_eps} is \texttt{1}.
+
+Examples:
+\begin{verbatim}
+3 < 5              #c# = True
+"a" < "b"          #c# = True (lexicographic)
+[1,2] == [1,2]     #c# = True (list equality)
+Q1 == Q1            #c# = True (part identity)
+
+#c# Numeric equality (cross-type)
+5 == 5.0           #c# = False (strict: int vs real)
+5 =n= 5.0          #c# = True  (numeric: same value)
+5 =n= 5.1          #c# = False (different values)
+3.14 =n= 3.14      #c# = True  (real vs real works too)
+
+#c# Three-way numeric compare
+5 >< 3             #c# =  1  (5 > 3)
+5 >< 5             #c# =  0  (5 =n= 5)
+5 >< 7             #c# = -1  (5 < 7)
+5 >< 5.0           #c# =  0  (numeric equality)
+3.14 >< 3.14       #c# =  0  (real vs real)
+
+#c# Approximate equality
+syst.flag.approx_eps 0.01
+3.0 ~ 3.005        #c# = True (within 0.01)
+3.0 ~ 3.1          #c# = False (not within 0.01)
+3.0 ~+(0.2)~ 3.1    #c# = True (within 0.2)
+3.0 ~+(0.05)~ 3.1   #c# = False (not within 0.05)
+
+#c# Execution mode
+syst.flag.exec_mode "strict"  #c# warnings become errors
+
+#c# Multiplicative approximate equality (relative tolerance)
+100 ~*(0.01)~ 100.5  #c# = True (within 1%)
+100 ~*(0.001)~ 100.5 #c# = False (not within 0.1%)
+
+#c# Multiplicative approximate equality with system default
+syst.flag.approx_eps_mult 0.01
+100 ~* 100.5         #c# = True (within 1%)
+\end{verbatim}
+
+\subsection{Boolean Logic}
+Boolean operators combine or negate boolean values.
+\begin{verbatim}
+b && c Logical And
+b || c Logical Or
+b ^^ c Logical Xor
+b !& c Nand (Not And)
+b !| c Nor (Not Or)
+b !^ c Xnor (Not Xor)
+b -> c Imply (a implies b)
+b !-> c Nimp (a does not imply b)
+!b     Negation
+\end{verbatim}
+
+\begin{itemize}
+\item Operands: \texttt{bool}, \texttt{bool}
+\item Result: \texttt{bool}
+\item Short-circuit evaluation: \texttt{a \&\& b} evaluates \texttt{b} only if \texttt{a} is \texttt{True}. \texttt{a || b} evaluates \texttt{b} only if \texttt{a} is \texttt{False}. However, if the unevaluated operand contains a function call that modifies global scope, both operands are always evaluated to preserve side effects.
+\end{itemize}
+
+Truth tables:
+\begin{verbatim}
+a  b  a!&b  a!|b  a!^b  a->b  a!->b
+T  T   F     F     T     T      F
+T  F   T     F     F     F      T
+F  T   T     F     F     T      F
+F  F   T     T     T     T      F
+\end{verbatim}
+
+Semantics:
+\begin{itemize}
+\item \texttt{!\&} (NAND): \texttt{!(a \&\& b)}
+\item \texttt{!|} (NOR): \texttt{!(a || b)}
+\item \texttt{!}\texttt{\^{}} (XNOR): \texttt{a == b} (logical equality)
+\item \texttt{->} (IMPLY): \texttt{!a || b}. Not commutative: \texttt{a -> b} $\neq$ \texttt{b -> a}
+\item \texttt{!->} (NIMPLY): \texttt{a \&\& !b}. Not commutative: \texttt{a !-> b} $\neq$ \texttt{b !-> a}
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+True && False   #c# = False
+True || False   #c# = True
+True ^^ False   #c# = True
+True ^^ True    #c# = False
+True !& False   #c# = True  (NAND)
+True !| False   #c# = False (NOR)
+True !^ False   #c# = True  (XNOR)
+True -> False   #c# = False (IMPLY)
+True !-> False  #c# = True  (NIMPLY)
+!True           #c# = False
+\end{verbatim}
+
+\subsection{Bitwise Operations}
+Bitwise operators apply boolean logic to individual bits of integers.
+\begin{verbatim}
+a b&& b  Bitwise AND
+a b|| b  Bitwise OR
+a b^^ b  Bitwise XOR
+a b!& b  Bitwise NAND
+a b!| b  Bitwise NOR
+a b!^ b  Bitwise XNOR
+a b-> b  Bitwise IMPLY
+a b!-> b Bitwise NIMP
+b!a      Bitwise NOT (unary)
+\end{verbatim}
+
+\begin{itemize}
+\item Operands: \texttt{int}, \texttt{int}
+\item Result: \texttt{int}
+\item No short-circuit evaluation — both operands are always evaluated.
+\end{itemize}
+
+Semantics (bit-by-bit on integer representations):
+\begin{itemize}
+\item \texttt{b\&\&}: \texttt{a \& b} (bitwise AND)
+\item \texttt{b||}: \texttt{a | b} (bitwise OR)
+\item \texttt{b\^{}}: \texttt{a \^{} b} (bitwise XOR)
+\item \texttt{b!\&}: \texttt{\~{}(a \& b)} (bitwise NAND)
+\item \texttt{b!|}: \texttt{\~{}(a | b)} (bitwise NOR)
+\item \texttt{b!\^{}}: \texttt{\~{}(a \^{} b)} (bitwise XNOR)
+\item \texttt{b->}: \texttt{(\~{}a) | b} (bitwise IMPLY)
+\item \texttt{b!->}: \texttt{a \& (\~{}b)} (bitwise NIMP)
+\item \texttt{b!}: \texttt{\~{}a} (bitwise NOT, flips all bits)
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+5 b&& 46     #c# = 4     (0b000101 & 0b101110 = 0b000100)
+5 b|| 46     #c# = 47    (0b000101 | 0b101110 = 0b101111)
+5 b^^ 46     #c# = 43    (0b000101 ^ 0b101110 = 0b101011)
+5 b!& 46     #c# = -5     (\~{}4)
+5 b!| 46     #c# = -48    (\~{}47)
+5 b!^ 46     #c# = -44    (\~{}43)
+5 b-> 46     #c# = -6     ((\~{}5) | 46)
+5 b!-> 46    #c# = 4      (5 & (\~{}46))
+b! 0         #c# = -1     (all bits flipped)
+\end{verbatim}
+
+\subsection{Collection Operators}
+Collection operators manipulate sets, lists, and strings.
+\begin{verbatim}
+a u b  Union (sets only)
+a n b  Intersection (sets only)
+a / b  Difference (sets) / Division (numeric)
+||a    Cardinality / Length
+\end{verbatim}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{u}: \texttt{set + set} $\rightarrow$ \texttt{set} (union)
+\item \texttt{n}: \texttt{set + set} $\rightarrow$ \texttt{set} (intersection)
+\item \texttt{/}: \texttt{set / set} $\rightarrow$ \texttt{set} (difference)
+\item \texttt{/}: \texttt{int / int} $\rightarrow$ \texttt{real} (division)
+\item \texttt{||}: \texttt{||set} $\rightarrow$ \texttt{int} (cardinality)
+\item \texttt{||}: \texttt{||list} $\rightarrow$ \texttt{int} (length)
+\item \texttt{||}: \texttt{||string} $\rightarrow$ \texttt{int} (length)
+\end{itemize}
+
+Set operations (\texttt{u}, \texttt{n}) only work on sets. The \texttt{/} operator is overloaded: on sets it returns difference, on ints or reals it returns division. Cardinality (\texttt{||}) returns the element count for sets, lists, and strings.
+
+\paragraph{Edge Cases}
+\begin{itemize}
+\item A \texttt{Type Error} is raised for \texttt{u} or \texttt{n} if either operand is not a set.
+\item A \texttt{Type Error} is raised for \texttt{||} if the operand is not a set, list, or string.
+\item A \texttt{Type Error} is raised for \texttt{/} if the operands are a set and a non-set type (e.g., \texttt{set / int}).
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+#c# Set operations
+{1,2} u {2,3}     #c# = {1,2,3} (union)
+{1,2} n {2,3}     #c# = {2} (intersection)
+{1,2,3} / {2}     #c# = {1,3} (difference)
+
+#c# Cardinality
+||{1,2,3}          #c# = 3 (set size)
+||[1,2,3,4]        #c# = 4 (list length)
+||"hello"           #c# = 5 (string length)
+\end{verbatim}
+
+\subsection{List Operators}
+List operators perform vector and matrix operations on lists.
+\begin{verbatim}
+a . b  Dot product (real result)
+a x b  Cross product (list result)
+\end{verbatim}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item \texttt{.}: \texttt{list . list} $\rightarrow$ \texttt{real} (dot product, n-dimensional)
+\item \texttt{x}: \texttt{list x list} $\rightarrow$ \texttt{tensor} (cross product, 3D only)
+\end{itemize}
+
+The dot product computes $\sum_{i} a_i \cdot b_i$ for n-dimensional vectors (any length). The cross product computes the vector cross product (both lists must have length 3).
+
+\paragraph{Edge Cases}
+\begin{itemize}
+\item Dot product: A \texttt{Value Error} is raised if the vectors have different lengths.
+\item Dot product: A \texttt{Type Error} is raised if any element is not numeric (\texttt{int} or \texttt{real}).
+\item Dot product: Two empty vectors return \texttt{0}.
+\item Cross product: A \texttt{Value Error} is raised if either vector does not have length 3.
+\item Cross product: A \texttt{Type Error} is raised if any element is not numeric.
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+#c# Dot product (n-dimensional)
+[1, 2, 3] . [4, 5, 6]     #c# = 32 (1*4 + 2*5 + 3*6)
+[1, 2] . [3, 4]           #c# = 11 (2D)
+[1, 2, 3, 4] . [5, 6, 7, 8] #c# = 70 (4D)
+
+#c# Cross product (3D only)
+[1, 0, 0] x [0, 1, 0]     #c# = [0, 0, 1]
+[1, 2, 3] x [4, 5, 6]     #c# = [-3, 6, -3]
+\end{verbatim}
+
+\subsection{Tensor Operators}
+The \texttt{.} prefix on operators enables matrix/tensor operations on tensors. Without the prefix, operations are element-wise (see Section above).
+
+\subsubsection{Matrix Multiply}
+\begin{verbatim}
+a .* b  Matrix multiply (dot-product for 1D, matrix multiply for 2D)
+\end{verbatim}
+
+\begin{itemize}
+\item Operands: \texttt{tensor}, \texttt{tensor}
+\item Result: \texttt{tensor} or \texttt{real}
+\item Shape rules:
+  \item 1D \texttt{.*} 1D $\rightarrow$ scalar (dot product, same as \texttt{.})
+  \item 2D(m$\times$k) \texttt{.*} 2D(k$\times$n) $\rightarrow$ 2D(m$\times$n)
+  \item 2D(m$\times$k) \texttt{.*} 1D(k) $\rightarrow$ 1D(m)
+\end{itemize}
+
+\paragraph{Edge Cases}
+\begin{itemize}
+\item A \texttt{Value Error} is raised if inner dimensions do not match (e.g., 2D(2$\times$3) \texttt{.*} 2D(2$\times$2)).
+\item A \texttt{Value Error} is raised if 2D \texttt{.*} 1D dimension is incompatible (e.g., 2D(2$\times$3) \texttt{.*} 1D(2)).
+\item A \texttt{Type Error} is raised if any element is not numeric.
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+#c# 1D .* 1D = scalar (dot product)
+[1, 2, 3] .* [4, 5, 6]     #c# = 32
+
+#c# 2D .* 2D = matrix multiply
+[[1,2],[3,4]] .* [[5,6],[7,8]]  #c# = [[19,22],[43,50]]
+
+#c# 2D .* 1D = matrix-vector multiply
+[[1,2],[3,4]] .* [5, 6]        #c# = [17, 39]
+\end{verbatim}
+
+\subsubsection{Transpose / Hermitian}
+\begin{verbatim}
+a .T   Transpose (postfix operator)
+a ~.T  Transpose in place (no expression needed)
+a .H   Hermitian transpose (conjugate transpose, postfix operator)
+a ~.H  Hermitian transpose in place (no expression needed)
+\end{verbatim}
+
+\begin{itemize}
+\item Operands: \texttt{tensor}
+\item Result: \texttt{tensor}
+\item \texttt{.T} swaps rows and columns: shape (m$\times$n) $\rightarrow$ (n$\times$m)
+\item \texttt{.H} returns the conjugate transpose: $(A.H)_{ij} = \overline{A_{ji}}$. For real matrices, \texttt{.H} is identical to \texttt{.T}.
+\item 1D arrays are treated as row vectors and transposed to column vectors.
+\item \texttt{\textasciitilde.T} is shorthand for \texttt{[list]= \$var.T} — transposes in place without repeating the variable name.
+\item \texttt{\textasciitilde.H} is shorthand for \texttt{[list]= \$var.H} — conjugate transposes in place.
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+[1, 2, 3] .T           #c# = [[1],[2],[3]]  (1D -> column)
+[[1,2,3]] .T           #c# = [[1],[2],[3]]  (row -> column)
+[[1,2],[3,4]] .T       #c# = [[1,3],[2,4]]
+
+$m [list]= [[1,2],[3,4]]
+$m ~.T                 #c# $m is now [[1,3],[2,4]]
+
+# Hermitian transpose of complex matrix
+[[1+2j, 3],[4, 5-1j]] .H   #c# = [[1-2j, 4],[3, 5+1j]]
+\end{verbatim}
+
+\subsubsection{Erase}
+\begin{verbatim}
+$var ~.E  Erase (sets variable to null)
+\end{verbatim}
+
+\begin{itemize}
+\item Operands: any variable
+\item Result: none (statement, not expression)
+\item \texttt{\textasciitilde.E} clears the variable's value, setting it to \texttt{null}. The variable binding remains and can be reassigned.
+\item Any subsequent access to the variable before reassignment raises a \texttt{Runtime Error}.
+\item Use case: secure zeroization of sensitive data (passwords, keys, tokens). The old value is released immediately and cannot be recovered. For cryptographic-grade destruction (provable irrecoverability), use \texttt{\textasciitilde.E+} instead.
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$password [string]= "s3cr3t"
+#c# ... use $password ...
+$password ~.E                 #c# $password is now null
+#c# $password               #c# Runtime Error (access before reassign)
+
+$pin [string]= "1234"
+$pin ~.E
+$pin [string]= "5678"         #c# reassign after erase is valid
+\end{verbatim}
+
+\subsubsection{Cryptographic Shred}
+\begin{verbatim}
+$var ~.E+  Cryptographic shred (overwrite + erase)
+\end{verbatim}
+
+\begin{itemize}
+\item Operands: any variable
+\item Result: none (statement, not expression)
+\item \texttt{\textasciitilde.E+} performs a cryptographic shred of the variable's memory. Before releasing the value, the memory region is overwritten with pseudorandom data (8 passes alternating random bytes and complement bits), then the variable is set to \texttt{null}.
+\item The variable binding remains and can be reassigned.
+\item Any subsequent access to the variable before reassignment raises a \texttt{Runtime Error}.
+\item Use case: destruction of highly sensitive data (private keys, master secrets, cryptographic material) where a simple pointer nullification is insufficient to prevent forensic recovery.
+\item Overhead compared to \texttt{\textasciitilde.E}: ~8x (8 overwrite passes). Recommended for secrets that must be provably irrecoverable.
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$secret [string]= "RSA-PRIVATE-KEY-..."
+#c# ... use $secret ...
+$secret ~.E+               #c# memory overwritten 8x, then null
+#c# $secret               #c# Runtime Error (access before reassign)
+
+$key [tensor]= |[0x4a, 0x9f, ...]
+$key ~.E+                  #c# tensor memory shredded, then null
+$key [tensor]= |[0x00]    #c# reassign after shred is valid
+\end{verbatim}
+
+\subsubsection{Matrix Power}
+\begin{verbatim}
+a .^ n  Matrix power (repeated matrix multiply, n must be int >= 0)
+\end{verbatim}
+
+\begin{itemize}
+\item Operands: \texttt{tensor}, \texttt{int}
+\item Result: \texttt{tensor}
+\item \texttt{A .\^{} 0} returns the identity matrix (square matrices only)
+\item \texttt{A .\^{} n} = \texttt{A .* A .* ... .* A} (n times)
+\end{itemize}
+
+\paragraph{Edge Cases}
+\begin{itemize}
+\item A \texttt{Value Error} is raised if the matrix is not square.
+\item A \texttt{Value Error} is raised if the exponent is negative.
+\item A \texttt{Type Error} is raised if the exponent is not \texttt{int}.
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+[[1,2],[3,4]] .^ 0     #c# = [[1,0],[0,1]]  (identity)
+[[1,2],[3,4]] .^ 1     #c# = [[1,2],[3,4]]  (unchanged)
+[[1,2],[3,4]] .^ 2     #c# = [[7,10],[15,22]]
+\end{verbatim}
+
+\subsection{Set Comparison}
+Set comparison operators test membership and subset relationships.
+\begin{verbatim}
+a c b  Subset of
+a E b  Element of
+a !E b Not element of
+\end{verbatim}
+
+\begin{itemize}
+\item Operands: \texttt{set}, \texttt{set} (subset)
+\item Operands: any, \texttt{set} (membership)
+\item Result: \texttt{bool}
+\item \texttt{a c b} is true if every element of \texttt{a} is in \texttt{b}
+\item \texttt{a E b} is true if \texttt{a} is an element of set \texttt{b}
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+{1,2} c {1,2,3}   #c# = True (subset)
+1 E {1,2,3}       #c# = True (membership)
+Q1 E *p            #c# = True (part in all parts)
+4 !E {1,2,3}      #c# = True (not element)
+\end{verbatim}
+
+\subsection{Conditional Expression}
+A ternary-like operator for inline conditional values.
+\begin{verbatim}
+(condition)?->(value_if_true)!(value_if_false)
+\end{verbatim}
+
+\begin{itemize}
+\item Operands: \texttt{bool}, any, any
+\item Result: type of the selected branch
+\item Evaluates condition, returns first value if \texttt{True}, second if \texttt{False}
+\item Both branches must be of the same type (or coercible per the type coercion hierarchy: \texttt{int} $<$ \texttt{real} $<$ \texttt{complex})
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$x [int]= 5
+$result [int]= ($x > 3)?->("big")!("small")
+#c# $result = "big"
+
+$val [int]= 10
+$abs [int]= ($val >= 0)?->($val)!($val * -1)
+#c# $abs = 10
+
+$a [int]= 1
+$b [int]= 2
+$max [int]= ($a > $b)?->($a)!($b)
+#c# $max = 2
+\end{verbatim}
+
+\subsection{Null Operators}
+\subsubsection{Null Coalescing (\texttt{??})}
+Returns the left operand if it is not \texttt{null}, otherwise the right operand.
+\begin{verbatim}
+a ?? b   Returns a if a is not null, else b
+\end{verbatim}
+\begin{itemize}
+\item Operands: any, any
+\item Result: type of the left operand if not null, else type of the right operand
+\item Right operand is only evaluated if left operand is \texttt{null} (short-circuit)
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$x [int]= null
+$y [int]= $x ?? 5         #c# $y = 5
+$name [string]= null
+$display [string]= $name ?? "Unknown"  #c# $display = "Unknown"
+\end{verbatim}
+
+\subsubsection{Safe Member Access (\texttt{?.})}
+Returns the member access result if the left operand is not \texttt{null}, otherwise returns \texttt{null} without raising a \texttt{Runtime Error}.
+\begin{verbatim}
+obj?.member   Returns obj.member if obj is not null, else null
+\end{verbatim}
+\begin{itemize}
+\item Operands: any, member name (identifier)
+\item Result: type of the member if left operand is not null, else null
+\end{itemize}
+
+\subsubsection{Safe Indexing (\texttt{?[]})}
+Returns the index access result if the left operand is not \texttt{null}, otherwise returns \texttt{null} without raising a \texttt{Runtime Error}.
+\begin{verbatim}
+array?[index]       Returns array[index] if array is not null, else null
+tensor?[i]          Returns tensor[i] if tensor is not null, else null
+tensor?[i, j]       Returns tensor[i, j] if tensor is not null, else null
+tensor?[start:end]  Returns tensor[start:end] if tensor is not null, else null
+tensor?[[indices]]  Returns tensor[[indices]] if tensor is not null, else null
+tensor?[condition]  Returns tensor[condition] if tensor is not null, else null
+tensor?[..., i]     Returns tensor[..., i] if tensor is not null, else null
+\end{verbatim}
+\begin{itemize}
+\item Operands: any, any
+\item Result: element/sub-tensor of the collection if left operand is not null, else null
+\item Type Error / Value Error still raised if indexing is invalid (wrong type, out of bounds)
+\end{itemize}
+
+Examples:
+\begin{verbatim}
+$data = null
+$val [int]= $data?.field        #c# $val = null (no Runtime Error)
+$arr = null
+$item [int]= $arr?[0]           #c# $item = null (no Runtime Error)
+
+# Safe tensor indexing
+$mat = null
+$mat?[0, 1]              #c# Returns null (no error)
+$mat?[0:2]               #c# Returns null (no error)
+$mat?[0:2, 0]            #c# Returns null (no error)
+$mat?[$mat > 0]          #c# Returns null (no error)
+$mat?[..., 0]            #c# Returns null (no error)
+
+# Safe assignment
+$mat?[0] = 99            #c# No-op ($mat is null)
+\end{verbatim}
+
+\subsubsection{Safe Function Call (\texttt{?()})}
+Calls a function value if it is not \texttt{null}, otherwise returns \texttt{null} without raising a \texttt{Runtime Error}. Errors raised \textbf{within} the called function still propagate.
+\begin{verbatim}
+fn?(args)   Returns fn(args) if fn is not null, else null
+\end{verbatim}
+\begin{itemize}
+\item Operands: a variable holding a \texttt{func} value or \texttt{null}, followed by optional arguments
+\item Result: return type of the function if the variable is not \texttt{null}, else \texttt{null}
+\item If the variable is \texttt{null}: returns \texttt{null} (no error)
+\item If the variable is not \texttt{func}: raises a \texttt{Type Error}
+\item Arguments are evaluated before the null check
+\end{itemize}
+\begin{verbatim}
+$f [func]= L::($x [int]) -> { $x + 1 }
+$val [int]= $f?(10)           #c# $val = 11
+
+$g = null
+$val2 [int]= $g?(10)          #c# $val2 = null (no Runtime Error)
+\end{verbatim}
+
+\subsubsection{Null-Safe Function Call (\texttt{??()})}
+Like \texttt{?()}, but also suppresses any error raised \textbf{within} the called function, returning \texttt{null} instead. This is the safest calling convention---the expression can never raise an error.
+\begin{verbatim}
+fn??(args)   Returns fn(args) if fn is not null; returns null on any error
+\end{verbatim}
+\begin{itemize}
+\item Operands: a variable holding a \texttt{func} value or \texttt{null}, followed by optional arguments
+\item Result: return type of the function, or \texttt{null}
+\item If the variable is \texttt{null}: returns \texttt{null} (no error)
+\item If the variable is not \texttt{func}: returns \texttt{null} (no error)
+\item If the function call raises any error (\texttt{Type}, \texttt{Value}, \texttt{Division by Zero}, \texttt{Runtime}, \texttt{Assertion}): returns \texttt{null} (error suppressed)
+\item Arguments are evaluated before the null check (errors in argument evaluation are \textbf{not} suppressed)
+\end{itemize}
+\begin{verbatim}
+$f [func]= L::($x [int]) -> { 100 / $x }
+$val [int]= $f??(5)           #c# $val = 20
+$val2 [int]= $f??(0)          #c# $val2 = null (Division by Zero Error suppressed)
+
+$g = null
+$val3 [int]= $g??(5)          #c# $val3 = null (no Runtime Error)
+\end{verbatim}
+
+\label{sec:lambda}
+\subsection{Lambda Expressions}
+Lambda expressions create anonymous function values (of type \texttt{func}) that can be passed as arguments to higher-order functions, stored in variables, or called directly. They are defined with the \texttt{L::} prefix (consistent with the \texttt{f.u.} prefix for user-defined functions).
+
+\subsubsection{Syntax}
+\begin{verbatim}
+EBNF:
+lambda = "L::", "(", [ parameter, { ",", parameter } ], ")", 
+         "->", "{", { statement }, expression, "}"
+parameter = "$", id, "[", type, "]"
+\end{verbatim}
+
+Parameters must always have explicit types. The last expression in the body is the implicit return value. Multi-line bodies are allowed (multiple statements in \texttt{\{\}}).
+
+\subsubsection{Type Overloading}
+\begin{itemize}
+\item Parameters may be any scalar type: \texttt{int}, \texttt{real}, \texttt{bool}, \texttt{string}
+\item Parameters may also be \texttt{list} when operating on lists of lists
+\item Return type is inferred from the body expression
+\item All parameter types must match the elements passed by the higher-order function
+\end{itemize}
+
+\subsubsection{Scope Rules}
+\begin{itemize}
+\item Lambdas have \textbf{read-only} access to variables from the enclosing scope (closures can read but not write)
+\item Lambdas \textbf{can} declare local variables inside their body (block-scoped to the lambda)
+\item Lambdas \textbf{cannot} modify variables from the enclosing scope
+\item Attempting to write to an enclosing variable raises a Compile Error
+\end{itemize}
+
+\subsubsection{Return Value}
+The last expression in the body is the implicit return value. There is no explicit \texttt{return} keyword inside lambdas. If the body contains only statements with no trailing expression, the lambda returns nothing (useful for side effects only, e.g., with \texttt{f.print}).
+
+\subsubsection{Examples}
+\begin{verbatim}
+#c# Basic lambda (passed to map)
+map([1, 2, 3], L::($x [int])->{ $x * 2 })
+#c# Returns [2, 4, 6]
+
+#c# Lambda with multiple parameters
+L::($x [int], $y [int])->{ $x + $y }
+#c# Returns a function object (used inline)
+
+#c# Multi-line lambda
+map([1, 2, 3], L::($x [int])->{
+    $y [int]= $x * 10
+    $y + 1
+})
+#c# Returns [11, 21, 31]
+
+#c# Closure (read-only access to outer variable)
+$factor [int]= 10
+map([1, 2, 3], L::($x [int])->{ $x * $factor })
+#c# Returns [10, 20, 30]
+
+#c# Lambda with real types
+map([1.5, 2.5, 3.5], L::($x [real])->{ $x * $x })
+#c# Returns [2.25, 6.25, 12.25]
+
+#c# Lambda with nested list (2D tensor)
+map([[1,2],[3,4]], L::($row [list])->{ $row })
+#c# Returns [[1,2],[3,4]] (identity, demonstrates list parameter)
+
+#c# Lambda with bool parameter
+filter([True, False, True], L::($x [bool])->{ !$x })
+#c# Returns [False]
+\end{verbatim}
+
+\subsubsection{Error Conditions}
+\begin{itemize}
+\item Compile Error: parameter type is missing (e.g., \texttt{L::(\$x)->\{...\}} is invalid)
+\item Compile Error: attempting to write to an outer variable inside a lambda
+\item Runtime Error: type mismatch between parameter type and actual element type
+\end{itemize}
+
+\subsection{Pipeline}
+The pipeline operator \texttt{|=>} passes the left operand as the argument to the function on the right. This enables readable left-to-right data flow without nesting.
+\begin{verbatim}
+value |=> function_ref
+value |=> lambda
+\end{verbatim}
+
+\paragraph{Semantics}
+\begin{itemize}
+\item \texttt{a |=> f} evaluates to \texttt{f(a)}
+\item Left-associative: \texttt{a |=> f |=> g} evaluates to \texttt{g(f(a))}
+\item The left operand is fully evaluated before the function is called
+\end{itemize}
+
+\paragraph{Function Reference}
+A function reference names a function without calling it. Built-in references omit parentheses; user-defined references use the \texttt{f.u.} prefix:
+\begin{itemize}
+\item Built-in: \texttt{f.math.sin} (not \texttt{f.math.sin()})
+\item User-defined: \texttt{f.u.myfunc} (not \texttt{f.u.myfunc()})
+\item Lambda: \texttt{L::(x) -> \{ x + 1 \}}
+\end{itemize}
+
+\paragraph{Examples}
+\begin{verbatim}
+5 |=> f.math.sin                   #c# = sin(5)
+-3 |=> f.math.abs                  #c# = 3
+"hello" |=> f.str.upperc           #c# = "HELLO"
+
+# Chained pipeline:
+5 |=> f.math.sin |=> f.math.abs    #c# = |sin(5)|
+
+# Lambda in pipeline:
+5 |=> L::(x) -> { x * x + 1 }    #c# = 26
+
+# Pipeline with variables:
+$f [list]= [1, 2, 3, 4, 5]
+$f |=> f.list.sum |=> f.math.sqrt  #c# = sqrt(15)
+\end{verbatim}
+
+\paragraph{Constraints}
+\begin{itemize}
+\item The right-hand side must be a function reference or lambda -- a function call (\texttt{f.math.sin()}) is not valid as a pipeline target
+\item The function must accept exactly one argument -- a \texttt{Type Error} is raised otherwise
+\item For multi-argument functions, wrap in a lambda: \texttt{5 |=> L::(x) -> \{ f.math.pow(x, 2) \}}
+\end{itemize}
+
+\subsection{Function Composition}
+The composition operator \texttt{<o} creates a new function that applies the right operand first, then the left operand. This is mathematical function composition: \texttt{\$f <o \$g} produces a function equivalent to \texttt{L::(\$x) -> \{ \$f(\$g(\$x)) \}}.
+
+\paragraph{Syntax}
+\begin{verbatim}
+$f <o $g          #c# compose: returns new function ($x) -> $f($g($x))
+$f <o= $g         #c# compose-assign: $f = $f <o $g
+$f o>= $g         #c# reverse compose-assign: $f = $g <o $f
+\end{verbatim}
+
+\paragraph{Semantics}
+\begin{itemize}
+\item \texttt{\$f <o \$g} returns a new \texttt{func} value; neither \texttt{\$f} nor \texttt{\$g} is modified
+\item Right-associative: \texttt{\$f <o \$g <o \$h} = \texttt{\$f <o (\$g <o \$h)} $\rightarrow$ applies \texttt{\$h}, then \texttt{\$g}, then \texttt{\$f}
+\item The composed function has the arity of the rightmost function (\texttt{\$g})
+\end{itemize}
+
+\paragraph{Type Overloading}
+\begin{itemize}
+\item Both operands must be \texttt{func} -- a \texttt{Type Error} is raised otherwise
+\item The return type of \texttt{\$g} must be assignable to the parameter type of \texttt{\$f} -- a \texttt{Type Error} is raised otherwise
+\item Result is always \texttt{func}
+\end{itemize}
+
+\paragraph{Examples}
+\begin{verbatim}
+$double t= L::($x [int])->{ $x * 2 }
+$inc    t= L::($x [int])->{ $x + 1 }
+
+# $f <o $g means ($x) -> $f($g($x))
+$double_then_inc t= $double <o $inc
+$double_then_inc(3)        #c# Returns 8  (inc first: 3+1=4, then double: 4*2=8)
+
+# Right-associative chaining
+$add1 t= L::($x [int])->{ $x + 1 }
+$mul2 t= L::($x [int])->{ $x * 2 }
+$sqr  t= L::($x [int])->{ $x ^ 2 }
+
+$pipeline t= $sqr <o $mul2 <o $add1
+# $sqr <o ($mul2 <o $add1) = ($x) -> $sqr($mul2($add1($x)))
+$pipeline(3)               #c# Returns 64  ((3+1)*2)^2 = 8^2 = 64
+
+# Compose built-in functions
+$to_upper_then_len t= f.util.len <o f.str.upperc
+$to_upper_then_len("hello")  #c# Returns 5
+
+# Compose-assign: $f = $f <o $g
+$f t= L::($x [int])->{ $x * 2 }
+$f <o= L::($x [int])->{ $x + 10 }
+$f(3)                       #c# Returns 26  ($f is now ($x)->($x+10)*2, so (3+10)*2=26)
+
+# Reverse compose-assign: $g = $g <o $f  ($f goes on the LEFT of <o)
+$double t= L::($x [int])->{ $x * 2 }
+$add10  t= L::($x [int])->{ $x + 10 }
+$double o>= $add10
+# $double is now $add10 <o $double = ($x) -> $add10($double($x))
+$double(3)                    #c# Returns 16  (3*2=6, then 6+10=16)
+\end{verbatim}
+
+\paragraph{Error Conditions}
+\begin{itemize}
+\item \texttt{Type Error}: either operand is not a \texttt{func}
+\item \texttt{Type Error}: return type of \texttt{\$g} is not assignable to parameter type of \texttt{\$f}
+\item \texttt{Runtime Error}: either operand is \texttt{null}
+\end{itemize}
+
+\section{Operator Precedence}
+Operators are evaluated in the following order (highest to lowest):
+\begin{enumerate}
+\item \texttt{\^{}} -- Exponentiation (right-associative)
+\item \texttt{!} -- Boolean negation, Bitwise NOT (\texttt{b!})
+\item \texttt{\$var++}, \texttt{\$var--}, \texttt{.T}, \texttt{.H}, \texttt{\textasciitilde.E}, \texttt{?.}, \texttt{?[]}, \texttt{?()}, \texttt{??()}, \texttt{\$var(args)} -- Postfix increment / decrement, transpose, Hermitian transpose, erase, safe member access, safe indexing, safe function call, null-safe function call, function call
+\item \texttt{<o} -- Function composition (right-associative)
+\item \texttt{||a} -- Cardinality / length
+\item \texttt{*}, \texttt{/}, \texttt{//}, \texttt{\%}, \texttt{.}, \texttt{x}, \texttt{.*}, \texttt{.\^{}} -- Multiplication, division, floor division, modulo, dot product, cross product, matrix multiply, matrix power
+\item \texttt{<<}, \texttt{>>}, \texttt{<<<}, \texttt{>>>} -- Left shift, right shift, left rotate, right rotate
+\item \texttt{+}, \texttt{-} -- Addition, subtraction
+\item \texttt{<}, \texttt{<=}, \texttt{==}, \texttt{!=}, \texttt{=n=}, \texttt{><}, \texttt{>=}, \texttt{>}, \texttt{\textasciitilde}, \texttt{\textasciitilde*}, \texttt{\textasciitilde+()\textasciitilde}, \texttt{\textasciitilde*()\textasciitilde} -- Comparison
+\item \texttt{as} -- Type casting (e.g., \texttt{\$x as real})
+\item \texttt{c}, \texttt{E}, \texttt{!E} -- Set comparison
+\item \texttt{\&\&}, \texttt{!\&}, \texttt{b\&\&}, \texttt{b!\&} -- Logical AND, NAND, Bitwise AND, Bitwise NAND
+\item \texttt{||}, \texttt{!|}, \texttt{b||}, \texttt{b!|} -- Logical OR, NOR, Bitwise OR, Bitwise NOR
+\item \texttt{\^{}\^{}}, \texttt{!}\texttt{\^{}}, \texttt{b\^{}}\texttt{\^{}}, \texttt{b!}\texttt{\^{}} -- Logical XOR, XNOR, Bitwise XOR, Bitwise XNOR
+\item \texttt{->}, \texttt{!->}, \texttt{b->}, \texttt{b!->} -- IMPLY, NIMPLY, Bitwise IMPLY, Bitwise NIMPLY
+\item \texttt{?->...!...} -- Conditional expression
+\item \texttt{??} -- Null coalescing (right-associative)
+\item \texttt{|=>} -- Pipeline (left-associative)
+\item \texttt{L::(...)->\{...\}} -- Lambda expression
+\item User-defined operators (\texttt{o.u.*})
+\item \texttt{<->} -- Swap statement (lowest precedence)
+\end{enumerate}
+
+Note: \texttt{||} has two distinct meanings depending on position. As a \textbf{prefix} operator (\texttt{||expr}), it denotes cardinality/length and has high precedence (level 3). As an \textbf{infix} operator (\texttt{expr || expr}), it denotes logical OR and has low precedence (level 9). Parentheses override precedence. Function arguments are evaluated before the function is called.
+
+\section{User-defined Operators}
+User-defined operators extend the language with custom infix notation.
+
+\subsection{Definition}
+\begin{verbatim}
+EBNF:
+"letop", "o.u.", id, assigner, data
+\end{verbatim}
+
+The operator name must follow the pattern \texttt{o.u.[\_a-zA-Z0-9]+}.
+
+\subsection{Examples}
+\begin{verbatim}
+letop o.u.mod_minus_1 [int]= 
+    a % b - 1
+
+f.print( 4 o.u.mod_minus_1 3 )  #c# = 0
+
+letop o.u.parallel [int]= 
+    (a * b) / (a + b)
+
+f.print( 100 o.u.parallel 100 )  #c# = 50
+\end{verbatim}
+
+\subsection{Precedence}
+User-defined operators have the lowest precedence among all operators. Use parentheses to ensure correct evaluation order.
+
+
+
+\chapter{Constants}
+Constants are immutable values that cannot be reassigned after declaration.
+
+\section{Built-in Constants}
+\subsection{Proper Constants}
+Proper constants are fixed values provided by the language.
+
+\subsubsection{Mathematical Constants}
+\begin{itemize}
+\item \texttt{c.math.pi} -- The mathematical constant $\pi \approx 3.14159265...$
+\item \texttt{c.math.tau} -- $\tau = 2\pi \approx 6.28318530...$
+\item \texttt{c.math.e} -- Euler's number $e \approx 2.71828182...$
+\item \texttt{c.math.i} -- Imaginary unit $\sqrt{-1}$ (complex type)
+\item \texttt{c.math.iinf} -- Integer positive infinity
+\item \texttt{c.math.rinf} -- Real positive infinity
+\item \texttt{c.math.inf} -- Unsigned infinity (numeric)
+\item \texttt{c.math.NaN} -- Not-a-Number (real type)
+\item \texttt{c.math.egamma} -- Euler-Mascheroni constant $\gamma \approx 0.5772156649...$
+\item \texttt{c.math.sqrt2} -- $\sqrt{2} \approx 1.4142135623...$ (RMS conversion: $V_{\text{rms}} = V_{\text{pk}} / \sqrt{2}$)
+\item \texttt{c.math.sqrt2\_inv} -- $1/\sqrt{2} \approx 0.7071067811...$ (the $-3\text{dB}$ point)
+\item \texttt{c.math.sqrtpi} -- $\sqrt{\pi} \approx 1.77245385...$
+\item \texttt{c.math.ln2} -- $\ln(2) \approx 0.6931471805...$ (half-life, RC time constants)
+\item \texttt{c.math.ln10} -- $\ln(10) \approx 2.30258509...$
+\item \texttt{c.math.log2e} -- $\log_2(e) \approx 1.44269504...$
+\item \texttt{c.math.log10e} -- $\log_{10}(e) \approx 0.43429448...$
+\item \texttt{c.math.expMinus1} -- $e^{-1} \approx 0.3678794411...$
+\end{itemize}
+
+\subsubsection{Physical Constants}
+\paragraph{Fundamental}
+\begin{itemize}
+\item \texttt{c.phys.c} -- Speed of light in vacuum $c = 299\,792\,458$ m/s (exact)
+\item \texttt{c.phys.h} -- Planck constant $h = 6.626\,070\,15 \times 10^{-34}$ J$\cdot$s (exact)
+\item \texttt{c.phys.hbar} -- Reduced Planck constant $\hbar = 1.054\,571\,817 \times 10^{-34}$ J$\cdot$s
+\item \texttt{c.phys.q} -- Elementary charge $e = 1.602\,176\,634 \times 10^{-19}$ C (exact)
+\item \texttt{c.phys.kb} -- Boltzmann constant $k_B = 1.380\,649 \times 10^{-23}$ J/K (exact)
+\item \texttt{c.phys.alpha} -- Fine-structure constant $\alpha \approx 0.007\,297\,352\,564\,3$
+\item \texttt{c.phys.alphaInv} -- Inverse fine-structure constant $1/\alpha \approx 137.035\,999\,177$
+\item \texttt{c.phys.G} -- Newtonian gravitational constant $G \approx 6.674\,30 \times 10^{-11}$ m$^3$ kg$^{-1}$ s$^{-2}$
+\end{itemize}
+
+\paragraph{Electromagnetic}
+\begin{itemize}
+\item \texttt{c.phys.mu0} -- Vacuum permeability $\mu_0 \approx 1.256\,637\,061 \times 10^{-6}$ N/A$^2$
+\item \texttt{c.phys.eps0} -- Vacuum permittivity $\varepsilon_0 \approx 8.854\,187\,819 \times 10^{-12}$ F/m
+\item \texttt{c.phys.eta0} -- Characteristic impedance of vacuum $\eta_0 \approx 376.730\,313\,412$ $\Omega$
+\item \texttt{c.phys.k} -- Coulomb constant $k_e \approx 8.987\,551\,792 \times 10^{9}$ N$\cdot$m$^2$/C$^2$
+\item \texttt{c.phys.G0} -- Conductance quantum $G_0 = 2e^2/h \approx 7.748\,091\,730 \times 10^{-5}$ S
+\item \texttt{c.phys.G0Inv} -- Inverse conductance quantum $h/(2e^2) \approx 12\,906.403\,730$ $\Omega$
+\item \texttt{c.phys.phi0} -- Magnetic flux quantum $\Phi_0 = h/(2e) \approx 2.067\,833\,848 \times 10^{-15}$ Wb
+\item \texttt{c.phys.RK} -- von Klitzing constant $R_K = h/e^2 \approx 25\,812.807\,459$ $\Omega$
+\item \texttt{c.phys.KJ} -- Josephson constant $K_J = 2e/h \approx 483\,597.848\,4$ GHz/V
+\end{itemize}
+
+\paragraph{Atomic and Particle Masses}
+\begin{itemize}
+\item \texttt{c.phys.me} -- Electron mass $m_e \approx 9.109\,383\,714 \times 10^{-31}$ kg
+\item \texttt{c.phys.me\_u} -- Electron mass in u $\approx 0.000\,548\,579\,909$
+\item \texttt{c.phys.me\_MeV} -- Electron mass energy equivalent $\approx 0.510\,998\,951$ MeV
+\item \texttt{c.phys.mp} -- Proton mass $m_p \approx 1.672\,621\,924 \times 10^{-27}$ kg
+\item \texttt{c.phys.mp\_u} -- Proton mass in u $\approx 1.007\,276\,467$
+\item \texttt{c.phys.mp\_MeV} -- Proton mass energy equivalent $\approx 938.272\,089$ MeV
+\item \texttt{c.phys.mn} -- Neutron mass $m_n \approx 1.674\,927\,501 \times 10^{-27}$ kg
+\item \texttt{c.phys.mn\_u} -- Neutron mass in u $\approx 1.008\,664\,916$
+\item \texttt{c.phys.mn\_MeV} -- Neutron mass energy equivalent $\approx 939.565\,422$ MeV
+\item \texttt{c.phys.md} -- Deuteron mass $m_d \approx 3.343\,583\,777 \times 10^{-27}$ kg
+\item \texttt{c.phys.md\_u} -- Deuteron mass in u $\approx 2.013\,553\,213$
+\item \texttt{c.phys.md\_MeV} -- Deuteron mass energy equivalent $\approx 1875.612\,945$ MeV
+\item \texttt{c.phys.mMu} -- Muon mass $m_\mu \approx 1.883\,531\,627 \times 10^{-28}$ kg
+\item \texttt{c.phys.mMu\_u} -- Muon mass in u $\approx 0.113\,428\,925\,7$
+\item \texttt{c.phys.mMu\_MeV} -- Muon mass energy equivalent $\approx 105.658\,375\,5$ MeV
+\item \texttt{c.phys.mTau} -- Tau mass $m_\tau \approx 3.167\,54 \times 10^{-27}$ kg
+\item \texttt{c.phys.mTau\_u} -- Tau mass in u $\approx 1.907\,54$
+\item \texttt{c.phys.mTau\_MeV} -- Tau mass energy equivalent $\approx 1776.86$ MeV
+\item \texttt{c.phys.mAlpha} -- Alpha particle mass $m_\alpha \approx 6.644\,657\,345 \times 10^{-27}$ kg
+\item \texttt{c.phys.mAlpha\_u} -- Alpha particle mass in u $\approx 4.001\,506\,179$
+\item \texttt{c.phys.mAlpha\_MeV} -- Alpha particle mass energy equivalent $\approx 3727.379\,412$ MeV
+\item \texttt{c.phys.amu} -- Unified atomic mass unit $u = 1.660\,539\,069 \times 10^{-27}$ kg
+\item \texttt{c.phys.amu\_MeV} -- Atomic mass unit energy equivalent $\approx 931.494\,104$ MeV
+\end{itemize}
+
+\paragraph{Particle Magnetic Moments and Ratios}
+\begin{itemize}
+\item \texttt{c.phys.meMu\_e} -- Electron magnetic moment $\mu_e \approx -9.284\,764\,692 \times 10^{-24}$ J/T
+\item \texttt{c.phys.meG\_e} -- Electron g-factor $g_e \approx -2.002\,319\,304\,362$
+\item \texttt{c.phys.meAnomaly} -- Electron magnetic moment anomaly $a_e \approx 0.001\,159\,652\,180\,46$
+\item \texttt{c.phys.mpMu\_p} -- Proton magnetic moment $\mu_p \approx 1.410\,606\,795 \times 10^{-26}$ J/T
+\item \texttt{c.phys.mpG\_p} -- Proton g-factor $g_p \approx 5.585\,694\,689$
+\item \texttt{c.phys.mnMu\_n} -- Neutron magnetic moment $\mu_n \approx -9.662\,365\,3 \times 10^{-27}$ J/T
+\item \texttt{c.phys.mnG\_n} -- Neutron g-factor $g_n \approx -3.826\,085\,52$
+\item \texttt{c.phys.mMuMu\_mu} -- Muon magnetic moment $\mu_\mu \approx -4.490\,448\,3 \times 10^{-26}$ J/T
+\item \texttt{c.phys.mMuAnomaly} -- Muon magnetic moment anomaly $a_\mu \approx 0.001\,165\,920\,62$
+\item \texttt{c.phys.bohrMag} -- Bohr magneton $\mu_B \approx 9.274\,010\,066 \times 10^{-24}$ J/T
+\item \texttt{c.phys.nuclearMag} -- Nuclear magneton $\mu_N \approx 5.050\,783\,740 \times 10^{-27}$ J/T
+\end{itemize}
+
+\paragraph{Atomic Structure}
+\begin{itemize}
+\item \texttt{c.phys.bohrRadius} -- Bohr radius $a_0 \approx 5.291\,772\,105\,44 \times 10^{-11}$ m
+\item \texttt{c.phys.rydberg} -- Rydberg constant $R_\infty \approx 10\,973\,731.568$ m$^{-1}$
+\item \texttt{c.phys.rydberg\_eV} -- Rydberg constant $\times hc$ in eV $\approx 13.605\,693\,123$ eV
+\item \texttt{c.phys.rydberg\_J} -- Rydberg constant $\times hc$ in J $\approx 2.179\,872\,361 \times 10^{-18}$ J
+\item \texttt{c.phys.hartree\_E} -- Hartree energy $E_h \approx 4.359\,744\,722 \times 10^{-18}$ J
+\item \texttt{c.phys.hartree\_eV} -- Hartree energy in eV $\approx 27.211\,386\,246$ eV
+\item \texttt{c.phys.comptonWavelength} -- Compton wavelength of electron $\lambda_C \approx 2.426\,310\,235 \times 10^{-12}$ m
+\item \texttt{c.phys.comptonWavelengthReduced} -- Reduced Compton wavelength $\bar{\lambda}_C \approx 3.861\,592\,674 \times 10^{-13}$ m
+\item \texttt{c.phys.classicalElectronRadius} -- Classical electron radius $r_e \approx 2.817\,940\,321 \times 10^{-15}$ m
+\item \texttt{c.phys.thomsonCrossSection} -- Thomson cross-section $\sigma_e \approx 6.652\,458\,705 \times 10^{-29}$ m$^2$
+\end{itemize}
+
+\paragraph{Compton Wavelengths}
+\begin{itemize}
+\item \texttt{c.phys.comptonWavelengthProton} -- Proton Compton wavelength $\approx 1.321\,410\,000 \times 10^{-15}$ m
+\item \texttt{c.phys.comptonWavelengthNeutron} -- Neutron Compton wavelength $\approx 1.319\,591\,000 \times 10^{-15}$ m
+\item \texttt{c.phys.comptonWavelengthMuon} -- Muon Compton wavelength $\approx 1.173\,444\,110 \times 10^{-14}$ m
+\end{itemize}
+
+\paragraph{Energy Conversions}
+\begin{itemize}
+\item \texttt{c.phys.eV} -- Electron volt $1\text{ eV} = 1.602\,176\,634 \times 10^{-19}$ J (exact)
+\item \texttt{c.phys.eV\_Hz} -- eV to Hz $\approx 2.417\,989\,242 \times 10^{14}$ Hz
+\item \texttt{c.phys.eV\_invM} -- eV to inverse meter $\approx 806\,554.394$ m$^{-1}$
+\item \texttt{c.phys.eV\_K} -- eV to Kelvin $\approx 11\,604.518$ K
+\item \texttt{c.phys.eV\_kg} -- eV to kg $\approx 1.782\,662 \times 10^{-36}$ kg
+\item \texttt{c.phys.Hz\_eV} -- Hz to eV $\approx 4.135\,668 \times 10^{-15}$ eV
+\item \texttt{c.phys.invM\_eV} -- Inverse meter to eV $\approx 1.239\,842 \times 10^{-6}$ eV
+\item \texttt{c.phys.K\_eV} -- Kelvin to eV $\approx 8.617\,333 \times 10^{-5}$ eV
+\end{itemize}
+
+\paragraph{Physical Parameters}
+\begin{itemize}
+\item \texttt{c.phys.me\_mp} -- Electron-to-proton mass ratio $\approx 0.000\,446\,170\,214$
+\item \texttt{c.phys.mp\_me} -- Proton-to-electron mass ratio $\approx 1836.152\,673\,43$
+\item \texttt{c.phys.atm} -- Standard atmosphere $= 101\,325$ Pa (exact)
+\item \texttt{c.phys.Pa\_atm} -- Standard-state pressure $= 100\,000$ Pa (exact)
+\item \texttt{c.phys.sigma} -- Stefan-Boltzmann constant $\sigma \approx 5.670\,374\,419 \times 10^{-8}$ W/(m$^2 \cdot$ K$^4$)
+\item \texttt{c.phys.F} -- Faraday constant $F \approx 96\,485.332\,12$ C/mol
+\item \texttt{c.phys.NA} -- Avogadro constant $N_A \approx 6.022\,140\,76 \times 10^{23}$ mol$^{-1}$
+\item \texttt{c.phys.Rgas} -- Molar gas constant $R \approx 8.314\,462\,618$ J/(mol$\cdot$K)
+\item \texttt{c.phys.molarVolumeSTP\_100} -- Molar volume of ideal gas (273.15\,K, 100\,kPa) $\approx 0.022\,711$ m$^3$/mol
+\item \texttt{c.phys.molarVolumeSTP\_101} -- Molar volume of ideal gas (273.15\,K, 101.325\,kPa) $\approx 0.022\,414$ m$^3$/mol
+\item \texttt{c.phys.molarMassC12} -- Molar mass of carbon-12 $= 0.012$ kg/mol (exact)
+\item \texttt{c.phys.kT300} -- Thermal voltage at 300K $kT/q \approx 0.025\,852$ V
+\item \texttt{c.phys.Loschmidt\_100} -- Loschmidt constant (273.15\,K, 100\,kPa) $\approx 2.652 \times 10^{25}$ m$^{-3}$
+\item \texttt{c.phys.Loschmidt\_101} -- Loschmidt constant (273.15\,K, 101.325\,kPa) $\approx 2.687 \times 10^{25}$ m$^{-3}$
+\item \texttt{c.phys.luminousEfficacy} -- Maximum luminous efficacy $= 683$ lm/W (exact)
+\item \texttt{c.phys.wienDisplacement} -- Wien displacement constant $b \approx 2.897\,772 \times 10^{-3}$ m$\cdot$K
+\item \texttt{c.phys.wienFreqDisplacement} -- Wien frequency displacement constant $\approx 5.878\,926 \times 10^{10}$ Hz/K
+\item \texttt{c.phys.secondRadiation} -- Second radiation constant $c_2 \approx 0.014\,387\,769$ m$\cdot$K
+\item \texttt{c.phys.firstRadiation} -- First radiation constant $c_1 \approx 3.741\,772 \times 10^{-16}$ W$\cdot$m$^2$
+\item \texttt{c.phys.soundRefPressure} -- Sound reference pressure $p_0 = 20\text{ }\mu$Pa
+\item \texttt{c.phys.speedOfSoundAir} -- Speed of sound in air at 20$^\circ$C $\approx 343$ m/s
+\item \texttt{c.phys.speedOfLightWater} -- Speed of light in water $\approx 2.25 \times 10^{8}$ m/s
+\item \texttt{c.phys.g} -- Standard gravitational acceleration $g = 9.806\,65$ m/s$^2$ (exact)
+\end{itemize}
+
+\paragraph{Silicon and Crystallography}
+\begin{itemize}
+\item \texttt{c.phys.latticeSi} -- Lattice parameter of silicon $a_{\text{Si}} \approx 5.431\,021 \times 10^{-10}$ m
+\item \texttt{c.phys.latticeSi220} -- Lattice spacing of ideal Si(220) $d_{220} \approx 1.920\,156 \times 10^{-10}$ m
+\item \texttt{c.phys.molarVolumeSi} -- Molar volume of silicon $V_{m,\text{Si}} \approx 1.205\,883 \times 10^{-5}$ m$^3$/mol
+\end{itemize}
+
+\paragraph{Planck Units}
+\begin{itemize}
+\item \texttt{c.phys.planckLength} -- Planck length $\ell_P \approx 1.616\,255 \times 10^{-35}$ m
+\item \texttt{c.phys.planckMass} -- Planck mass $m_P \approx 2.176\,434 \times 10^{-8}$ kg
+\item \texttt{c.phys.planckMass\_GeV} -- Planck mass energy equivalent $\approx 1.220\,89 \times 10^{19}$ GeV
+\item \texttt{c.phys.planckTime} -- Planck time $t_P \approx 5.391\,247 \times 10^{-44}$ s
+\item \texttt{c.phys.planckTemp} -- Planck temperature $T_P \approx 1.416\,784 \times 10^{32}$ K
+\end{itemize}
+
+\paragraph{Miscellaneous}
+\begin{itemize}
+\item \texttt{c.phys.TCMB} -- Cosmic microwave background temperature $T_{\text{CMB}} \approx 2.725\,48$ K
+\item \texttt{c.phys.H0} -- Hubble constant $H_0 \approx 2.242 \times 10^{-18}$ Hz (approx. $70$ km/s/Mpc)
+\item \texttt{c.phys.SackurTetrode\_100} -- Sackur-Tetrode constant (1\,K, 100\,kPa) $\approx -1.151\,708$
+\item \texttt{c.phys.SackurTetrode\_101} -- Sackur-Tetrode constant (1\,K, 101.325\,kPa) $\approx -1.164\,871$
+\item \texttt{c.phys.neutronProtonMass} -- Neutron-proton mass difference in u $\approx 0.001\,388\,449$
+\item \texttt{c.phys.weakMixing} -- Weak mixing angle $\sin^2\theta_W \approx 0.223\,05$
+\item \texttt{c.phys.fermiConst} -- Fermi coupling constant $G_F \approx 1.166\,379 \times 10^{-5}$ GeV$^{-2}$
+\end{itemize}
+
+\subsection{Pseudo-Constants}
+Pseudo-constants are system-defined sets that provide access to electrical objects.
+
+\subsubsection{Set Pseudo-Constants}
+\begin{itemize}
+\item \texttt{*n} -- Empty set
+\item \texttt{*e} -- All parts, connections, pins, holes, and nets
+\item \texttt{*i} -- All pins and connections
+\item \texttt{*u} -- All parts, connections, and pins on the upper side of the board
+\item \texttt{*b} -- All parts, connections, and pins on the bottom side of the board
+\item \texttt{*h} -- All holes
+\item \texttt{*c} -- All connections
+\item \texttt{*p} -- All parts
+\item \texttt{*t} -- All pins
+\item \texttt{*v} -- All nets
+\item \texttt{*fp} -- All footprints
+\item \texttt{*pkg} -- All packages
+\item \texttt{*layer} -- All board layers
+\end{itemize}
+
+Example:
+\begin{verbatim}
+$my_set = *n   #c# Initialize with empty set
+$my_set = $my_set u { R1, R2 }   #c# Add elements
+\end{verbatim}
+
+\section{User-defined Constants}
+User-defined constants are created using the \texttt{let} keyword with the \texttt{c.u.} prefix:
+\begin{verbatim}
+EBNF:
+constant_assignment = "let", "c.u.", id, assigner, 
+                      [";", "P", "=", boolean_data_type]
+
+Examples:
+let c.u.$max_current [int]= 30
+let c.u.$board_name [string]= "PowerSupply"
+\end{verbatim}
+Constants are immutable by definition and cannot be reassigned.
+

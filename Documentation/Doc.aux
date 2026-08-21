@@ -1,0 +1,1987 @@
+\relax 
+\@writefile{toc}{\contentsline {chapter}{\numberline {1}Introduction}{10}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {1.1}Abstract}{10}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.2}Reading this Document}{10}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {part}{I\hspace  {1em}Core Language}{11}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {2}Design Principles}{12}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {2.1}Design Goals}{12}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}Applications and Application-Areas with special Priority during Design}{12}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Design Philosophy}{13}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}Lexical Structure}{14}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Character Set}{14}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Whitespace}{14}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Comments}{14}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}Identifiers}{15}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.5}Keywords}{15}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.6}Literals}{15}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.7}Operators}{15}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.8}Delimiters}{16}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.9}Tokenization Rules}{16}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.10}Statement Separators}{16}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.11}End of File}{16}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Formal Grammar}{17}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Primitives}{17}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}General Grammar}{17}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Grammar relating to the electrical System}{22}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Make Statement}{22}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Electrical Statements}{22}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}Physical Constraints}{23}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.4}System Statements}{24}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.5}Additional Grammar Rules}{24}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.6}Common Rules}{25}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Types}{26}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{ch:types}{{5}{26}{}{chapter.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}Generic Types}{26}{}\protected@file@percent }
+\newlabel{sec:generic-types}{{5.1}{26}{}{section.5.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}Boolean}{26}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Boolean Data Type Definition}{26}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Boolean Data Type Literals}{26}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Boolean Data Type Casting and Coercion}{26}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.2}Null}{26}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Null Data Type Definition}{26}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Null Data Type Literals}{27}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Null Coercion}{27}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Null Coalescing}{27}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Safe Access}{27}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Null Examples}{27}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.3}Integer}{27}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Integer Data Type Definition}{27}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Integer Data Type Literals}{28}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Integer Data Type Casting and Coercion}{29}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.4}Real}{29}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Real Data Type Definition}{29}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Real Data Type Literals}{29}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Real Data Type Casting and Coercion}{31}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.5}Complex}{31}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Complex Data Type Definition}{31}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Hierarchy}{31}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Complex Data Type Literals}{31}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Rectangular Form}{32}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Polar Form}{32}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Complex Data Type Casting and Coercion}{32}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Complex Components}{32}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.6}Set}{32}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Set Data Type Definition}{32}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Set Data Type Literals}{33}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Set Data Type Casting and Coercion}{33}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.7}String}{34}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{String Data Type Definition}{34}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{String Data Type Literals}{34}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Escape Sequences}{34}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Raw Strings}{34}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{String Data Type Casting and Coercion}{35}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.8}List}{35}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{List Data Type Definition}{35}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{List Data Type Literals}{35}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Exclusive Ranges}{36}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{List Data Type Casting and Coercion}{36}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.9}Tensor}{37}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{37}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Historical Note}{37}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Hierarchy}{37}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Tensor Data Type Literals}{37}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Warning}{37}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Creation}{38}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Shape}{38}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Validation Rules}{38}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{38}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Broadcasting}{39}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Element-wise Operations}{39}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Slicing}{39}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Reshape}{39}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Operators}{40}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Functions}{40}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}Function}{40}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}Function Data Type Definition}{40}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.2}Function Data Type Creation}{40}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Function Reference}{41}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Lambda Expression}{41}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.3}Function Data Type Calling}{41}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.4}Function Data Type Annotations}{41}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.5}Function Data Type Equality}{42}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.6}Function Data Type Collections}{42}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.7}Function Data Type Printing}{42}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.3}Electrical Types}{42}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.1}Part}{42}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Part Data Type Definition}{42}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Part Data Type Literals}{42}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Part Data Type Casting and Coercion}{43}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.2}Pin}{43}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Pin Data Type Definition}{43}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Pin Data Type Literals}{43}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Pin Data Type Casting and Coercion}{44}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.3}Connection}{44}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Connection Data Type Definition}{44}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Connection Data Type Literals}{44}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Connection Data Type Casting and Coercion}{44}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.4}Net}{44}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Net Data Type Definition}{44}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Net Data Type Literals}{44}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Net Data Type Casting and Coercion}{45}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.4}Type Casting with \texttt  {as}}{45}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.1}Syntax}{45}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.2}Numeric Conversions}{45}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{int as real}{45}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{real as int}{45}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{bool as int}{45}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{int as bool}{45}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{real as bool}{46}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.3}Complex Conversions}{46}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{int as complex}{46}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{real as complex}{46}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{complex as real}{46}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{complex as int}{46}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.4}List/Tensor Conversions}{46}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{list as tensor}{46}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{tensor as list}{46}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.5}Error Handling}{46}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.6}Edge Cases}{47}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {6}Variables}{48}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {6.1}Variable Declaration and Assignment}{48}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.1}Type-Inferred Assignment}{48}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.2}Variable Redeclaration}{48}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.2}Mutability}{49}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.3}Scope}{49}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.4}Examples}{50}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {7}Expressions}{51}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {7.1}Expression Grammar}{51}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7.2}Operator Precedence}{53}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7.3}Evaluation Order}{53}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {8}Operators}{54}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{sec:operators}{{8}{54}{}{chapter.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {8.1}Built-in Operators}{54}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1.1}Arithmetic}{54}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Overloading}{54}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{56}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1.2}Increment / Decrement}{57}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Semantics}{57}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1.3}Compound Assignment}{57}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Arithmetic}{57}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Set}{58}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Vector}{58}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Tensor (Ndarray)}{58}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Bitwise / Shift}{58}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Boolean}{58}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{IMPLY / NIMPLY}{58}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Bitwise Logic}{59}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Function Composition}{59}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Safe Null Assignment}{60}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Safe Typed Assignment (\texttt  {?[type]?=})}{60}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Safe Inferred Assignment (\texttt  {?t?=})}{61}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Lazy Binding (\texttt  {:Lt=} / \texttt  {:L[type]=})}{61}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Inferred Type (\texttt  {:Lt=})}{61}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Explicit Type (\texttt  {:L[type]=})}{61}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1.4}Swap}{63}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{63}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1.5}Comparison}{64}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Overloading}{64}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Function Equality}{64}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Numeric Equality}{65}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Three-way Numeric Compare}{65}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Approximate Equality}{65}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1.6}Boolean Logic}{66}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1.7}Bitwise Operations}{67}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1.8}Collection Operators}{68}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Overloading}{68}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{68}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1.9}List Operators}{69}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Overloading}{69}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{69}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1.10}Tensor Operators}{70}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Matrix Multiply}{70}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{70}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Transpose / Hermitian}{70}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Erase}{71}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Cryptographic Shred}{72}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Matrix Power}{72}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{72}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1.11}Set Comparison}{73}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1.12}Conditional Expression}{73}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1.13}Null Operators}{74}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Null Coalescing (\texttt  {??})}{74}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Safe Member Access (\texttt  {?.})}{74}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Safe Indexing (\texttt  {?[]})}{74}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Safe Function Call (\texttt  {?()})}{75}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Null-Safe Function Call (\texttt  {??()})}{75}{}\protected@file@percent }
+\newlabel{sec:lambda}{{8.1.13}{76}{}{subsection.8.1.13}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1.14}Lambda Expressions}{76}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Syntax}{76}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Type Overloading}{76}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Scope Rules}{77}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Return Value}{77}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Examples}{77}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Error Conditions}{78}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1.15}Pipeline}{78}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Semantics}{78}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Function Reference}{78}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{78}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Constraints}{79}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1.16}Function Composition}{79}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Syntax}{79}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Semantics}{79}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Overloading}{79}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{79}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Error Conditions}{80}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8.2}Operator Precedence}{80}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8.3}User-defined Operators}{81}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.1}Definition}{81}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.2}Examples}{81}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.3}Precedence}{82}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {9}Constants}{83}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {9.1}Built-in Constants}{83}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.1.1}Proper Constants}{83}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Mathematical Constants}{83}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Physical Constants}{84}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Fundamental}{84}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Electromagnetic}{84}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Atomic and Particle Masses}{84}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Particle Magnetic Moments and Ratios}{85}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Atomic Structure}{86}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Compton Wavelengths}{86}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Energy Conversions}{86}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Physical Parameters}{87}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Silicon and Crystallography}{87}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Planck Units}{88}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Miscellaneous}{88}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.1.2}Pseudo-Constants}{88}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Set Pseudo-Constants}{88}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9.2}User-defined Constants}{89}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {10}Control Flow}{90}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {10.1}Conditional Execution}{90}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {10.2}Cases}{91}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Equivalent if/otherwise chain}{92}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {10.3}Alias Statements}{92}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.3.1}Function Alias}{92}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.3.2}Namespace Alias}{93}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.3.3}Edge Cases}{93}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {10.4}For Loops}{93}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Variable Scoping}{93}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {10.5}While Loops}{93}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.1}Basic While Loop}{94}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Variable Scoping}{94}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.2}While with Else Clause}{94}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.3}Do-While Loops}{95}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.4}Break and Continue}{95}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.5}Nested While Loops}{96}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.6}Safety: Maximum Iteration Limit}{96}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.7}Infinite Loops}{96}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {10.6}Goto Statements}{97}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Warning -- Deprecated Usage}{97}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {10.7}End of Program Statements}{97}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {10.8}Output and Logging}{97}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {11}Functions}{98}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {11.1}Built-in Functions}{98}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.1}Mathematical Functions}{98}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Absolute Value Function}{98}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{99}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Modulus}{99}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor (Element-wise)}{99}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{99}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{99}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{99}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{100}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{100}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{100}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{100}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{100}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Numerical Considerations}{100}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{100}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Parallel Equivalent Function}{101}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{101}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Equivalent Forms}{101}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{101}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{102}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{102}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Zero and Infinity}{102}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{102}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{102}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{102}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Signum Function}{102}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{103}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Definition}{103}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{103}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{103}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{104}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{104}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{104}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{104}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{104}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{104}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Heaviside Step Function}{104}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{105}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Definition}{105}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{105}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{106}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{106}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{106}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{at\_zero Parameter}{106}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{106}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{107}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{107}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{107}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{107}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Sigmoid Function}{107}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Standard Sigmoid}{108}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scaled Sigmoid}{108}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Curve Selection}{108}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Numerical Stability}{108}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Optimization}{109}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{109}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{109}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{109}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{109}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{110}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scaled Examples}{110}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Curve Examples}{110}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Alias Examples}{110}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{110}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{111}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{111}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Threshold Examples}{111}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Sine Function}{111}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{112}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Definition}{112}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{112}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{112}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{112}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{112}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{112}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{113}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{113}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{113}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{113}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{113}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{113}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{113}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Cosine Function}{113}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{114}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Definition}{114}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{114}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{114}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{115}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{115}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{115}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{115}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{115}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{115}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{115}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{116}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{116}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{116}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Tangent Function}{116}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{116}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Definition}{117}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{117}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{117}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{117}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{117}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{117}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{118}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{118}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{118}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{118}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{118}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{118}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{118}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Cotangent Function}{118}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{119}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Definition}{119}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{119}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{119}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{120}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{120}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{120}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{120}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{120}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{120}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{120}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{121}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{121}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{121}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Secant Function}{121}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{121}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Definition}{122}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{122}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{122}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{122}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{122}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{122}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{123}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{123}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{123}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{123}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{123}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{123}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{123}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Cosecant Function}{123}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{124}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Definition}{124}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{124}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{124}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{124}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{125}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{125}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{125}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{125}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{125}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{125}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{125}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{125}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{126}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Versine Functions}{126}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Versine}{126}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{126}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{126}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{127}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{127}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{127}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{127}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{127}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{127}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{128}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{128}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{128}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{128}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{128}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Vercosine}{128}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{128}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{129}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{129}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{129}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{129}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{129}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{129}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{129}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{130}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{130}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{130}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{130}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{130}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Coversine}{130}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{130}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{131}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{131}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{131}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{131}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{131}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{131}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{131}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{132}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{132}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{132}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{132}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{132}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Covercosine}{132}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{132}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{133}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{133}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{133}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{133}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{133}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{133}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{133}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{134}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{134}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{134}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{134}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{134}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Haversine}{134}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{135}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{135}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{135}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{135}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{135}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{135}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{135}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{136}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{136}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{136}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{136}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{136}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{136}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Havercosine}{136}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{137}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{137}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{137}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{137}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{137}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{137}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{137}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{138}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{138}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{138}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{138}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{138}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{138}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Hacoversine}{138}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{139}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{139}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{139}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{139}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{139}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{139}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{139}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{140}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{140}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{140}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{140}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{140}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{140}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Hacovercosine}{140}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{141}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{141}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{141}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{141}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{141}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{141}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{141}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{142}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{142}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{142}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{142}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{142}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{142}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Exsecant}{142}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{143}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{143}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{143}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{143}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{143}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{143}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{144}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{144}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{144}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{144}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{144}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{144}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{144}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Excosecant}{144}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{145}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{145}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{145}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{145}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{145}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{146}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{146}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{146}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{146}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{146}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{146}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{146}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{146}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Chord}{147}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{147}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{147}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{147}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{147}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{148}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{148}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{148}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{148}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{148}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{148}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{148}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{148}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{149}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Arcsine Function}{149}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{149}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Definition}{149}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{149}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{150}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{150}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{150}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{150}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{150}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{150}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{151}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{151}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{151}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{151}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{151}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Arccosine Function}{151}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{152}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Definition}{152}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{152}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{152}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{152}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{152}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{153}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{153}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{153}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{153}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{153}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{153}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{153}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{153}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Arctangent Function}{154}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{154}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Definition}{154}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{154}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{154}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{155}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{155}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{155}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{155}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{155}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{155}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{155}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{156}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{156}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{156}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Arccotangent Function}{156}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{156}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Definition}{156}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{157}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{157}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{157}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{157}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{157}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{157}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{158}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{158}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{158}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{158}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{158}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{158}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Arcsecant Function}{158}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{159}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Definition}{159}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Conversion}{159}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{159}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Type}{159}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Behavior}{159}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalar Examples}{160}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Degree Examples}{160}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complex Examples}{160}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Examples}{160}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List Auto-conversion}{160}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed Unit Examples}{160}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Examples}{160}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{160}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Arccosecant Function}{161}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hyperbolic Sine Function}{161}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hyperbolic Cosine Function}{161}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hyperbolic Tangent Function}{162}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hyperbolic Cotangent Function}{162}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hyperbolic Secant Function}{163}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hyperbolic Cosecant Function}{163}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Complex Hyperbolic Formulas}{163}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hyperbolic Arcsine Function}{164}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hyperbolic Arccosine Function}{164}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hyperbolic Arctangent Function}{164}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Inverse Hyperbolic Cotangent Function}{165}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Inverse Hyperbolic Secant Function}{165}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Inverse Hyperbolic Cosecant Function}{166}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Complex Hyperbolic Inverse Formulas}{166}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Gudermannian Function}{166}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{166}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{167}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{167}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Inverse Gudermannian Function}{167}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{167}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{167}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{168}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Roundtrip Property}{168}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Exponential Function}{168}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Square Root Function}{168}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Power Function}{169}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hyperoperation}{170}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hyperroot}{171}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Super-Logarithm}{172}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Natural Logarithm}{172}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Base-10 Logarithm}{173}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Expm1 Function}{173}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Log1p Function}{174}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Exp2 Function}{174}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Logaddexp Function}{174}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Logaddexp2 Function}{175}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{IsClose Function}{175}{}\protected@file@percent }
+\newlabel{sec:isclose}{{11.1.1}{175}{}{subsection.11.1.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{Relationship to Operators}{175}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{176}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{AllClose Function}{176}{}\protected@file@percent }
+\newlabel{sec:allclose}{{11.1.1}{176}{}{subsection.11.1.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{Examples}{176}{}\protected@file@percent }
+\newlabel{sec:complex_functions}{{11.1.1}{177}{}{subsection.11.1.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Real Part Function}{177}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Imaginary Part Function}{177}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Angle Function}{178}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Complex Conjugate Function}{178}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Polar Conversion Function}{178}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Rectangular Conversion Function}{179}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Cis Function}{179}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Radians to Degrees Function}{180}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Degrees to Radians Function}{180}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Floor Function}{180}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Ceiling Function}{181}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Round Function}{181}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{E-Series Rounding Function}{182}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{E-Series Reference}{183}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Minimum Function}{183}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Maximum Function}{184}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Element-wise Maximum}{184}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Element-wise Minimum}{185}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Inverse Tangent Function based on a Vector Argument}{185}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{186}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Norm Function}{186}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Normalize Function}{187}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Relationship between abs(vec=True) and norm}{187}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Clamp}{187}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{188}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Linear Interpolation}{188}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Is Finite Function}{188}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Is NaN Function}{189}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Unit in the Last Place Function}{189}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Machine Epsilon Function}{190}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Truncate}{190}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Cube Root}{190}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Nth Root}{191}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Base-2 Logarithm}{192}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{General Logarithm}{192}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hypotenuse}{192}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Sinc Function}{193}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Tanc Function}{193}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Factorial}{194}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Greatest Common Divisor}{194}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Least Common Multiple}{194}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Double Factorial}{195}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Falling Factorial}{195}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Rising Factorial}{195}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Binomial Coefficient}{196}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Multinomial Coefficient}{196}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Modular Inverse}{197}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Divides}{197}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Permutations}{197}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Combinations}{198}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Partitions}{198}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Compositions}{198}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Gray Code}{199}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Derangements}{199}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Gamma Function}{200}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Log-Gamma Function}{200}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.2}String Functions}{201}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{String Conversion}{201}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{String Formatting}{201}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{201}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Uppercase Function}{202}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Lowercase Function}{202}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{String Character Access}{203}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{String Slice}{203}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{String Length Function}{203}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Unicode Code Point Function}{204}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Contains Function}{204}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{IndexOf Function}{205}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{LastIndexOf Function}{205}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Count Function}{205}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{StartsWith Function}{206}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{EndsWith Function}{206}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Replace Function}{206}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{ReplaceAll Function}{207}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Insert Function}{207}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Remove Function}{208}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{ToUpperCase Function}{208}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{ToLowerCase Function}{208}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Capitalize Function}{209}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Title Case Function}{209}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Swap Case Function}{210}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Trim Function}{210}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{TrimStart Function}{210}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{TrimEnd Function}{211}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Split Function}{211}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{SplitLines Function}{211}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Join Function}{212}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Partition Function}{212}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Format Hex Function}{213}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Format Binary Function}{213}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Is Empty Function}{213}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Is Blank Function}{214}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Is Numeric Function}{214}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Is Integer Function}{215}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Is Real Function}{215}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Is Identifier Function}{215}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Is Valid UTF-8 Function}{216}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Regex Functions}{216}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Regex Match}{216}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Regex Find}{217}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Regex FindAll}{217}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Regex Replace}{217}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Encoding Functions}{217}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Bytes Conversion}{217}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{FromBytes}{217}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Base64}{218}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Hex Encode/Decode}{218}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Identifier Functions}{218}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Case Checks}{218}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Sanitize Identifier}{219}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.3}Vectorization}{219}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Supported Functions}{219}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Edge Cases}{219}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Examples}{219}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.4}Tensor Indexing}{220}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Element Access}{220}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Sub-tensor Access}{220}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Slice Access}{221}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Index List Access}{221}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Boolean Indexing}{222}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Ellipsis Indexing}{222}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Safe Indexing (\texttt  {?[]})}{222}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Assignment}{223}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Edge Cases}{224}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Semantics}{224}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.5}List and Set Functions}{224}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Concatenation}{224}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Push}{225}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Pop}{225}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Head}{225}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Tail}{226}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Type Conversion}{226}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{List to Set}{226}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set to List}{226}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Copy and Clone}{226}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Shallow Copy}{226}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Deep Clone}{227}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.6}Ndarray Functions}{227}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Array Creation}{227}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Zeros}{227}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Ones}{228}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Identity Matrix}{228}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Full}{228}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Diagonal}{229}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Diagonal Flat}{229}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Lower Triangle}{229}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Upper Triangle}{230}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Eye}{230}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Linspace}{230}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Logspace}{231}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Geomspace}{231}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Dimension Manipulation}{232}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Stack}{232}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Vertical Stack}{232}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Horizontal Stack}{232}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Cleave}{233}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Swap Axes}{233}{}\protected@file@percent }
+\newlabel{sec:transpose}{{11.1.6}{233}{}{subsection.11.1.6}{}}
+\@writefile{toc}{\contentsline {paragraph}{Transpose}{233}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Semantics}{234}{}\protected@file@percent }
+\newlabel{eq:transpose}{{11.1}{234}{}{equation.11.1}{}}
+\newlabel{eq:transpose-axis}{{11.2}{234}{}{equation.11.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Parameters}{234}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Common Equivalences}{234}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Edge Cases}{234}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Examples}{234}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Basic 2D Transpose}{234}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Arbitrary Axis Permutation (3D)}{235}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Equivalent to moveaxis / rollaxis}{235}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{1D (No-op)}{235}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Identity Permutation}{235}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Error Cases}{235}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Expand Dimensions}{235}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Move Axis}{236}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Basic}{236}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{2D}{236}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{No-op}{236}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Negative Index}{236}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Error Cases}{236}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Roll Axis}{236}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Basic}{237}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{3D}{237}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{No-op}{237}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Negative Index}{237}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Error Cases}{237}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Squeeze}{237}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Reshape}{237}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Basic}{238}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Pipeline}{238}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Inference}{238}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Error Cases}{238}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Flip}{238}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Flip Vertical}{239}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Flip Horizontal}{239}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Rotate 90}{239}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Roll}{239}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Repeat}{240}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tile}{240}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Pad}{241}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Append}{241}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Insert}{241}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Delete}{242}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Trim Zeros}{242}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Meshgrid}{242}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Einstein Summation}{243}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases -- Reduction Functions}{245}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Reduction Functions}{246}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Sum}{246}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Product}{246}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mean}{247}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Standard Deviation}{247}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Variance}{247}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Median}{247}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Percentile}{247}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases -- Percentile}{248}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mode}{248}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases -- Mode}{248}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Quantile}{248}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases -- Quantile}{248}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Root Mean Square}{249}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Peak}{249}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases -- Peak}{249}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Skewness}{249}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Kurtosis}{250}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Search Functions}{250}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases -- Search Functions}{250}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Index of Minimum}{251}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Index of Maximum}{251}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Binary Search}{251}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Partial Sort}{251}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Intersection}{252}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Union}{252}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Set Difference}{252}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Is In}{253}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Is In (Flattened)}{253}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Select}{253}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Compress}{254}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Advanced Indexing}{254}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Place}{254}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Put}{254}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Take}{255}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Choose}{255}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Index Mesh}{255}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Diagonal Indices}{256}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Lower Triangle Indices}{256}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Upper Triangle Indices}{256}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Shape Functions}{257}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Flatten}{257}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Shape}{257}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Dimensions}{257}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Data Type}{258}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Size}{258}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Memory}{258}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Cumulative Operations}{258}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Cumulative Sum}{258}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Cumulative Product}{259}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Difference}{259}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Trapezoidal Integration}{259}{}\protected@file@percent }
+\newlabel{eq:trapz}{{11.3}{260}{}{equation.11.3}{}}
+\newlabel{eq:trapz-uniform}{{11.4}{260}{}{equation.11.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{Grad}{260}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Sort}{261}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Argsort}{261}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Reverse}{262}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Unique}{262}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Linear Algebra Functions}{262}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases -- Linear Algebra Functions}{262}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Determinant}{262}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Matrix Inverse}{263}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Eigenvalues}{263}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Eigenvectors}{263}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Singular Value Decomposition}{263}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{LU Decomposition}{263}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{QR Decomposition}{264}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Cholesky Decomposition}{264}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{264}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Trace}{264}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Matrix Rank}{264}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Condition Number}{265}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Pseudo-Inverse}{265}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Least Squares}{265}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Cross Product}{265}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Outer Product}{266}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Kronecker Product}{266}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tensor Dot}{266}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Hermitian Eigendecomposition}{267}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Sign-Log Determinant}{267}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Multi-Matrix Multiply}{267}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Vandermonde Matrix}{268}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Statistical Functions}{269}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Histogram}{269}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases -- Histogram}{269}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Weighted Average}{269}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Linear System Solver}{270}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.7}Integer Sequence Functions}{270}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Fibonacci}{270}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Lucas}{271}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Pell}{271}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Tribonacci}{272}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Catalan}{272}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Bell}{272}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Bernoulli}{273}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Euler Number}{273}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Stirling Numbers of the First Kind}{274}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Stirling Numbers of the Second Kind}{274}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Partition Number}{275}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Harmonic Number}{275}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.8}Higher-Order Functions}{275}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases -- Higher-Order Functions}{276}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Map}{276}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Morphology}{276}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Overloading}{276}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{276}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Error Conditions}{277}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Filter}{277}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Morphology}{277}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Overloading}{277}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{277}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Error Conditions}{277}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Reduce}{278}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Morphology}{278}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Overloading}{278}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{278}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Error Conditions}{279}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Where}{279}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Morphology}{279}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Overloading}{279}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples — Index Mode}{279}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples — Value Selection Mode}{279}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Error Conditions}{280}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Nonzero}{280}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{NaN Fill}{281}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Count}{281}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Morphology}{281}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Overloading}{281}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{281}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Error Conditions}{282}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Find}{282}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Morphology}{282}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Overloading}{282}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{282}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Error Conditions}{282}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Sort with Comparator}{283}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Comparator Lambda}{283}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Overloading}{283}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{283}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Error Conditions}{284}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Arity}{284}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Overloading}{284}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{284}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Error Conditions}{284}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Assert}{284}{}\protected@file@percent }
+\newlabel{sec:assert}{{11.1.8}{284}{}{subsection.11.1.8}{}}
+\@writefile{toc}{\contentsline {paragraph}{Keyword Form}{285}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Function Form}{285}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Semantics}{285}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Error Type Aliases}{285}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{285}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Error Conditions}{286}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Throw}{286}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Warn}{286}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Try/Except}{287}{}\protected@file@percent }
+\newlabel{sec:try-except}{{11.1.8}{287}{}{subsection.11.1.8}{}}
+\@writefile{toc}{\contentsline {paragraph}{Syntax}{287}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Semantics}{287}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Variable Scope}{287}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{287}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Error Conditions}{288}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.9}Signal Processing Functions}{289}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Fast Fourier Transform}{289}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Overloading}{289}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{289}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Error Conditions}{289}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Inverse Fast Fourier Transform}{289}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Type Overloading}{290}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{290}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Error Conditions}{290}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{FFT Utilities}{290}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{FFT Shift}{290}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Inverse FFT Shift}{290}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{FFT Frequencies}{291}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Real FFT}{291}{}\protected@file@percent }
+\newlabel{sec:rfft}{{11.1.9}{291}{}{subsection.11.1.9}{}}
+\@writefile{toc}{\contentsline {paragraph}{Output Length}{291}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Comparison to fft}{291}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{292}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Zero-Padding and Truncation}{292}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Typical Workflow}{292}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Inverse Real FFT}{292}{}\protected@file@percent }
+\newlabel{sec:irfft}{{11.1.9}{292}{}{subsection.11.1.9}{}}
+\@writefile{toc}{\contentsline {paragraph}{Output Length}{292}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{293}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Roundtrip Verification}{293}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Resampling via Fourier Interpolation}{293}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Real FFT Frequencies}{293}{}\protected@file@percent }
+\newlabel{sec:rfftfreq}{{11.1.9}{293}{}{subsection.11.1.9}{}}
+\@writefile{toc}{\contentsline {paragraph}{Relationship to fftfreq}{293}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{294}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complete Example}{294}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.10}Signal Processing Namespace}{294}{}\protected@file@percent }
+\newlabel{sec:sig-namespace}{{11.1.10}{294}{}{subsection.11.1.10}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Notation}{294}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Transforms}{295}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Discrete Fourier Transform --- \texttt  {f.sig.dft(signal)}}{295}{}\protected@file@percent }
+\newlabel{eq:sig-dft}{{11.5}{295}{}{equation.11.5}{}}
+\newlabel{eq:sig-idft}{{11.6}{295}{}{equation.11.6}{}}
+\@writefile{toc}{\contentsline {paragraph}{Fast Fourier Transform --- \texttt  {f.sig.fft(signal)}}{295}{}\protected@file@percent }
+\newlabel{eq:sig-fft}{{11.7}{295}{}{equation.11.7}{}}
+\@writefile{toc}{\contentsline {paragraph}{Inverse FFT --- \texttt  {f.sig.ifft(signal)}}{296}{}\protected@file@percent }
+\newlabel{eq:sig-ifft}{{11.8}{296}{}{equation.11.8}{}}
+\@writefile{toc}{\contentsline {paragraph}{Real FFT --- \texttt  {f.sig.rfft(signal)}}{296}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Inverse Real FFT --- \texttt  {f.sig.irfft(signal)}}{296}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Real FFT Frequencies --- \texttt  {f.sig.rfftfreq(n, d)}}{296}{}\protected@file@percent }
+\newlabel{eq:sig-rfftfreq}{{11.9}{296}{}{equation.11.9}{}}
+\@writefile{toc}{\contentsline {paragraph}{Short-Time FFT --- \texttt  {f.sig.stft(signal, window, hop)}}{297}{}\protected@file@percent }
+\newlabel{eq:sig-stft}{{11.10}{297}{}{equation.11.10}{}}
+\@writefile{toc}{\contentsline {paragraph}{Hilbert Transform --- \texttt  {f.sig.hilbert(signal)}}{297}{}\protected@file@percent }
+\newlabel{eq:sig-hilbert}{{11.11}{297}{}{equation.11.11}{}}
+\newlabel{eq:sig-analytic}{{11.12}{297}{}{equation.11.12}{}}
+\@writefile{toc}{\contentsline {paragraph}{Envelope and Phase --- \texttt  {f.sig.envelope(signal)}, \texttt  {f.sig.phase(signal)}, \texttt  {f.sig.unwrapPhase(signal)}}{298}{}\protected@file@percent }
+\newlabel{eq:sig-envelope}{{11.13}{298}{}{equation.11.13}{}}
+\newlabel{eq:sig-phase}{{11.14}{298}{}{equation.11.14}{}}
+\newlabel{eq:sig-unwrap}{{11.15}{298}{}{equation.11.15}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Windowing}{298}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Window Functions --- \texttt  {f.sig.window(type, size)}}{298}{}\protected@file@percent }
+\newlabel{eq:win-rect}{{11.16}{298}{}{equation.11.16}{}}
+\newlabel{eq:win-hann}{{11.17}{298}{}{equation.11.17}{}}
+\newlabel{eq:win-hamming}{{11.18}{298}{}{equation.11.18}{}}
+\newlabel{eq:win-blackman}{{11.19}{298}{}{equation.11.19}{}}
+\newlabel{eq:win-bartlett}{{11.20}{298}{}{equation.11.20}{}}
+\newlabel{eq:win-kaiser}{{11.21}{298}{}{equation.11.21}{}}
+\newlabel{eq:win-gaussian}{{11.22}{298}{}{equation.11.22}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Filtering}{299}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Architecture}{299}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Apply Filter --- \texttt  {f.sig.ufilter(signal, filterFunc)}}{299}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Combine Filters --- \texttt  {f.sig.combineFilters(f1, f2, ...)}}{299}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Basic Filter Shapes}{299}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subparagraph}{Lowpass --- \texttt  {f.sig.lptf(cutoff, falloff, resonance)}}{299}{}\protected@file@percent }
+\newlabel{eq:sig-lptf}{{11.23}{299}{}{equation.11.23}{}}
+\@writefile{toc}{\contentsline {subparagraph}{Highpass --- \texttt  {f.sig.hptf(cutoff, falloff, resonance)}}{300}{}\protected@file@percent }
+\newlabel{eq:sig-hptf}{{11.24}{300}{}{equation.11.24}{}}
+\@writefile{toc}{\contentsline {subparagraph}{Bandpass --- \texttt  {f.sig.bptf(low, high, resonance)}}{300}{}\protected@file@percent }
+\newlabel{eq:sig-bptf}{{11.25}{300}{}{equation.11.25}{}}
+\@writefile{toc}{\contentsline {subparagraph}{Notch --- \texttt  {f.sig.nptf(freq, Q)}}{300}{}\protected@file@percent }
+\newlabel{eq:sig-nptf}{{11.26}{300}{}{equation.11.26}{}}
+\@writefile{toc}{\contentsline {subparagraph}{Allpass --- \texttt  {f.sig.aptf(freq, Q)}}{300}{}\protected@file@percent }
+\newlabel{eq:sig-aptf}{{11.27}{300}{}{equation.11.27}{}}
+\@writefile{toc}{\contentsline {paragraph}{Equalization Filters}{300}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subparagraph}{Peaking EQ --- \texttt  {f.sig.peteq(freq, gain, Q)}}{301}{}\protected@file@percent }
+\newlabel{eq:sig-peteq}{{11.28}{301}{}{equation.11.28}{}}
+\@writefile{toc}{\contentsline {subparagraph}{Low Shelf --- \texttt  {f.sig.lshelf(freq, gain, slope)}}{301}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subparagraph}{High Shelf --- \texttt  {f.sig.hshelf(freq, gain, slope)}}{301}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Classic IIR Filter Design}{301}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subparagraph}{Butterworth --- \texttt  {f.sig.butter(order, cutoff, type, fs)}}{301}{}\protected@file@percent }
+\newlabel{eq:sig-butter}{{11.29}{301}{}{equation.11.29}{}}
+\@writefile{toc}{\contentsline {subparagraph}{Bessel --- \texttt  {f.sig.bessel(order, cutoff, type, fs)}}{301}{}\protected@file@percent }
+\newlabel{eq:sig-bessel}{{11.30}{301}{}{equation.11.30}{}}
+\@writefile{toc}{\contentsline {subparagraph}{Chebyshev Type I --- \texttt  {f.sig.cheby1(order, cutoff, rp, type, fs)}}{301}{}\protected@file@percent }
+\newlabel{eq:sig-cheby1}{{11.31}{301}{}{equation.11.31}{}}
+\@writefile{toc}{\contentsline {subparagraph}{Chebyshev Type II --- \texttt  {f.sig.cheby2(order, cutoff, rs, type, fs)}}{301}{}\protected@file@percent }
+\newlabel{eq:sig-cheby2}{{11.32}{301}{}{equation.11.32}{}}
+\@writefile{toc}{\contentsline {subparagraph}{Elliptic --- \texttt  {f.sig.ellip(order, cutoff, rp, rs, type, fs)}}{302}{}\protected@file@percent }
+\newlabel{eq:sig-ellip}{{11.33}{302}{}{equation.11.33}{}}
+\@writefile{toc}{\contentsline {subparagraph}{Linkwitz-Riley --- \texttt  {f.sig.linkwitzRiley(order, cutoff, type, fs)}}{302}{}\protected@file@percent }
+\newlabel{eq:sig-lr}{{11.34}{302}{}{equation.11.34}{}}
+\@writefile{toc}{\contentsline {paragraph}{FIR Filter Design}{302}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subparagraph}{Window Method --- \texttt  {f.sig.firwin(numtaps, cutoff, fs, window)}}{302}{}\protected@file@percent }
+\newlabel{eq:sig-firwin}{{11.35}{302}{}{equation.11.35}{}}
+\@writefile{toc}{\contentsline {subparagraph}{Least-Squares --- \texttt  {f.sig.firls(numtaps, bands, desired, fs)}}{302}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subparagraph}{Equiripple --- \texttt  {f.sig.remez(numtaps, bands, desired, fs)}}{302}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Filter Application}{302}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subparagraph}{Second-Order Sections --- \texttt  {f.sig.sosfilt(sos, signal)}}{303}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subparagraph}{Direct Form --- \texttt  {f.sig.lfilter(b, a, signal)}}{303}{}\protected@file@percent }
+\newlabel{eq:sig-lfilter}{{11.36}{303}{}{equation.11.36}{}}
+\@writefile{toc}{\contentsline {subparagraph}{Zero-Phase --- \texttt  {f.sig.filtfilt(b, a, signal)}}{303}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Convolution and Correlation}{303}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Convolution --- \texttt  {f.sig.convolve(a, b)}}{303}{}\protected@file@percent }
+\newlabel{eq:sig-convolve}{{11.37}{303}{}{equation.11.37}{}}
+\@writefile{toc}{\contentsline {paragraph}{Deconvolution --- \texttt  {f.sig.deconvolve(a, b)}}{303}{}\protected@file@percent }
+\newlabel{eq:sig-deconvolve}{{11.38}{303}{}{equation.11.38}{}}
+\@writefile{toc}{\contentsline {paragraph}{Cross-Correlation --- \texttt  {f.sig.correlate(a, b)}}{304}{}\protected@file@percent }
+\newlabel{eq:sig-correlate}{{11.39}{304}{}{equation.11.39}{}}
+\@writefile{toc}{\contentsline {paragraph}{Auto-Correlation --- \texttt  {f.sig.autocorrelate(a)}}{304}{}\protected@file@percent }
+\newlabel{eq:sig-autocorr}{{11.40}{304}{}{equation.11.40}{}}
+\@writefile{toc}{\contentsline {paragraph}{Normalized Cross-Correlation --- \texttt  {f.sig.xcorr(a, b)}}{304}{}\protected@file@percent }
+\newlabel{eq:sig-xcorr}{{11.41}{304}{}{equation.11.41}{}}
+\@writefile{toc}{\contentsline {paragraph}{2D Convolution --- \texttt  {f.sig.convolve2D(image, kernel)}}{304}{}\protected@file@percent }
+\newlabel{eq:sig-conv2d}{{11.42}{304}{}{equation.11.42}{}}
+\@writefile{toc}{\contentsline {paragraph}{N-D Convolution --- \texttt  {f.sig.convolveND(array, kernel)}}{305}{}\protected@file@percent }
+\newlabel{eq:sig-convnd}{{11.43}{305}{}{equation.11.43}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Standard Kernels}{305}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Gaussian Kernel --- \texttt  {f.sig.gaussianKernel(size, sigma)}}{305}{}\protected@file@percent }
+\newlabel{eq:sig-gaussian-kernel}{{11.44}{305}{}{equation.11.44}{}}
+\@writefile{toc}{\contentsline {paragraph}{Box Kernel --- \texttt  {f.sig.boxKernel(size)}}{306}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Motion Blur Kernel --- \texttt  {f.sig.motionKernel(size, angle)}}{306}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Sharpen Kernel --- \texttt  {f.sig.sharpenKernel(amount)}}{306}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Unsharp Mask --- \texttt  {f.sig.unsharpMask(size, sigma, amount)}}{307}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Sobel Kernel --- \texttt  {f.sig.sobelKernel(direction)}}{307}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Prewitt Kernel --- \texttt  {f.sig.prewittKernel(direction)}}{307}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Laplacian Kernel --- \texttt  {f.sig.laplacianKernel(variant)}}{308}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Laplacian of Gaussian Kernel --- \texttt  {f.sig.laplacianOfGaussianKernel(size, sigma)}}{308}{}\protected@file@percent }
+\newlabel{eq:sig-log-kernel}{{11.45}{308}{}{equation.11.45}{}}
+\@writefile{toc}{\contentsline {paragraph}{Emboss Kernel --- \texttt  {f.sig.embossKernel(angle)}}{308}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{High-Pass Kernel --- \texttt  {f.sig.highpassKernel(size, sigma)}}{309}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Identity Kernel --- \texttt  {f.sig.identityKernel()}}{309}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Normalize Kernel --- \texttt  {f.sig.normalizeKernel(kernel)}}{309}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Flip Kernel --- \texttt  {f.sig.flipKernel(kernel)}}{310}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Time-Domain Effects}{310}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Comb Filter --- \texttt  {f.sig.comb(delay, feedback, feedforward)}}{310}{}\protected@file@percent }
+\newlabel{eq:sig-comb-ff}{{11.46}{310}{}{equation.11.46}{}}
+\newlabel{eq:sig-comb-fb}{{11.47}{310}{}{equation.11.47}{}}
+\@writefile{toc}{\contentsline {paragraph}{Flanger --- \texttt  {f.sig.flanger(delay, rate, depth, feedback)}}{310}{}\protected@file@percent }
+\newlabel{eq:sig-flanger-delay}{{11.48}{310}{}{equation.11.48}{}}
+\newlabel{eq:sig-flanger}{{11.49}{310}{}{equation.11.49}{}}
+\@writefile{toc}{\contentsline {paragraph}{Echo --- \texttt  {f.sig.echo(delay, decay, repeats)}}{310}{}\protected@file@percent }
+\newlabel{eq:sig-echo}{{11.50}{310}{}{equation.11.50}{}}
+\@writefile{toc}{\contentsline {paragraph}{Reverb --- \texttt  {f.sig.reverb(room, damping, wet)}}{310}{}\protected@file@percent }
+\newlabel{eq:sig-reverb}{{11.51}{310}{}{equation.11.51}{}}
+\@writefile{toc}{\contentsline {paragraph}{Phaser --- \texttt  {f.sig.phaser(stages, rate, depth)}}{310}{}\protected@file@percent }
+\newlabel{eq:sig-phaser}{{11.52}{310}{}{equation.11.52}{}}
+\@writefile{toc}{\contentsline {paragraph}{Allpass --- \texttt  {f.sig.allpass(freq, Q)}}{311}{}\protected@file@percent }
+\newlabel{eq:sig-allpass-single}{{11.53}{311}{}{equation.11.53}{}}
+\@writefile{toc}{\contentsline {paragraph}{Chorus --- \texttt  {f.sig.chorus(delay, rate, depth, mix)}}{311}{}\protected@file@percent }
+\newlabel{eq:sig-chorus}{{11.54}{311}{}{equation.11.54}{}}
+\@writefile{toc}{\contentsline {paragraph}{Tremolo --- \texttt  {f.sig.tremolo(rate, depth)}}{311}{}\protected@file@percent }
+\newlabel{eq:sig-tremolo}{{11.55}{311}{}{equation.11.55}{}}
+\@writefile{toc}{\contentsline {paragraph}{Vibrato --- \texttt  {f.sig.vibrato(rate, depth)}}{311}{}\protected@file@percent }
+\newlabel{eq:sig-vibrato}{{11.56}{311}{}{equation.11.56}{}}
+\@writefile{toc}{\contentsline {paragraph}{Auto-Wah --- \texttt  {f.sig.autoWah(attack, release, sens)}}{311}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Ring Modulation --- \texttt  {f.sig.ringMod(freq)}}{311}{}\protected@file@percent }
+\newlabel{eq:sig-ringmod}{{11.57}{311}{}{equation.11.57}{}}
+\@writefile{toc}{\contentsline {paragraph}{Soft Clipping --- \texttt  {f.sig.softClip(threshold, gain)}}{311}{}\protected@file@percent }
+\newlabel{eq:sig-softclip}{{11.58}{311}{}{equation.11.58}{}}
+\@writefile{toc}{\contentsline {paragraph}{Hard Clipping --- \texttt  {f.sig.hardClip(threshold)}}{311}{}\protected@file@percent }
+\newlabel{eq:sig-hardclip}{{11.59}{311}{}{equation.11.59}{}}
+\@writefile{toc}{\contentsline {paragraph}{Saturation --- \texttt  {f.sig.saturation(drive, mix)}}{311}{}\protected@file@percent }
+\newlabel{eq:sig-saturation}{{11.60}{311}{}{equation.11.60}{}}
+\@writefile{toc}{\contentsline {paragraph}{Fuzz --- \texttt  {f.sig.fuzz(gain, threshold, mix)}}{312}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Measurement and Analysis}{312}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Signal-to-Noise Ratio --- \texttt  {f.sig.snr(signal, noise)}}{312}{}\protected@file@percent }
+\newlabel{eq:sig-snr}{{11.61}{312}{}{equation.11.61}{}}
+\@writefile{toc}{\contentsline {paragraph}{Total Harmonic Distortion --- \texttt  {f.sig.thd(signal)}}{312}{}\protected@file@percent }
+\newlabel{eq:sig-thd}{{11.62}{312}{}{equation.11.62}{}}
+\@writefile{toc}{\contentsline {paragraph}{SINAD --- \texttt  {f.sig.sINAD(signal)}}{312}{}\protected@file@percent }
+\newlabel{eq:sig-sinad}{{11.63}{312}{}{equation.11.63}{}}
+\@writefile{toc}{\contentsline {paragraph}{Spurious-Free Dynamic Range --- \texttt  {f.sig.sfdr(signal)}}{313}{}\protected@file@percent }
+\newlabel{eq:sig-sfdr}{{11.64}{313}{}{equation.11.64}{}}
+\@writefile{toc}{\contentsline {paragraph}{RMS, Peak-to-Peak, Crest Factor, DC Offset}{313}{}\protected@file@percent }
+\newlabel{eq:sig-rms}{{11.65}{313}{}{equation.11.65}{}}
+\newlabel{eq:sig-p2p}{{11.66}{313}{}{equation.11.66}{}}
+\newlabel{eq:sig-cf}{{11.67}{313}{}{equation.11.67}{}}
+\newlabel{eq:sig-dc}{{11.68}{313}{}{equation.11.68}{}}
+\@writefile{toc}{\contentsline {paragraph}{Dynamic Range --- \texttt  {f.sig.dynamicRange(signal, fs)}}{313}{}\protected@file@percent }
+\newlabel{eq:sig-dr}{{11.69}{313}{}{equation.11.69}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Resampling and Manipulation}{313}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Resample --- \texttt  {f.sig.resample(signal, rate)}}{313}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Interpolate Signal --- \texttt  {f.sig.interpolateSignal(signal)}}{314}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Downsample --- \texttt  {f.sig.downsample(signal, factor)}}{314}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Upsample --- \texttt  {f.sig.upsample(signal, factor)}}{314}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Quantize --- \texttt  {f.sig.quantize(signal, bits)}}{314}{}\protected@file@percent }
+\newlabel{eq:sig-quantize}{{11.70}{314}{}{equation.11.70}{}}
+\@writefile{toc}{\contentsline {paragraph}{Normalize --- \texttt  {f.sig.normalize(signal, mode)}}{315}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Control Systems}{315}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Transfer Function --- \texttt  {f.sig.tf(num, den)}}{315}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Step Response --- \texttt  {f.sig.stepResponse(tf)}}{315}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Impulse Response --- \texttt  {f.sig.impulseResponse(tf)}}{315}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Pole-Zero Map --- \texttt  {f.sig.poleZero(tf)}}{315}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Bode Plot --- \texttt  {f.sig.bode(tf, freqs)}}{315}{}\protected@file@percent }
+\newlabel{eq:sig-bode-mag}{{11.71}{315}{}{equation.11.71}{}}
+\newlabel{eq:sig-bode-phase}{{11.72}{315}{}{equation.11.72}{}}
+\@writefile{toc}{\contentsline {paragraph}{Nyquist Plot --- \texttt  {f.sig.nyquist(tf, freqs)}}{315}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Root Locus --- \texttt  {f.sig.rootLocus(tf)}}{315}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Stability Check --- \texttt  {f.sig.stability(tf)}}{316}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{EDA-Specific}{316}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Impedance --- \texttt  {f.sig.impedance(response, freqs)}}{316}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Group Delay --- \texttt  {f.sig.groupDelay(tf, freqs)}}{316}{}\protected@file@percent }
+\newlabel{eq:sig-group-delay}{{11.73}{316}{}{equation.11.73}{}}
+\@writefile{toc}{\contentsline {paragraph}{Phase Response --- \texttt  {f.sig.phaseResponse(tf, freqs)}}{316}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Magnitude Response --- \texttt  {f.sig.magnitudeResponse(tf, freqs)}}{316}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{S-Parameter --- \texttt  {f.sig.sParameter(tf, freqs)}}{316}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Edge Cases and Error Conditions}{317}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Empty Signals}{317}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Single-Sample Signals}{317}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Zero Signals}{317}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{NaN and Inf Propagation}{317}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Non-Power-of-2 Lengths}{317}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Invalid Parameters}{317}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Numerical Precision}{318}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.11}Debug Functions}{318}{}\protected@file@percent }
+\newlabel{sec:debug-functions}{{11.1.11}{318}{}{subsection.11.1.11}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Debug Print Function}{318}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Modes}{318}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{318}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Breakpoint Function}{318}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{318}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Graph Dump Function}{319}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{319}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Resource Monitor Function}{319}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{319}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Execution Trace Function}{319}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{319}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Profiling Function}{319}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{320}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Memory Inspection Function}{320}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{320}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{CPU Usage Function}{320}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{320}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Variable Watch Function}{320}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{320}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Call Stack Function}{321}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{321}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Variable Inspector Function}{321}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{321}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.12}System Functions}{321}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Get Configuration Function}{321}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Set Configuration Function}{322}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Environment Variable Function}{322}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Set Environment Function}{322}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Version Function}{322}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Features Function}{323}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.13}System Variables}{323}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Memory Hash Variable}{323}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Temperature Sensor Variables}{324}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Available Sensors Variable}{324}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Comparison to Other System Access}{325}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.14}Time Functions}{325}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Epoch Nanoseconds Function}{325}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{ISO 8601 Timestamp Function}{325}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Nanoseconds to ISO 8601 Function}{326}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Sleep Function}{326}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Timer Start Function}{326}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Timer Stop Function}{327}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Timer Read Function}{327}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.15}Random Number Functions}{328}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Seed Function}{328}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Random Function}{328}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Random Integer Function}{328}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Random Real Function}{329}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Uniform Function}{329}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Normal Distribution Function}{330}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Choice Function}{330}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Shuffle Function}{330}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Random Boolean Function}{331}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Cryptographically Secure Random Function}{331}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Random Prime Function}{331}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.16}Hash Functions}{332}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{General Hash Function}{332}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hash Bytes Function}{332}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{FNV-1a Hash Function}{332}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{MurmurHash Function}{333}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{xxHash Function}{333}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{CRC-32 Checksum Function}{334}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Adler-32 Checksum Function}{334}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{MD5 Hash Function}{334}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{SHA-1 Hash Function}{335}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{SHA-224 Hash Function}{335}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{SHA-256 Hash Function}{335}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{SHA-384 Hash Function}{336}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{SHA-512 Hash Function}{336}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{SHA-3 256 Hash Function}{337}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{SHA-3 512 Hash Function}{337}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{BLAKE2b Hash Function}{337}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{BLAKE2s Hash Function}{338}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{BLAKE3 Hash Function}{338}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.17}Probability Distributions}{338}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Normal PDF}{338}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Normal CDF}{339}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Normal Inverse CDF}{339}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Normal Random}{339}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Exponential PDF}{340}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Exponential CDF}{340}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Exponential Inverse CDF}{340}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Exponential Random}{341}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Gamma PDF}{341}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Gamma CDF}{341}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Gamma Inverse CDF}{342}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Gamma Random}{342}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Beta PDF}{342}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Beta CDF}{343}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Beta Inverse CDF}{343}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Beta Random}{343}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Weibull PDF}{344}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Weibull CDF}{344}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Weibull Inverse CDF}{344}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Weibull Random}{345}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Logistic PDF}{345}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Logistic CDF}{345}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Logistic Inverse CDF}{346}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Logistic Random}{346}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Cauchy PDF}{346}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Cauchy CDF}{347}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Cauchy Inverse CDF}{347}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Cauchy Random}{347}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Student's t PDF}{348}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Student's t CDF}{348}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Student's t Inverse CDF}{348}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Student's t Random}{349}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Chi-Square PDF}{349}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Chi-Square CDF}{349}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Chi-Square Inverse CDF}{350}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Chi-Square Random}{350}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{F-Distribution PDF}{350}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{F-Distribution CDF}{351}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{F-Distribution Inverse CDF}{351}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{F-Distribution Random}{351}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Uniform PDF}{352}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Uniform CDF}{352}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Uniform Inverse CDF}{352}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Uniform Random}{353}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Binomial PMF}{353}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Binomial CDF}{353}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Binomial Inverse CDF}{354}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Binomial Random}{354}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Poisson PMF}{354}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Poisson CDF}{355}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Poisson Inverse CDF}{355}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Poisson Random}{355}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Geometric PMF}{356}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Geometric CDF}{356}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Geometric Inverse CDF}{356}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Geometric Random}{357}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Negative Binomial PMF}{357}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Negative Binomial CDF}{357}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Negative Binomial Inverse CDF}{358}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Negative Binomial Random}{358}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.18}Numerical Analysis}{358}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{When to Use}{358}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Newton's Method}{359}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{When to Prefer Newton's Method}{359}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Bisection Method}{359}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{When to Prefer Bisection}{360}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Secant Method}{360}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{When to Prefer Secant Method}{360}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Brent's Method}{361}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{When to Prefer Brent's Method}{361}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Root-Finding Method Comparison}{361}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Interpolation}{361}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Runge's Phenomenon}{362}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Spline Interpolation}{362}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Polynomial Functions}{363}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Polynomial Evaluation}{363}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Polynomial Fit}{364}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Polynomial Roots}{365}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Roundtrip Property}{365}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Polynomial Derivative}{366}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Roundtrip Property}{366}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Polynomial Integral}{366}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definite Integral}{367}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Adaptive Integration}{367}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Numerical Differentiation}{368}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{ODE Solver}{368}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\$dydt Signature}{368}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Explicit Methods}{369}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Implicit Methods}{369}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Method Selection Guide}{370}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{371}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.19}Shared Functions}{371}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Assert Function}{371}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Length/Size Function}{371}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases -- Collection Utilities}{371}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.20}Special Functions}{372}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Print Function}{372}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Type Function}{372}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Reference Function}{372}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{No-Operation Function}{373}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Soft Integer Conversion}{373}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Soft Real Conversion}{373}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1.21}Engineering Math Functions}{374}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Magnitude to dB Function}{374}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{dB10 Function}{374}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{dB20 Function}{374}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{dB to Magnitude Function}{375}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Voltage Divider Function}{375}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Current Divider Function}{376}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{LC Resonance Frequency Function}{376}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Reactance Function}{376}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Unit Conversion Function}{377}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {11.1}{\ignorespaces Supported dimensions and unit strings for \texttt  {f.math.convert}. Full names and short aliases (column 1) are both accepted.}}{378}{}\protected@file@percent }
+\newlabel{tab:unit-strings}{{11.1}{378}{}{table.11.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{SI Prefix Conversion}{379}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{SI Decimal Prefixes (2022 standard)}{380}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{IEC Binary Prefixes}{380}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Wavelength to Frequency}{381}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Frequency to Wavelength}{381}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Error Function}{382}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Complementary Error Function}{382}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Imaginary Error Function}{382}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Bessel J Function}{383}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Bessel Y Function}{383}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Bessel I Function}{384}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Bessel K Function}{384}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Lambert W Function}{384}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Dilogarithm Function}{385}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Trilogarithm Function}{385}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{General Polylogarithm Function}{385}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Digamma Function}{386}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Trigamma Function}{386}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Beta Function}{387}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Legendre P Function}{387}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Legendre Q Function}{388}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Associated Legendre Function}{388}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hermite Polynomial Function}{388}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Laguerre Polynomial Function}{389}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Chebyshev Polynomial Function}{389}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Chebyshev Polynomial of the Second Kind}{389}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Gegenbauer Polynomial}{390}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Jacobi Polynomial}{390}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Zernike Polynomial}{391}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Sine Integral Function}{391}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Airy Function}{391}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Airy Function (Complex)}{392}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Scaled Airy Function}{392}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Airy Function Zeros}{393}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Bi Airy Function Zeros}{393}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Airy Integrals}{394}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Scorer's Function Hi}{394}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Scorer's Function Gi}{395}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Scorer's Function Hi (Complex)}{395}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Scorer's Function Gi (Complex)}{395}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Align Up Function}{396}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Align Down Function}{396}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Is Power of Two Function}{396}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Next Power of Two Function}{397}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Popcount Function}{397}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Parity Function}{398}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Bit Length Function}{398}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Integer Log2 Function}{398}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Ceiling Log2 Function}{399}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{ToBase Function}{399}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{FromBase Function}{400}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Bin Function}{400}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Oct Function}{401}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hex Function}{401}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{FromBin Function}{401}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{FromOct Function}{402}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{FromHex Function}{402}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Choice and Majority Functions}{402}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Choice (Ch)}{402}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Majority (Maj)}{403}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Is Prime}{403}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Next Prime}{404}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Previous Prime}{404}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Nearest Prime}{404}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Nth Prime}{405}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Prime Pi}{405}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Prime Factors}{405}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Distinct Prime Factors}{406}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Omega Function}{406}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Big Omega Function}{406}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Euler's Totient Function}{407}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{M\"obius Function}{407}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Liouville Function}{408}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Jacobi Symbol}{408}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Legendre Symbol}{408}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Kronecker Symbol}{409}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Carmichael Lambda Function}{409}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Continued Fraction}{410}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Continued Fraction Value}{410}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Is Perfect Power}{410}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Is Abundant}{411}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Is Deficient}{411}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Is Square-Free}{411}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Is Power}{412}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Integer Square Root}{412}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Valuation}{412}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Chinese Remainder}{413}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Primitive Root}{413}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Polygamma Function}{414}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{IsNaN}{414}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{IsInf}{414}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Remap}{415}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Covariance}{415}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Correlation}{415}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Linear Regression}{416}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Dawson Function}{416}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Fresnel Sine Integral}{416}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Fresnel Cosine Integral}{417}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Exponential Integral}{417}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Logarithmic Integral}{417}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Cosine Integral}{418}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hyperbolic Sine Integral}{418}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hyperbolic Cosine Integral}{418}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hankel Function of the First Kind}{419}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hankel Function of the Second Kind}{419}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Kelvin Function ber}{419}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Kelvin Function bei}{420}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Kelvin Function ker}{420}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Kelvin Function kei}{420}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Struve Function H}{421}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Struve Function L}{421}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Riemann Zeta Function}{421}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hurwitz Zeta Function}{422}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Dirichlet Eta Function}{422}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Lerch Transcendent}{422}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Confluent Hypergeometric Function 0F1}{423}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Kummer's Confluent Hypergeometric Function 1F1}{423}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Gauss Hypergeometric Function 2F1}{423}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Generalized Hypergeometric Function pFq}{424}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Meijer G-Function}{424}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Fox H-Function}{424}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Jacobi Theta Function}{425}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Complete Elliptic Integral of the First Kind}{425}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Complete Elliptic Integral of the Second Kind}{425}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Complete Elliptic Integral of the Third Kind}{426}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Jacobi Elliptic Functions}{426}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Weierstrass Elliptic Function}{427}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Lower Incomplete Gamma Function}{427}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Upper Incomplete Beta Function}{427}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Inverse Tangent Integral (Ti$_2$)}{428}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Rogers Dilogarithm}{428}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Bloch-Wigner Dilogarithm}{429}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Legendre Chi Function}{429}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {11.2}User-defined Functions}{430}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.2.1}Function Definition}{430}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.2.2}Function Calls}{430}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.2.3}Return Values}{430}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.2.4}Local Scoping}{431}{}\protected@file@percent }
+\newlabel{sec:function-scope}{{11.2.4}{431}{}{subsection.11.2.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{Scope Rules}{431}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Return Values}{431}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples}{431}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Recursion}{432}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {part}{II\hspace  {1em}Formal Semantics}{433}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {12}Evaluation Model}{434}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {12.1}Evaluation Order}{434}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {12.2}Operator Precedence}{434}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {12.3}Type Coercion}{434}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {13}Execution Order}{436}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {13.1}Sequential Execution}{436}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {13.2}Expression Evaluation}{436}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {13.3}Assertions}{436}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {13.4}Error Handling}{436}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {13.5}Function Value Calling}{437}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {13.6}Safe Function Calling}{437}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {13.6.1}Safe Call (\texttt  {?()})}{437}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {13.6.2}Null-Safe Call (\texttt  {??()})}{437}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {13.7}Function Composition}{438}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {13.8}Declaration Order}{438}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {14}Constraint Resolution}{439}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {14.1}Conflict Resolution}{439}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {15}Type System Rules}{440}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {15.1}Type Categories}{440}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {15.2}Type Safety}{440}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {15.3}Error Types}{440}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {part}{III\hspace  {1em}Core Formal Model}{442}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {16}Structure of the Program}{443}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {16.1}Program Entry Point}{443}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {16.2}Global Scope}{443}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {16.3}Execution Model}{443}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {17}Structure of the Electrical System}{444}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {17.1}Electrical Graph}{444}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {17.2}Object Lifecycle}{444}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {18}Structure of the Solver}{445}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {18.1}Constraint Representation}{445}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {18.2}Resolution Algorithm}{445}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {part}{IV\hspace  {1em}Hardware Model}{446}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {19}Circuit Model}{447}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {19.1}Graph Structure}{447}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {19.2}Hierarchy}{447}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {20}Electrical Objects}{448}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {20.1}Nets}{448}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {20.1.1}Creation}{448}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {20.1.2}Properties}{448}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {20.2}Parts}{448}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {20.2.1}Creation}{449}{}\protected@file@percent }
+\newlabel{sec:part-creation}{{20.2.1}{449}{}{subsection.20.2.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {20.2.2}PCB Text Visibility Flags}{449}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {20.2.3}Properties}{449}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {20.3}Pins}{449}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {20.3.1}Creation}{449}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {20.3.2}Reference Syntax}{449}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {20.4}Connections}{450}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {20.4.1}Creation}{450}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {20.5}Models}{450}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {20.5.1}Model Declaration Syntax}{450}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {20.5.2}Built-in Models}{451}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {20.5.3}Custom Model Examples}{451}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{MOSFET Model}{451}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Non-Polarized Capacitor}{452}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{SiC MOSFET with Metadata}{452}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {20.6}Electrical Modules}{452}{}\protected@file@percent }
+\newlabel{sec:modules}{{20.6}{452}{}{section.20.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {20.6.1}Definition}{452}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {20.6.2}Instantiation}{453}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {20.6.3}Example}{453}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {20.7}Relationship between the Objects}{453}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {21}Querying}{454}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {21.1}Output and Input Quantifiers}{454}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {21.2}Net based Querying}{454}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {21.3}Tagged Net based Querying}{454}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {21.4}Affiliation-based Querying}{455}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {21.5}General Querying}{455}{}\protected@file@percent }
+\newlabel{sec:general-querying}{{21.5}{455}{}{section.21.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {21.5.1}Set Builder Notation}{455}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {21.5.2}Set Query Notation}{456}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {21.5.3}Nesting}{456}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {part}{V\hspace  {1em}Physical System}{458}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {22}Physical Constraints}{459}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{sec:physical-constraints}{{22}{459}{}{chapter.22}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {22.1}Units and SI Prefixes}{459}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {22.2}Priority System}{459}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {22.3}Proximity Constraint}{460}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {22.4}Creepage Constraint}{460}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {22.5}Layer Constraint}{460}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {22.6}Board Definition}{460}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {22.7}Footprint Unification}{461}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {22.8}Net Shrink}{461}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {22.9}Plane Creation}{462}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {22.10}Text Annotation}{462}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {22.11}Via Fill}{462}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Edge Cases}{463}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {22.11.1}Pattern Types}{463}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{grid}{463}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{hex}{463}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{stagger}{463}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{radial}{463}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{random}{463}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {22.11.2}Examples}{463}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {22.12}Connection Current}{464}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {22.13}Alignment}{464}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {22.14}Connection Matching}{464}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {22.14.1}Properties}{464}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {22.14.2}Value Calculation Methods}{465}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Calculation Mode Selection}{465}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Length (len)}{465}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Resistance (res)}{465}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Calculus Mode}{465}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Inductance (ind)}{466}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Calculus Mode}{466}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Capacitance (cap)}{466}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Calculus Mode}{466}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Impedance (imp)}{467}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Calculus Mode}{467}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Propagation Time (t)}{467}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Calculus Mode}{467}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {22.14.3}Matching Objective}{467}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {22.14.4}Example}{468}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {23}Solver Model}{469}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{sec:solver-model}{{23}{469}{}{chapter.23}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {23.1}Overview}{469}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {23.2}Algorithm Selection}{469}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {23.2.1}Available Algorithms}{469}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Simulated Annealing (sa)}{469}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Objective Function}{469}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Neighbourhood Structure}{469}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Acceptance Probability}{470}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Cooling Schedule}{470}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Convergence Criterion}{470}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Algorithm}{470}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{470}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Genetic Algorithm (ga)}{471}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Population Representation}{471}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Fitness Function}{471}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Selection}{471}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Crossover}{471}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mutation}{471}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Elitism}{471}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Convergence Criterion}{472}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Algorithm}{472}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{472}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Constraint Programming (cp)}{472}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Problem Formulation}{472}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Domains}{473}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Constraint Types}{473}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Arc Consistency (AC-3)}{473}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Propagation}{473}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Backtracking Search}{473}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Optimization Extension}{473}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Convergence Criterion}{473}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{474}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Gradient Descent (gd)}{474}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Objective Function}{474}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Gradient Computation}{474}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Update Rule}{474}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Learning Rate Schedules}{474}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Momentum Enhancement}{475}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Constraint Handling}{475}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Convergence Criterion}{475}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Algorithm}{475}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{475}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Hybrid (hybrid)}{476}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Architecture}{476}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Phase 1: Global Exploration (Simulated Annealing)}{476}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Phase 2: Local Refinement (Gradient Descent)}{476}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Phase 3: Constraint Satisfaction (Constraint Programming)}{476}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Adaptive Phase Selection}{476}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Phase Transition Criteria}{477}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Algorithm}{477}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Properties}{477}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {23.2.2}Default Algorithm}{477}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {23.3}Constraint Resolution}{477}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {23.3.1}No Conflicts}{477}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {23.3.2}Conflicts Between Different Priorities}{477}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {23.3.3}Conflicts Between Same Priorities}{478}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Lower Priorities (-d, -nth, -imp, -vimp)}{478}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Higher Priorities (-oeo, -eo, -ne, -nonneg)}{478}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {23.4}Layout Generation Pipeline}{478}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {23.4.1}Phase 1: Constraint Collection}{478}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {23.4.2}Phase 2: Board Setup}{478}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {23.4.3}Phase 3: Component Placement}{478}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {23.4.4}Phase 4: Trace Routing}{478}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {23.4.5}Phase 5: Via Placement}{479}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {23.4.6}Phase 6: Plane Generation}{479}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {23.4.7}Phase 7: Design Rule Check}{479}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {23.4.8}Phase 8: File Export}{479}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {23.5}Ordering of Global Set Constant *e}{479}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {23.5.1}Canonical String Rules}{479}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {23.5.2}Example}{480}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {24}Flags}{481}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{ch:flags}{{24}{481}{}{chapter.24}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {24.1}Available Flags}{481}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {24.2}PCB Part Text Visibility}{482}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {part}{VI\hspace  {1em}Toolchain}{483}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {25}Compiler and Execution Pipeline}{484}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {25.1}Compilation Phases}{484}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {25.2}Entry Point}{484}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {26}Code Generation}{485}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {26.1}PCB Generation}{485}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {26.2}Schematic Generation}{485}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {26.3}Export}{485}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {27}Standard Library}{486}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {27.1}Component Models}{486}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {27.2}Footprint Libraries}{486}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {27.3}Material Library}{486}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {28}External Library}{487}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {28.1}Importing Libraries}{487}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {28.2}Supported Formats}{487}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {29}Debugging and Logging}{488}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {29.1}Debug Mode}{488}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {29.2}Quick Reference}{488}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {29.3}Workflow}{489}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {part}{VII\hspace  {1em}Reference}{490}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {30}Exceptions}{491}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {30.1}Type Errors}{491}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {30.2}Value Errors}{491}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {30.3}Reference Errors}{491}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {30.4}Constraint Errors}{491}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {31}Error and Warning Model}{492}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {31.1}Errors}{492}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {31.2}Warnings}{492}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {32}Future Improvements}{493}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {chapter}{\numberline {33}Implementations}{494}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {33.1}Reference Implementation}{494}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {33.2}Build and Installation}{494}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {34}References}{495}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {34.1}Language Specification}{495}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {34.2}Related Standards}{495}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {A}Standard Libraries}{496}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {A.1}Material Libraries}{496}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1.1}PCB Substrate Material Library}{496}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1.2}PCB Conductor Material Library}{496}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1.3}PCB Surface-finish Material Library}{496}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.2}Basic Model Libraries}{496}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.2.1}Passive Component Model Library}{496}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.2.2}Active Component Model Library}{497}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.2.3}Integrated Circuit Component Model Library}{497}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.2.4}Board Hardware Component Model Library}{497}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.3}Additional Language Libraries}{497}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.4}Footprint Libraries}{497}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {B}Examples}{498}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {B.1}LED Circuit}{498}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.1.1}Intent}{498}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.1.2}EDADSL Code}{498}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.1.3}Explanation}{498}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B.2}Arithmetic and Type Coercion}{499}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.2.1}Intent}{499}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.2.2}EDADSL Code}{499}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.2.3}Explanation}{499}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B.3}Conditionals and Classification}{499}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.3.1}Intent}{499}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.3.2}EDADSL Code}{499}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.3.3}Explanation}{500}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B.4}Lambdas and Higher-Order Functions}{500}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.4.1}Intent}{500}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.4.2}EDADSL Code}{500}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.4.3}Explanation}{501}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B.5}Complex Arithmetic and FFT}{501}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.5.1}Intent}{501}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.5.2}EDADSL Code}{501}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.5.3}Explanation}{502}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B.6}Ndarray Matrix Operations}{502}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.6.1}Intent}{502}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.6.2}EDADSL Code}{502}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.6.3}Explanation}{503}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B.7}Closures and Lambdas}{503}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.7.1}Intent}{503}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.7.2}EDADSL Code}{503}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.7.3}Explanation}{504}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B.8}Design-Rule-Driven Component Placement}{504}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.8.1}Intent}{504}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.8.2}EDADSL Code}{504}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.8.3}Explanation}{505}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B.9}Signal Processing Pipeline}{505}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.9.1}Intent}{505}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.9.2}EDADSL Code}{505}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.9.3}Explanation}{506}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {C}Diagrams}{507}{}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {C.1}Execution-phase Diagram}{507}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {C.2}Type Hierarchy Diagram}{508}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {C.3}Operator Precedence Diagram}{508}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {C.4}Example Circuit: LED Current-Limiting}{509}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {C.5}FFT Pipeline Diagram}{510}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {C.6}Ndarray Operations}{511}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {C.7}Custom Model Definition and Usage}{512}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.7.1}Intent}{512}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.7.2}EDADSL Code}{512}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.7.3}Explanation}{513}{}\protected@file@percent }
+\gdef \@abspage@last{514}

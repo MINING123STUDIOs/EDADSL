@@ -1,0 +1,376 @@
+\chapter{Formal Grammar}
+The Formal Grammar of EDADSL is defined using Extended Backus–Naur form, while Primitives are given using Regular Expressions.
+\section{Primitives}
+The Primitives are defined using Regular Expressions. For more Information on Lexical structure see Part I Chapter 2.
+\begin{verbatim}
+idchar  = [_a-zA-Z0-9]
+id      = [_a-zA-Z][_a-zA-Z0-9]*
+letter  = [a-zA-Z]
+\end{verbatim}
+
+\section{General Grammar}
+\begin{verbatim}
+program                       = "start", statement,
+                                { ("%N" | newline), statement }
+
+statement                     = assignment
+                              | flow_control
+                              | function
+                              | electrical_system_statement
+                              | compound_assignment
+                              | postfix_expression
+                              | echo_statement
+                              | writetolog
+                              | letop
+                              | assertion
+                              | try_except
+                              | alias_stmt
+
+assignment                    = variable_assignment          
+                              | constant_assignment
+
+function                      = function_call_built_in
+                              | function_call_ud
+                              | function_call_var
+                              | function_definition
+
+flow_control                  = conditional
+                              | cases
+                              | iterator
+                              | while_loop
+                              | do_while
+                              | break_stmt
+                              | continue_stmt
+                              | jump
+                              | halt
+                              | noop
+
+conditional                   = "if", boolean_expression, "::", code_block,
+                              { "otherwise", boolean_expression, "::", code_block },
+                              ["else", "::", code_block]
+
+cases                         = "cases", "(", variable, typed_assign, data, ")", 
+                              "::", "{", { case_clause }, [ otherwise_clause ], "}"
+
+case_clause                   = "case", "(", boolean_expression, ")", 
+                              "::", code_block
+
+otherwise_clause              = "otherwise", "::", code_block
+
+iterator                      = "for", variable, "E",
+                                (list | set), "::", code_block
+#c# Note: "E" in the iterator is disambiguated from the set comparison "E"
+#c# by parser context — after "for $var" it is the iterator keyword.
+
+while_loop                    = "while", boolean_expression, "::", code_block,
+                                ["else", "::", code_block]
+
+do_while                      = "do", "::", code_block,
+                                "while", boolean_data_type
+
+break_stmt                    = "break"
+
+continue_stmt                 = "continue"
+
+jump                          = ( "gotomarker" | "gotojump" ), id
+
+echo_statement                = "echo", variable
+
+writetolog                    = "writetolog", string_expression
+
+letop                         = "letop", "o.u.", id, assigner, data
+
+function_definition = "function", "f.u.", id, 
+                      "(", [ { variable, "," }, variable], 
+                      ")", "::", "{", f_statement, 
+                      {f_statement}, "}"
+
+f_statement = statement | "return", [data]
+
+function_call_ud              = "f.u.", id, "(",
+                                [{ data, "," }, data] ,")"
+
+function_call_built_in        = "f", ".", namespace, ".", id, "(",
+                                [{ data, "," }, data] ,")"
+
+function_call_var             = variable, "(",
+                                [{ data, "," }, data] ,")"
+
+safe_function_call            = variable, "?", "(",
+                                [{ data, "," }, data] ,")"
+
+null_safe_function_call       = variable, "??", "(",
+                                [{ data, "," }, data] ,")"
+
+namespace                     = "math" | "trig" | "hyp" | "cplx" | "log"
+                              | "special" | "str" | "list" | "tnsr"
+                               | "stat" | "linalg" | "ee" | "int" | "util"
+                               | "seq" | "sig" | "debg" | "sys" | "time" | "rng" | "hash"
+
+variable_assignment           = variable,
+                                (typed_assign | inferred_assign),
+                                [";", "M", "=", boolean_data_type]
+
+typed_assign                  = assigner
+inferred_assign               = "t", "=", data
+
+safe_typed_assign             = variable, "?[", type, "]?=", data
+
+safe_inferred_assign          = variable, "?t?=", data
+
+lazy_binding                  = variable, ( typed_lazy_binding | inferred_lazy_binding )
+typed_lazy_binding            = ":L", "[", type, "]=", data
+inferred_lazy_binding         = ":Lt=", data
+
+compound_assignment           = variable, compound_op, data
+                            | variable, compound_unary_op
+compound_op                   = "+=" | "-=" | "*=" | "/=" | "%=" | "^="
+                              | "<<=" | ">>=" | "&&=" | "||=" | "^^="
+                              | "u=" | "n=" | ".=" | "x=" | ".*=" | ".^="
+                              | "+r=" | "-r=" | "/r=" | "%r=" | "^r="
+                              | "xr=" | ".*r=" | ".^r="
+                              | "<<r=" | ">>r="
+                              | "<<<" , "[", int, "]", "="
+                              | ">>>", "[", int, "]", "="
+                              | "<<<" , "[", int, "]", "r="
+                              | ">>>", "[", int, "]", "r="
+                              | "->=" | "!->=" | "->r=" | "!->r="
+                              | "b&&=" | "b||=" | "b^^=" | "b!&=" | "b!|=" | "b!^="
+                              | "b->=" | "b!->=" | "b->r=" | "b!->r="
+                              | "<o=" | "o>="
+compound_unary_op             = "~.T" | "~.H" | "~.E" | "~.E+" | "~b!"
+
+assigner                      = "[bool]=",   boolean_type
+                              | "[int]=",     int_type
+                              | "[real]=",    real_type
+                              | "[list]=",    list_type
+                              | "[string]=",  string_type
+                              | "[set]=",     set_type
+                              | "[func]=",    func_type
+                              | electrical_system_assigner
+
+constant_assignment = "let", "c.u.", id, assigner, 
+                      [";", "P", "=", boolean_data_type]
+
+constant_ref        = "c", ".", const_namespace, ".", id
+
+const_namespace     = "math" | "phys"
+
+
+halt                          = "halt"
+noop                          = "skip"
+
+list                          = "[", [{ data, "," }, data], "]"
+
+variable                      = "$", id
+
+code_block                    = "{", { ("%N" | newline), statement }, "}"
+
+boolean_data_type             = expression  (any expression evaluating to bool)
+
+data                          = variable
+                              | literal
+                              | constant
+                              | constant_ref
+                              | function_call_built_in
+                              | function_call_ud
+                              | function_call_var
+                              | expression  (see Chapter 4 for expression grammar)
+
+pipeline_expression           = expression, "|=>", function_ref
+                              | expression, "|=>", lambda
+
+composition_expression        = expression, "<o", expression
+
+type_cast                     = expression, "as", type_name
+
+type_name                     = "int" | "real" | "bool" | "complex"
+                              | "list" | "tensor"
+
+function_ref                  = "f", ".", namespace, ".", id
+                              | "f.u.", id
+
+func_type                     = function_ref | lambda | "null"
+
+assertion                     = "assert", boolean_expression, "::"
+                              , string_type, [";", error_type]
+
+error_type                    = "Assertion Error" | "aerr"
+                              | "Type Error"       | "terr"
+                              | "Value Error"      | "verr"
+                              | "Division by Zero Error" | "0div"
+                              | "Runtime Error"    | "rerr"
+                              | "Permission Error" | "perm"
+
+try_except                    = "try", "::", code_block
+                              , { "otherwise", [error_type], "::", code_block }
+                              , ["except", "::", code_block]
+
+alias_stmt                    = "alias", function_ref, "as", id
+                              | "alias", namespace, "as", id
+\end{verbatim}
+
+\newpage
+\section{Grammar relating to the electrical System}
+\begin{verbatim}
+electrical_system_statement   = make_statement
+                              | elec_statement
+                              | phys_statement
+                              | syst_statement
+
+electrical_system_assigner    = "[part]=", part_type
+                              | "[connection]=", connection_type
+                              | "[pin]=", pin_type
+                              | "[net]=", net_type
+\end{verbatim}
+
+\subsection{Make Statement}
+\begin{verbatim}
+make_statement = "make.", ("pcb" | "schematic")
+\end{verbatim}
+
+\subsection{Electrical Statements}
+\begin{verbatim}
+elec_statement = "elec.",
+  ( "part", part_reference, ":", model_name,
+    "(", [model_params], ")",
+    [";", "des", "=", string_type],
+    [";", "fp", "=", string_type]
+  | "connect", (net_type | pin_type),
+    pin_type, { pin_type }
+  | "net", string_type, { string_type }
+  | "tag", net_type, string_type,
+    { string_type }, ["-remove"]
+  | "untag", net_type, string_type,
+    { string_type }
+  | "makemodel", model_name, ":",
+    "{", pin_entries, [metadata], "}"
+  | "makemodule", id, "(", [variable, {",", variable}], ")",
+    "{", module_body, "}"
+  )
+
+part_reference = string_type
+               | "[", { string_type, "," }, string_type, "]"
+
+model_name     = id, ["/", id]
+model_params   = [{ id, "=", data, "," }, id, "=", data]
+
+pin_entries    = { pin_entry, ";" }
+pin_entry      = id, "->", integer, ";", "T", "=", pin_type
+pin_type       = "input" | "power" | "output"
+metadata       = des_entry | dts_entry | fp_entry
+des_entry      = "des", "=", string_type
+dts_entry      = "dts", "=", string_type
+fp_entry       = "fp", "=", string_type
+
+module_body    = { statement }
+\end{verbatim}
+
+\subsection{Physical Constraints}
+\begin{verbatim}
+phys_statement = phys_prox | phys_creep | phys_layer
+               | phys_board | phys_shrinknet
+               | phys_mkplane | phys_viafill
+               | phys_connectioncurrent | phys_align
+               | phys_connmatch | phys_mktext
+               | phys_unite
+
+phys_prox   = "phys.prox", set,
+              ( set, "min", "=", real, "max", "=", real
+              | "minim" ), priority
+
+phys_creep  = "phys.creep", set, set,
+              "d", "=", real, priority
+
+phys_layer  = "phys.layer", set, layer_ref, priority
+
+phys_board  = "phys.board",
+              "N=", int,
+              "T=", list,
+              "W=", list,
+              ["M=", list]
+
+phys_shrinknet = "phys.shrinknet", net, priority
+
+phys_mkplane   = "phys.mkplane", layer_ref, net
+
+phys_viafill   = "phys.viafill", pad,
+              "v", "=", real, "d", "=", real,
+              ["p", "=", pattern],
+              ["l", "=", int]
+
+phys_connectioncurrent = "phys.connectioncurrent",
+              (connection | set), real, priority
+
+phys_align  = "phys.align", list,
+              "axis", "=", ("x" | "y"),
+              "d", "=", real, priority
+
+phys_connmatch = "phys.connmatch",
+              match_property, set, priority
+
+phys_mktext = "phys.mktext",
+              "txt", string,
+              ["font", string],
+              ["size", real],
+              ["material", string],
+              ["layer", layer_ref]
+
+phys_unite   = "phys.unite", "{", part, {",", part}, "}"
+part         = id
+\end{verbatim}
+
+\subsection{System Statements}
+\begin{verbatim}
+syst_statement = syst_flag | syst_cm | syst_alg
+
+syst_flag = "syst.flag.", flag_name, (real | string_type)
+
+flag_name = id
+
+syst_cm   = "syst.cm.calc",
+            ("approx" | "calculus" | "hybrid")
+
+syst_alg  = "syst.alg", id
+
+sys_var = "$$", sys_var_name
+
+sys_var_name = "sys_mem_SHA512"
+             | "sys_temp_", id
+             | "sys_temp_available_sensors"
+\end{verbatim}
+
+\subsection{Additional Grammar Rules}
+\begin{verbatim}
+set_builder    = "{", variable, "E", ( set | list ),
+                 ":", expression, [ "~", expression ], "}"
+
+set_query      = "{", set_expr, "@~", "[",
+                 expression, "]",
+                 [ "~[", expression, "]" ],
+                 "~>", [ variable ], "}"
+
+lambda         = "L::", "(", [variable, {",", variable}], ")",
+                 "->", "{", { statement }, expression, "}"
+
+conditional_expr = expression, "?->",
+                   "(", expression, ")",
+                   "!", "(", expression, ")"
+
+pipe_syntax    = elec_connect, { "->", elec_connect }
+\end{verbatim}
+
+\subsection{Common Rules}
+\begin{verbatim}
+layer_ref      = int | "T" | "B"
+priority       = ["-d" | "-nth" | "-imp" | "-vimp"
+                | "-oeo" | "-eo" | "-ne" | "-nonneg"]
+pattern        = "grid" | "hex" | "stagger"
+               | "radial" | "random"
+match_property = "l" | "res" | "L" | "cap"
+               | "imp" | "t"
+net            = id
+pad            = id | int
+\end{verbatim}
+
+
